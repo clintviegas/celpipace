@@ -158,25 +158,28 @@ export const SCORE_LEVELS = [
   { level: '10–12', label: 'Level 10–12', desc: 'Advanced / Native-like',  clb: '10', highlight: true, note: 'Max CRS points' },
 ]
 
-// ─── CRS Age points (single) ──────────────────────────────────────
+// ─── CRS Age points (single / no accompanying spouse) ────────────
+// Source: IRCC official CRS criteria table — max 110 pts
 export const CRS_AGE = {
-  17: 0, 18: 99, 19: 105, 20: 110, 21: 113, 22: 116, 23: 119, 24: 121,
-  25: 123, 26: 124, 27: 125, 28: 126, 29: 127, 30: 128, 31: 129,
-  32: 128, 33: 127, 34: 126, 35: 125, 36: 124, 37: 123, 38: 122,
-  39: 121, 40: 120, 41: 119, 42: 118, 43: 117, 44: 116, 45: 115,
-  46: 114, 47: 0,
+  17: 0,
+  18: 99,  19: 105, 20: 110, 21: 110, 22: 110, 23: 110, 24: 110,
+  25: 110, 26: 110, 27: 110, 28: 110, 29: 110, 30: 105, 31: 99,
+  32: 94,  33: 88,  34: 83,  35: 77,  36: 72,  37: 66,  38: 61,
+  39: 55,  40: 50,  41: 39,  42: 28,  43: 17,  44: 6,
+  45: 0,   46: 0,   47: 0,
 }
 
-// ─── CRS Education points (single) ───────────────────────────────
+// ─── CRS Education points (single / no spouse) ───────────────────
+// Source: IRCC official — max 150 pts (doctoral)
 export const CRS_EDUCATION = {
   'none':         0,
   'secondary':   28,
   'one_year':    84,
   'two_year':    91,
-  'bachelors':   112,
-  'two_or_more': 119,
-  'masters':     126,
-  'doctoral':    140,
+  'bachelors':  112,
+  'two_or_more':119,
+  'masters':    126,
+  'doctoral':   150,
 }
 
 // ─── CRS Canadian work experience (single) ───────────────────────

@@ -255,16 +255,21 @@ export default function CRSCalculatorPage() {
     const s1 = lang1Pts(clb1.speak)
     const lang1Total = l1.listen + r1.read + w1.write + s1.speak
 
-    // Language 2 (max 24)
+    // Language 2 (max 22 per IRCC)
     const hasLang2 = lang2Test !== 'none' && lang2Test !== ''
     const l2 = lang2Pts(clb2.listen)
     const r2 = lang2Pts(clb2.read)
     const w2 = lang2Pts(clb2.write)
     const s2 = lang2Pts(clb2.speak)
-    const lang2Total = hasLang2 ? Math.min(24, l2.listen + r2.read + w2.write + s2.speak) : 0
+    const lang2Total = hasLang2 ? Math.min(22, l2.listen + r2.read + w2.write + s2.speak) : 0
 
-    // Canadian education bonus (+30)
-    const canEduPts = hasCanadianEdu && canadianEduLevel !== 'secondary' ? 30 : 0
+    // Canadian education bonus (+15 for 1-2yr credential, +30 for 3yr+ / master's / doctoral)
+    let canEduPts = 0
+    if (hasCanadianEdu) {
+      if (canadianEduLevel === 'three_plus')   canEduPts = 30
+      else if (canadianEduLevel === 'one_or_two') canEduPts = 15
+      // 'secondary' = 0 pts
+    }
 
     // Skill transferability
     const lang1Min = Math.min(clb1.listen, clb1.read, clb1.write, clb1.speak)
@@ -278,17 +283,18 @@ export default function CRSCalculatorPage() {
     }
     const skillTotal = Math.min(100, st.total + certLangPts)
 
-    // Additional
+    // Additional points (Section D: nomination, French, Canadian education, sibling)
     const nomPts     = hasNomination ? 600 : 0
-    // French bonus: +25 if no English result, +50 if also strong English (CLB 4+)
+    // French bonus: +25 base; +50 if all 4 French skills CLB 7+
     const frenchPts  = hasFrenchBonus
-      ? (lang2Test !== 'none' && clb2.speak >= 7 && clb2.listen >= 7 && clb2.read >= 7 && clb2.write >= 7 ? 50 : 25)
+      ? (clb2.speak >= 7 && clb2.listen >= 7 && clb2.read >= 7 && clb2.write >= 7 ? 50 : 25)
       : 0
-    const siblingPts = hasSibling ? 15 : 0
-    const additionalPts = nomPts + frenchPts + siblingPts
+    const siblingPts    = hasSibling ? 15 : 0
+    const additionalPts = nomPts + frenchPts + siblingPts + canEduPts
 
-    const corePts   = agePts + eduPts + canPts + foreignPts + lang1Total + lang2Total + canEduPts
-    const totalPts  = corePts + skillTotal + additionalPts
+    // Core = A factors only (age + edu + lang1 + lang2 + canExp + foreignExp)
+    const corePts  = agePts + eduPts + canPts + foreignPts + lang1Total + lang2Total
+    const totalPts = corePts + skillTotal + additionalPts
 
     return {
       agePts, eduPts, canPts, foreignPts,
@@ -412,11 +418,11 @@ export default function CRSCalculatorPage() {
                 <FieldLabel>Choose the best answer to describe this level of education.</FieldLabel>
                 <CRSSelect value={canadianEduLevel} onChange={setCanEduLvl}>
                   <option value="secondary">A secondary school (high school) credential — no bonus pts</option>
-                  <option value="one_or_two">A 1 or 2-year diploma or certificate</option>
-                  <option value="three_plus">A degree, diploma or certificate of 3 years or longer OR a Master's, professional or doctoral degree of at least 1 academic year</option>
+                  <option value="one_or_two">A 1 or 2-year diploma or certificate (+15 pts)</option>
+                  <option value="three_plus">A degree, diploma or certificate of 3 years or longer OR a Master's, professional or doctoral degree of at least 1 academic year (+30 pts)</option>
                 </CRSSelect>
                 <p className="crs-field-tip" style={{ marginTop: 8 }}>
-                  +30 pts for a post-secondary Canadian credential (1-year or longer).
+                  +15 pts for a 1–2 year Canadian credential; +30 pts for 3-year or longer / Master's / doctoral.
                 </p>
               </Question>
             )}
@@ -481,7 +487,7 @@ export default function CRSCalculatorPage() {
             <Question num="5iii">
               <FieldLabel>Do you have other language results? (Second official language)</FieldLabel>
               <p className="crs-field-tip" style={{ marginBottom: 10 }}>
-                Test results must be less than two years old. You can earn up to 24 additional points for CLB 5+.
+                Test results must be less than two years old. You can earn up to 22 additional points for CLB 5+.
               </p>
               <CRSSelect value={lang2Test} onChange={setLang2Test} style={{ marginBottom: lang2Test !== 'none' ? 16 : 0 }}>
                 <option value="none">Not applicable</option>
@@ -612,11 +618,11 @@ export default function CRSCalculatorPage() {
             <ScoreBar label="Age"                        points={breakdown.agePts}      max={110}  color="#4A90D9" />
             <ScoreBar label="Education"                  points={breakdown.eduPts}      max={150}  color="#2D8A56" />
             {breakdown.canEduPts > 0 && (
-              <ScoreBar label="Canadian Education (+30)" points={breakdown.canEduPts}   max={30}   color="#2D8A56" />
+              <ScoreBar label={`Canadian Education (+${breakdown.canEduPts})`} points={breakdown.canEduPts}   max={30}   color="#2D8A56" />
             )}
-            <ScoreBar label="Language — 1st (CELPIP)"   points={breakdown.lang1Total}  max={160}  color="#C8102E" />
+            <ScoreBar label="Language — 1st Official"   points={breakdown.lang1Total}  max={136}  color="#C8102E" />
             {breakdown.lang2Total > 0 && (
-              <ScoreBar label="Language — 2nd"           points={breakdown.lang2Total}  max={24}   color="#9B59B6" />
+              <ScoreBar label="Language — 2nd Official"  points={breakdown.lang2Total}  max={22}   color="#9B59B6" />
             )}
             <ScoreBar label="Canadian Work Exp."         points={breakdown.canPts}      max={80}   color="#C8972A" />
             {breakdown.foreignPts > 0 && (
@@ -626,7 +632,7 @@ export default function CRSCalculatorPage() {
               <ScoreBar label="Skill Transferability"    points={breakdown.skillTotal}  max={100}  color="#0F6B8A" />
             )}
             {breakdown.additionalPts > 0 && (
-              <ScoreBar label="Additional Points"        points={breakdown.additionalPts} max={665} color="#8B5E3C" />
+              <ScoreBar label="Additional Points"        points={breakdown.additionalPts} max={695} color="#8B5E3C" />
             )}
           </div>
 
@@ -678,9 +684,10 @@ export default function CRSCalculatorPage() {
                 ].map(({ score, clb }) => {
                   const l = lang1Pts(clb)
                   const total4 = l.listen + l.read + l.write + l.speak
+                  // nonLang = core without lang1 (age + edu + canExp + foreignExp + lang2)
                   const nonLang = breakdown.corePts - breakdown.lang1Total
                   const newSt = skillTransfer({ education, canExp, foreignExp, lang1Min: clb })
-                  const est = nonLang + total4 + newSt.total + breakdown.additionalPts + breakdown.lang2Total
+                  const est = nonLang + total4 + newSt.total + breakdown.additionalPts
                   const gain = est - breakdown.totalPts
                   const isActive = score === celpipListen && score === celpipRead && score === celpipWrite && score === celpipSpeak
                   return (
