@@ -158,102 +158,82 @@ export const SCORE_LEVELS = [
   { level: '10–12', label: 'Level 10–12', desc: 'Advanced / Native-like',  clb: '10', highlight: true, note: 'Max CRS points' },
 ]
 
-// ─── CRS Age points (single / no accompanying spouse) ────────────
-// Source: IRCC official CRS criteria table — max 110 pts
-export const CRS_AGE = {
-  17: 0,
-  18: 99,  19: 105, 20: 110, 21: 110, 22: 110, 23: 110, 24: 110,
-  25: 110, 26: 110, 27: 110, 28: 110, 29: 110, 30: 105, 31: 99,
-  32: 94,  33: 88,  34: 83,  35: 77,  36: 72,  37: 66,  38: 61,
-  39: 55,  40: 50,  41: 39,  42: 28,  43: 17,  44: 6,
-  45: 0,   46: 0,   47: 0,
-}
+// ─── CRS Age points ───────────────────────────────────────────────
+// Source: Official IRCC CRS JS (crs-tool-udit.js)
+// [withSpouse, withoutSpouse]
+export const CRS_AGE_WITH_SPOUSE    = { 17:0, 18:90, 19:95, 20:100, 21:100, 22:100, 23:100, 24:100, 25:100, 26:100, 27:100, 28:100, 29:100, 30:95, 31:90, 32:85, 33:80, 34:75, 35:70, 36:65, 37:60, 38:55, 39:50, 40:45, 41:35, 42:25, 43:15, 44:5, 45:0 }
+export const CRS_AGE_NO_SPOUSE      = { 17:0, 18:99, 19:105, 20:110, 21:110, 22:110, 23:110, 24:110, 25:110, 26:110, 27:110, 28:110, 29:110, 30:105, 31:99, 32:94, 33:88, 34:83, 35:77, 36:72, 37:66, 38:61, 39:55, 40:50, 41:39, 42:28, 43:17, 44:6, 45:0 }
+// Keep backward compat alias (no spouse)
+export const CRS_AGE = CRS_AGE_NO_SPOUSE
 
-// ─── CRS Education points (single / no spouse) ───────────────────
-// Source: IRCC official — max 150 pts (doctoral)
-export const CRS_EDUCATION = {
-  'none':         0,
-  'secondary':   28,
-  'one_year':    84,
-  'two_year':    91,
-  'bachelors':  112,
-  'two_or_more':119,
-  'masters':    126,
-  'doctoral':   150,
-}
+// ─── CRS Education points ─────────────────────────────────────────
+// Source: Official IRCC CRS JS
+// With spouse: secondary=28, 1yr=84, 2yr=91, bachelors=112, 2+=119, masters=126, doctoral=140
+// Without spouse: secondary=30, 1yr=90, 2yr=98, bachelors=120, 2+=128, masters=135, doctoral=150
+export const CRS_EDUCATION_WITH_SPOUSE = { 'none':0, 'secondary':28, 'one_year':84, 'two_year':91, 'bachelors':112, 'two_or_more':119, 'masters':126, 'doctoral':140 }
+export const CRS_EDUCATION_NO_SPOUSE   = { 'none':0, 'secondary':30, 'one_year':90, 'two_year':98, 'bachelors':120, 'two_or_more':128, 'masters':135, 'doctoral':150 }
+// Keep backward compat alias
+export const CRS_EDUCATION = CRS_EDUCATION_NO_SPOUSE
 
-// ─── CRS Canadian work experience (single) ───────────────────────
-export const CRS_CAN_EXP = {
-  0: 0, 1: 40, 2: 53, 3: 64, 4: 72, 5: 80,
-}
+// ─── CRS Canadian work experience ────────────────────────────────
+// Source: Official IRCC CRS JS
+export const CRS_CAN_EXP_WITH_SPOUSE = { 0:0, 1:35, 2:46, 3:56, 4:63, 5:70 }
+export const CRS_CAN_EXP_NO_SPOUSE   = { 0:0, 1:40, 2:53, 3:64, 4:72, 5:80 }
+export const CRS_CAN_EXP = CRS_CAN_EXP_NO_SPOUSE
 
-// ─── CRS Foreign work experience (single) ────────────────────────
-export const CRS_FOREIGN_EXP = {
-  0: 0, 1: 13, 2: 25, 3: 25,
-}
+// ─── CRS Foreign work experience ─────────────────────────────────
+// Source: Official IRCC CRS JS — only in skill transferability, no direct core pts
+// (IRCC Q6ii foreign adds 0 core pts — foreign exp only matters for skill transferability)
+export const CRS_FOREIGN_EXP = { 0:0, 1:0, 2:0, 3:0 }
 
-// ─── CRS First official language (single applicant) ──────────────
-// Keys: CLB level 4–10. Each sub-key is the points per ability.
-// Max: Listening 32, Reading 32, Writing 32, Speaking 32 = 128 per skill pair, total 128
-// Official IRCC table (without spouse):
-export const CRS_LANG_POINTS = {
-  4:  { listen: 6,  read: 6,  write: 6,  speak: 6  },
-  5:  { listen: 6,  read: 6,  write: 6,  speak: 6  },
-  6:  { listen: 9,  read: 9,  write: 9,  speak: 9  },
-  7:  { listen: 17, read: 17, write: 17, speak: 17 },
-  8:  { listen: 23, read: 23, write: 23, speak: 23 },
-  9:  { listen: 31, read: 31, write: 31, speak: 31 },
-  10: { listen: 34, read: 34, write: 34, speak: 34 },
+// ─── CRS First official language (per skill, per CLB) ────────────
+// Source: Official IRCC CRS JS — CELPIP array z[i][6]=with_spouse, z[i][7]=no_spouse
+// CLB: 10=34/32, 9=31/29, 8=23/22, 7=17/16, 6=9/8, 5=6/6, 4=6/6, <4=0/0
+export const CRS_LANG_POINTS_WITH_SPOUSE = {
+  4:  { listen:6,  read:6,  write:6,  speak:6  },
+  5:  { listen:6,  read:6,  write:6,  speak:6  },
+  6:  { listen:8,  read:8,  write:8,  speak:8  },
+  7:  { listen:16, read:16, write:16, speak:16 },
+  8:  { listen:22, read:22, write:22, speak:22 },
+  9:  { listen:29, read:29, write:29, speak:29 },
+  10: { listen:32, read:32, write:32, speak:32 },
 }
+export const CRS_LANG_POINTS_NO_SPOUSE = {
+  4:  { listen:6,  read:6,  write:6,  speak:6  },
+  5:  { listen:6,  read:6,  write:6,  speak:6  },
+  6:  { listen:9,  read:9,  write:9,  speak:9  },
+  7:  { listen:17, read:17, write:17, speak:17 },
+  8:  { listen:23, read:23, write:23, speak:23 },
+  9:  { listen:31, read:31, write:31, speak:31 },
+  10: { listen:34, read:34, write:34, speak:34 },
+}
+export const CRS_LANG_POINTS = CRS_LANG_POINTS_NO_SPOUSE
 
-// ─── CRS Second official language (per skill) ────────────────────
-// Max 22 pts per skill. Only scores CLB 5+ count.
+// ─── CRS Second official language (per skill, per CLB) ───────────
+// Source: Official IRCC CRS JS — z[i][8]=with_spouse, z[i][9]=no_spouse
+// CLB: 10=6/6, 9=6/6, 8=3/3, 7=3/3, 6=1/1, 5=1/1, <=4=0/0
+// Max 22 pts total (enforced in calculator)
 export const CRS_LANG2_POINTS = {
-  0:  { listen: 0,  read: 0,  write: 0,  speak: 0  },
-  4:  { listen: 0,  read: 0,  write: 0,  speak: 0  },
-  5:  { listen: 1,  read: 1,  write: 1,  speak: 1  },
-  6:  { listen: 1,  read: 1,  write: 1,  speak: 1  },
-  7:  { listen: 3,  read: 3,  write: 3,  speak: 3  },
-  8:  { listen: 3,  read: 3,  write: 3,  speak: 3  },
-  9:  { listen: 6,  read: 6,  write: 6,  speak: 6  },
-  10: { listen: 6,  read: 6,  write: 6,  speak: 6  },
+  0:  { listen:0, read:0, write:0, speak:0 },
+  4:  { listen:0, read:0, write:0, speak:0 },
+  5:  { listen:1, read:1, write:1, speak:1 },
+  6:  { listen:1, read:1, write:1, speak:1 },
+  7:  { listen:3, read:3, write:3, speak:3 },
+  8:  { listen:3, read:3, write:3, speak:3 },
+  9:  { listen:6, read:6, write:6, speak:6 },
+  10: { listen:6, read:6, write:6, speak:6 },
 }
 
-// ─── Skill Transferability: Education + Language ──────────────────
-// CLB 7–8 in all 4 = 13 pts; CLB 9+ in all 4 = 25 pts
-// combined with post-secondary degree → max 50 pts
-// We store the language tier points, capped at 50 with education combo
-export const SKILL_TRANSFER_EDU_LANG = {
-  // firstLangAllAtLeast: points
-  none: 0, clb7: 13, clb9: 25,
+// ─── Spouse education points (Section B) ─────────────────────────
+// Source: Official IRCC CRS JS q10
+export const CRS_SPOUSE_EDUCATION = {
+  'none':0, 'secondary':2, 'one_year':6, 'two_year':7,
+  'bachelors':8, 'two_or_more':9, 'masters':10, 'doctoral':10,
 }
 
-// ─── Skill Transferability: Education + Canadian Exp ─────────────
-// 1 year Canadian exp + post-sec = 13 pts; 2+ years = 25 pts; max 50
-export const SKILL_TRANSFER_EDU_CANEXP = {
-  0: 0, 1: 13, 2: 25,
-}
-
-// ─── Skill Transferability: Foreign Exp + Language ───────────────
-// CLB 7–8 + 1yr foreign = 13; CLB 9+ + 1yr foreign = 25
-// CLB 7–8 + 2yr+ foreign = 25; CLB 9+ + 2yr+ foreign = 50; max 50
-// Returns pts given (langTier: 'none'|'clb7'|'clb9', foreignYrs: 0-3)
-export const SKILL_TRANSFER_FOREIGN_LANG = {
-  // [langTier][foreignYrs]
-  none: { 0: 0, 1: 0,  2: 0,  3: 0  },
-  clb7: { 0: 0, 1: 13, 2: 25, 3: 25 },
-  clb9: { 0: 0, 1: 25, 2: 50, 3: 50 },
-}
-
-// ─── Skill Transferability: Foreign Exp + Canadian Exp ───────────
-// 1yr foreign + 1yr canadian = 13; 2yr+ foreign + 2yr+ canadian = 25; max 25
-export const SKILL_TRANSFER_FOREIGN_CANEXP = {
-  // [foreignYrs][canYrs]
-  0: { 0: 0,  1: 0,  2: 0  },
-  1: { 0: 0,  1: 13, 2: 13 },
-  2: { 0: 0,  1: 13, 2: 25 },
-  3: { 0: 0,  1: 13, 2: 25 },
-}
+// ─── Spouse Canadian work experience (Section B) ─────────────────
+// Source: Official IRCC CRS JS q11: 0=0, 1=5, 2=7, 3=8, 4=9, 5=10
+export const CRS_SPOUSE_CAN_EXP = { 0:0, 1:5, 2:7, 3:8, 4:9, 5:10 }
 
 // ─── Pricing ─────────────────────────────────────────────────────
 export const PRICING_PLANS = [
