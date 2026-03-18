@@ -60,7 +60,7 @@ export default function App() {
 
       {page === 'tips' && <TipsPage />}
       {page === 'scores' && <ScoresPage />}
-      {page === 'calculator' && <CRSCalculatorPage />}
+      {page === 'calculator' && <CRSCalculatorPage setPage={goPage} />}
 
       {page === 'pricing' && (
         <main style={{ paddingTop: '80px' }}>

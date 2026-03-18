@@ -190,8 +190,88 @@ function ScoreBar({ label, points, max, color }) {
   )
 }
 
+/**
+ * CRS Boost Card — shows exact CRS gain at CLB 9 using real IRCC math.
+ * Uses calcSkillTransfer and lang1Pts which are already in scope.
+ */
+function BoostCard({ currentCRS, lang1Min, nonLangCore, spouseTotal, additionalPts,
+                     education, canExp, foreignExp, hasCertQual, withSpouse, setPage }) {
+  // Simulate CRS if all 4 skills were CLB 9
+  const targetCLB = 9
+  const lp9  = lang1Pts(targetCLB, withSpouse)
+  const lang9 = lp9.listen + lp9.read + lp9.write + lp9.speak
+  const st9  = calcSkillTransfer({ education, canExp, foreignExp, lang1Min: targetCLB, hasCertQual })
+  const crs9 = nonLangCore + lang9 + spouseTotal + st9.skillTotal + additionalPts
+  const delta = crs9 - currentCRS
+
+  // Only show when user has entered at least one score AND isn't already at CLB 9+
+  if (lang1Min === 0 || lang1Min >= 9) return null
+
+  const urgent = currentCRS < 500
+
+  return (
+    <motion.div
+      className={`boost-card${urgent ? ' boost-card--urgent' : ''}`}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      key={`${currentCRS}-${lang1Min}`}
+    >
+      <div className="boost-card-header">
+        <span className="boost-card-icon">{urgent ? '⚠️' : '🚀'}</span>
+        <div>
+          <div className="boost-card-title">
+            {urgent ? 'Your score is below recent cutoffs' : 'Language is your fastest path to more points'}
+          </div>
+          <div className="boost-card-sub">
+            Improving all 4 CELPIP skills to <strong>CLB 9</strong> adds <strong className="boost-delta">+{delta} CRS pts</strong>
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison bars */}
+      <div className="boost-compare">
+        <div className="boost-compare-row">
+          <span className="boost-compare-label">Now — CLB {lang1Min}</span>
+          <div className="boost-compare-track">
+            <motion.div
+              className="boost-compare-fill boost-compare-fill--current"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, Math.round((currentCRS / 1200) * 100))}%` }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            />
+          </div>
+          <span className="boost-compare-score">{currentCRS}</span>
+        </div>
+        <div className="boost-compare-row">
+          <span className="boost-compare-label">CLB 9 →</span>
+          <div className="boost-compare-track">
+            <motion.div
+              className="boost-compare-fill boost-compare-fill--target"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, Math.round((crs9 / 1200) * 100))}%` }}
+              transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
+            />
+          </div>
+          <span className="boost-compare-score boost-compare-score--target">{crs9}</span>
+        </div>
+      </div>
+
+      <div className="boost-facts">
+        {delta >= 50 && <span className="boost-fact">🔥 +{delta} pts — bigger than most job offers ever gave</span>}
+        {delta >= 30 && delta < 50 && <span className="boost-fact">📈 Language gain can exceed years of extra work experience</span>}
+        <span className="boost-fact">✅ CLB 9 unlocks maximum language points in Express Entry</span>
+      </div>
+
+      <button className="btn btn-primary boost-cta" onClick={() => setPage('practice')}>
+        🎯 Start improving to CLB 9 — AI Practice
+      </button>
+    </motion.div>
+  )
+}
+
 /* ── Main Component ───────────────────────────────────────────── */
-export default function CRSCalculatorPage() {
+export default function CRSCalculatorPage({ setPage = () => {} }) {
 
   /* ── Marital / Spouse ── */
   const [marital, setMarital]           = useState('single')
@@ -346,6 +426,8 @@ export default function CRSCalculatorPage() {
       spouseEduPts, spouseCanPts, spouseLangTotal, spouseTotal,
       st, canEduPts, nomPts, frenchPts, siblingPts, additionalPts,
       totalPts, lang1Min,
+      // nonLangCore = everything in core except lang1 (used by BoostCard)
+      nonLangCore: agePts + eduPts + canPts + lang2Total,
       langSkills: { L, R, W, S },
     }
   }, [
@@ -646,6 +728,21 @@ export default function CRSCalculatorPage() {
         {/* ── RIGHT: Score Panel ── */}
         <div className="crs-score-panel">
 
+          {/* Boost Card — shows before score card when user has room to grow */}
+          <BoostCard
+            currentCRS={calc.totalPts}
+            lang1Min={calc.lang1Min}
+            nonLangCore={calc.nonLangCore}
+            spouseTotal={calc.spouseTotal}
+            additionalPts={calc.additionalPts}
+            education={education}
+            canExp={canExp}
+            foreignExp={foreignExp}
+            hasCertQual={hasCertQual}
+            withSpouse={withSpouse}
+            setPage={setPage}
+          />
+
           <div className="crs-score-card">
             <div className="crs-total-label">Estimated CRS Score</div>
             <motion.div className="crs-total-score" key={calc.totalPts}
@@ -660,6 +757,16 @@ export default function CRSCalculatorPage() {
               <div style={{ fontSize:12, color:'var(--gray-400)', marginTop:8, textAlign:'center' }}>
                 Using <strong>married / partner formula</strong>
               </div>
+            )}
+            {/* Inline CTA when score is below cutoff and user has scores entered */}
+            {calc.totalPts > 0 && calc.totalPts < 500 && calc.lang1Min > 0 && calc.lang1Min < 9 && (
+              <button
+                className="btn btn-primary"
+                style={{ width:'100%', marginTop:16, fontSize:14 }}
+                onClick={() => setPage('practice')}
+              >
+                🎯 Boost your score — Start AI practice
+              </button>
             )}
           </div>
 
@@ -731,7 +838,7 @@ export default function CRSCalculatorPage() {
           {/* CELPIP Impact table */}
           <div className="lang-impact-card">
             <div className="lang-impact-title">🎯 CELPIP Score Impact</div>
-            <p className="lang-impact-sub">All 4 skills at the same score — how does CRS change?</p>
+            <p className="lang-impact-sub">All 4 skills at the same level — how does your CRS change?</p>
             <table className="lang-impact-table">
               <thead>
                 <tr><th>CELPIP</th><th>CLB</th><th>Lang pts</th><th>Est. CRS</th><th>Gain</th></tr>
@@ -741,8 +848,7 @@ export default function CRSCalculatorPage() {
                   const lp  = lang1Pts(clb, withSpouse)
                   const lh  = lp.listen + lp.read + lp.write + lp.speak
                   const sth = calcSkillTransfer({ education, canExp, foreignExp, lang1Min:clb, hasCertQual })
-                  const nonLang = calc.corePts - calc.lang1Total
-                  const est = nonLang + lh + calc.spouseTotal + sth.skillTotal + calc.additionalPts
+                  const est = calc.nonLangCore + lh + calc.spouseTotal + sth.skillTotal + calc.additionalPts
                   const gain = est - calc.totalPts
                   const isActive = [l1Speak, l1Listen, l1Read, l1Write].every(v => v === s)
                   return (
@@ -759,6 +865,12 @@ export default function CRSCalculatorPage() {
                 })}
               </tbody>
             </table>
+            <p style={{ fontSize:11, color:'var(--gray-500)', marginTop:10, marginBottom:12 }}>
+              CLB 9 unlocks near-maximum language points — often the single biggest CRS lever available.
+            </p>
+            <button className="btn btn-outline" style={{ width:'100%', fontSize:13 }} onClick={() => setPage('practice')}>
+              📖 Practice CELPIP with AI — free
+            </button>
           </div>
 
           <div className="crs-disclaimer">

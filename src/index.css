@@ -1664,6 +1664,96 @@ img { display: block; max-width: 100%; }
 .lang-row-active td { background: var(--red-light); font-weight: 700; color: var(--red-dark); }
 .lang-row-active td strong { color: var(--red-dark); }
 
+/* ── CRS Boost Card ──────────────────────────────────────────── */
+.boost-card {
+  background: linear-gradient(135deg, #0F1F3D 0%, #1a3460 100%);
+  border: 1px solid rgba(200,151,42,0.35);
+  border-radius: var(--r-lg);
+  padding: 22px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 24px rgba(15,31,61,0.25);
+}
+.boost-card--urgent {
+  background: linear-gradient(135deg, #3b0a0a 0%, #5c1515 100%);
+  border-color: rgba(220,38,38,0.4);
+}
+.boost-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.boost-card-icon { font-size: 24px; line-height: 1; margin-top: 2px; flex-shrink: 0; }
+.boost-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.boost-card-sub { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.5; }
+.boost-delta { color: #4ade80; font-size: 15px; }
+
+/* Comparison bars */
+.boost-compare { display: flex; flex-direction: column; gap: 10px; }
+.boost-compare-row { display: flex; align-items: center; gap: 10px; }
+.boost-compare-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  width: 76px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.boost-compare-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.boost-compare-fill {
+  height: 100%;
+  border-radius: 99px;
+}
+.boost-compare-fill--current { background: rgba(255,255,255,0.35); }
+.boost-compare-fill--target  { background: linear-gradient(90deg, #22c55e, #4ade80); }
+.boost-compare-score {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.boost-compare-score--target { color: #4ade80; }
+
+/* Facts row */
+.boost-facts { display: flex; flex-direction: column; gap: 6px; }
+.boost-fact {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+/* CTA */
+.boost-cta {
+  background: linear-gradient(90deg, #C8972A, #e8b340) !important;
+  color: #0F1F3D !important;
+  font-weight: 700 !important;
+  border: none !important;
+  font-size: 14px !important;
+  padding: 13px 20px !important;
+  border-radius: var(--r-md) !important;
+  width: 100%;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.boost-cta:hover { opacity: 0.92; transform: translateY(-1px); }
+
 .crs-disclaimer {
   font-size: 11px;
   color: var(--gray-400);
