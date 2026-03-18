@@ -12,6 +12,7 @@ export default function Navbar({ currentPage, setPage }) {
 
   const links = [
     { id: 'home',       label: 'Home' },
+    { id: 'exam',       label: '📝 Mock Tests' },
     { id: 'practice',   label: 'Practice' },
     { id: 'tips',       label: 'Tips' },
     { id: 'scores',     label: 'Scores' },
@@ -19,7 +20,7 @@ export default function Navbar({ currentPage, setPage }) {
     { id: 'pricing',    label: 'Pricing' },
   ]
 
-  const isApp = ['practice','tips','scores','calculator'].includes(currentPage)
+  const isApp = ['practice','tips','scores','calculator','exam'].includes(currentPage)
 
   return (
     <nav className={`navbar${scrolled || isApp ? ' scrolled' : ''}`}>

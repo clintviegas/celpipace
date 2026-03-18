@@ -12,6 +12,7 @@ import PracticePage from './pages/PracticePage'
 import TipsPage from './pages/TipsPage'
 import ScoresPage from './pages/ScoresPage'
 import CRSCalculatorPage from './pages/CRSCalculatorPage'
+import ExamPage from './pages/ExamPage'
 import './App.css'
 
 function HomePage({ setPage }) {
@@ -61,6 +62,7 @@ export default function App() {
       {page === 'tips' && <TipsPage />}
       {page === 'scores' && <ScoresPage />}
       {page === 'calculator' && <CRSCalculatorPage setPage={goPage} />}
+      {page === 'exam' && <ExamPage setPage={goPage} />}
 
       {page === 'pricing' && (
         <main style={{ paddingTop: '80px' }}>
