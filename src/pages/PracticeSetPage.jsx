@@ -360,8 +360,11 @@ What would you do? In your response:
    HELPERS
 ══════════════════════════════════════════════════════════════ */
 const DIFF_COLOURS = {
+  'easy':               { bg: '#F0FDF4', text: '#2D8A56' },
+  'medium':             { bg: '#EEF7FF', text: '#4A90D9' },
   'intermediate':       { bg: '#EEF7FF', text: '#4A90D9' },
   'upper-intermediate': { bg: '#FFF8EC', text: '#C8972A' },
+  'hard':               { bg: '#FFF8EC', text: '#C8972A' },
   'advanced':           { bg: '#FEF2F2', text: '#D91B1B' },
 }
 
@@ -634,6 +637,87 @@ function SpeakingPractice({ data, started, onStart, color }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   READING — One expandable card per practice set
+══════════════════════════════════════════════════════════════ */
+function ReadingSetCard({ set, index, color }) {
+  const [open,     setOpen]     = useState(false)
+  const [revealed, setRevealed] = useState(false)
+  const diffStyle = DIFF_COLOURS[set.difficulty] || DIFF_COLOURS['medium']
+
+  return (
+    <motion.div
+      className={`ps-set-card${open ? ' ps-set-card--open' : ''}`}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.22, delay: index * 0.06 }}
+    >
+      {/* Card header — always visible */}
+      <button className="ps-set-header" onClick={() => { setOpen(v => !v); setRevealed(false) }}>
+        <div className="ps-set-header-left">
+          <span className="ps-set-num-badge" style={{ background: color, color: '#fff' }}>
+            Set {set.setNumber}
+          </span>
+          <div className="ps-set-header-text">
+            <span className="ps-set-title">{set.setTitle}</span>
+            <span className="ps-set-scenario">📍 {set.scenario}</span>
+          </div>
+        </div>
+        <div className="ps-set-header-right">
+          <span className="ps-diff-badge" style={{ background: diffStyle.bg, color: diffStyle.text }}>
+            {set.difficulty.charAt(0).toUpperCase() + set.difficulty.slice(1)}
+          </span>
+          <span className="ps-set-q-count">{set.questions.length} Qs</span>
+          <span className="ps-set-chevron" style={{ color }}>{open ? '▲' : '▼'}</span>
+        </div>
+      </button>
+
+      {/* Expandable body */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="ps-set-body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            {/* Instruction */}
+            <div className="ps-set-instruction">
+              <span className="ps-instr-label" style={{ color }}>{set.instruction}</span>
+            </div>
+
+            {/* Passage */}
+            {set.passage && (
+              <div className="ps-passage-block" style={{ borderLeftColor: color }}>
+                <div className="ps-passage-label" style={{ color }}>📄 Reading Passage</div>
+                <pre className="ps-passage-text">{set.passage}</pre>
+              </div>
+            )}
+
+            {/* Questions */}
+            <div className="ps-set-questions">
+              <div className="ps-questions-header">
+                <span className="ps-questions-title">{set.questions.length} Questions</span>
+                <button
+                  className="ps-reveal-btn"
+                  style={{ color, borderColor: color }}
+                  onClick={() => setRevealed(v => !v)}
+                >
+                  {revealed ? '🙈 Hide Answers' : '🔑 Show Answer Key'}
+                </button>
+              </div>
+              {set.questions.map((q, i) => (
+                <QuestionCard key={q.id} q={q} index={i} revealed={revealed} />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
    MAIN PAGE
 ══════════════════════════════════════════════════════════════ */
 export default function PracticeSetPage({ part, setPage }) {
@@ -648,20 +732,10 @@ export default function PracticeSetPage({ part, setPage }) {
 
   // ── Fetch reading questions live from Supabase ──────────────
   const isReading = section === 'reading'
-  const { questions: dbQuestions, passage: dbPassage, meta: dbMeta, loading: dbLoading, error: dbError } = useReadingSet(isReading ? partId : null)
+  const { sets: dbSets, loading: dbLoading, error: dbError } = useReadingSet(isReading ? partId : null)
 
-  // Merge: reading uses Supabase data; other sections use hardcoded sets
+  // For non-reading sections keep using the hardcoded set
   const staticData = isReading ? null : getSet(part)
-  const data = isReading
-    ? {
-        title:       dbMeta?.set_title   || staticData?.title || partId,
-        instruction: dbMeta?.instruction || 'Read the passage, then answer the questions.',
-        scenario:    dbMeta?.scenario    || '',
-        type:        'mcq',
-        passage:     dbPassage,
-        questions:   dbQuestions,
-      }
-    : staticData
 
   // Loading state for reading
   if (isReading && dbLoading) {
@@ -669,7 +743,7 @@ export default function PracticeSetPage({ part, setPage }) {
       <div className="ps-root">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
           <div style={{ fontSize: 40 }}>📖</div>
-          <p style={{ color: '#2D8A56', fontWeight: 600, fontSize: 18 }}>Loading questions…</p>
+          <p style={{ color: '#2D8A56', fontWeight: 600, fontSize: 18 }}>Loading practice sets…</p>
         </div>
       </div>
     )
@@ -689,6 +763,14 @@ export default function PracticeSetPage({ part, setPage }) {
     )
   }
 
+  // For non-reading sections, staticData is the set object
+  const data = staticData
+
+  // Page header title: for reading use part label, for others use set title
+  const pageTitle = isReading
+    ? `${partId} — ${part?.label || 'Practice'}`
+    : data?.title || partId
+
   return (
     <div className="ps-root">
 
@@ -702,7 +784,7 @@ export default function PracticeSetPage({ part, setPage }) {
           {partId} · {part?.label || 'Practice'}
         </button>
         <span className="ps-bc-sep">›</span>
-        <span className="ps-bc-current">{data.title}</span>
+        <span className="ps-bc-current">{pageTitle}</span>
       </div>
 
       {/* Header */}
@@ -720,8 +802,8 @@ export default function PracticeSetPage({ part, setPage }) {
               {part?.difficulty || 'Intermediate'}
             </span>
           </div>
-          <h1 className="ps-title">{data.title}</h1>
-          <p className="ps-scenario">📍 {data.scenario}</p>
+          <h1 className="ps-title">{pageTitle}</h1>
+          <p className="ps-scenario">{isReading ? `� ${dbSets.length} Practice Sets · ${dbSets.reduce((s,x)=>s+x.questions.length,0)} Questions` : `�📍 ${data?.scenario}`}</p>
         </div>
         <div className="ps-nav-arrows">
           <button className="ps-arrow-btn" onClick={() => setPage(cfg.page)}>← Back to {partId}</button>
@@ -731,59 +813,66 @@ export default function PracticeSetPage({ part, setPage }) {
 
       <div className="ps-body">
 
-        {/* Instruction */}
-        <div className="ps-instruction-card">
-          <div className="ps-instr-label" style={{ color: cfg.color }}>Instruction</div>
-          <p className="ps-instr-text">{data.instruction}</p>
-
-          {/* Section-specific entry point */}
-          {data.type === 'mcq' && section === 'listening' && (
-            <AudioGate started={started} onStart={() => setStarted(true)} />
-          )}
-          {data.type === 'mcq' && section === 'reading' && !started && (
-            <div className="ps-audio-start">
-              <div className="ps-audio-icon">📖</div>
-              <p>Press <strong>Start</strong> to reveal the passage and begin answering questions.</p>
-              <button className="ps-start-btn" style={{ background: cfg.color }} onClick={() => setStarted(true)}>📖 Start Reading</button>
+        {/* ── READING: 5 expandable set cards ── */}
+        {isReading && (
+          <div className="ps-reading-sets">
+            <div className="ps-reading-sets-intro">
+              <span className="ps-instr-label" style={{ color: cfg.color }}>
+                Click any set to expand the passage and questions. Work through all 5 to cover easy to advanced.
+              </span>
             </div>
-          )}
-          {data.type === 'mcq' && section === 'reading' && started && (
-            <PassageBlock passage={data.passage} />
-          )}
-          {data.type === 'writing' && (
-            <WritingPractice data={data} started={started} onStart={() => setStarted(true)} color={cfg.color} />
-          )}
-          {data.type === 'speaking' && (
-            <SpeakingPractice data={data} started={started} onStart={() => setStarted(true)} color={cfg.color} />
-          )}
-        </div>
-
-        {/* MCQ Questions */}
-        {data.type === 'mcq' && started && (
-          <motion.div className="ps-questions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-            <div className="ps-questions-header">
-              <span className="ps-questions-title">{data.questions.length} Questions</span>
-              <button className="ps-reveal-btn" style={{ color: cfg.color, borderColor: cfg.color }} onClick={() => setRevealed(v => !v)}>
-                {revealed ? '🙈 Hide Answer Key' : '�� Show Answer Key'}
-              </button>
-            </div>
-            {revealed && (
-              <div className="ps-score-summary">
-                <span className="ps-score-icon">📋</span>
-                <span>All answers and explanations are now visible below each question.</span>
-              </div>
-            )}
-            {data.questions.map((q, i) => <QuestionCard key={q.id} q={q} index={i} revealed={revealed} />)}
-          </motion.div>
+            {dbSets.map((set, i) => (
+              <ReadingSetCard key={set.setNumber} set={set} index={i} color={cfg.color} />
+            ))}
+          </div>
         )}
 
-        {/* Back link */}
-        {started && data.type === 'mcq' && (
-          <div className="ps-back-bar">
-            <button className="ps-back-link" style={{ color: cfg.color }} onClick={() => setPage(cfg.page)}>
-              ← Back to {part?.label || 'Questions'}
-            </button>
-          </div>
+        {/* ── ALL OTHER SECTIONS: single set with instruction card + questions ── */}
+        {!isReading && data && (
+          <>
+            {/* Instruction */}
+            <div className="ps-instruction-card">
+              <div className="ps-instr-label" style={{ color: cfg.color }}>Instruction</div>
+              <p className="ps-instr-text">{data.instruction}</p>
+
+              {data.type === 'mcq' && section === 'listening' && (
+                <AudioGate started={started} onStart={() => setStarted(true)} />
+              )}
+              {data.type === 'writing' && (
+                <WritingPractice data={data} started={started} onStart={() => setStarted(true)} color={cfg.color} />
+              )}
+              {data.type === 'speaking' && (
+                <SpeakingPractice data={data} started={started} onStart={() => setStarted(true)} color={cfg.color} />
+              )}
+            </div>
+
+            {/* MCQ Questions (listening) */}
+            {data.type === 'mcq' && started && (
+              <motion.div className="ps-questions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+                <div className="ps-questions-header">
+                  <span className="ps-questions-title">{data.questions.length} Questions</span>
+                  <button className="ps-reveal-btn" style={{ color: cfg.color, borderColor: cfg.color }} onClick={() => setRevealed(v => !v)}>
+                    {revealed ? '🙈 Hide Answer Key' : '🔑 Show Answer Key'}
+                  </button>
+                </div>
+                {revealed && (
+                  <div className="ps-score-summary">
+                    <span className="ps-score-icon">📋</span>
+                    <span>All answers and explanations are now visible below each question.</span>
+                  </div>
+                )}
+                {data.questions.map((q, i) => <QuestionCard key={q.id} q={q} index={i} revealed={revealed} />)}
+              </motion.div>
+            )}
+
+            {started && data.type === 'mcq' && (
+              <div className="ps-back-bar">
+                <button className="ps-back-link" style={{ color: cfg.color }} onClick={() => setPage(cfg.page)}>
+                  ← Back to {part?.label || 'Questions'}
+                </button>
+              </div>
+            )}
+          </>
         )}
 
       </div>

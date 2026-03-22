@@ -4,17 +4,28 @@ import { supabase } from '../lib/supabase'
 /**
  * useReadingSet
  * Fetches all questions for a given part (e.g. 'R1') from Supabase.
- * Returns questions sorted by question_order.
+ * Groups rows by set_number and returns an array of set objects.
  *
- * Usage:
- *   const { questions, passage, meta, loading, error } = useReadingSet('R1')
+ * Returns:
+ *   sets: [
+ *     {
+ *       setNumber:   1,
+ *       setTitle:    'Email — Noise Complaint...',
+ *       instruction: 'Read the email below...',
+ *       scenario:    'Residential — Tenant Correspondence',
+ *       difficulty:  'easy',          ← difficulty of the set (from Q1)
+ *       passage:     '...',           ← shared passage text
+ *       questions: [
+ *         { id, text, options, answer, explanation, difficulty }
+ *       ]
+ *     },
+ *     ...
+ *   ]
  */
 export function useReadingSet(part) {
-  const [questions, setQuestions] = useState([])
-  const [passage,   setPassage]   = useState(null)
-  const [meta,      setMeta]      = useState(null)   // { set_title, instruction, scenario }
-  const [loading,   setLoading]   = useState(true)
-  const [error,     setError]     = useState(null)
+  const [sets,    setSets]    = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error,   setError]   = useState(null)
 
   useEffect(() => {
     if (!part) return
@@ -23,11 +34,12 @@ export function useReadingSet(part) {
     setLoading(true)
     setError(null)
 
-    async function fetch() {
+    async function load() {
       const { data, error: err } = await supabase
         .from('reading_questions')
         .select('*')
         .eq('part', part)
+        .order('set_number',     { ascending: true })
         .order('question_order', { ascending: true })
 
       if (cancelled) return
@@ -38,33 +50,41 @@ export function useReadingSet(part) {
         return
       }
 
-      if (data && data.length > 0) {
-        // Passage is stored on the first question row — reuse for all in the set
-        const firstPassage = data.find(q => q.passage)?.passage ?? null
-        setPassage(firstPassage)
-        setMeta({
-          set_title:   data[0].set_title,
-          instruction: data[0].instruction,
-          scenario:    data[0].scenario,
+      // Group rows by set_number
+      const grouped = {}
+      for (const row of (data || [])) {
+        const n = row.set_number
+        if (!grouped[n]) {
+          grouped[n] = {
+            setNumber:   n,
+            setTitle:    row.set_title,
+            instruction: row.instruction,
+            scenario:    row.scenario,
+            difficulty:  row.difficulty,         // set-level difficulty from Q1
+            passage:     row.passage ?? null,    // passage only on first row
+            questions:   [],
+          }
+        }
+        // Capture passage if this row has it (only Q1 of each set stores it)
+        if (row.passage) grouped[n].passage = row.passage
+
+        grouped[n].questions.push({
+          id:          row.question_order,
+          text:        row.question_text,
+          options:     row.options,               // JSONB → already an array
+          answer:      row.correct_index,
+          explanation: row.explanation,
+          difficulty:  row.difficulty,
         })
-        setQuestions(
-          data.map(q => ({
-            id:          q.question_order,
-            text:        q.question_text,
-            options:     q.options,           // already an array from jsonb
-            answer:      q.correct_index,
-            explanation: q.explanation,
-            difficulty:  q.difficulty,
-          }))
-        )
       }
 
+      setSets(Object.values(grouped))
       setLoading(false)
     }
 
-    fetch()
+    load()
     return () => { cancelled = true }
   }, [part])
 
-  return { questions, passage, meta, loading, error }
+  return { sets, loading, error }
 }
