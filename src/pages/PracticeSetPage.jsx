@@ -14,77 +14,198 @@ const SECTION_CONFIG = {
 
 /* ══════════════════════════════════════════════════════════════
    LISTENING — sample practice sets
+   Question types mirror the real CELPIP exam variety:
+     'mcq'           — standard 4-option multiple choice
+     'speaker_id'    — identify which speaker said / felt X
+     'inference'     — what can be inferred / implied
+     'vocab_context' — what does the word/phrase mean here
+     'gist'          — main idea / purpose of the conversation
 ══════════════════════════════════════════════════════════════ */
 const LISTENING_SETS = {
   L1: {
     title: 'Customer & Staff at the Library',
-    instruction: 'You will hear a conversation between a man and a woman at a public library. The woman is a library staff member, and the man is a customer who needs help locating a book.',
+    instruction: 'You will hear a conversation between a library staff member and a customer who needs help locating a book. Answer the questions based on what you hear.',
     scenario: 'Library — Customer Service',
     type: 'mcq',
     questions: [
-      { id: 1, text: 'What is the main problem the customer is trying to solve?', options: ['A) His library card has expired.', 'B) He cannot find the book he is looking for on the shelf.', 'C) He wants to borrow more books than the limit allows.', 'D) He has been charged a late fee he disagrees with.'], answer: 1, explanation: 'The man explains he checked the shelf where the system shows the book should be, but it is not there. The staff member then offers to help locate it.' },
-      { id: 2, text: 'What does the staff member suggest as the first step?', options: ['A) Check whether another branch has the book.', 'B) Place a hold on the book for a future date.', 'C) Look in the returns cart near the front desk.', 'D) Search the library catalog again on her computer.'], answer: 2, explanation: 'The staff member says the returns cart often has books that have been returned but not yet re-shelved. This is her first suggestion.' },
-      { id: 3, text: 'What does the man decide to do by the end of the conversation?', options: ['A) Come back tomorrow when the book will definitely be available.', 'B) Place a hold on the book so he is notified when it is ready.', 'C) Borrow a different book on the same topic.', 'D) Ask a manager to help locate the book.'], answer: 1, explanation: 'After the returns cart does not have the book, the staff member offers to place a hold. The man agrees this is the best option.' },
+      { id: 1, difficulty: 'easy',   questionType: 'gist',
+        text: 'What is the main purpose of the conversation?',
+        options: ['A) The customer is reporting a missing library card.', 'B) The customer is trying to locate a book he cannot find on the shelf.', 'C) The staff member is informing the customer about a new branch policy.', 'D) The customer wants to borrow more books than the borrowing limit allows.'],
+        answer: 1, explanation: 'The entire conversation revolves around the customer not being able to find the book where the system says it should be.' },
+      { id: 2, difficulty: 'easy',   questionType: 'mcq',
+        text: 'What does the staff member suggest as the FIRST step to finding the book?',
+        options: ['A) Check whether another branch has a copy.', 'B) Search the catalogue again on her computer.', 'C) Look in the returns cart near the front desk.', 'D) Place a hold and wait for it to be re-shelved.'],
+        answer: 2, explanation: 'The staff member mentions the returns cart first — books often sit there after being returned but before being re-shelved.' },
+      { id: 3, difficulty: 'medium', questionType: 'inference',
+        text: 'What can be inferred about the customer from this conversation?',
+        options: ['A) He visits the library for the first time.', 'B) He already checked the shelf before speaking to the staff member.', 'C) He is not interested in placing a hold on the book.', 'D) He plans to visit a different branch instead.'],
+        answer: 1, explanation: 'He says he checked the shelf where the system shows the book — implying he already looked before approaching staff.' },
+      { id: 4, difficulty: 'medium', questionType: 'mcq',
+        text: 'What does the customer decide to do at the end of the conversation?',
+        options: ['A) Return the next day when staff can confirm the book is available.', 'B) Place a hold so he is notified when the book becomes available.', 'C) Borrow a different book on the same subject.', 'D) Ask the manager to investigate where the book has gone.'],
+        answer: 1, explanation: 'After the returns cart does not have the book, the customer agrees to place a hold.' },
+      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'The staff member says the book may be "in transit." In this context, "in transit" most likely means:',
+        options: ['A) Being transported to a different city library.', 'B) Checked out by another customer and not yet returned.', 'C) In the process of being moved between shelves or branches within the system.', 'D) Lost and flagged for replacement by the acquisitions team.'],
+        answer: 2, explanation: '"In transit" in library systems means the item is moving between locations or processing stages — not yet on the shelf but not checked out either.' },
     ],
   },
   L2: {
     title: 'Friends Planning a Weekend Trip',
-    instruction: 'You will hear a phone conversation between two friends, Sarah and Mark, who are planning a weekend trip. Listen carefully to what each person wants and what they finally decide.',
+    instruction: 'You will hear a phone conversation between two friends, Sarah and Mark, planning a weekend trip. Listen carefully to what each person says.',
     scenario: 'Phone call — Weekend Plans',
     type: 'mcq',
     questions: [
-      { id: 1, text: 'What does Sarah want to do for the weekend?', options: ['A) Stay in the city and visit a museum.', 'B) Drive to the mountains for a hike.', 'C) Book a hotel near the beach.', 'D) Visit her family in another city.'], answer: 1, explanation: "Sarah mentions she has been wanting to hike and suggests the mountains specifically." },
-      { id: 2, text: "What is Mark's concern about the trip?", options: ['A) He does not like hiking.', 'B) The weather forecast looks uncertain.', 'C) He already made other plans for Saturday.', "D) His car is being repaired that weekend."], answer: 1, explanation: "Mark says he checked the weather and it might rain on Saturday. This is his main hesitation." },
-      { id: 3, text: 'What do they agree to do?', options: ['A) Go hiking on Sunday instead of Saturday.', 'B) Book a cabin for both nights to be safe.', 'C) Wait and check the weather again before deciding.', 'D) Cancel the trip and plan something closer to home.'], answer: 0, explanation: "They agree to shift the hike to Sunday when the weather looks clearer." },
+      { id: 1, difficulty: 'easy',   questionType: 'gist',
+        text: 'What is the main topic of this conversation?',
+        options: ['A) Deciding where to go for a weekend trip.', 'B) Booking a hotel for a family vacation.', 'C) Discussing whether to cancel a trip already booked.', 'D) Comparing the cost of different holiday destinations.'],
+        answer: 0, explanation: 'The entire conversation is about where to go for the coming weekend — Sarah wants the mountains, Mark has concerns.' },
+      { id: 2, difficulty: 'easy',   questionType: 'speaker_id',
+        text: 'Who first brings up the idea of going to the mountains?',
+        options: ['A) Mark, because he wants to hike.', 'B) Sarah, because she has been wanting to hike.', 'C) Both — they have discussed it before.', 'D) Neither — a friend suggested it to them.'],
+        answer: 1, explanation: 'Sarah is the one who proposes the mountains for a hike.' },
+      { id: 3, difficulty: 'medium', questionType: 'mcq',
+        text: 'What is Mark\'s main concern about the plan?',
+        options: ['A) He does not enjoy hiking.', 'B) The weather forecast predicts possible rain on Saturday.', 'C) His car needs repairs and cannot make the trip.', 'D) He already has other plans for Saturday.'],
+        answer: 1, explanation: 'Mark checked the weather and is worried it might rain on Saturday, which is his key hesitation.' },
+      { id: 4, difficulty: 'medium', questionType: 'inference',
+        text: 'What does Mark\'s suggestion to "shift the hike to Sunday" tell us about his attitude?',
+        options: ['A) He does not want to go at all and is stalling.', 'B) He is open to the trip but wants to avoid the bad weather.', 'C) He prefers shorter trips and wants to return home by Saturday evening.', 'D) He is worried Sarah will change her mind if they wait.'],
+        answer: 1, explanation: 'Proposing Sunday shows he still wants to go — he is adapting to the weather concern, not rejecting the idea.' },
+      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'Mark says the Sunday forecast "looks much clearer." In context, "clearer" refers to:',
+        options: ['A) Better road visibility for the drive.', 'B) A more settled and dry weather outlook.', 'C) A clearer hiking trail with fewer other visitors.', 'D) A more certain plan with less room for doubt.'],
+        answer: 1, explanation: '"Clearer" here is a weather term — it means less cloud cover, lower chance of rain, and more settled conditions.' },
     ],
   },
   L3: {
     title: 'Community Centre Announcement',
-    instruction: 'You will hear an announcement from a community centre director about upcoming changes to the facility and new programs being offered this season.',
+    instruction: 'You will hear a community centre director making an announcement about changes to the facility. Listen carefully to the details.',
     scenario: 'Community Centre — Public Announcement',
     type: 'mcq',
     questions: [
-      { id: 1, text: 'Why is the swimming pool temporarily closed?', options: ['A) The pool is being expanded to add more lanes.', 'B) Scheduled safety inspections and filter upgrades are underway.', 'C) Staff are on a two-week training program.', 'D) The pool water failed a health inspection.'], answer: 1, explanation: 'The director states the pool is closed for scheduled maintenance including safety checks and filter upgrades.' },
-      { id: 2, text: 'Which new program is being introduced for seniors?', options: ['A) A Wednesday morning yoga class.', 'B) An outdoor walking club on Mondays.', 'C) A low-impact aquatic fitness session.', 'D) A community gardening workshop on Fridays.'], answer: 2, explanation: 'The director specifically introduces a new aquatic fitness program designed for seniors.' },
-      { id: 3, text: 'How can residents register for the new programs?', options: ['A) By calling the front desk during business hours.', 'B) By filling out a paper form at the reception.', 'C) Through the community centre website or the mobile app.', 'D) By emailing the program coordinator directly.'], answer: 2, explanation: 'The director says registration is available through the website and the updated mobile app.' },
+      { id: 1, difficulty: 'easy',   questionType: 'gist',
+        text: 'What is the main purpose of this announcement?',
+        options: ['A) To advertise membership discounts for the summer season.', 'B) To inform members about facility changes and new programs.', 'C) To explain why the community centre is temporarily closing.', 'D) To introduce a new director to the membership.'],
+        answer: 1, explanation: 'The director announces pool maintenance, a new senior program, and the registration method — all updates about the facility.' },
+      { id: 2, difficulty: 'easy',   questionType: 'mcq',
+        text: 'Why is the swimming pool temporarily closed?',
+        options: ['A) It is being expanded to add more lanes.', 'B) It failed a recent health inspection.', 'C) Scheduled safety checks and filter upgrades are underway.', 'D) Staff are attending a two-week training program.'],
+        answer: 2, explanation: 'The director says the closure is for scheduled maintenance: safety checks and filter upgrades.' },
+      { id: 3, difficulty: 'medium', questionType: 'mcq',
+        text: 'Which new program is being introduced specifically for seniors?',
+        options: ['A) A Wednesday morning yoga class.', 'B) A low-impact aquatic fitness session.', 'C) An outdoor walking club on Monday mornings.', 'D) A chair yoga class in Room 2.'],
+        answer: 1, explanation: 'The director introduces a new aquatic fitness program designed for seniors as part of the season updates.' },
+      { id: 4, difficulty: 'medium', questionType: 'inference',
+        text: 'What can be inferred from the director\'s mention of "advance registration" for all programs?',
+        options: ['A) The centre expects low attendance and wants to confirm numbers.', 'B) Some programs have been oversubscribed in the past.', 'C) Walk-in participation is no longer permitted at the centre.', 'D) Registration must be completed at the front desk in person.'],
+        answer: 1, explanation: 'Requiring advance registration usually signals that demand exists and space is limited — a common response to past overcrowding.' },
+      { id: 5, difficulty: 'hard',   questionType: 'mcq',
+        text: 'How can residents register for the new programs?',
+        options: ['A) By calling the front desk during business hours.', 'B) By completing a paper form at reception.', 'C) Through the community centre website or mobile app.', 'D) By emailing the program coordinator directly.'],
+        answer: 2, explanation: 'The director says registration is available through the website and the updated mobile app.' },
     ],
   },
   L4: {
     title: 'News Report — City Transit Expansion',
-    instruction: 'You will hear a short news report from a Canadian radio station about a major announcement from the city transit authority.',
+    instruction: 'You will hear a short Canadian radio news report about a major transit announcement. Listen carefully to the facts and figures presented.',
     scenario: 'Radio News — City Transit',
     type: 'mcq',
     questions: [
-      { id: 1, text: 'What is the main topic of this news report?', options: ['A) A strike by city transit workers.', 'B) Plans to extend the subway line to two new neighbourhoods.', 'C) An increase in transit fares starting next month.', 'D) A new electric bus fleet purchased by the city.'], answer: 1, explanation: 'The report opens by announcing that city council has approved a subway extension project covering two new neighbourhoods.' },
-      { id: 2, text: 'According to the report, when is the project expected to be completed?', options: ['A) By the end of next year.', 'B) Within 18 months.', 'C) In approximately three years.', 'D) Within five years, pending further funding.'], answer: 2, explanation: 'The transit authority spokesperson states the project timeline is approximately three years from the start of construction.' },
+      { id: 1, difficulty: 'easy',   questionType: 'gist',
+        text: 'What is the main story in this news report?',
+        options: ['A) A city transit workers\' strike is expected to begin next week.', 'B) City council has approved extending the subway to two new neighbourhoods.', 'C) Transit fares are increasing for the second time this year.', 'D) The city is replacing its diesel bus fleet with electric vehicles.'],
+        answer: 1, explanation: 'The report leads with council\'s approval of a subway extension project covering two new areas.' },
+      { id: 2, difficulty: 'easy',   questionType: 'mcq',
+        text: 'When is the transit project expected to be completed?',
+        options: ['A) By the end of next year.', 'B) Within 18 months of construction beginning.', 'C) In approximately three years.', 'D) Within five years, depending on additional funding.'],
+        answer: 2, explanation: 'The transit authority spokesperson states a three-year timeline from the start of construction.' },
+      { id: 3, difficulty: 'medium', questionType: 'inference',
+        text: 'The reporter says the project has been "years in the making." What does this suggest?',
+        options: ['A) Construction has already been underway for several years.', 'B) The project was proposed and debated for a long time before approval.', 'C) The city has been building similar projects over many years.', 'D) The project is unusually large compared to other transit plans.'],
+        answer: 1, explanation: '"Years in the making" implies a long planning and approval process — not that construction started years ago.' },
+      { id: 4, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'The report describes the extension as serving "underserved communities." In context, "underserved" most likely means:',
+        options: ['A) Communities that pay lower property taxes.', 'B) Areas where transit options are currently limited or inadequate.', 'C) Neighbourhoods where fewer residents use public transit.', 'D) Districts that have requested transit improvements but been denied.'],
+        answer: 1, explanation: '"Underserved" in urban planning refers to areas lacking adequate public services — here, areas with limited or no subway access.' },
     ],
   },
   L5: {
     title: 'Panel Discussion — Remote Work Policy',
-    instruction: "You will hear three speakers — a company manager, an employee, and a business consultant — discussing a new company remote work policy. Listen carefully to each person's position.",
+    instruction: 'You will hear three speakers — a manager, an employee, and a consultant — discussing a new remote work policy. Listen carefully to each person\'s argument.',
     scenario: 'Panel — Workplace Policy',
     type: 'mcq',
     questions: [
-      { id: 1, text: "What is the manager's main argument in favour of the new policy?", options: ["A) Remote work saves the company money on office space.", "B) Employees are more focused at home with fewer interruptions.", "C) The policy increases employee satisfaction and reduces turnover.", "D) Remote teams perform better on complex creative tasks."], answer: 2, explanation: "The manager says the policy was introduced primarily because exit surveys showed flexibility was a major factor in employees leaving." },
-      { id: 2, text: "What concern does the employee raise?", options: ["A) The internet connection at home is unreliable.", "B) Remote work makes it harder to separate personal and work time.", "C) Team collaboration suffers when people are not in the same office.", "D) Promotions are harder to get for remote workers."], answer: 1, explanation: "The employee mentions that working from home has blurred the boundaries between work and personal life." },
-      { id: 3, text: "Which point do the manager and consultant BOTH agree on?", options: ["A) All employees should have the option to work from home full time.", "B) In-person meetings should be held at least once a month.", "C) Clear communication guidelines are essential for remote teams.", "D) The policy should be reviewed after six months."], answer: 2, explanation: "Both independently mention that teams need clear communication protocols to make remote work effective." },
+      { id: 1, difficulty: 'easy',   questionType: 'speaker_id',
+        text: 'Which speaker argues that the policy mainly benefits employee retention?',
+        options: ['A) The manager.', 'B) The employee.', 'C) The consultant.', 'D) All three speakers agree on this point.'],
+        answer: 0, explanation: 'The manager says the policy was introduced because exit surveys showed flexibility was a major reason employees were leaving — retention is her key argument.' },
+      { id: 2, difficulty: 'easy',   questionType: 'mcq',
+        text: 'What concern does the employee raise about remote work?',
+        options: ['A) The internet connection at home is unreliable.', 'B) Remote work makes it harder to separate work time from personal time.', 'C) Team collaboration suffers when people are not in the same office.', 'D) Remote workers are passed over for promotion.'],
+        answer: 1, explanation: 'The employee mentions that working from home has blurred boundaries between personal and work life.' },
+      { id: 3, difficulty: 'medium', questionType: 'speaker_id',
+        text: 'Which point do the manager and the consultant BOTH make independently?',
+        options: ['A) All employees should have the option to work from home full time.', 'B) In-person meetings should be held at least once a month.', 'C) Clear communication guidelines are essential for remote teams to succeed.', 'D) The policy should be reviewed and updated after six months.'],
+        answer: 2, explanation: 'Both the manager and consultant independently stress that clear communication protocols are what make remote work effective.' },
+      { id: 4, difficulty: 'medium', questionType: 'inference',
+        text: 'What can be inferred about the consultant\'s overall position on remote work?',
+        options: ['A) He is strongly opposed and believes it should be reversed.', 'B) He is cautiously supportive but emphasises that structure is critical.', 'C) He is neutral and does not express a clear opinion.', 'D) He supports remote work only for managers, not junior staff.'],
+        answer: 1, explanation: 'The consultant agrees remote work can work but consistently emphasises communication guidelines — a conditional, structured endorsement.' },
+      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'The manager says the policy was driven by "exit survey data." In context, "exit surveys" most likely refers to:',
+        options: ['A) Surveys given to clients when they leave the company\'s services.', 'B) Surveys completed by employees when they resign from the company.', 'C) A government survey of businesses exiting the market.', 'D) Surveys of employees when they physically leave the office each day.'],
+        answer: 1, explanation: 'Exit surveys (or exit interviews) are conducted with departing employees to understand why they are leaving — a common HR tool.' },
     ],
   },
   L6: {
     title: 'Debate — Should Cities Ban Single-Use Plastics?',
-    instruction: 'You will hear two speakers presenting contrasting viewpoints on whether cities should ban single-use plastics. Speaker A supports the ban; Speaker B opposes it.',
+    instruction: 'You will hear two speakers debating whether cities should ban single-use plastics. Speaker A supports the ban; Speaker B opposes it. Listen to each argument carefully.',
     scenario: 'Debate Format — Environmental Policy',
     type: 'mcq',
     questions: [
-      { id: 1, text: "What is Speaker A's main argument for the ban?", options: ["A) Single-use plastics are more expensive than reusable alternatives.", "B) Most plastics are not actually recyclable despite what labels say.", "C) A ban will drive innovation in sustainable packaging industries.", "D) Other countries have already banned plastics successfully."], answer: 1, explanation: "Speaker A argues the recycling system fails in practice — most single-use plastics end up in landfill despite being labelled recyclable." },
-      { id: 2, text: "What is Speaker B's main concern about the ban?", options: ["A) Reusable bags are inconvenient for shoppers.", "B) The ban would disproportionately hurt low-income consumers.", "C) Plastic alternatives are less hygienic in food service.", "D) The government has no authority to regulate packaging."], answer: 1, explanation: "Speaker B argues that low-income households rely on cheap single-use products and banning them places an unfair financial burden on poorer communities." },
-      { id: 3, text: 'What do both speakers agree on?', options: ["A) An outright ban is the only effective solution.", "B) Consumer education alone is insufficient to solve the plastic problem.", "C) Businesses should voluntarily phase out plastics without regulation.", "D) The issue requires more scientific research before action."], answer: 1, explanation: "Despite disagreeing on the solution, both acknowledge that relying on consumers alone without structural change is not enough." },
+      { id: 1, difficulty: 'easy',   questionType: 'speaker_id',
+        text: 'Which speaker argues that the current recycling system has largely failed in practice?',
+        options: ['A) Speaker A.', 'B) Speaker B.', 'C) Both speakers make this argument.', 'D) Neither — both believe recycling works if done correctly.'],
+        answer: 0, explanation: 'Speaker A\'s key argument is that most single-use plastics are labelled recyclable but end up in landfill — the recycling system fails in practice.' },
+      { id: 2, difficulty: 'easy',   questionType: 'mcq',
+        text: 'What is Speaker B\'s main concern about banning single-use plastics?',
+        options: ['A) Reusable bags are unhygienic in food service settings.', 'B) The ban would place an unfair financial burden on low-income consumers.', 'C) Plastic alternatives are more expensive to manufacture.', 'D) The government does not have authority to regulate packaging.'],
+        answer: 1, explanation: 'Speaker B argues that low-income households rely on cheap single-use products and a ban disproportionately affects them.' },
+      { id: 3, difficulty: 'medium', questionType: 'inference',
+        text: 'When Speaker B says a ban is a "blunt instrument," what does this suggest about his view?',
+        options: ['A) He believes bans are ineffective because they are difficult to enforce.', 'B) He thinks the ban is too broad and does not target the actual problem precisely.', 'C) He feels the ban would hurt businesses more than consumers.', 'D) He is suggesting that physical force may be required to implement it.'],
+        answer: 1, explanation: 'A "blunt instrument" is a policy metaphor meaning a solution that lacks precision — it affects too many things indiscriminately rather than targeting the actual problem.' },
+      { id: 4, difficulty: 'medium', questionType: 'speaker_id',
+        text: 'What do BOTH speakers agree on?',
+        options: ['A) An outright ban is the most effective solution to the plastic problem.', 'B) Consumer education alone is insufficient to solve the plastic crisis.', 'C) Businesses should voluntarily reduce plastic packaging without regulation.', 'D) The issue requires more scientific research before any action is taken.'],
+        answer: 1, explanation: 'Both acknowledge that relying on consumers alone — without structural change — is not enough to address the problem, even though they disagree on the solution.' },
+      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'Speaker A says the recycling label has become "more symbol than system." This phrase means:',
+        options: ['A) The recycling logo is too small to be seen on most packaging.', 'B) The recycling process works well but is poorly communicated to consumers.', 'C) The recycling label suggests action but the actual system is not functioning effectively.', 'D) Companies use recycling symbols as a marketing tool with no legal obligation.'],
+        answer: 2, explanation: 'The phrase means the label has become performative — it gives the impression of environmental responsibility without the actual result of recycling occurring.' },
     ],
   },
 }
 
 /* ══════════════════════════════════════════════════════════════
    READING — sample practice sets
+══════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   READING — static fallback sets  (DB sets are primary)
+   These mirror 4 real CELPIP Reading sub-task styles:
+     R1 — Correspondence (email/letter)
+     R2 — Diagram/Apply Information (schedule, chart)
+     R3 — Information (expository passage — paragraph matching)
+     R4 — Viewpoints (two opinion texts)
+   Question types used:
+     'tone_purpose'   — What is the tone / purpose of the text?
+     'mcq'            — Standard comprehension
+     'inference'      — What does this imply / suggest?
+     'vocab_context'  — What does this word/phrase mean here?
+     'fill_blank'     — Choose the word that fits the blank
+     'paragraph_match'— Which paragraph (A–D / Not Given) contains this?
+     'speaker_id'     — What is Speaker A's / B's position?
 ══════════════════════════════════════════════════════════════ */
 const READING_SETS = {
   R1: {
@@ -106,54 +227,111 @@ Sincerely,
 James Kowalski
 Unit 3B`,
     questions: [
-      { id: 1, text: 'What is the main purpose of this email?', options: ['A) To request a rent reduction due to the disturbance.', 'B) To formally report a noise complaint to the property manager.', 'C) To ask the property manager to evict the upstairs tenant.', 'D) To notify the building of a broken noise policy.'], answer: 1, explanation: "The email's primary purpose is to formally bring the noise issue to the property manager's attention and request that it be addressed. There is no mention of rent reduction or eviction." },
-      { id: 2, text: 'Why does the writer mention speaking with the upstairs tenant?', options: ['A) To show that he has already tried to resolve the issue informally.', 'B) To suggest the upstairs tenant is willing to cooperate.', 'C) To prove that the disturbance is intentional.', 'D) To explain why he is frustrated with building management.'], answer: 0, explanation: "He mentions the prior conversation to demonstrate he tried to resolve it informally before escalating to the property manager — showing good faith." },
-      { id: 3, text: 'What is the tone of this email?', options: ['A) Angry and confrontational.', 'B) Casual and conversational.', 'C) Formal and professional.', 'D) Apologetic and uncertain.'], answer: 2, explanation: "The email uses formal language (\"I am writing to bring...\", \"I would appreciate your assistance\") and maintains a professional, measured tone throughout." },
+      { id: 1, difficulty: 'easy',   questionType: 'tone_purpose',
+        text: 'What is the main purpose of this email?',
+        options: ['A) To request a rent reduction due to the disturbance.', 'B) To formally report a noise complaint to the property manager.', 'C) To ask the property manager to evict the upstairs tenant.', 'D) To announce that the writer plans to move out.'],
+        answer: 1, explanation: 'The email\'s primary purpose is to bring the issue to Ms. Harrington\'s attention and request action. There is no mention of rent reduction or a request to evict.' },
+      { id: 2, difficulty: 'easy',   questionType: 'mcq',
+        text: 'Why does the writer mention that he spoke with the upstairs tenant directly?',
+        options: ['A) To show the upstairs tenant is willing to cooperate.', 'B) To demonstrate he tried to resolve the matter informally before escalating.', 'C) To prove the disturbance has been intentional.', 'D) To explain why he is frustrated with the property manager.'],
+        answer: 1, explanation: 'Mentioning the prior direct conversation shows the writer acted in good faith and attempted an informal solution before contacting management.' },
+      { id: 3, difficulty: 'medium', questionType: 'tone_purpose',
+        text: 'Which word BEST describes the overall tone of this email?',
+        options: ['A) Angry and confrontational.', 'B) Casual and conversational.', 'C) Formal and measured.', 'D) Apologetic and uncertain.'],
+        answer: 2, explanation: 'Phrases such as "I am writing to bring … to your attention" and "I would appreciate your assistance" are formal and measured — neither aggressive nor casual.' },
+      { id: 4, difficulty: 'medium', questionType: 'inference',
+        text: 'What does the phrase "in accordance with the building\'s noise policy" suggest about the writer?',
+        options: ['A) He is threatening legal action against the tenant.', 'B) He wants the manager to go beyond the rules.', 'C) He is aware of the rules and expects them to be applied.', 'D) He is unsure whether a noise policy exists in the building.'],
+        answer: 2, explanation: 'Citing the existing policy signals that the writer is informed and reasonable — he is not demanding special treatment, just proper enforcement.' },
+      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'The writer says he can "provide dates and times of the specific incidents if needed." In context, the phrase "if needed" most likely signals:',
+        options: ['A) He is not certain the incidents actually occurred on those dates.', 'B) He is offering evidence to support his complaint without being demanding.', 'C) He hopes the manager will handle it without requiring proof.', 'D) He is unsure whether the property manager can act on a verbal complaint.'],
+        answer: 1, explanation: '"If needed" is a polite hedge — he has the evidence ready but frames it as an offer rather than a demand, reinforcing his cooperative, non-confrontational stance.' },
     ],
   },
   R2: {
-    title: 'Community Centre — Weekly Schedule',
-    instruction: 'Read the passage and the schedule below, then answer the questions.',
-    scenario: 'Community Centre — Program Information',
+    title: 'Community Centre — Spring Fitness Schedule',
+    instruction: 'Read the passage and the schedule table below. Then answer the questions by choosing the option that BEST matches the information provided.',
+    scenario: 'Community Centre — Applying Diagram Information',
     type: 'mcq',
     passage: `The Riverside Community Centre has updated its weekly fitness schedule for the spring season. Yoga classes run on Monday and Wednesday mornings from 9:00 AM to 10:00 AM. The aquatic fitness class for seniors is offered Tuesday and Thursday afternoons from 2:00 PM to 3:00 PM. Indoor cycling is available Monday through Friday at 6:00 PM. All classes require advance registration, which can be completed online or at the front desk.
 
 Note: The pool will be closed for maintenance on Thursday, April 10th. The aquatic fitness class on that date will be replaced by a chair yoga session in Room 2.
 
-SCHEDULE (Week of April 7–11):
-Mon Apr 7:  Yoga (9AM), Indoor Cycling (6PM)
-Tue Apr 8:  Aquatic Fitness (2PM), Indoor Cycling (6PM)
-Wed Apr 9:  Yoga (9AM), Indoor Cycling (6PM)
-Thu Apr 10: Chair Yoga – Room 2 (2PM), Indoor Cycling (6PM)
-Fri Apr 11: Indoor Cycling (6PM)`,
+SCHEDULE — Week of April 7–11:
+┌──────────────┬──────────────────────────────────────────────────────┐
+│ Mon Apr 7    │ Yoga (9 AM)  ·  Indoor Cycling (6 PM)               │
+│ Tue Apr 8    │ Aquatic Fitness – Pool (2 PM)  ·  Indoor Cycling (6 PM) │
+│ Wed Apr 9    │ Yoga (9 AM)  ·  Indoor Cycling (6 PM)               │
+│ Thu Apr 10   │ Chair Yoga – Room 2 (2 PM)  ·  Indoor Cycling (6 PM) │
+│ Fri Apr 11   │ Indoor Cycling (6 PM)                               │
+└──────────────┴──────────────────────────────────────────────────────┘`,
     questions: [
-      { id: 1, text: 'A senior wants to attend an aquatic fitness class this week. Which day should they register for?', options: ['A) Monday, April 7', 'B) Tuesday, April 8', 'C) Thursday, April 10', 'D) Friday, April 11'], answer: 1, explanation: "Aquatic Fitness runs Tuesday and Thursday. On Thursday April 10 the pool is closed and the class is replaced by Chair Yoga. Tuesday April 8 is the only aquatic fitness option that week." },
-      { id: 2, text: 'How many classes are available on Wednesday, April 9?', options: ['A) One', 'B) Two', 'C) Three', 'D) Four'], answer: 1, explanation: "Wednesday has Yoga at 9AM and Indoor Cycling at 6PM — two classes total." },
-      { id: 3, text: 'Why is the aquatic fitness class replaced on April 10?', options: ['A) The instructor is unavailable that day.', 'B) The pool is closed for maintenance.', 'C) A special event is taking place at the community centre.', 'D) Enrolment numbers were too low to run the class.'], answer: 1, explanation: "The passage specifically states the pool will be closed for maintenance on Thursday April 10, which is why the class is replaced." },
+      { id: 1, difficulty: 'easy',   questionType: 'mcq',
+        text: 'A senior resident wants to attend an aquatic fitness class this week. Which day should she register for?',
+        options: ['A) Monday, April 7', 'B) Tuesday, April 8', 'C) Thursday, April 10', 'D) Friday, April 11'],
+        answer: 1, explanation: 'Aquatic Fitness runs Tuesdays and Thursdays. On Thursday April 10 the pool is closed and the session is replaced by Chair Yoga — so Tuesday April 8 is the only aquatic fitness option that week.' },
+      { id: 2, difficulty: 'easy',   questionType: 'mcq',
+        text: 'How many different classes are offered on Wednesday, April 9?',
+        options: ['A) One', 'B) Two', 'C) Three', 'D) Four'],
+        answer: 1, explanation: 'Wednesday lists Yoga at 9 AM and Indoor Cycling at 6 PM — exactly two classes.' },
+      { id: 3, difficulty: 'easy',   questionType: 'mcq',
+        text: 'Why is the aquatic fitness class replaced on Thursday, April 10?',
+        options: ['A) The instructor is unavailable that day.', 'B) The pool is closed for maintenance.', 'C) Enrolment was too low to justify the class.', 'D) A special event is taking place in the pool area.'],
+        answer: 1, explanation: 'The notice explicitly states the pool will be closed for maintenance on April 10, which is why the aquatic class is replaced.' },
+      { id: 4, difficulty: 'medium', questionType: 'fill_blank',
+        text: 'According to the passage, all classes require advance ___ which can be completed ___ or at the front desk.',
+        options: ['A) registration … online', 'B) payment … in person', 'C) confirmation … by phone', 'D) booking … by email'],
+        answer: 0, explanation: 'The passage states: "All classes require advance registration, which can be completed online or at the front desk."' },
+      { id: 5, difficulty: 'hard',   questionType: 'inference',
+        text: 'A resident signs up for the Thursday 2 PM class on April 10 and arrives expecting a pool workout. What is most likely to happen?',
+        options: ['A) He will find the pool class running as normal.', 'B) He will find a Chair Yoga session in Room 2 instead.', 'C) He will be told all Thursday classes are cancelled.', 'D) He will be redirected to Tuesday\'s aquatic fitness class.'],
+        answer: 1, explanation: 'The schedule replaces the Thursday aquatic session with Chair Yoga in Room 2 for that specific week due to pool maintenance.' },
     ],
   },
   R3: {
     title: 'The Rise of Urban Beekeeping in Canadian Cities',
-    instruction: 'Read the passage below, then answer the questions.',
-    scenario: 'General Interest — Environment & Urban Life',
+    instruction: 'Read the passage, then answer Questions 1–5. Paragraphs are labelled A–D. For paragraph-matching questions, select which paragraph contains the information described. Select "E) Not Given" if the information does not appear in the passage.',
+    scenario: 'Information Passage — Environment & Urban Life',
     type: 'mcq',
-    passage: `Urban beekeeping has grown steadily across Canadian cities over the past decade, driven by a combination of environmental concern, community food initiatives, and changing municipal regulations. Cities like Toronto, Vancouver, and Montreal now permit residential beekeeping under specific conditions, and rooftop hives have become a visible presence in many downtown neighbourhoods.
+    paragraphLabels: { A: 'Para A', B: 'Para B', C: 'Para C', D: 'Para D', E: 'Not Given' },
+    passage: `[A] Urban beekeeping has grown steadily across Canadian cities over the past decade, driven by a combination of environmental concern, community food initiatives, and changing municipal regulations. Cities like Toronto, Vancouver, and Montreal now permit residential beekeeping under specific conditions, and rooftop hives have become a visible presence in many downtown neighbourhoods.
 
-Proponents argue that urban bees provide measurable ecological benefits. Because cities are often warmer than surrounding rural areas and contain a diverse range of flowering plants in gardens and parks, urban bees can actually thrive more consistently than their rural counterparts. Studies from several European cities have shown higher honey production per hive in urban environments compared to agricultural zones, largely because monoculture farming reduces the variety of plants available to rural bees.
+[B] Proponents argue that urban bees provide measurable ecological benefits. Because cities are often warmer than surrounding rural areas and contain a diverse range of flowering plants in gardens and parks, urban bees can actually thrive more consistently than their rural counterparts. Studies from several European cities have shown higher honey production per hive in urban environments compared to agricultural zones, largely because monoculture farming reduces the variety of plants available to rural bees.
 
-Critics, however, raise concerns about the welfare of bees kept in high-density areas. Without the biodiversity of natural landscapes, urban bees may face nutritional gaps if flowering sources are limited or seasonal. There are also concerns about the spread of disease between hives kept in close proximity, and about what happens to colonies when inexperienced hobby beekeepers abandon the practice.
+[C] Critics, however, raise concerns about the welfare of bees kept in high-density areas. Without the biodiversity of natural landscapes, urban bees may face nutritional gaps if flowering sources are limited or seasonal. There are also concerns about the spread of disease between hives kept in close proximity, and about what happens to colonies when inexperienced hobby beekeepers abandon the practice.
 
-Despite these debates, urban beekeeping continues to expand. Many cities now offer training programs and community hive projects that allow residents to participate without managing a hive individually. Whether urban beekeeping represents a meaningful contribution to pollinator health or simply a well-intentioned hobby remains an open question — but its presence in Canadian cities shows no sign of diminishing.`,
+[D] Despite these debates, urban beekeeping continues to expand. Many cities now offer training programs and community hive projects that allow residents to participate without managing a hive individually. Whether urban beekeeping represents a meaningful contribution to pollinator health or simply a well-intentioned hobby remains an open question — but its presence in Canadian cities shows no sign of diminishing.`,
     questions: [
-      { id: 1, text: 'What is the main idea of this passage?', options: ['A) Urban beekeeping is more productive than rural beekeeping.', 'B) Urban beekeeping has grown in Canadian cities and raises both benefits and concerns.', 'C) Canadian cities should ban urban beekeeping to protect bee welfare.', 'D) European cities have better beekeeping practices than Canadian ones.'], answer: 1, explanation: "The passage introduces urban beekeeping's growth, presents arguments in favour, then raises concerns, ending with a balanced view. Option B captures this neutral, balanced main idea." },
-      { id: 2, text: 'According to the passage, why might urban bees produce more honey than rural bees?', options: ['A) Urban bees are a different, more productive species.', 'B) City temperatures are warmer, which makes bees more active.', 'C) Cities offer a more diverse range of flowering plants than monoculture farmland.', 'D) Urban beekeepers are more experienced than rural ones.'], answer: 2, explanation: "The passage states that rural bees suffer because monoculture farming limits plant variety, while cities have diverse gardens and parks. More plant variety means more nectar sources for urban bees." },
-      { id: 3, text: 'What does the word "proximity" mean as used in the third paragraph?', options: ['A) Competition', 'B) Closeness', 'C) Popularity', 'D) Movement'], answer: 1, explanation: "\"Proximity\" means nearness or being close together. The passage uses it to describe hives kept near each other in urban areas, which raises the risk of disease spreading between colonies." },
+      { id: 1, difficulty: 'easy',   questionType: 'mcq',
+        text: 'What is the main idea of this passage?',
+        options: ['A) Urban beekeeping is more productive than rural beekeeping.', 'B) Urban beekeeping has grown in Canadian cities and raises both benefits and concerns.', 'C) Canadian cities should ban urban beekeeping to protect bee welfare.', 'D) European research methods are superior to Canadian beekeeping practices.'],
+        answer: 1, explanation: 'The passage is balanced: it describes growth (A), presents benefits (B), raises concerns (C), and ends with an open question (D) — B is the only option that captures this nuanced, two-sided overview.' },
+      { id: 2, difficulty: 'easy',   questionType: 'paragraph_match',
+        text: 'Concerns about disease spreading between closely situated hives are raised.',
+        options: ['A', 'B', 'C', 'D', 'E'],
+        paragraphLabels: { A: 'Para A', B: 'Para B', C: 'Para C', D: 'Para D', E: 'Not Given' },
+        answer: 2, explanation: 'Paragraph C specifically mentions "concerns about the spread of disease between hives kept in close proximity."' },
+      { id: 3, difficulty: 'medium', questionType: 'vocab_context',
+        text: 'The word "proximity" in paragraph C (line: "hives kept in close proximity") most closely means:',
+        options: ['A) Competition', 'B) Closeness', 'C) Quantity', 'D) Movement'],
+        targetWord: 'proximity',
+        answer: 1, explanation: '"Proximity" means physical nearness. In context, hives located close together risk spreading disease — "closeness" captures this precisely.' },
+      { id: 4, difficulty: 'medium', questionType: 'paragraph_match',
+        text: 'A comparison is made between the amount of honey produced in cities versus agricultural areas.',
+        options: ['A', 'B', 'C', 'D', 'E'],
+        paragraphLabels: { A: 'Para A', B: 'Para B', C: 'Para C', D: 'Para D', E: 'Not Given' },
+        answer: 1, explanation: 'Paragraph B states: "Studies from several European cities have shown higher honey production per hive in urban environments compared to agricultural zones."' },
+      { id: 5, difficulty: 'hard',   questionType: 'inference',
+        text: 'What does the writer\'s use of the phrase "a well-intentioned hobby" in paragraph D suggest?',
+        options: ['A) The writer believes urban beekeeping has no real environmental value.', 'B) The writer is slightly sceptical about claims that it significantly helps pollinators.', 'C) The writer is enthusiastically in favour of urban beekeeping programs.', 'D) The writer believes hobby beekeepers are irresponsible.'],
+        answer: 1, explanation: '"Well-intentioned hobby" is gently dismissive — it acknowledges sincerity but quietly questions whether the impact matches the enthusiasm. This is a mild sceptical hedge, not an outright dismissal.' },
     ],
   },
   R4: {
     title: 'Should Remote Work Become a Permanent Right?',
-    instruction: 'Read both viewpoints below, then answer the questions.',
-    scenario: 'Opinion Texts — Workplace Policy',
+    instruction: 'Read BOTH viewpoints below. Then answer the questions by choosing the option that BEST reflects the content or position in the texts.',
+    scenario: 'Viewpoints — Workplace Policy',
     type: 'mcq',
     passage: `VIEWPOINT A — Maria Delacroix, HR Director
 
@@ -167,9 +345,26 @@ The enthusiasm for remote work ignores a significant problem: collaboration suff
 
 I am not arguing that remote work has no place. For focused, independent tasks, it is often better. But codifying it as a right risks normalizing a model that works well for senior individual contributors and poorly for everyone else. Organizations should retain the authority to determine what arrangements serve their teams best.`,
     questions: [
-      { id: 1, text: "What is Maria's main argument in favour of remote work?", options: ['A) Remote work eliminates office costs for companies.', 'B) Data shows productivity and satisfaction have not suffered.', 'C) All employees prefer working from home.', 'D) Remote work is better suited to junior employees.'], answer: 1, explanation: "Maria cites productivity data, high satisfaction scores, and expanded hiring reach as evidence that remote work has proven itself — all forms of measurable outcome data." },
-      { id: 2, text: "What is Kevin's main concern about making remote work a permanent right?", options: ['A) It costs too much to equip employees with home office tools.', 'B) Video calls are less reliable than in-person meetings.', 'C) It benefits senior employees but harms junior ones who rely on mentorship.', 'D) Remote workers are more likely to change jobs frequently.'], answer: 2, explanation: "Kevin specifically argues that junior employees lose informal mentorship when experienced colleagues are absent, and this is his primary concern about normalizing remote work." },
-      { id: 3, text: 'On which point do both Maria and Kevin AGREE?', options: ['A) Remote work should be available to all employees without exception.', 'B) Some roles are not suitable for remote work.', 'C) Productivity declines significantly when teams work remotely.', 'D) Companies should let employees choose their own schedules.'], answer: 1, explanation: "Maria acknowledges remote work is not appropriate for every role or employee. Kevin says for focused independent tasks it is often better. Both agree remote work is not universally suitable — some roles require in-person presence." },
+      { id: 1, difficulty: 'easy',   questionType: 'speaker_id',
+        text: 'What is Maria\'s main argument in favour of remote work?',
+        options: ['A) Remote work eliminates office costs for companies.', 'B) Data shows productivity and employee satisfaction have not suffered.', 'C) All employees prefer working from home.', 'D) Remote work is better suited to junior employees than senior ones.'],
+        answer: 1, explanation: 'Maria cites productivity data, high satisfaction scores, and expanded hiring reach — measurable outcomes — as evidence that remote work has proven itself.' },
+      { id: 2, difficulty: 'easy',   questionType: 'speaker_id',
+        text: 'What is Kevin\'s main concern about making remote work a permanent right?',
+        options: ['A) It is too expensive to equip employees with home office tools.', 'B) Video calls are technically unreliable.', 'C) It benefits senior staff but disadvantages junior employees who depend on informal mentorship.', 'D) Remote workers are more likely to leave the company.'],
+        answer: 2, explanation: 'Kevin specifically argues that junior employees lose the informal mentorship they gain from being physically near experienced colleagues.' },
+      { id: 3, difficulty: 'medium', questionType: 'mcq',
+        text: 'On which point do BOTH Maria and Kevin AGREE?',
+        options: ['A) Remote work should be available to all employees without exception.', 'B) Some roles or individuals are not suited to remote work.', 'C) Productivity declines significantly when teams work remotely.', 'D) Employees should be allowed to choose their own schedules freely.'],
+        answer: 1, explanation: 'Maria: "remote work is not appropriate for every role or every employee." Kevin: "for focused, independent tasks, it is often better" — implying other tasks require in-person work. Both concede remote work is not universally appropriate.' },
+      { id: 4, difficulty: 'medium', questionType: 'inference',
+        text: 'Kevin says codifying remote work as a right "risks normalizing a model that works well for senior individual contributors." What does this imply about his view?',
+        options: ['A) He believes remote work should only be offered to senior employees.', 'B) He is concerned that making remote work a right privileges one group at the expense of another.', 'C) He thinks senior employees are more productive at home than in the office.', 'D) He wants organizations to eliminate remote work entirely for all staff.'],
+        answer: 1, explanation: 'Kevin\'s point is that a blanket right would entrench a system that helps senior independent workers while systematically hurting juniors who need proximity and mentorship.' },
+      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'Maria says she wants "a framework that treats remote work as a default right." In context, "default" most closely means:',
+        options: ['A) Temporary and subject to frequent review.', 'B) The standard starting position unless there is a specific reason to change it.', 'C) A strict rule with no exceptions permitted.', 'D) An optional benefit rather than an entitlement.'],
+        answer: 1, explanation: '"Default" means the assumed starting point — the baseline assumption unless overridden. Maria is saying remote work should be assumed available unless a specific role requirement justifies in-person work.' },
     ],
   },
 }
@@ -368,6 +563,24 @@ const DIFF_COLOURS = {
   'advanced':           { bg: '#FEF2F2', text: '#D91B1B' },
 }
 
+const QTYPE_LABELS = {
+  mcq:             'Multiple Choice',
+  fill_blank:      'Fill in the Blank',
+  paragraph_match: 'Paragraph Matching',
+  vocab_context:   'Vocabulary in Context',
+  inference:       'Inference',
+  speaker_id:      'Speaker Identification',
+  tone_purpose:    'Tone & Purpose',
+  gist:            'Main Idea',
+}
+
+/* Sort questions: easy → medium → hard.
+   Within the same difficulty level the original order is preserved. */
+function sortByDifficulty(questions) {
+  const rank = { easy: 0, medium: 1, intermediate: 1, hard: 2, 'upper-intermediate': 2, advanced: 3 }
+  return [...questions].sort((a, b) => (rank[a.difficulty] ?? 1) - (rank[b.difficulty] ?? 1))
+}
+
 function getSet(part) {
   const sec = part?.section || 'listening'
   const id  = part?.id || 'L1'
@@ -379,13 +592,181 @@ function getSet(part) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SHARED MCQ COMPONENTS
+   QUESTION TYPE SUB-RENDERERS
+══════════════════════════════════════════════════════════════ */
+
+/* A) Standard MCQ / Inference / Speaker ID / Tone / Gist
+   2-column: question left, lettered options right            */
+function StandardMCQ({ q, qIndex, total, answered, selected, revealed, color, onSelect }) {
+  const LETTERS = ['A', 'B', 'C', 'D', 'E']
+  const correct = selected === q.answer
+
+  return (
+    <div className="ps-cq-wrap">
+      {/* Left: question */}
+      <div className="ps-cq-left">
+        <p className="ps-cq-stem">{q.text}</p>
+      </div>
+      {/* Right: options */}
+      <div className="ps-cq-right">
+        {q.options.map((opt, i) => {
+          const letter = LETTERS[i] || String(i + 1)
+          // Strip leading "A) " prefix if the text already has it (DB data has it; static might too)
+          const labelRe = /^[A-E]\)\s*/
+          const cleanOpt = opt.replace(labelRe, '')
+
+          let cls = 'ps-cq-opt'
+          if (answered || revealed) {
+            if (i === q.answer)      cls += ' ps-cq-opt--correct'
+            else if (i === selected) cls += ' ps-cq-opt--wrong'
+            else                     cls += ' ps-cq-opt--dim'
+          } else if (selected === i) {
+            cls += ' ps-cq-opt--hover'
+          }
+          return (
+            <button
+              key={i}
+              className={cls}
+              onClick={() => { if (!answered && !revealed) onSelect(i) }}
+              disabled={answered || revealed}
+            >
+              <span
+                className="ps-cq-letter"
+                style={(answered || revealed) ? {} : (selected === i ? { background: color, color: '#fff', borderColor: color } : {})}
+              >
+                {letter}
+              </span>
+              <span className="ps-cq-opt-text">{cleanOpt}</span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/* B) Paragraph Matching — A B C D E grid of large letter buttons */
+function ParagraphMatchQ({ q, answered, selected, revealed, color, onSelect }) {
+  const labels = q.paragraphLabels || { A: 'A', B: 'B', C: 'C', D: 'D', E: 'Not Given' }
+  const opts   = q.options || ['A', 'B', 'C', 'D', 'E']
+  return (
+    <div className="ps-cq-para-section">
+      <p className="ps-cq-stem ps-cq-stem--para">{q.text}</p>
+      <div className="ps-cq-para-grid">
+        {opts.map((val, i) => {
+          let cls = 'ps-cq-para-btn'
+          if (answered || revealed) {
+            if (i === q.answer)      cls += ' ps-cq-para-btn--correct'
+            else if (i === selected) cls += ' ps-cq-para-btn--wrong'
+            else                     cls += ' ps-cq-para-btn--dim'
+          } else if (selected === i) {
+            cls += ' ps-cq-para-btn--selected'
+          }
+          return (
+            <button
+              key={i}
+              className={cls}
+              style={(selected === i && !answered && !revealed) ? { borderColor: color, color } : {}}
+              onClick={() => { if (!answered && !revealed) onSelect(i) }}
+              disabled={answered || revealed}
+              title={labels[val] || val}
+            >
+              <span className="ps-cq-para-letter">{val}</span>
+              <span className="ps-cq-para-sublabel">{labels[val] || ''}</span>
+            </button>
+          )
+        })}
+      </div>
+      <p className="ps-cq-para-hint">Select the paragraph (A–D) that contains this information, or <strong>E</strong> if Not Given.</p>
+    </div>
+  )
+}
+
+/* C) Vocabulary in Context — same as MCQ but highlights the target word */
+function VocabContextQ({ q, answered, selected, revealed, color, onSelect }) {
+  return (
+    <div className="ps-cq-vocab-section">
+      <p className="ps-cq-stem">
+        {q.targetWord
+          ? q.text.split(new RegExp(`(${q.targetWord})`, 'i')).map((part, i) =>
+              i % 2 === 1
+                ? <span key={i} className="ps-cq-vocab-word">{part}</span>
+                : part
+            )
+          : q.text}
+      </p>
+      <StandardMCQ
+        q={q}
+        answered={answered}
+        selected={selected}
+        revealed={revealed}
+        color={color}
+        onSelect={onSelect}
+      />
+    </div>
+  )
+}
+
+/* D) Fill in the Blank — sentence with highlighted blank + option buttons */
+function FillBlankQ({ q, qIndex, answered, selected, revealed, color, onSelect }) {
+  const LETTERS = ['A', 'B', 'C', 'D']
+  const correct = selected === q.answer
+  // Split on blank marker
+  const parts = q.text.split(/\d+___[.,]?/)
+
+  return (
+    <div className="ps-cq-fill-section">
+      {/* Sentence with blank shown as a highlighted slot */}
+      <div className="ps-cq-fill-sentence">
+        <span>{parts[0]}</span>
+        <span className="ps-cq-blank-slot">
+          {answered || revealed
+            ? <span className={answered && correct ? 'ps-blank-filled--correct' : 'ps-blank-filled--wrong'}>
+                {q.options[q.answer]?.replace(/^[A-E]\)\s*/, '')}
+              </span>
+            : <span className="ps-blank-placeholder">____</span>}
+        </span>
+        {parts[1] && <span>{parts[1]}</span>}
+      </div>
+
+      {/* Option buttons */}
+      <div className="ps-cq-fill-options">
+        {q.options.map((opt, i) => {
+          const letter   = LETTERS[i] || String(i + 1)
+          const cleanOpt = opt.replace(/^[A-E]\)\s*/, '')
+          let cls = 'ps-cq-opt'
+          if (answered || revealed) {
+            if (i === q.answer)      cls += ' ps-cq-opt--correct'
+            else if (i === selected) cls += ' ps-cq-opt--wrong'
+            else                     cls += ' ps-cq-opt--dim'
+          }
+          return (
+            <button
+              key={i}
+              className={cls}
+              onClick={() => { if (!answered && !revealed) onSelect(i) }}
+              disabled={answered || revealed}
+            >
+              <span
+                className="ps-cq-letter"
+                style={selected === i && !answered ? { background: color, color: '#fff', borderColor: color } : {}}
+              >{letter}</span>
+              <span className="ps-cq-opt-text">{cleanOpt}</span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED MCQ COMPONENTS  (legacy QuestionCard kept for old refs)
 ══════════════════════════════════════════════════════════════ */
 function QuestionCard({ q, index, revealed }) {
   const [selected, setSelected] = useState(null)
   const answered = selected !== null
   const correct  = selected === q.answer
-
   return (
     <div className={`ps-q-card${answered ? (correct ? ' ps-q-correct' : ' ps-q-wrong') : ''}`}>
       <div className="ps-q-num">Question {index + 1}</div>
@@ -652,14 +1033,12 @@ function DiagramBlock({ html }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   FILL-BLANK QUESTION — inline dropdown in sentence
+   FILL-BLANK QUESTION — inline dropdown in sentence (legacy)
 ══════════════════════════════════════════════════════════════ */
 function FillBlankQuestion({ q, index }) {
   const [selected, setSelected] = useState(null)
   const answered = selected !== null
   const correct  = selected === q.answer
-
-  // Split on the blank marker (e.g. "1___." or "1___,")
   const blankRe  = /\d+___[.,]?/
   const parts    = q.text.split(blankRe)
   const blankNum = (q.text.match(/(\d+)___/) || ['', index + 1])[1]
@@ -675,8 +1054,6 @@ function FillBlankQuestion({ q, index }) {
           </span>
         )}
       </div>
-
-      {/* Sentence with inline dropdown */}
       <div className="ps-fbq-sentence">
         <span>{parts[0]}</span>
         <select
@@ -692,8 +1069,6 @@ function FillBlankQuestion({ q, index }) {
         </select>
         {parts[1] && <span>{parts[1]}</span>}
       </div>
-
-      {/* Explanation (after answer chosen) */}
       {answered && (
         <div className="ps-fbq-explanation">
           {!correct && (
@@ -710,34 +1085,34 @@ function FillBlankQuestion({ q, index }) {
 
 /* ══════════════════════════════════════════════════════════════
    ONE-AT-A-TIME QUESTION PANEL
-   Shows a single MCQ or fill-blank question with Prev / Next nav.
-   Used inside the main practice layout for all section types.
+   Renders every CELPIP question type with proper formatting.
+   Questions are sorted easy → medium → hard before display.
 ══════════════════════════════════════════════════════════════ */
 function QuestionPanel({ questions, color }) {
-  const [qIndex,    setQIndex]    = useState(0)
-  const [answers,   setAnswers]   = useState({})  // { [qIndex]: selectedIndex }
-  const [revealed,  setRevealed]  = useState(false)
+  const sortedQs = sortByDifficulty(questions)
 
-  const q        = questions[qIndex]
-  const total    = questions.length
+  const [qIndex,   setQIndex]   = useState(0)
+  const [answers,  setAnswers]  = useState({})   // { [sortedIndex]: selectedOptionIndex }
+  const [revealed, setRevealed] = useState(false)
+
+  const q        = sortedQs[qIndex]
+  const total    = sortedQs.length
   const selected = answers[qIndex] ?? null
   const answered = selected !== null
   const correct  = selected === q.answer
-  const isFill   = q.questionType === 'fill_blank'
+  const qtype    = q.questionType || 'mcq'
 
-  // Reset reveal when changing question
   const goTo = (n) => { setQIndex(n); setRevealed(false) }
-
-  // Fill-blank helpers
-  const blankRe  = /\d+___[.,]?/
-  const parts    = q.text.split(blankRe)
-  const blankNum = (q.text.match(/(\d+)___/) || ['', qIndex + 1])[1]
+  const handleSelect = (i) => setAnswers(a => ({ ...a, [qIndex]: i }))
 
   const pct = Math.round(((qIndex + 1) / total) * 100)
 
+  // Difficulty badge colour
+  const diffC = DIFF_COLOURS[q.difficulty] || DIFF_COLOURS['medium']
+
   return (
     <div className="ps-qpanel">
-      {/* Progress bar */}
+      {/* ── Progress bar ── */}
       <div className="ps-qpanel-progress-wrap">
         <div className="ps-qpanel-progress-bar">
           <div className="ps-qpanel-progress-fill" style={{ width: `${pct}%`, background: color }} />
@@ -747,7 +1122,7 @@ function QuestionPanel({ questions, color }) {
         </span>
       </div>
 
-      {/* Question card */}
+      {/* ── Question card ── */}
       <motion.div
         key={qIndex}
         className={`ps-q-card ps-q-card--solo${answered ? (correct ? ' ps-q-correct' : ' ps-q-wrong') : ''}`}
@@ -755,9 +1130,20 @@ function QuestionPanel({ questions, color }) {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.2 }}
       >
+        {/* Header row: Q-number badge + type tag + difficulty + verdict */}
         <div className="ps-q-num-row">
           <span className="ps-q-num" style={{ background: color }}>Q{qIndex + 1}</span>
-          {isFill && <span className="ps-fbq-tag">Fill in blank {blankNum}</span>}
+
+          {qtype && QTYPE_LABELS[qtype] && (
+            <span className="ps-cq-qtype-tag">{QTYPE_LABELS[qtype]}</span>
+          )}
+
+          {q.difficulty && (
+            <span className="ps-cq-diff-tag" style={{ background: diffC.bg, color: diffC.text }}>
+              {q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1)}
+            </span>
+          )}
+
           {answered && (
             <span className={`ps-q-verdict ${correct ? 'ps-q-verdict--ok' : 'ps-q-verdict--err'}`}>
               {correct ? '✓ Correct' : '✗ Incorrect'}
@@ -765,57 +1151,50 @@ function QuestionPanel({ questions, color }) {
           )}
         </div>
 
-        {/* Question text — fill-blank shows sentence with inline dropdown */}
-        {isFill ? (
-          <div className="ps-fbq-sentence ps-fbq-sentence--solo">
-            <span>{parts[0]}</span>
-            <select
-              className={`ps-blank-select${answered ? (correct ? ' ps-blank-select--correct' : ' ps-blank-select--wrong') : ''}`}
-              value={selected ?? ''}
-              onChange={e => setAnswers(a => ({ ...a, [qIndex]: Number(e.target.value) }))}
-              disabled={answered}
-            >
-              <option value="" disabled>choose ▾</option>
-              {(q.options || []).map((opt, i) => (
-                <option key={i} value={i}>{opt}</option>
-              ))}
-            </select>
-            {parts[1] && <span>{parts[1]}</span>}
-          </div>
+        {/* ── Question body — switches on type ── */}
+        {qtype === 'paragraph_match' ? (
+          <ParagraphMatchQ
+            q={q}
+            answered={answered}
+            selected={selected}
+            revealed={revealed}
+            color={color}
+            onSelect={handleSelect}
+          />
+        ) : qtype === 'vocab_context' ? (
+          <VocabContextQ
+            q={q}
+            answered={answered}
+            selected={selected}
+            revealed={revealed}
+            color={color}
+            onSelect={handleSelect}
+          />
+        ) : qtype === 'fill_blank' ? (
+          <FillBlankQ
+            q={q}
+            qIndex={qIndex}
+            answered={answered}
+            selected={selected}
+            revealed={revealed}
+            color={color}
+            onSelect={handleSelect}
+          />
         ) : (
-          <p className="ps-q-text">{q.text}</p>
+          /* mcq | inference | speaker_id | tone_purpose | gist */
+          <StandardMCQ
+            q={q}
+            qIndex={qIndex}
+            total={total}
+            answered={answered}
+            selected={selected}
+            revealed={revealed}
+            color={color}
+            onSelect={handleSelect}
+          />
         )}
 
-        {/* Options — MCQ only */}
-        {!isFill && (
-          <div className="ps-q-options">
-            {q.options.map((opt, i) => {
-              let cls = 'ps-q-option'
-              if (answered || revealed) {
-                if (i === q.answer)        cls += ' ps-opt-correct'
-                else if (i === selected)   cls += ' ps-opt-wrong'
-                else                       cls += ' ps-opt-dim'
-              }
-              if (selected === i) cls += ' ps-opt-selected'
-              return (
-                <button
-                  key={i}
-                  className={cls}
-                  style={selected === i && !answered ? { borderColor: color } : {}}
-                  onClick={() => {
-                    if (!answered && !revealed)
-                      setAnswers(a => ({ ...a, [qIndex]: i }))
-                  }}
-                  disabled={answered || revealed}
-                >
-                  {opt}
-                </button>
-              )
-            })}
-          </div>
-        )}
-
-        {/* Explanation */}
+        {/* ── Explanation ── */}
         <AnimatePresence>
           {(answered || revealed) && (
             <motion.div
@@ -824,7 +1203,11 @@ function QuestionPanel({ questions, color }) {
             >
               {!correct && answered && (
                 <div className="ps-fbq-correct-ans" style={{ marginBottom: 6 }}>
-                  ✓ Correct answer: <strong>{q.options[q.answer]}</strong>
+                  ✓ Correct answer: <strong>
+                    {qtype === 'paragraph_match'
+                      ? (q.options[q.answer] || q.answer)
+                      : (q.options[q.answer] || '').replace(/^[A-E]\)\s*/, '')}
+                  </strong>
                 </div>
               )}
               <span className="ps-exp-icon">{correct && answered ? '✅' : '📘'}</span>
@@ -834,7 +1217,7 @@ function QuestionPanel({ questions, color }) {
         </AnimatePresence>
       </motion.div>
 
-      {/* Navigation row */}
+      {/* ── Navigation row ── */}
       <div className="ps-qpanel-nav">
         <button
           className="ps-qnav-btn ps-qnav-btn--prev"
@@ -862,17 +1245,21 @@ function QuestionPanel({ questions, color }) {
         </button>
       </div>
 
-      {/* Dot indicators */}
+      {/* ── Dot indicators ── */}
       <div className="ps-qpanel-dots">
-        {questions.map((_, i) => (
-          <button
-            key={i}
-            className={`ps-qdot${i === qIndex ? ' ps-qdot--active' : ''}${answers[i] !== undefined ? (answers[i] === questions[i].answer ? ' ps-qdot--ok' : ' ps-qdot--err') : ''}`}
-            style={i === qIndex ? { background: color, borderColor: color } : {}}
-            onClick={() => goTo(i)}
-            title={`Question ${i + 1}`}
-          />
-        ))}
+        {sortedQs.map((sq, i) => {
+          const isDone = answers[i] !== undefined
+          const isOk   = isDone && answers[i] === sq.answer
+          return (
+            <button
+              key={i}
+              className={`ps-qdot${i === qIndex ? ' ps-qdot--active' : ''}${isDone ? (isOk ? ' ps-qdot--ok' : ' ps-qdot--err') : ''}`}
+              style={i === qIndex ? { background: color, borderColor: color } : {}}
+              onClick={() => goTo(i)}
+              title={`Q${i + 1} — ${sq.questionType || 'mcq'} — ${sq.difficulty || ''}`}
+            />
+          )
+        })}
       </div>
     </div>
   )
