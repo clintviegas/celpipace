@@ -200,15 +200,7 @@ export default function Navbar({ currentPage, setPage, onSignIn }) {
               setPage={(p) => { setPage(p); setMenuOpen(false) }}
             />
           ))}
-          {/* CRS Calc — flat */}
-          <li>
-            <button
-              className={`nav-link-btn${currentPage === 'calculator' ? ' nav-link-active' : ''}`}
-              onClick={() => { setPage('calculator'); setMenuOpen(false) }}
-            >
-              🧮 CRS Calc
-            </button>
-          </li>
+
         </ul>
 
         {/* Auth actions */}
