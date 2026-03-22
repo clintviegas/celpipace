@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useReadingSet } from '../hooks/useReadingSet'
 
 /* ══════════════════════════════════════════════════════════════
    SECTION CONFIG — colours & icons per section
@@ -640,11 +641,53 @@ export default function PracticeSetPage({ part, setPage }) {
   const [revealed, setRevealed] = useState(false)
 
   const section = part?.section || 'listening'
-  const data    = getSet(part)
   const partId  = part?.id || 'L1'
   const cfg     = SECTION_CONFIG[section] || SECTION_CONFIG.listening
   const diffKey = (part?.difficulty || 'Intermediate').toLowerCase().replace(' ', '-')
   const diffStyle = DIFF_COLOURS[diffKey] || DIFF_COLOURS['intermediate']
+
+  // ── Fetch reading questions live from Supabase ──────────────
+  const isReading = section === 'reading'
+  const { questions: dbQuestions, passage: dbPassage, meta: dbMeta, loading: dbLoading, error: dbError } = useReadingSet(isReading ? partId : null)
+
+  // Merge: reading uses Supabase data; other sections use hardcoded sets
+  const staticData = isReading ? null : getSet(part)
+  const data = isReading
+    ? {
+        title:       dbMeta?.set_title   || staticData?.title || partId,
+        instruction: dbMeta?.instruction || 'Read the passage, then answer the questions.',
+        scenario:    dbMeta?.scenario    || '',
+        type:        'mcq',
+        passage:     dbPassage,
+        questions:   dbQuestions,
+      }
+    : staticData
+
+  // Loading state for reading
+  if (isReading && dbLoading) {
+    return (
+      <div className="ps-root">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
+          <div style={{ fontSize: 40 }}>📖</div>
+          <p style={{ color: '#2D8A56', fontWeight: 600, fontSize: 18 }}>Loading questions…</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state for reading
+  if (isReading && dbError) {
+    return (
+      <div className="ps-root">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
+          <div style={{ fontSize: 40 }}>⚠️</div>
+          <p style={{ color: '#C8102E', fontWeight: 600, fontSize: 18 }}>Could not load questions</p>
+          <p style={{ color: '#666', fontSize: 14 }}>{dbError}</p>
+          <button className="ps-start-btn" onClick={() => setPage('reading')}>← Back to Reading</button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="ps-root">
