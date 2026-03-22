@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 export default function Navbar({ currentPage, setPage }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const { user, signOut } = useAuth()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -21,6 +23,11 @@ export default function Navbar({ currentPage, setPage }) {
   ]
 
   const isApp = ['practice','tips','scores','calculator','exam'].includes(currentPage)
+
+  // Get initials for avatar fallback
+  const initials = user?.user_metadata?.full_name
+    ? user.user_metadata.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : user?.email?.[0]?.toUpperCase() ?? '?'
 
   return (
     <nav className={`navbar${scrolled || isApp ? ' scrolled' : ''}`}>
@@ -44,8 +51,25 @@ export default function Navbar({ currentPage, setPage }) {
         </ul>
 
         <div className="nav-actions">
-          <button className="btn btn-outline" onClick={() => setPage('pricing')}>Sign In</button>
-          <button className="btn btn-primary" onClick={() => setPage('practice')}>Start Free</button>
+          {user ? (
+            /* ── Logged-in: show user chip + sign out ── */
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className="nav-user-chip">
+                {user.user_metadata?.avatar_url
+                  ? <img className="nav-user-avatar" src={user.user_metadata.avatar_url} alt={initials} />
+                  : <div className="nav-user-initials">{initials}</div>
+                }
+                {user.user_metadata?.full_name?.split(' ')[0] ?? user.email?.split('@')[0]}
+              </div>
+              <button className="nav-signout-btn" onClick={signOut}>Sign out</button>
+            </div>
+          ) : (
+            /* ── Logged-out: sign in + start free ── */
+            <>
+              <button className="btn btn-outline" onClick={() => setPage('exam')}>Sign In</button>
+              <button className="btn btn-primary" onClick={() => setPage('exam')}>Start Free</button>
+            </>
+          )}
         </div>
 
         <button

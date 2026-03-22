@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '../context/AuthContext'
+import AuthModal from '../components/AuthModal'
 
 /* ── Constants ────────────────────────────────────────────────── */
 const SECTIONS = [
@@ -449,30 +451,66 @@ function ScoreReport({ section, onRetry, onHome }) {
 
 /* ── Main ExamPage ─────────────────────────────────────────────── */
 export default function ExamPage({ setPage = () => {} }) {
+  const { user } = useAuth()
+
   const [view, setView] = useState('lobby')       // 'lobby' | 'test' | 'report'
   const [activeTab, setActiveTab] = useState('sections') // 'sections' | 'modes'
   const [selectedSection, setSelectedSection] = useState(null)
   const [selectedMode, setSelectedMode]       = useState(null)
 
+  // Auth modal state
+  const [authOpen, setAuthOpen]       = useState(false)
+  const [authReason, setAuthReason]   = useState('')
+  const [pendingAction, setPendingAction] = useState(null)
+
+  // If user just logged in and there's a pending action, run it
+  const requireAuth = (reason, action) => {
+    if (user) {
+      action()
+    } else {
+      setAuthReason(reason)
+      setPendingAction(() => action)
+      setAuthOpen(true)
+    }
+  }
+
+  // When modal closes, if user is now logged in run the pending action
+  const handleAuthClose = () => {
+    setAuthOpen(false)
+    if (user && pendingAction) {
+      pendingAction()
+      setPendingAction(null)
+    }
+  }
+
   const handleStartMock = (section) => {
-    setSelectedSection(section)
-    setSelectedMode(TEST_MODES.find(m => m.id === 'section_mock'))
-    setView('test')
+    requireAuth('Sign in to start a Section Mock Test', () => {
+      setSelectedSection(section)
+      setSelectedMode(TEST_MODES.find(m => m.id === 'section_mock'))
+      setView('test')
+    })
   }
   const handleStartDrill = (section) => {
-    setSelectedSection(section)
-    setSelectedMode(TEST_MODES.find(m => m.id === 'quick_drill'))
-    setView('test')
+    requireAuth('Sign in to track your drill progress', () => {
+      setSelectedSection(section)
+      setSelectedMode(TEST_MODES.find(m => m.id === 'quick_drill'))
+      setView('test')
+    })
   }
   const handleModeStart = (mode) => {
     if (mode.locked) return
-    setSelectedMode(mode)
-    setSelectedSection(mode.id === 'full_mock' ? null : SECTIONS[0])
-    setView('test')
+    requireAuth(`Sign in to start ${mode.label}`, () => {
+      setSelectedMode(mode)
+      setSelectedSection(mode.id === 'full_mock' ? null : SECTIONS[0])
+      setView('test')
+    })
   }
 
   return (
     <div className="page-wrap exam-page-wrap">
+      {/* Auth modal — soft gate */}
+      <AuthModal isOpen={authOpen} onClose={handleAuthClose} reason={authReason} />
+
       <AnimatePresence mode="wait">
 
         {/* ── LOBBY ── */}

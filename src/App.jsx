@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import WhyCELPIP from './components/WhyCELPIP'
@@ -29,7 +30,7 @@ function HomePage({ setPage }) {
   )
 }
 
-export default function App() {
+export function AppInner() {
   const [page, setPage] = useState('home')
   const [activeSection, setActiveSection] = useState('listening')
 
@@ -72,5 +73,13 @@ export default function App() {
 
       <Footer setPage={goPage} />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
   )
 }
