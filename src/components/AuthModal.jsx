@@ -40,23 +40,22 @@ export default function AuthModal({ isOpen, onClose, reason }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            className="auth-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={handleClose}
-          />
-
-          {/* Modal — split panel */}
+        /* Single backdrop div — flex centres the modal inside it */
+        <motion.div
+          className="auth-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={handleClose}
+        >
+          {/* Modal — split panel. stopPropagation so clicking inside doesn't close */}
           <motion.div
             className="auth-modal"
-            initial={{ opacity: 0, y: 48, scale: 0.97 }}
+            initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, y: 0,  scale: 1 }}
-            exit={{ opacity: 0, y: 32, scale: 0.97 }}
-            transition={{ type: 'spring', stiffness: 360, damping: 30 }}
+            exit={{ opacity: 0, y: 24, scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+            onClick={e => e.stopPropagation()}
           >
             {/* ── Left panel — branding ── */}
             <div className="auth-panel-left">
@@ -179,7 +178,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
               </AnimatePresence>
             </div>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   )
