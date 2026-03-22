@@ -94,14 +94,15 @@ function NavItem({ item, active, setPage, openId, setOpenId }) {
 
   // Close on outside click
   useEffect(() => {
+    if (!open) return   // only attach listener when this dropdown is open
     const handler = (e) => {
       if (ref.current && !ref.current.contains(e.target)) {
-        setOpenId(id => id === item.id ? null : id)
+        setOpenId(null)
       }
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
-  }, [item.id, setOpenId])
+  }, [open, setOpenId])
 
   if (item.flat) {
     return (
