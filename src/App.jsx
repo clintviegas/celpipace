@@ -68,6 +68,7 @@ export function AppInner() {
       {page === 'calculator' && <CRSCalculatorPage setPage={goPage} />}
       {page === 'exam' && <ExamPage setPage={goPage} />}
 
+      {/* Pricing still accessible from footer/CTA but not in main nav */}
       {page === 'pricing' && (
         <main style={{ paddingTop: '80px' }}>
           <Pricing />
