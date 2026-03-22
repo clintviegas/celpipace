@@ -2727,8 +2727,8 @@ img { display: block; max-width: 100%; }
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 1001;
-  width: min(860px, 96vw);
-  max-height: 90vh;
+  width: min(820px, 94vw);
+  max-height: min(580px, 92vh);
   display: flex;
   border-radius: 20px;
   overflow: hidden;
@@ -2737,10 +2737,10 @@ img { display: block; max-width: 100%; }
 
 /* ── Left panel — navy branding ── */
 .auth-panel-left {
-  width: 340px;
+  width: 300px;
   flex-shrink: 0;
   background: linear-gradient(155deg, var(--navy) 0%, #1a3a6e 60%, #0d1f40 100%);
-  padding: 48px 36px;
+  padding: 40px 32px;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -2766,44 +2766,44 @@ img { display: block; max-width: 100%; }
   pointer-events: none;
 }
 .auth-panel-logo {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
   letter-spacing: -.01em;
 }
 .auth-panel-tagline {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   color: #fff;
   line-height: 1.25;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 .auth-panel-highlight { color: var(--gold); }
 .auth-panel-perks {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   margin-bottom: auto;
 }
 .auth-perk {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(255,255,255,.82);
   font-weight: 500;
 }
-.auth-perk-icon { font-size: 18px; }
+.auth-perk-icon { font-size: 16px; }
 .auth-panel-badge {
-  margin-top: 36px;
+  margin-top: 28px;
   display: inline-block;
   background: rgba(200,151,42,.2);
   border: 1px solid rgba(200,151,42,.35);
   color: var(--gold);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 99px;
   width: fit-content;
 }
@@ -2812,7 +2812,7 @@ img { display: block; max-width: 100%; }
 .auth-panel-right {
   flex: 1;
   background: #fff;
-  padding: 48px 40px;
+  padding: 40px 36px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2859,7 +2859,7 @@ img { display: block; max-width: 100%; }
 }
 
 .auth-modal-title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--navy);
   margin: 0 0 6px;
@@ -2867,10 +2867,10 @@ img { display: block; max-width: 100%; }
 }
 
 .auth-modal-sub {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--gray-500);
   line-height: 1.6;
-  margin: 0 0 28px;
+  margin: 0 0 22px;
 }
 
 /* Buttons */
@@ -2880,14 +2880,14 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 13px 20px;
-  border-radius: 12px;
-  font-size: 15px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: all .18s;
   border: none;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .auth-btn--google {
   background: #fff;
