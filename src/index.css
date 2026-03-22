@@ -3000,16 +3000,19 @@ img { display: block; max-width: 100%; }
   inset: 0;
   background: rgba(8, 15, 35, 0.65);
   backdrop-filter: blur(6px);
-  z-index: 1000;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Modal container — side by side */
 .auth-modal {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1001;
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  z-index: 1101;
   width: min(820px, 94vw);
   max-height: min(580px, 92vh);
   display: flex;
