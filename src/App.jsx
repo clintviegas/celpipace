@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
+import AuthModal from './components/AuthModal'
 import Hero from './components/Hero'
 import WhyCELPIP from './components/WhyCELPIP'
 import CRSBooster from './components/CRSBooster'
@@ -33,6 +34,7 @@ function HomePage({ setPage }) {
 export function AppInner() {
   const [page, setPage] = useState('home')
   const [activeSection, setActiveSection] = useState('listening')
+  const [authOpen, setAuthOpen] = useState(false)
 
   // Load Google Fonts
   useEffect(() => {
@@ -49,7 +51,8 @@ export function AppInner() {
 
   return (
     <>
-      <Navbar currentPage={page} setPage={goPage} />
+      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+      <Navbar currentPage={page} setPage={goPage} onSignIn={() => setAuthOpen(true)} />
 
       {page === 'home' && <HomePage setPage={goPage} />}
 

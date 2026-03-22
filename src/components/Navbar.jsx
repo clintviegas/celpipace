@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 
-export default function Navbar({ currentPage, setPage }) {
+export default function Navbar({ currentPage, setPage, onSignIn }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { user, signOut } = useAuth()
@@ -66,8 +66,8 @@ export default function Navbar({ currentPage, setPage }) {
           ) : (
             /* ── Logged-out: sign in + start free ── */
             <>
-              <button className="btn btn-outline" onClick={() => setPage('exam')}>Sign In</button>
-              <button className="btn btn-primary" onClick={() => setPage('exam')}>Start Free</button>
+              <button className="btn btn-outline" onClick={onSignIn}>Log in</button>
+              <button className="btn btn-primary" onClick={onSignIn}>Sign up free</button>
             </>
           )}
         </div>
