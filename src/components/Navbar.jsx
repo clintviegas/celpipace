@@ -88,23 +88,27 @@ function DropItem({ item, color, setPage, closeAll }) {
 }
 
 /* ── Nav item with optional dropdown ── */
-function NavItem({ item, active, setPage }) {
-  const [open, setOpen] = useState(false)
+function NavItem({ item, active, setPage, openId, setOpenId }) {
   const ref = useRef(null)
+  const open = openId === item.id
 
   // Close on outside click
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpenId(id => id === item.id ? null : id)
+      }
+    }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
-  }, [])
+  }, [item.id, setOpenId])
 
   if (item.flat) {
     return (
       <li ref={ref}>
         <button
           className={`nav-link-btn${active ? ' nav-link-active' : ''}`}
-          onClick={() => setPage(item.id)}
+          onClick={() => { setPage(item.id); setOpenId(null) }}
         >
           {item.label}
         </button>
@@ -116,8 +120,8 @@ function NavItem({ item, active, setPage }) {
     <li ref={ref} className="nav-has-drop">
       <button
         className={`nav-link-btn nav-link-drop${active ? ' nav-link-active' : ''} ${open ? 'nav-link-drop--open' : ''}`}
-        onClick={() => setOpen(o => !o)}
-        onMouseEnter={() => setOpen(true)}
+        onClick={() => setOpenId(open ? null : item.id)}
+        onMouseEnter={() => setOpenId(item.id)}
       >
         {item.label}
         <span className="nav-chevron" style={{ transform: open ? 'rotate(180deg)' : 'none' }}>▾</span>
@@ -126,7 +130,7 @@ function NavItem({ item, active, setPage }) {
       {open && (
         <div
           className="nav-dropdown"
-          onMouseLeave={() => setOpen(false)}
+          onMouseLeave={() => setOpenId(null)}
           style={{ '--drop-color': item.color, '--drop-light': item.colorLight }}
         >
           <div className="nav-drop-header" style={{ background: item.colorLight, color: item.color }}>
@@ -139,7 +143,7 @@ function NavItem({ item, active, setPage }) {
                 item={p}
                 color={item.color}
                 setPage={setPage}
-                closeAll={() => setOpen(false)}
+                closeAll={() => setOpenId(null)}
               />
             ))}
           </div>
@@ -148,7 +152,7 @@ function NavItem({ item, active, setPage }) {
               <button
                 className="nav-drop-cta"
                 style={{ background: item.color }}
-                onClick={() => { setPage('exam'); setOpen(false) }}
+                onClick={() => { setPage('exam'); setOpenId(null) }}
               >
                 Practice {item.label} →
               </button>
@@ -163,6 +167,7 @@ function NavItem({ item, active, setPage }) {
 export default function Navbar({ currentPage, setPage, onSignIn }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [openId, setOpenId] = useState(null)   // only one dropdown open at a time
   const { user, signOut } = useAuth()
 
   useEffect(() => {
@@ -197,7 +202,9 @@ export default function Navbar({ currentPage, setPage, onSignIn }) {
               key={item.id}
               item={item}
               active={activeId === item.id}
-              setPage={(p) => { setPage(p); setMenuOpen(false) }}
+              setPage={(p) => { setPage(p); setMenuOpen(false); setOpenId(null) }}
+              openId={openId}
+              setOpenId={setOpenId}
             />
           ))}
 
