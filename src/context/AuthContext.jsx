@@ -74,17 +74,9 @@ export function AuthProvider({ children }) {
   }
 
   /* ── Sign out ── */
-  const signOut = async () => {
-    console.log('signOut called, current user:', user?.email)
-    try {
-      const { error } = await supabase.auth.signOut({ scope: 'local' })
-      console.log('signOut result:', error)
-    } catch (e) {
-      console.error('Sign out exception:', e)
-    } finally {
-      console.log('Clearing user state')
-      setUser(null)
-    }
+  const signOut = () => {
+    setUser(null)
+    supabase.auth.signOut({ scope: 'local' }).catch(() => {})
   }
 
   return (
