@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useReadingSet } from '../hooks/useReadingSet'
+import { usePracticeSet } from '../hooks/usePracticeSet'
 
 /* ══════════════════════════════════════════════════════════════
    SECTION CONFIG — colours & icons per section
@@ -830,7 +830,7 @@ export default function PracticeSetPage({ part, setPage }) {
 
   // ── Fetch reading questions live from Supabase ──────────────
   const isReading = section === 'reading'
-  const { sets: dbSets, loading: dbLoading, error: dbError } = useReadingSet(isReading ? partId : null)
+  const { sets: dbSets, loading: dbLoading, error: dbError } = usePracticeSet(isReading ? 'reading' : null, isReading ? partId : null)
 
   // For non-reading sections keep using the hardcoded set
   const staticData = isReading ? null : getSet(part)
