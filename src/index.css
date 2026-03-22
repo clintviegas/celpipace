@@ -4012,3 +4012,175 @@ img { display: block; max-width: 100%; }
   .ps-q-card { padding: 18px 16px; }
   .ps-instruction-card { padding: 20px 16px; }
 }
+
+/* ── Reading passage ── */
+.ps-passage-block {
+  background: #f7f9fc;
+  border: 1.5px solid #e0e8f4;
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-top: 16px;
+}
+.ps-passage-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #2D8A56;
+  margin-bottom: 12px;
+}
+.ps-passage-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #333;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* ── Writing practice ── */
+.ps-writing-area { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.ps-writing-prompt-box {
+  background: #fffdf0;
+  border: 1.5px solid #e8dfc0;
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+.ps-writing-prompt {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #333;
+  white-space: pre-wrap;
+  margin: 0 0 14px;
+}
+.ps-writing-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #888;
+}
+.ps-writing-criteria {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ps-crit-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #888;
+}
+.ps-crit-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.ps-crit-tag {
+  font-size: 12px;
+  font-weight: 600;
+  background: #FFF3D0;
+  color: #C8972A;
+  border-radius: 12px;
+  padding: 4px 12px;
+}
+.ps-textarea-wrap { position: relative; }
+.ps-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid #e0e8f4;
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #222;
+  resize: vertical;
+  transition: border-color .2s;
+  background: #fff;
+}
+.ps-textarea:focus { outline: none; border-color: #C8972A; box-shadow: 0 0 0 3px rgba(200,151,42,.1); }
+.ps-word-count {
+  text-align: right;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 6px;
+  font-weight: 500;
+}
+.ps-wc-good  { color: #2D8A56; }
+.ps-wc-over  { color: #C8102E; }
+.ps-model-toggle { text-align: center; }
+.ps-model-answer {
+  background: #f7f9fc;
+  border: 1.5px solid #e0e8f4;
+  border-radius: 12px;
+  padding: 20px 22px;
+  overflow: hidden;
+}
+.ps-model-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #888;
+  margin-bottom: 12px;
+}
+.ps-model-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #333;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* ── Speaking practice ── */
+.ps-speaking-area { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.ps-speaking-prompt-box {
+  background: #fff5f5;
+  border: 1.5px solid #f4c0c8;
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+.ps-speak-timer {
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 1.5px solid #e0e8f4;
+}
+.ps-timer-prep  { background: #fffdf0; border-color: #e8dfc0; }
+.ps-timer-speak { background: #fff5f5; border-color: #f4c0c8; }
+.ps-timer-done  { background: #f0fdf4; border-color: #86efac; }
+.ps-timer-label { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 8px; }
+.ps-timer-val   { font-size: 32px; font-weight: 800; color: #0F1F3D; margin-bottom: 10px; letter-spacing: -.02em; }
+.ps-timer-bar   { height: 8px; background: #e0e8f4; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+.ps-timer-fill  { height: 100%; border-radius: 4px; transition: width 1s linear; }
+.ps-timer-note  { font-size: 13px; color: #888; }
+.ps-skip-btn {
+  background: none;
+  border: none;
+  color: #4A90D9;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: inherit;
+  text-decoration: underline;
+}
+.ps-speaking-notes {
+  background: #f7f9fc;
+  border: 1.5px solid #e0e8f4;
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+.ps-speak-points {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ps-speak-points li {
+  font-size: 13.5px;
+  color: #444;
+  line-height: 1.6;
+}

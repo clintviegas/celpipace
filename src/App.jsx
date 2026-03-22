@@ -16,6 +16,9 @@ import ScoresPage from './pages/ScoresPage'
 import CRSCalculatorPage from './pages/CRSCalculatorPage'
 import ExamPage from './pages/ExamPage'
 import ListeningPage from './pages/ListeningPage'
+import ReadingPage from './pages/ReadingPage'
+import WritingPage from './pages/WritingPage'
+import SpeakingPage from './pages/SpeakingPage'
 import PracticeSetPage from './pages/PracticeSetPage'
 import './App.css'
 
@@ -72,6 +75,15 @@ export function AppInner() {
       {page === 'exam' && <ExamPage setPage={goPage} />}
       {page === 'listening' && (
         <ListeningPage setPage={goPage} setActivePart={setActivePart} />
+      )}
+      {page === 'reading' && (
+        <ReadingPage setPage={goPage} setActivePart={setActivePart} />
+      )}
+      {page === 'writing' && (
+        <WritingPage setPage={goPage} setActivePart={setActivePart} />
+      )}
+      {page === 'speaking' && (
+        <SpeakingPage setPage={goPage} setActivePart={setActivePart} />
       )}
       {page === 'practice-set' && (
         <PracticeSetPage part={activePart} setPage={goPage} />

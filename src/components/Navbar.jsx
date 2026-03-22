@@ -81,6 +81,12 @@ function DropItem({ item, color, setPage, closeAll, parentId }) {
       setPage(item.action)
     } else if (parentId === 'listening') {
       setPage('listening')
+    } else if (parentId === 'reading') {
+      setPage('reading')
+    } else if (parentId === 'writing') {
+      setPage('writing')
+    } else if (parentId === 'speaking') {
+      setPage('speaking')
     } else {
       setPage('exam')
     }
@@ -164,7 +170,7 @@ function NavItem({ item, active, setPage, openId, setOpenId }) {
               <button
                 className="nav-drop-cta"
                 style={{ background: item.color }}
-                onClick={() => { setPage(item.id === 'listening' ? 'listening' : 'exam'); setOpenId(null) }}
+                onClick={() => { setPage(item.id === 'listening' ? 'listening' : item.id === 'reading' ? 'reading' : item.id === 'writing' ? 'writing' : item.id === 'speaking' ? 'speaking' : 'exam'); setOpenId(null) }}
               >
                 Practice {item.label} →
               </button>
