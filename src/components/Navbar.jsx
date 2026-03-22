@@ -75,11 +75,21 @@ const NAV_ITEMS = [
 ]
 
 /* ── Single dropdown item ── */
-function DropItem({ item, color, setPage, closeAll }) {
+function DropItem({ item, color, setPage, closeAll, parentId }) {
+  const handleClick = () => {
+    if (item.action) {
+      setPage(item.action)
+    } else if (parentId === 'listening') {
+      setPage('listening')
+    } else {
+      setPage('exam')
+    }
+    closeAll()
+  }
   return (
     <button
       className="nav-drop-item"
-      onClick={() => { setPage(item.action || 'exam'); closeAll() }}
+      onClick={handleClick}
     >
       <div className="nav-drop-label" style={{ color }}>{item.label}</div>
       <div className="nav-drop-desc">{item.desc}</div>
@@ -145,6 +155,7 @@ function NavItem({ item, active, setPage, openId, setOpenId }) {
                 color={item.color}
                 setPage={setPage}
                 closeAll={() => setOpenId(null)}
+                parentId={item.id}
               />
             ))}
           </div>
@@ -153,7 +164,7 @@ function NavItem({ item, active, setPage, openId, setOpenId }) {
               <button
                 className="nav-drop-cta"
                 style={{ background: item.color }}
-                onClick={() => { setPage('exam'); setOpenId(null) }}
+                onClick={() => { setPage(item.id === 'listening' ? 'listening' : 'exam'); setOpenId(null) }}
               >
                 Practice {item.label} →
               </button>

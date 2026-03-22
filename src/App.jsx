@@ -15,6 +15,8 @@ import TipsPage from './pages/TipsPage'
 import ScoresPage from './pages/ScoresPage'
 import CRSCalculatorPage from './pages/CRSCalculatorPage'
 import ExamPage from './pages/ExamPage'
+import ListeningPage from './pages/ListeningPage'
+import PracticeSetPage from './pages/PracticeSetPage'
 import './App.css'
 
 function HomePage({ setPage }) {
@@ -34,6 +36,7 @@ function HomePage({ setPage }) {
 export function AppInner() {
   const [page, setPage] = useState('home')
   const [activeSection, setActiveSection] = useState('listening')
+  const [activePart, setActivePart] = useState(null)
   const [authOpen, setAuthOpen] = useState(false)
 
   // Load Google Fonts
@@ -67,6 +70,12 @@ export function AppInner() {
       {page === 'scores' && <ScoresPage />}
       {page === 'calculator' && <CRSCalculatorPage setPage={goPage} />}
       {page === 'exam' && <ExamPage setPage={goPage} />}
+      {page === 'listening' && (
+        <ListeningPage setPage={goPage} setActivePart={setActivePart} />
+      )}
+      {page === 'practice-set' && (
+        <PracticeSetPage part={activePart} setPage={goPage} />
+      )}
 
       {/* Pricing still accessible from footer/CTA but not in main nav */}
       {page === 'pricing' && (
