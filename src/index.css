@@ -3384,6 +3384,7 @@ img { display: block; max-width: 100%; }
   line-height: 1.15;
   margin: 0 0 16px;
   letter-spacing: -.02em;
+  color: #fff;
 }
 .lp-hero-accent { color: #4A90D9; }
 .lp-hero-subtitle {
