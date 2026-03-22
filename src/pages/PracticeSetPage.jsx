@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePracticeSet } from '../hooks/usePracticeSet'
 
@@ -1266,160 +1266,405 @@ function QuestionPanel({ questions, color }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   PRACTICE LAYOUT — Sidebar + Main panel
-   Used for ALL section types (reading, listening, writing, speaking)
+   EXAM QUESTION LIST
+   Shows ALL questions at once in a scrollable right pane,
+   exactly like the real CELPIP test interface.
+   Each question is numbered and renders by questionType.
+══════════════════════════════════════════════════════════════ */
+function ExamQuestionList({ questions, color, showAnswerKey }) {
+  const sortedQs = sortByDifficulty(questions)
+  const [answers,  setAnswers]  = useState({})
+  const [revealed, setRevealed] = useState(false)
+
+  const allDone = sortedQs.length > 0 && sortedQs.every((_, i) => answers[i] !== undefined)
+  const score   = sortedQs.filter((q, i) => answers[i] === q.answer).length
+
+  const handleSelect = (qIndex, optIndex) => {
+    if (!revealed) setAnswers(a => ({ ...a, [qIndex]: optIndex }))
+  }
+
+  return (
+    <div className="ps-exam-qlist">
+      {/* Instruction chip */}
+      <div className="ps-exam-qlist-instr" style={{ borderColor: color, color }}>
+        Using the options provided, choose the best answer for each question.
+      </div>
+
+      {sortedQs.map((q, i) => {
+        const selected = answers[i] ?? null
+        const answered = selected !== null
+        const correct  = selected === q.answer
+        const qtype    = q.questionType || 'mcq'
+
+        return (
+          <div
+            key={q.id ?? i}
+            className={`ps-exam-q${answered || revealed ? (correct || revealed ? (i === Object.keys(answers).length - 1 ? '' : '') : '') : ''}`}
+            id={`exam-q-${i}`}
+          >
+            {/* Q number + type tag + difficulty */}
+            <div className="ps-exam-q-header">
+              <span className="ps-exam-q-num" style={{ background: color }}>{i + 1}</span>
+              {QTYPE_LABELS[qtype] && (
+                <span className="ps-exam-q-type">{QTYPE_LABELS[qtype]}</span>
+              )}
+              {q.difficulty && (
+                <span className="ps-cq-diff-tag" style={{
+                  background: (DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.medium).bg,
+                  color:      (DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.medium).text,
+                }}>
+                  {q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1)}
+                </span>
+              )}
+              {(answered || revealed) && (
+                <span className={`ps-exam-q-verdict ${(revealed ? (answers[i] === q.answer) : correct) ? 'ps-exam-q-verdict--ok' : 'ps-exam-q-verdict--err'}`}>
+                  {revealed
+                    ? answers[i] === q.answer ? '✓ Correct' : '✗ Incorrect'
+                    : correct ? '✓ Correct' : '✗ Incorrect'}
+                </span>
+              )}
+            </div>
+
+            {/* Question body — paragraph_match gets italic quote */}
+            {qtype === 'paragraph_match' ? (
+              <p className="ps-exam-q-stem ps-exam-q-stem--quote">"{q.text}"</p>
+            ) : qtype === 'vocab_context' ? (
+              <p className="ps-exam-q-stem">
+                {q.targetWord
+                  ? q.text.split(new RegExp(`(${q.targetWord})`, 'i')).map((part, pi) =>
+                      pi % 2 === 1
+                        ? <span key={pi} className="ps-cq-vocab-word">{part}</span>
+                        : part
+                    )
+                  : q.text}
+              </p>
+            ) : qtype === 'fill_blank' ? (
+              /* Fill blank: show the sentence with a highlighted blank */
+              <p className="ps-exam-q-stem">
+                {q.text.split(/(\d+___[.,]?)/).map((chunk, ci) =>
+                  /\d+___/.test(chunk)
+                    ? <span key={ci} className="ps-exam-blank-slot">
+                        {answered || revealed
+                          ? <span className={answers[i] === q.answer ? 'ps-blank-filled--correct' : 'ps-blank-filled--wrong'}>
+                              {(q.options[q.answer] || '').replace(/^[A-E]\)\s*/, '')}
+                            </span>
+                          : <span className="ps-blank-placeholder">____</span>}
+                      </span>
+                    : chunk
+                )}
+              </p>
+            ) : (
+              <p className="ps-exam-q-stem">{q.text}</p>
+            )}
+
+            {/* Options — paragraph_match = A/B/C/D/E grid, others = radio-style list */}
+            {qtype === 'paragraph_match' ? (
+              <div className="ps-exam-para-grid">
+                {(q.options || ['A','B','C','D','E']).map((val, oi) => {
+                  let cls = 'ps-exam-para-btn'
+                  if (answered || revealed) {
+                    if (oi === q.answer)       cls += ' ps-exam-para-btn--correct'
+                    else if (oi === selected)  cls += ' ps-exam-para-btn--wrong'
+                    else                       cls += ' ps-exam-para-btn--dim'
+                  } else if (selected === oi) {
+                    cls += ' ps-exam-para-btn--sel'
+                  }
+                  return (
+                    <button
+                      key={oi}
+                      className={cls}
+                      style={selected === oi && !answered && !revealed ? { borderColor: color, color } : {}}
+                      onClick={() => handleSelect(i, oi)}
+                      disabled={answered || revealed}
+                      title={(q.paragraphLabels || {})[val] || val}
+                    >
+                      <span className="ps-exam-para-letter">{val}</span>
+                      <span className="ps-exam-para-sub">{(q.paragraphLabels || {})[val] || ''}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="ps-exam-opts">
+                {(q.options || []).map((opt, oi) => {
+                  const LETTERS = ['A','B','C','D','E']
+                  const letter   = LETTERS[oi] || String(oi + 1)
+                  const cleanOpt = opt.replace(/^[A-E]\)\s*/, '')
+                  let cls = 'ps-exam-opt'
+                  if (answered || revealed) {
+                    if (oi === q.answer)       cls += ' ps-exam-opt--correct'
+                    else if (oi === selected)  cls += ' ps-exam-opt--wrong'
+                    else                       cls += ' ps-exam-opt--dim'
+                  } else if (selected === oi) {
+                    cls += ' ps-exam-opt--sel'
+                  }
+                  return (
+                    <button
+                      key={oi}
+                      className={cls}
+                      onClick={() => handleSelect(i, oi)}
+                      disabled={answered || revealed}
+                    >
+                      <span
+                        className="ps-exam-opt-letter"
+                        style={selected === oi && !answered && !revealed ? { background: color, color: '#fff', borderColor: color } : {}}
+                      >{letter}</span>
+                      <span className="ps-exam-opt-text">{cleanOpt}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* Explanation — shown after answering or reveal */}
+            {(answered || revealed) && q.explanation && (
+              <div className={`ps-exam-expl${correct || (revealed && answers[i] === q.answer) ? ' ps-exam-expl--ok' : ''}`}>
+                {!correct && answered && (
+                  <div className="ps-exam-expl-correct">
+                    ✓ Answer: <strong>
+                      {qtype === 'paragraph_match'
+                        ? (q.options || [])[q.answer] || q.answer
+                        : (q.options[q.answer] || '').replace(/^[A-E]\)\s*/, '')}
+                    </strong>
+                  </div>
+                )}
+                <span className="ps-exp-icon">{correct && answered ? '✅' : '📘'}</span>
+                {q.explanation}
+              </div>
+            )}
+          </div>
+        )
+      })}
+
+      {/* Score bar after all answered */}
+      {allDone && !revealed && (
+        <div className="ps-exam-score" style={{ borderColor: color }}>
+          <span style={{ color }}>
+            Score: <strong>{score} / {sortedQs.length}</strong>
+            &nbsp;({Math.round((score / sortedQs.length) * 100)}%)
+          </span>
+        </div>
+      )}
+
+      {/* Answer Key toggle */}
+      {showAnswerKey && (
+        <button
+          className="ps-exam-reveal-btn"
+          style={revealed ? { background: '#f3f4f6', color: '#555', borderColor: '#d1d5db' } : { borderColor: color, color }}
+          onClick={() => setRevealed(v => !v)}
+        >
+          {revealed ? '🙈 Hide Answer Key' : '🔑 Show Answer Key'}
+        </button>
+      )}
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRACTICE LAYOUT — CELPIP exam interface
+   ┌─────────────────────────────────────────────────────────┐
+   │  TOP BAR: [Part name]  [Set tabs]  [Timer]  [Next →]   │
+   ├───────────────────────────┬─────────────────────────────┤
+   │  LEFT PANE                │  RIGHT PANE                 │
+   │  Passage / Email /        │  All questions listed       │
+   │  Audio / Prompt           │  top to bottom, numbered   │
+   │  (scrollable)             │  (scrollable independently)│
+   └───────────────────────────┴─────────────────────────────┘
 ══════════════════════════════════════════════════════════════ */
 function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet, staticData }) {
-  const [activeSet,     setActiveSet]     = useState(0)
-  const [sidebarOpen,   setSidebarOpen]   = useState(true)
+  const [activeSet, setActiveSet] = useState(0)
+  const [timeLeft,  setTimeLeft]  = useState(null)  // null = not started
+  const timerRef = useRef(null)
 
   const set = sets[activeSet]
   if (!set) return null
 
-  const diffStyle  = DIFF_COLOURS[set.difficulty] || DIFF_COLOURS['medium']
-  const fillBlanks = set.questions ? set.questions.filter(q => q.questionType === 'fill_blank') : []
-  const mcqs       = set.questions ? set.questions.filter(q => q.questionType !== 'fill_blank') : []
-  // For non-reading, all questions are MCQ (no questionType field → treat as mcq)
-  const allQs      = set.questions || []
+  const diffStyle = DIFF_COLOURS[set.difficulty] || DIFF_COLOURS['medium']
+  const allQs     = set.questions || []
+  const isStarted = startedSets[activeSet]
+
+  // When set changes, stop any running timer
+  const switchSet = (i) => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    setTimeLeft(null)
+    setActiveSet(i)
+  }
+
+  // Start exam timer (11 min for reading, 8 for listening etc.)
+  const startTimer = () => {
+    const mins = section === 'reading' ? 11 : section === 'listening' ? 8 : 27
+    setTimeLeft(mins * 60)
+    onStartSet(activeSet)
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) { clearInterval(timerRef.current); return 0 }
+        return t - 1
+      })
+    }, 1000)
+  }
+
+  const fmtTime = (secs) => {
+    if (secs === null) return '--:--'
+    const m = Math.floor(secs / 60)
+    const s = secs % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
+  const timeCritical = timeLeft !== null && timeLeft < 120  // last 2 min = red
 
   return (
-    <div className={`ps-layout${sidebarOpen ? '' : ' ps-layout--sidebar-hidden'}`}>
+    <div className="ps-exam-shell">
 
-      {/* ── SIDEBAR ── */}
-      <aside className="ps-sidebar">
-        <div className="ps-sidebar-header">
-          <span className="ps-sidebar-title" style={{ color }}>
-            {section === 'reading' ? '📋 Practice Sets' : '� Topics'}
+      {/* ── TOP BAR ── */}
+      <div className="ps-exam-topbar">
+        {/* Left: part label */}
+        <div className="ps-exam-topbar-left">
+          <span className="ps-exam-topbar-part" style={{ color }}>
+            {section === 'reading'   ? '📖 Reading' :
+             section === 'listening' ? '🎧 Listening' :
+             section === 'writing'   ? '✍️ Writing' : '🎙️ Speaking'}
           </span>
-          <button className="ps-sidebar-toggle" onClick={() => setSidebarOpen(false)} title="Hide panel">
-            ✕
-          </button>
+          <span className="ps-exam-topbar-sep">›</span>
+          <span className="ps-exam-topbar-setname">{set.setTitle || set.title}</span>
         </div>
-        <nav className="ps-sidebar-nav">
-          {sets.map((s, i) => {
-            const d   = DIFF_COLOURS[s.difficulty] || DIFF_COLOURS['medium']
-            const qs  = s.questions?.length || 0
-            return (
-              <button
-                key={i}
-                className={`ps-sidebar-item${i === activeSet ? ' ps-sidebar-item--active' : ''}`}
-                style={i === activeSet ? { borderLeftColor: color, background: `${color}0d` } : {}}
-                onClick={() => setActiveSet(i)}
+
+        {/* Centre: set tabs (scroll on overflow) */}
+        <div className="ps-exam-tabs">
+          {sets.map((s, i) => (
+            <button
+              key={i}
+              className={`ps-exam-tab${i === activeSet ? ' ps-exam-tab--active' : ''}`}
+              style={i === activeSet ? { color, borderBottomColor: color } : {}}
+              onClick={() => switchSet(i)}
+            >
+              {s.setNumber ? `Set ${s.setNumber}` : `Set ${i + 1}`}
+              <span
+                className="ps-exam-tab-diff"
+                style={{
+                  background: (DIFF_COLOURS[s.difficulty] || DIFF_COLOURS.medium).bg,
+                  color:      (DIFF_COLOURS[s.difficulty] || DIFF_COLOURS.medium).text,
+                }}
               >
-                <span className="ps-sidebar-item-num" style={i === activeSet ? { background: color } : {}}>
-                  {i + 1}
-                </span>
-                <span className="ps-sidebar-item-body">
-                  <span className="ps-sidebar-item-title">{s.setTitle || s.title}</span>
-                  <span className="ps-sidebar-item-meta">
-                    <span className="ps-diff-badge" style={{ background: d.bg, color: d.text, fontSize: 10 }}>
-                      {(s.difficulty || 'medium').charAt(0).toUpperCase() + (s.difficulty || 'medium').slice(1)}
-                    </span>
-                    {qs > 0 && <span className="ps-sidebar-item-qs">{qs} Qs</span>}
-                  </span>
-                </span>
+                {(s.difficulty || 'med').charAt(0).toUpperCase()}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Right: timer + next */}
+        <div className="ps-exam-topbar-right">
+          {isStarted ? (
+            <span className={`ps-exam-timer${timeCritical ? ' ps-exam-timer--critical' : ''}`}>
+              ⏱ {fmtTime(timeLeft)}
+            </span>
+          ) : (
+            <span className="ps-exam-timer ps-exam-timer--idle">⏱ --:--</span>
+          )}
+          {activeSet < sets.length - 1 && (
+            <button
+              className="ps-exam-next-btn"
+              style={{ background: color }}
+              onClick={() => switchSet(activeSet + 1)}
+            >
+              NEXT ›
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ── SPLIT PANE ── */}
+      <div className="ps-exam-split">
+
+        {/* ── LEFT: passage / prompt / audio ── */}
+        <div className="ps-exam-left">
+
+          {/* Instruction banner */}
+          <div className="ps-exam-instr" style={{ borderLeftColor: color }}>
+            {set.instruction}
+          </div>
+
+          {/* Audio gate (listening) */}
+          {section === 'listening' && !isStarted && (
+            <div className="ps-exam-start-gate">
+              <div className="ps-exam-gate-icon">🎧</div>
+              <p className="ps-exam-gate-text">Press <strong>Start</strong> to reveal the listening audio and begin.</p>
+              <button className="ps-exam-gate-btn" style={{ background: color }} onClick={startTimer}>
+                ▶ Start — {section === 'reading' ? '11' : '8'} min
               </button>
-            )
-          })}
-        </nav>
-      </aside>
-
-      {/* ── TOGGLE BUTTON (shown when sidebar is hidden) ── */}
-      {!sidebarOpen && (
-        <button
-          className="ps-sidebar-show-btn"
-          style={{ borderColor: color, color }}
-          onClick={() => setSidebarOpen(true)}
-        >
-          ☰ Sets
-        </button>
-      )}
-
-      {/* ── MAIN CONTENT ── */}
-      <main className="ps-main">
-
-        {/* Set title bar */}
-        <div className="ps-main-set-bar">
-          <div className="ps-main-set-bar-left">
-            <span className="ps-main-set-num" style={{ background: color }}>Set {set.setNumber ?? activeSet + 1}</span>
-            <div>
-              <div className="ps-main-set-title">{set.setTitle || set.title}</div>
-              {(set.scenario || set.instruction) && (
-                <div className="ps-main-set-scenario">{set.scenario || ''}</div>
-              )}
             </div>
-          </div>
-          <span className="ps-diff-badge" style={{ background: diffStyle.bg, color: diffStyle.text }}>
-            {(set.difficulty || 'medium').charAt(0).toUpperCase() + (set.difficulty || 'medium').slice(1)}
-          </span>
+          )}
+
+          {section === 'listening' && isStarted && (
+            <div className="ps-exam-audio-bar">
+              <span className="ps-exam-audio-icon">🔊</span>
+              <span className="ps-exam-audio-label">Audio for this set</span>
+              <span className="ps-exam-audio-note">(Audio plays once on the real test — replay available here)</span>
+            </div>
+          )}
+
+          {/* Passage */}
+          {set.passage && (
+            <div className="ps-exam-passage">
+              <pre className="ps-exam-passage-text">{set.passage}</pre>
+            </div>
+          )}
+
+          {/* Diagram (R2) */}
+          {set.diagramHtml && (
+            <div className="ps-exam-diagram">
+              <div className="ps-exam-diagram-label">📊 Reference Information</div>
+              <div dangerouslySetInnerHTML={{ __html: set.diagramHtml }} />
+            </div>
+          )}
+
+          {/* Writing / Speaking prompts on left */}
+          {set.type === 'writing' && (
+            <WritingPractice
+              data={set}
+              started={isStarted}
+              onStart={startTimer}
+              color={color}
+            />
+          )}
+          {set.type === 'speaking' && (
+            <SpeakingPractice
+              data={set}
+              started={isStarted}
+              onStart={startTimer}
+              color={color}
+            />
+          )}
         </div>
 
-        {/* Instruction */}
-        <div className="ps-main-instruction" style={{ borderLeftColor: color }}>
-          {set.instruction}
+        {/* ── RIGHT: questions ── */}
+        <div className="ps-exam-right">
+          {allQs.length === 0 ? (
+            <div className="ps-exam-no-qs">
+              <p>No questions for this set.</p>
+            </div>
+          ) : !isStarted && (section === 'listening') ? (
+            <div className="ps-exam-right-locked">
+              <div style={{ fontSize: 32 }}>🔒</div>
+              <p>Start the audio to unlock questions.</p>
+            </div>
+          ) : !isStarted && (section === 'reading') ? (
+            /* Reading: show questions right away, but also show start button */
+            <>
+              <div className="ps-exam-start-inline">
+                <button className="ps-exam-gate-btn" style={{ background: color }} onClick={startTimer}>
+                  ▶ Start Timer — 11 min
+                </button>
+                <span className="ps-exam-start-hint">You can answer without starting the timer</span>
+              </div>
+              <ExamQuestionList questions={allQs} color={color} showAnswerKey={true} />
+            </>
+          ) : (
+            <ExamQuestionList questions={allQs} color={color} showAnswerKey={true} />
+          )}
         </div>
 
-        {/* Diagram (R2 only — above passage) */}
-        {set.diagramHtml && <DiagramBlock html={set.diagramHtml} />}
-
-        {/* Passage / email */}
-        {set.passage && (
-          <div className="ps-passage-block" style={{ borderLeftColor: color }}>
-            <div className="ps-passage-label" style={{ color }}>
-              {set.diagramHtml ? '✉️ Email' : '📄 Reading Passage'}
-            </div>
-            <pre className="ps-passage-text">{set.passage}</pre>
-          </div>
-        )}
-
-        {/* Writing / Speaking special UIs */}
-        {set.type === 'writing' && (
-          <WritingPractice
-            data={set}
-            started={startedSets[activeSet]}
-            onStart={() => onStartSet(activeSet)}
-            color={color}
-          />
-        )}
-        {set.type === 'speaking' && (
-          <SpeakingPractice
-            data={set}
-            started={startedSets[activeSet]}
-            onStart={() => onStartSet(activeSet)}
-            color={color}
-          />
-        )}
-
-        {/* Listening audio gate */}
-        {set.type === 'mcq' && section === 'listening' && !startedSets[activeSet] && (
-          <AudioGate started={false} onStart={() => onStartSet(activeSet)} />
-        )}
-
-        {/* Questions — one at a time */}
-        {allQs.length > 0 && (
-          (set.type !== 'mcq' || section !== 'listening' || startedSets[activeSet]) &&
-          set.type !== 'writing' && set.type !== 'speaking'
-        ) && (
-          <>
-            {/* Fill-blank section header */}
-            {fillBlanks.length > 0 && mcqs.length > 0 && (
-              <div className="ps-section-divider" style={{ color }}>✏️ Part 1 — Fill in the Blanks</div>
-            )}
-            {fillBlanks.length > 0 && <QuestionPanel questions={fillBlanks} color={color} />}
-
-            {fillBlanks.length > 0 && mcqs.length > 0 && (
-              <div className="ps-section-divider" style={{ color, marginTop: 28 }}>📝 Part 2 — Comprehension Questions</div>
-            )}
-            {mcqs.length > 0 && <QuestionPanel questions={mcqs} color={color} />}
-
-            {/* Pure MCQ (no fill-blank) — listening + reading R1/R3/R4 */}
-            {fillBlanks.length === 0 && mcqs.length === 0 && allQs.length > 0 && (
-              <QuestionPanel questions={allQs} color={color} />
-            )}
-          </>
-        )}
-
-      </main>
+      </div>
     </div>
   )
 }
