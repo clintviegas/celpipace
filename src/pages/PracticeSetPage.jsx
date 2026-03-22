@@ -637,12 +637,87 @@ function SpeakingPractice({ data, started, onStart, color }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   DIAGRAM BLOCK — renders HTML table for R2 "Apply a Diagram"
+══════════════════════════════════════════════════════════════ */
+function DiagramBlock({ html }) {
+  return (
+    <div className="ps-diagram-block">
+      <div className="ps-diagram-label">📊 Reference Diagram</div>
+      <div
+        className="ps-diagram-table"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FILL-BLANK QUESTION — inline dropdown in sentence
+══════════════════════════════════════════════════════════════ */
+function FillBlankQuestion({ q, index }) {
+  const [selected, setSelected] = useState(null)
+  const answered = selected !== null
+  const correct  = selected === q.answer
+
+  // Split on the blank marker (e.g. "1___." or "1___,")
+  const blankRe  = /\d+___[.,]?/
+  const parts    = q.text.split(blankRe)
+  const blankNum = (q.text.match(/(\d+)___/) || ['', index + 1])[1]
+
+  return (
+    <div className={`ps-fill-blank-q${answered ? (correct ? ' ps-fbq--correct' : ' ps-fbq--wrong') : ''}`}>
+      <div className="ps-fbq-label">
+        <span className="ps-fbq-num">{index + 1}</span>
+        <span className="ps-fbq-tag">Fill in blank {blankNum}</span>
+        {answered && (
+          <span className={`ps-fbq-result ${correct ? 'ps-fbq-result--ok' : 'ps-fbq-result--err'}`}>
+            {correct ? '✓ Correct' : '✗ Incorrect'}
+          </span>
+        )}
+      </div>
+
+      {/* Sentence with inline dropdown */}
+      <div className="ps-fbq-sentence">
+        <span>{parts[0]}</span>
+        <select
+          className={`ps-blank-select${answered ? (correct ? ' ps-blank-select--correct' : ' ps-blank-select--wrong') : ''}`}
+          value={selected ?? ''}
+          onChange={e => setSelected(Number(e.target.value))}
+          disabled={answered}
+        >
+          <option value="" disabled>choose ▾</option>
+          {(q.options || []).map((opt, i) => (
+            <option key={i} value={i}>{opt}</option>
+          ))}
+        </select>
+        {parts[1] && <span>{parts[1]}</span>}
+      </div>
+
+      {/* Explanation (after answer chosen) */}
+      {answered && (
+        <div className="ps-fbq-explanation">
+          {!correct && (
+            <span className="ps-fbq-correct-ans">
+              ✓ Correct answer: <strong>{q.options[q.answer]}</strong>
+            </span>
+          )}
+          <span className="ps-fbq-exp-text">💡 {q.explanation}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
    READING — One expandable card per practice set
 ══════════════════════════════════════════════════════════════ */
 function ReadingSetCard({ set, index, color }) {
   const [open,     setOpen]     = useState(false)
   const [revealed, setRevealed] = useState(false)
   const diffStyle = DIFF_COLOURS[set.difficulty] || DIFF_COLOURS['medium']
+
+  const fillBlanks = set.questions.filter(q => q.questionType === 'fill_blank')
+  const mcqs       = set.questions.filter(q => q.questionType !== 'fill_blank')
 
   return (
     <motion.div
@@ -686,30 +761,53 @@ function ReadingSetCard({ set, index, color }) {
               <span className="ps-instr-label" style={{ color }}>{set.instruction}</span>
             </div>
 
-            {/* Passage */}
+            {/* Diagram (R2 only) */}
+            {set.diagramHtml && <DiagramBlock html={set.diagramHtml} />}
+
+            {/* Passage / email text */}
             {set.passage && (
               <div className="ps-passage-block" style={{ borderLeftColor: color }}>
-                <div className="ps-passage-label" style={{ color }}>📄 Reading Passage</div>
+                <div className="ps-passage-label" style={{ color }}>
+                  {set.diagramHtml ? '✉️ Email' : '📄 Reading Passage'}
+                </div>
                 <pre className="ps-passage-text">{set.passage}</pre>
               </div>
             )}
 
-            {/* Questions */}
-            <div className="ps-set-questions">
-              <div className="ps-questions-header">
-                <span className="ps-questions-title">{set.questions.length} Questions</span>
-                <button
-                  className="ps-reveal-btn"
-                  style={{ color, borderColor: color }}
-                  onClick={() => setRevealed(v => !v)}
-                >
-                  {revealed ? '🙈 Hide Answers' : '🔑 Show Answer Key'}
-                </button>
+            {/* Fill-in-the-blank questions (R2) */}
+            {fillBlanks.length > 0 && (
+              <div className="ps-set-questions">
+                <div className="ps-questions-header">
+                  <span className="ps-questions-title" style={{ color }}>
+                    ✏️ Part 1 — Fill in the Blanks ({fillBlanks.length} blanks)
+                  </span>
+                </div>
+                {fillBlanks.map((q, i) => (
+                  <FillBlankQuestion key={q.id} q={q} index={i} />
+                ))}
               </div>
-              {set.questions.map((q, i) => (
-                <QuestionCard key={q.id} q={q} index={i} revealed={revealed} />
-              ))}
-            </div>
+            )}
+
+            {/* MCQ questions */}
+            {mcqs.length > 0 && (
+              <div className="ps-set-questions" style={{ marginTop: fillBlanks.length > 0 ? 24 : 0 }}>
+                <div className="ps-questions-header">
+                  <span className="ps-questions-title" style={{ color }}>
+                    {fillBlanks.length > 0 ? `📝 Part 2 — Comprehension (${mcqs.length} questions)` : `${mcqs.length} Questions`}
+                  </span>
+                  <button
+                    className="ps-reveal-btn"
+                    style={{ color, borderColor: color }}
+                    onClick={() => setRevealed(v => !v)}
+                  >
+                    {revealed ? '🙈 Hide Answers' : '🔑 Show Answer Key'}
+                  </button>
+                </div>
+                {mcqs.map((q, i) => (
+                  <QuestionCard key={q.id} q={q} index={i} revealed={revealed} />
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

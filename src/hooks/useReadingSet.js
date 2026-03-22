@@ -60,21 +60,24 @@ export function useReadingSet(part) {
             setTitle:    row.set_title,
             instruction: row.instruction,
             scenario:    row.scenario,
-            difficulty:  row.difficulty,         // set-level difficulty from Q1
-            passage:     row.passage ?? null,    // passage only on first row
+            difficulty:  row.difficulty,          // set-level difficulty from Q1
+            passage:     row.passage ?? null,     // passage only on first row
+            diagramHtml: row.diagram_html ?? null,// HTML table for R2 diagram sets
             questions:   [],
           }
         }
-        // Capture passage if this row has it (only Q1 of each set stores it)
-        if (row.passage) grouped[n].passage = row.passage
+        // Capture passage / diagram only from rows that carry them
+        if (row.passage)      grouped[n].passage     = row.passage
+        if (row.diagram_html) grouped[n].diagramHtml = row.diagram_html
 
         grouped[n].questions.push({
-          id:          row.question_order,
-          text:        row.question_text,
-          options:     row.options,               // JSONB → already an array
-          answer:      row.correct_index,
-          explanation: row.explanation,
-          difficulty:  row.difficulty,
+          id:           row.question_order,
+          text:         row.question_text,
+          options:      row.options,               // JSONB → already an array
+          answer:       row.correct_index,
+          explanation:  row.explanation,
+          difficulty:   row.difficulty,
+          questionType: row.question_type || 'mcq', // 'mcq' | 'fill_blank'
         })
       }
 
