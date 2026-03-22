@@ -14,9 +14,20 @@ const SECTIONS = [
     parts: 6,
     duration: '47–55 min',
     questions: 38,
-    description: 'Listen to conversations, news items, and interviews. Answer multiple-choice questions.',
-    skills: ['Short conversations', 'News reports', 'Discussions', 'Workplace talks'],
+    description: 'The CELPIP Listening test has 6 parts. All audio uses Canadian English accents and reflects real-life situations. Every question is multiple choice, and each clip plays only once on the real test.',
+    skills: ['Problem Solving', 'Daily Life Conversation', 'Information', 'News Item', 'Discussion', 'Viewpoints'],
     clbRange: 'CLB 4–12',
+    partDetails: [
+      { num: 'L1', name: 'Problem Solving', desc: 'A conversation between two people working through a problem. Tests comprehension of solutions and decisions.' },
+      { num: 'L2', name: 'Daily Life Conversation', desc: 'A phone call, workplace chat, or everyday exchange. Focuses on main ideas and specific details.' },
+      { num: 'L3', name: 'Information', desc: 'A longer informational passage on a general topic. Tests detail comprehension and inference.' },
+      { num: 'L4', name: 'News Item', desc: 'A news-style broadcast similar to Canadian radio or TV. Tests understanding of facts, events, and opinions.' },
+      { num: 'L5', name: 'Discussion', desc: 'Multiple speakers sharing different perspectives on a topic. Requires identifying who said what.' },
+      { num: 'L6', name: 'Viewpoints', desc: 'Two contrasting viewpoints on a single topic. Tests ability to distinguish and compare positions.' },
+    ],
+    scoring: 'Scores are on the CLB scale (1–12). Express Entry requires CLB 7 minimum. CLB 9+ in all skills earns maximum CRS language points.',
+    prepTip: 'Read each question before the audio plays so you know what to listen for. Take short notes during longer passages to capture names, numbers, and key details.',
+    timeGuide: '47–55 minutes total. Each audio clip plays once — you cannot replay on the real test.',
   },
   {
     id: 'reading',
@@ -27,9 +38,18 @@ const SECTIONS = [
     parts: 4,
     duration: '55–60 min',
     questions: 38,
-    description: 'Read correspondence, diagrams, reports, and viewpoints. Answer multiple-choice questions.',
-    skills: ['Email/correspondence', 'Diagrams & forms', 'Reports', 'Viewpoints'],
+    description: 'The CELPIP Reading test has 4 parts covering emails, diagrams, informational passages, and viewpoints. All passages use Canadian English and cover practical everyday topics.',
+    skills: ['Correspondence', 'Apply a Diagram', 'Information', 'Viewpoints'],
     clbRange: 'CLB 4–12',
+    partDetails: [
+      { num: 'R1', name: 'Correspondence', desc: 'Comprehend everyday emails and letters. Tests your ability to identify tone, purpose, and key details in written correspondence.' },
+      { num: 'R2', name: 'Apply a Diagram', desc: 'Extract and apply information from diagrams, charts, or schedules. Tests practical reading and data interpretation.' },
+      { num: 'R3', name: 'Information', desc: 'A longer informational passage on a general topic. Tests both direct comprehension and inference from the text.' },
+      { num: 'R4', name: 'Viewpoints', desc: 'Multiple viewpoints on a single topic. Tests your ability to identify, distinguish, and compare different opinions.' },
+    ],
+    scoring: 'Scored on CLB 1–12. CLB 7 required for Express Entry. CLB 4 for citizenship. Provincial programs typically require CLB 5–7.',
+    prepTip: 'Read the questions before the passage so you know what information to look for. Focus on inference questions — these cause the most errors.',
+    timeGuide: 'Roughly 11 min for R1 · 13 min for R2 · 14 min for R3 · 17 min for R4. You manage your own time across all 4 parts.',
   },
   {
     id: 'writing',
@@ -38,11 +58,18 @@ const SECTIONS = [
     color: '#C8972A',
     colorLight: '#FFFBEB',
     parts: 2,
-    duration: '53–60 min',
+    duration: '53 min',
     questions: 2,
-    description: 'Write an email response and a survey-style opinion essay. Scored on content, vocabulary, and organization.',
-    skills: ['Email writing', 'Opinion essay', 'Vocabulary range', 'Sentence structure'],
+    description: 'The CELPIP Writing test has 2 tasks. Both expect 150–200 words, typed on a computer. You are scored on content, vocabulary, readability, and task fulfillment.',
+    skills: ['Writing an Email', 'Survey Questions'],
     clbRange: 'CLB 4–12',
+    partDetails: [
+      { num: 'W1', name: 'Writing an Email', desc: '27 minutes. Write an email responding to a specific scenario. Can be formal (complaint, request) or informal depending on who you\'re writing to. Address every bullet point in the prompt.' },
+      { num: 'W2', name: 'Survey Questions', desc: '26 minutes. Choose a position on a topic and defend your opinion with supporting arguments. Pick one clear position and stick with it — avoid sitting on the fence.' },
+    ],
+    scoring: 'Scored on 4 criteria: content & coherence, vocabulary range, readability (grammar/spelling/sentences), and task fulfillment. CLB 1–12.',
+    prepTip: 'For W1, address every bullet point and match tone to the scenario. For W2, pick one clear position and support it with specific reasons — never switch mid-response.',
+    timeGuide: 'W1: 27 minutes · W2: 26 minutes. You manage your own time within each task window.',
   },
   {
     id: 'speaking',
@@ -51,11 +78,24 @@ const SECTIONS = [
     color: '#C8102E',
     colorLight: '#FEF2F2',
     parts: 8,
-    duration: '15–22 min',
+    duration: '15–20 min',
     questions: 8,
-    description: 'Respond to images, conversations, and real-world scenarios. Scored on fluency, vocabulary, and coherence.',
-    skills: ['Picture description', 'Daily conversations', 'Advice giving', 'Story narration'],
+    description: 'The CELPIP Speaking test has 8 tasks measuring your ability to communicate clearly. Each task gives 30–60 seconds prep time and 60–90 seconds to record your spoken response.',
+    skills: ['Giving Advice', 'Personal Experience', 'Describing a Scene', 'Making Predictions', 'Comparing & Persuading', 'Difficult Situation', 'Expressing Opinions', 'Unusual Situation'],
     clbRange: 'CLB 4–12',
+    partDetails: [
+      { num: 'S1', name: 'Giving Advice', desc: 'Give advice in a personal scenario. Be direct, structured, and cover the specific points asked.' },
+      { num: 'S2', name: 'Personal Experience', desc: 'Talk about a personal experience. Use clear examples and connect them to the question.' },
+      { num: 'S3', name: 'Describing a Scene', desc: 'Describe an image in detail — people, setting, activities, and atmosphere.' },
+      { num: 'S4', name: 'Making Predictions', desc: 'Make predictions about a future situation shown or described in the prompt.' },
+      { num: 'S5', name: 'Comparing & Persuading', desc: 'Compare two options and persuade someone to choose one. Support your position with reasons.' },
+      { num: 'S6', name: 'Difficult Situation', desc: 'Describe how you would handle a difficult real-life scenario. Stay calm and practical.' },
+      { num: 'S7', name: 'Expressing Opinions', desc: 'Express and defend an opinion on a topic. Acknowledge the other side, then argue your position.' },
+      { num: 'S8', name: 'Unusual Situation', desc: 'Describe an unusual situation and how you would react or resolve it.' },
+    ],
+    scoring: 'Scored on 4 criteria: coherence, vocabulary range, listenability (pronunciation, pace, clarity), and task fulfillment. CLB 9+ earns 136 max CRS language points.',
+    prepTip: 'The most common reason for low scores is not fully answering every part of the prompt. Use prep time to plan: opening statement → supporting points → conclusion.',
+    timeGuide: '30–60 seconds prep time · 60–90 seconds speaking time per task. Entire test is 15–20 minutes.',
   },
 ]
 
@@ -111,10 +151,10 @@ const TEST_MODES = [
 
 /* ── Stat badges on top ────────────────────────────────────────── */
 const STATS = [
-  { label: 'Questions', value: '1,200+', icon: '📝' },
-  { label: 'Mock Tests', value: '12',    icon: '🏆' },
-  { label: 'Sections',  value: '4',      icon: '📚' },
-  { label: 'Avg. Improvement', value: '+1.8 CLB', icon: '📈' },
+  { label: 'Practice Questions', value: '1,200+', icon: '📝' },
+  { label: 'Mock Tests',         value: '12',     icon: '🏆' },
+  { label: 'Test Sections',      value: '4',      icon: '📚' },
+  { label: 'Parts / Tasks',      value: '20',     icon: '🎯' },
 ]
 
 /* ── Sub-components ────────────────────────────────────────────── */
@@ -147,6 +187,8 @@ function SectionPill({ section, active, onClick }) {
 }
 
 function SectionCard({ section, onPractice, onMock }) {
+  const [expanded, setExpanded] = useState(false)
+
   return (
     <motion.div
       className="exam-section-card"
@@ -176,6 +218,38 @@ function SectionCard({ section, onPractice, onMock }) {
           </span>
         ))}
       </div>
+
+      {/* Parts expand toggle */}
+      <button
+        className="exam-sc-parts-toggle"
+        style={{ color: section.color }}
+        onClick={() => setExpanded(e => !e)}
+      >
+        {expanded ? '▲ Hide parts' : `▼ See all ${section.parts} parts`}
+      </button>
+
+      {/* Expanded parts list */}
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            className="exam-sc-parts-list"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            {section.partDetails.map(p => (
+              <div key={p.num} className="exam-sc-part-row">
+                <span className="exam-sc-part-num" style={{ background: section.color + '18', color: section.color }}>{p.num}</span>
+                <div className="exam-sc-part-info">
+                  <div className="exam-sc-part-name">{p.name}</div>
+                  <div className="exam-sc-part-desc">{p.desc}</div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Actions */}
       <div className="exam-sc-actions">
@@ -232,6 +306,99 @@ function ModeCard({ mode, onStart }) {
         >
           {mode.locked ? '🔒 Unlock Pro' : mode.cta}
         </button>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ── Learning Tab ─────────────────────────────────────────────── */
+function LearningCard({ section }) {
+  const [open, setOpen] = useState(null) // 'scoring' | 'prep' | 'time'
+
+  const toggle = (key) => setOpen(o => o === key ? null : key)
+
+  const accordion = [
+    {
+      key: 'what',
+      icon: '📋',
+      title: `What the ${section.label} test includes`,
+      content: section.description,
+    },
+    {
+      key: 'scoring',
+      icon: '📊',
+      title: 'How scoring works',
+      content: section.scoring,
+    },
+    {
+      key: 'prep',
+      icon: '💡',
+      title: 'How to prepare',
+      content: section.prepTip,
+    },
+    {
+      key: 'time',
+      icon: '⏱',
+      title: 'Time guide',
+      content: section.timeGuide,
+    },
+  ]
+
+  return (
+    <motion.div
+      className="learn-card"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      style={{ borderTopColor: section.color }}
+    >
+      {/* Header */}
+      <div className="learn-card-header" style={{ background: section.colorLight }}>
+        <span className="learn-card-icon" style={{ color: section.color }}>{section.icon}</span>
+        <div>
+          <div className="learn-card-title" style={{ color: section.color }}>{section.label}</div>
+          <div className="learn-card-meta">{section.parts} parts · {section.duration}</div>
+        </div>
+      </div>
+
+      {/* Parts quick-list */}
+      <div className="learn-parts-grid">
+        {section.partDetails.map(p => (
+          <div key={p.num} className="learn-part-chip" style={{ background: section.color + '12', color: section.color, borderColor: section.color + '30' }}>
+            <span className="learn-part-num">{p.num}</span>
+            <span className="learn-part-name">{p.name}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Accordion info */}
+      <div className="learn-accordion">
+        {accordion.map(item => (
+          <div key={item.key} className="learn-acc-item">
+            <button
+              className="learn-acc-trigger"
+              onClick={() => toggle(item.key)}
+              style={{ color: open === item.key ? section.color : undefined }}
+            >
+              <span className="learn-acc-icon">{item.icon}</span>
+              <span className="learn-acc-label">{item.title}</span>
+              <span className="learn-acc-chevron" style={{ transform: open === item.key ? 'rotate(180deg)' : 'rotate(0deg)' }}>▾</span>
+            </button>
+            <AnimatePresence>
+              {open === item.key && (
+                <motion.div
+                  className="learn-acc-body"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.22 }}
+                >
+                  <p>{item.content}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
       </div>
     </motion.div>
   )
@@ -454,7 +621,7 @@ export default function ExamPage({ setPage = () => {} }) {
   const { user } = useAuth()
 
   const [view, setView] = useState('lobby')       // 'lobby' | 'test' | 'report'
-  const [activeTab, setActiveTab] = useState('sections') // 'sections' | 'modes'
+  const [activeTab, setActiveTab] = useState('sections') // 'sections' | 'modes' | 'learn'
   const [selectedSection, setSelectedSection] = useState(null)
   const [selectedMode, setSelectedMode]       = useState(null)
 
@@ -528,7 +695,7 @@ export default function ExamPage({ setPage = () => {} }) {
                   <span className="exam-hero-highlight">anytime you practice</span>
                 </h1>
                 <p className="exam-hero-sub">
-                  Full mock tests, section drills, and AI scoring — everything you need to reach CLB 9.
+                  Full mock tests · Section drills · AI scoring — 4 sections, 20 parts, 1,200+ questions to reach CLB 9.
                 </p>
                 <div className="exam-hero-actions">
                   <button className="btn btn-primary btn-lg" onClick={() => handleModeStart(TEST_MODES[0])}>
@@ -555,6 +722,11 @@ export default function ExamPage({ setPage = () => {} }) {
                 className={`exam-tab${activeTab === 'modes' ? ' active' : ''}`}
                 onClick={() => setActiveTab('modes')}>
                 🎯 Test Modes
+              </button>
+              <button
+                className={`exam-tab${activeTab === 'learn' ? ' active' : ''}`}
+                onClick={() => setActiveTab('learn')}>
+                🧠 Learning Hub
               </button>
             </div>
 
@@ -584,6 +756,22 @@ export default function ExamPage({ setPage = () => {} }) {
                 {TEST_MODES.map(m => (
                   <ModeCard key={m.id} mode={m} onStart={handleModeStart} />
                 ))}
+              </motion.div>
+            )}
+
+            {/* Learning Hub */}
+            {activeTab === 'learn' && (
+              <motion.div key="learn"
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}>
+                <div className="learn-hub-intro">
+                  <p>Everything you need to know about each CELPIP section — what's tested, how scoring works, timing strategies, and how to prepare effectively.</p>
+                </div>
+                <div className="learn-grid">
+                  {SECTIONS.map(s => (
+                    <LearningCard key={s.id} section={s} />
+                  ))}
+                </div>
               </motion.div>
             )}
 
