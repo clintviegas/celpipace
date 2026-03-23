@@ -1891,6 +1891,20 @@ export default function PracticeSetPage({ part, setPage }) {
     )
   }
 
+  // Empty state for reading
+  if (isReading && !dbLoading && (!dbSets || dbSets.length === 0)) {
+    return (
+      <div className="ps-root">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
+          <div style={{ fontSize: 40 }}>📭</div>
+          <p style={{ color: cfg.color, fontWeight: 600, fontSize: 18 }}>No questions found for {partId}</p>
+          <p style={{ color: '#666', fontSize: 14 }}>Checking database for section="reading" and part="{partId}"</p>
+          <button className="ps-start-btn" onClick={() => setPage('reading')}>← Back to Reading</button>
+        </div>
+      </div>
+    )
+  }
+
   const pageTitle = `${partId} · ${part?.label || 'Practice'}`
   const totalQs   = activeSets.reduce((s, x) => s + (x.questions?.length || 0), 0)
 

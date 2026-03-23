@@ -46,6 +46,8 @@ export function usePracticeSet(section, part) {
     setError(null)
 
     async function load() {
+      console.log(`[usePracticeSet] Fetching for section="${section}", part="${part}"`)
+      
       // Fetch questions directly by section and part
       const { data: questionsData, error: questionsErr } = await supabase
         .from('questions')
@@ -56,7 +58,11 @@ export function usePracticeSet(section, part) {
 
       if (cancelled) return
 
+      console.log(`[usePracticeSet] Query error:`, questionsErr)
+      console.log(`[usePracticeSet] Fetched ${questionsData?.length || 0} questions:`, questionsData)
+
       if (questionsErr) {
+        console.error('Error fetching questions:', questionsErr)
         setError(questionsErr.message)
         setLoading(false)
         return
