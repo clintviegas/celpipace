@@ -352,81 +352,125 @@ SCHEDULE — Week of April 7–11:
     ],
   },
   R3: {
-    title: 'The Rise of Urban Beekeeping in Canadian Cities',
-    instruction: 'Read the passage, then answer Questions 1–5. Paragraphs are labelled A–D. For paragraph-matching questions, select which paragraph contains the information described. Select "E) Not Given" if the information does not appear in the passage.',
-    scenario: 'Information Passage — Environment & Urban Life',
+    title: 'Digital Literacy in Canadian Schools — A Growing Priority',
+    instruction: 'Read the passage carefully. Answer the questions by selecting the option that BEST answers the question based on the information provided.',
+    scenario: 'Informational Passage — Education & Technology',
     type: 'mcq',
-    paragraphLabels: { A: 'Para A', B: 'Para B', C: 'Para C', D: 'Para D', E: 'Not Given' },
-    passage: `[A] Urban beekeeping has grown steadily across Canadian cities over the past decade, driven by a combination of environmental concern, community food initiatives, and changing municipal regulations. Cities like Toronto, Vancouver, and Montreal now permit residential beekeeping under specific conditions, and rooftop hives have become a visible presence in many downtown neighbourhoods.
+    passage: `[A] Digital literacy — the ability to find, evaluate, and communicate information using digital technology — has become a core expectation in Canadian schools. Yet despite widespread access to computers and internet in Canadian classrooms, many students graduate without mastering foundational digital skills. A 2024 study by the Canadian Education Association found that only 68% of secondary school students could reliably evaluate the credibility of online sources, and fewer than half could identify sponsored or biased content in their social media feeds.
 
-[B] Proponents argue that urban bees provide measurable ecological benefits. Because cities are often warmer than surrounding rural areas and contain a diverse range of flowering plants in gardens and parks, urban bees can actually thrive more consistently than their rural counterparts. Studies from several European cities have shown higher honey production per hive in urban environments compared to agricultural zones, largely because monoculture farming reduces the variety of plants available to rural bees.
+[B] The challenge lies partly in curriculum design. Most provincial education ministries have integrated digital literacy into existing subjects rather than establishing it as a standalone discipline. While this approach avoids creating yet another course, it often results in spotty, inconsistent coverage. A student might learn to use spreadsheets in math class but never learn basic password hygiene or how to recognize phishing attempts — critical skills in an increasingly connected world.
 
-[C] Critics, however, raise concerns about the welfare of bees kept in high-density areas. Without the biodiversity of natural landscapes, urban bees may face nutritional gaps if flowering sources are limited or seasonal. There are also concerns about the spread of disease between hives kept in close proximity, and about what happens to colonies when inexperienced hobby beekeepers abandon the practice.
+[C] Teachers themselves often lack formal training in digital literacy pedagogy. Many educators grew up in analog environments and, despite using technology in the classroom, may not understand how to teach the critical thinking skills required to navigate an online landscape. Professional development programs exist, but they are often poorly funded and reach only a fraction of the teaching workforce.
 
-[D] Despite these debates, urban beekeeping continues to expand. Many cities now offer training programs and community hive projects that allow residents to participate without managing a hive individually. Whether urban beekeeping represents a meaningful contribution to pollinator health or simply a well-intentioned hobby remains an open question — but its presence in Canadian cities shows no sign of diminishing.`,
+[D] Some provinces have begun to address this gap. British Columbia introduced a dedicated Digital Literacy requirement in its 2023 curriculum overhaul, while Ontario has incorporated media literacy across multiple grade levels. These efforts represent a shift toward more intentional, systematic instruction — but without consistent national standards, students in provinces that have not prioritized digital literacy remain at a disadvantage.
+
+[E] The long-term stakes are significant. Students who graduate without digital literacy skills will struggle in post-secondary education and the modern workforce, where digital competence is assumed rather than taught. Investment in teacher training, curriculum development, and consistent standards is not optional — it is a critical responsibility of the education system.`,
     questions: [
-      { id: 1, difficulty: 'easy',   questionType: 'mcq',
-        text: 'What is the main idea of this passage?',
-        options: ['A) Urban beekeeping is more productive than rural beekeeping.', 'B) Urban beekeeping has grown in Canadian cities and raises both benefits and concerns.', 'C) Canadian cities should ban urban beekeeping to protect bee welfare.', 'D) European research methods are superior to Canadian beekeeping practices.'],
-        answer: 1, explanation: 'The passage is balanced: it describes growth (A), presents benefits (B), raises concerns (C), and ends with an open question (D) — B is the only option that captures this nuanced, two-sided overview.' },
-      { id: 2, difficulty: 'easy',   questionType: 'paragraph_match',
-        text: 'Concerns about disease spreading between closely situated hives are raised.',
-        options: ['A', 'B', 'C', 'D', 'E'],
-        paragraphLabels: { A: 'Para A', B: 'Para B', C: 'Para C', D: 'Para D', E: 'Not Given' },
-        answer: 2, explanation: 'Paragraph C specifically mentions "concerns about the spread of disease between hives kept in close proximity."' },
-      { id: 3, difficulty: 'medium', questionType: 'vocab_context',
-        text: 'The word "proximity" in paragraph C (line: "hives kept in close proximity") most closely means:',
-        options: ['A) Competition', 'B) Closeness', 'C) Quantity', 'D) Movement'],
-        targetWord: 'proximity',
-        answer: 1, explanation: '"Proximity" means physical nearness. In context, hives located close together risk spreading disease — "closeness" captures this precisely.' },
-      { id: 4, difficulty: 'medium', questionType: 'paragraph_match',
-        text: 'A comparison is made between the amount of honey produced in cities versus agricultural areas.',
-        options: ['A', 'B', 'C', 'D', 'E'],
-        paragraphLabels: { A: 'Para A', B: 'Para B', C: 'Para C', D: 'Para D', E: 'Not Given' },
-        answer: 1, explanation: 'Paragraph B states: "Studies from several European cities have shown higher honey production per hive in urban environments compared to agricultural zones."' },
-      { id: 5, difficulty: 'hard',   questionType: 'inference',
-        text: 'What does the writer\'s use of the phrase "a well-intentioned hobby" in paragraph D suggest?',
-        options: ['A) The writer believes urban beekeeping has no real environmental value.', 'B) The writer is slightly sceptical about claims that it significantly helps pollinators.', 'C) The writer is enthusiastically in favour of urban beekeeping programs.', 'D) The writer believes hobby beekeepers are irresponsible.'],
-        answer: 1, explanation: '"Well-intentioned hobby" is gently dismissive — it acknowledges sincerity but quietly questions whether the impact matches the enthusiasm. This is a mild sceptical hedge, not an outright dismissal.' },
+      { id: 1, difficulty: 'easy',   questionType: 'gist',
+        text: 'What is the main purpose of this passage?',
+        options: ['A) To argue that computers should not be used in schools.', 'B) To identify the problem of insufficient digital literacy instruction and discuss efforts to address it.', 'C) To praise British Columbia\'s education system.', 'D) To explain why teachers reject professional development training.'],
+        answer: 1, explanation: 'The passage identifies digital literacy gaps (A, B, C), describes why they exist, and highlights provincial efforts to address the problem (D, E) — B captures this overall purpose.' },
+      { id: 2, difficulty: 'easy',   questionType: 'detail',
+        text: 'According to the 2024 Canadian Education Association study mentioned in paragraph A, what percentage of secondary school students CANNOT reliably evaluate online source credibility?',
+        options: ['A) 32%', 'B) 50%', 'C) 68%', 'D) Over 75%'],
+        answer: 0, explanation: 'The passage states "only 68% of secondary school students could reliably evaluate the credibility of online sources" — meaning 32% cannot.' },
+      { id: 3, difficulty: 'easy',   questionType: 'mcq',
+        text: 'According to paragraph B, why is inconsistent digital literacy instruction a problem?',
+        options: ['A) It increases the cost of education per student.', 'B) It creates gaps where students may learn some skills but miss critical others.', 'C) Teachers are not willing to integrate digital literacy.', 'D) Technology companies refuse to provide resources to schools.'],
+        answer: 1, explanation: 'The passage notes that by integrating digital literacy into existing subjects rather than as standalone instruction, students get spotty coverage — a spreadsheet user might not learn password safety.' },
+      { id: 4, difficulty: 'medium', questionType: 'vocab_context',
+        text: 'In paragraph C, the word "spotty" means most nearly the same as:',
+        options: ['A) Visible', 'B) Irregular or incomplete', 'C) Contaminated', 'D) Covered with patterns'],
+        targetWord: 'spotty',
+        answer: 1, explanation: '"Spotty" in this context means coverage that is scattered and incomplete — "inconsistent and uneven across different locations" — not "contaminated".' },
+      { id: 5, difficulty: 'medium', questionType: 'inference',
+        text: 'Why does the author mention that teachers "grew up in analog environments"?',
+        options: ['A) To suggest that older teachers should retire immediately.', 'B) To imply that teachers are resistant to change.', 'C) To explain why teachers may lack the instinctive understanding of digital literacy that younger people have.', 'D) To criticize teachers for not investing in their own education.'],
+        answer: 2, explanation: 'The author is explaining that because teachers learned in pre-digital eras, they may not intuitively understand digital culture — hence their need for formal training in digital pedagogy.' },
+      { id: 6, difficulty: 'medium', questionType: 'detail',
+        text: 'Which TWO provinces are mentioned as having taken concrete action on digital literacy curriculum?',
+        options: ['A) Ontario and Quebec', 'B) British Columbia and Ontario', 'C) British Columbia and Alberta', 'D) Alberta and Saskatchewan'],
+        answer: 1, explanation: 'Paragraph D specifically names BC (introduced dedicated Digital Literacy in 2023) and Ontario (incorporated media literacy across grade levels). The other provinces are not mentioned.' },
+      { id: 7, difficulty: 'hard',   questionType: 'inference',
+        text: 'What does the author mean by saying digital competence in post-secondary and the workforce is "assumed rather than taught"?',
+        options: ['A) Nobody needs to learn digital skills in university or at work.', 'B) Universities and employers expect students and employees to already possess digital skills, rather than providing training.', 'C) Teachers in universities are better at teaching digital skills than high school teachers.', 'D) Digital skills are less important in university than in K–12 education.'],
+        answer: 1, explanation: '"Assumed" means taken for granted as already present. The author is saying universities and employers expect digital literacy as a prerequisite, not something they will teach.' },
+      { id: 8, difficulty: 'hard',   questionType: 'tone_purpose',
+        text: 'What is the author\'s tone regarding Canada\'s current state of digital literacy education?',
+        options: ['A) Enthusiastically optimistic about recent progress.', 'B) Dismissive of efforts by teachers and school boards.', 'C) Concerned about gaps but hopeful about emerging solutions.', 'D) Angry and accusatory toward provincial governments.'],
+        answer: 2, explanation: 'The author identifies serious problems (gaps, inconsistency, teacher training issues) but also notes provincial progress (BC, Ontario). The tone is urgent but not hostile — concerned and solution-oriented.' },
+      { id: 9, difficulty: 'hard',   questionType: 'inference',
+        text: 'The author\'s statement in paragraph E that "investment in teacher training, curriculum development, and consistent standards is not optional" most likely means:',
+        options: ['A) Schools can choose to invest in these areas or not, depending on budget.', 'B) Investment should be voluntary and left to individual teachers.', 'C) These investments are essential and necessary if schools want to serve their students well.', 'D) The government should restrict schools from spending on digital literacy.'],
+        answer: 2, explanation: '"Not optional" means essential, non-negotiable, mandatory — the author is arguing this investment is a moral and practical necessity, not a nice-to-have.' },
     ],
   },
   R4: {
-    title: 'Should Remote Work Become a Permanent Right?',
-    instruction: 'Read BOTH viewpoints below. Then answer the questions by choosing the option that BEST reflects the content or position in the texts.',
-    scenario: 'Viewpoints — Workplace Policy',
+    title: 'Should AI-Generated Content Be Regulated in Schools? — Two Viewpoints',
+    instruction: 'Two speakers have different opinions on this topic. Answer questions by identifying which speaker(s) support the given statement, or by selecting the BEST answer based on the passage.',
+    scenario: 'Two Viewpoints — Education & AI Ethics',
     type: 'mcq',
-    passage: `VIEWPOINT A — Maria Delacroix, HR Director
+    passage: `SPEAKER A — Dr. Catherine Liu, Education Policy Researcher
 
-Remote work has proven itself. Productivity data from our organization shows no decline in output, employee satisfaction scores are at an all-time high, and we have successfully hired talent from cities we could not previously recruit from. The commute is the most universally disliked part of work life, and eliminating it has given employees back hours every week. Companies that refuse to offer flexible work will simply lose their best people to competitors who do.
+I strongly support regulatory frameworks for AI-generated content in schools. We're at a critical juncture: tools like ChatGPT and Claude are becoming ubiquitous, and without clear guidelines, we're essentially conducting an uncontrolled experiment on young minds. First, there's the plagiarism and academic integrity issue. If students can download a five-paragraph essay in thirty seconds, how do teachers assess learning? But the integrity problem pales next to the deeper issue of critical thinking. When AI systems can instantly generate plausible-sounding answers to complex questions, students lose the struggle that generates learning. Struggle is uncomfortable, but it's where learning lives.
 
-That said, remote work is not appropriate for every role or every employee. Some positions require physical presence, and some individuals work better in a structured office environment. What we need is not a blanket policy but a framework that treats remote work as a default right — available to all unless the role requires otherwise.
+Second, AI systems contain significant biases embedded in their training data. They reflect historical inequities and can reinforce stereotypes. For instance, an AI trained on English-language internet content disproportionately represents Western perspectives and marginalizes non-Western voices. Should we be deploying systems that subtly train students to accept a narrow, culturally biased worldview? Third, AI companies profit immensely from user data and content. When students use free AI tools in school, they're generating training data that makes these companies richer. That's an ethical problem we should address.
 
-VIEWPOINT B — Kevin Tanaka, Operations Manager
+Regulation doesn't mean banning AI. It means establishing clear standards: transparent disclosure of AI use, guardrails on what content is permitted, mandatory labelling of AI-generated materials, and audits to ensure tools used in schools meet equity and bias standards. We regulate pharmaceuticals, aviation, and automobiles because the stakes are high. Education deserves the same level of scrutiny.
 
-The enthusiasm for remote work ignores a significant problem: collaboration suffers. The spontaneous hallway conversation, the whiteboard session, the sense of shared momentum in a team working toward the same goal — these things do not translate to video calls. Junior employees in particular lose out: they learn their craft by being near experienced colleagues, and that informal mentorship disappears when everyone is working from home.
+SPEAKER B — James Chen, Technology Integration Specialist
 
-I am not arguing that remote work has no place. For focused, independent tasks, it is often better. But codifying it as a right risks normalizing a model that works well for senior individual contributors and poorly for everyone else. Organizations should retain the authority to determine what arrangements serve their teams best.`,
+I understand Dr. Liu's concerns, but regulation at this stage would be counterproductive and frankly impossible to enforce. Let me address the issues in order. First, on plagiarism: that's a teaching and assessment problem, not a technology problem. For decades, students could copy from Wikipedia, and good teachers adapted by requiring process documentation, in-class writing, and other methods that prove learning. Smart educators are already doing the same with AI — asking students to use ChatGPT as a brainstorming partner, then produce original analysis. The tool itself isn't the enemy; it's a catalyst for rethinking assessment.
+
+On bias: yes, AI systems have biases, but so do human teachers, textbooks, and curricula. The solution isn't regulation; it's transparency and critical evaluation. When students use AI, they can be taught to interrogate the system's assumptions and compare its outputs against diverse sources. That's actually a valuable exercise in critical thinking — learning to work alongside an imperfect tool. Regulatory frameworks, by contrast, create the illusion of safety without addressing the underlying problem.
+
+Third, regarding data privacy: I agree it's important, but it's separate from education. We should have strong data protection laws (and I support GDPR-style regulation), but restricting educational use because of corporate data harvesting is like banning electricity in schools because power companies collect billing data. The solution is data regulation, not AI restriction in education.
+
+Here's the deeper issue: the world students will enter is AI-saturated. Banning or heavily restricting AI in schools is training them for a world that won't exist. We should be teaching them to use AI safely, critically, and ethically — and that requires exposure, not restriction. Some schools are doing this brilliantly: creating AI literacy curricula, having students audit AI systems for bias, using AI to personalize learning for students with different needs. These schools are preparing students for reality.
+
+Regulation will slow innovation and hand competitive advantage to wealthy schools that can navigate bureaucracy. Poorer schools will be locked out. The path forward is transparency, teacher training, and ethical frameworks — not regulatory gatekeeping.`,
     questions: [
-      { id: 1, difficulty: 'easy',   questionType: 'speaker_id',
-        text: 'What is Maria\'s main argument in favour of remote work?',
-        options: ['A) Remote work eliminates office costs for companies.', 'B) Data shows productivity and employee satisfaction have not suffered.', 'C) All employees prefer working from home.', 'D) Remote work is better suited to junior employees than senior ones.'],
-        answer: 1, explanation: 'Maria cites productivity data, high satisfaction scores, and expanded hiring reach — measurable outcomes — as evidence that remote work has proven itself.' },
-      { id: 2, difficulty: 'easy',   questionType: 'speaker_id',
-        text: 'What is Kevin\'s main concern about making remote work a permanent right?',
-        options: ['A) It is too expensive to equip employees with home office tools.', 'B) Video calls are technically unreliable.', 'C) It benefits senior staff but disadvantages junior employees who depend on informal mentorship.', 'D) Remote workers are more likely to leave the company.'],
-        answer: 2, explanation: 'Kevin specifically argues that junior employees lose the informal mentorship they gain from being physically near experienced colleagues.' },
-      { id: 3, difficulty: 'medium', questionType: 'mcq',
-        text: 'On which point do BOTH Maria and Kevin AGREE?',
-        options: ['A) Remote work should be available to all employees without exception.', 'B) Some roles or individuals are not suited to remote work.', 'C) Productivity declines significantly when teams work remotely.', 'D) Employees should be allowed to choose their own schedules freely.'],
-        answer: 1, explanation: 'Maria: "remote work is not appropriate for every role or every employee." Kevin: "for focused, independent tasks, it is often better" — implying other tasks require in-person work. Both concede remote work is not universally appropriate.' },
-      { id: 4, difficulty: 'medium', questionType: 'inference',
-        text: 'Kevin says codifying remote work as a right "risks normalizing a model that works well for senior individual contributors." What does this imply about his view?',
-        options: ['A) He believes remote work should only be offered to senior employees.', 'B) He is concerned that making remote work a right privileges one group at the expense of another.', 'C) He thinks senior employees are more productive at home than in the office.', 'D) He wants organizations to eliminate remote work entirely for all staff.'],
-        answer: 1, explanation: 'Kevin\'s point is that a blanket right would entrench a system that helps senior independent workers while systematically hurting juniors who need proximity and mentorship.' },
-      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
-        text: 'Maria says she wants "a framework that treats remote work as a default right." In context, "default" most closely means:',
-        options: ['A) Temporary and subject to frequent review.', 'B) The standard starting position unless there is a specific reason to change it.', 'C) A strict rule with no exceptions permitted.', 'D) An optional benefit rather than an entitlement.'],
-        answer: 1, explanation: '"Default" means the assumed starting point — the baseline assumption unless overridden. Maria is saying remote work should be assumed available unless a specific role requirement justifies in-person work.' },
+      { id: 1, difficulty: 'easy',   questionType: 'speaker_view',
+        text: 'Which speaker advocates for REGULATION of AI-generated content in schools?',
+        options: ['A) Dr. Catherine Liu', 'B) James Chen', 'C) Both speakers agree on this point', 'D) Neither speaker addresses this issue'],
+        answer: 0, explanation: 'Dr. Liu explicitly states: "I strongly support regulatory frameworks for AI-generated content in schools." James Chen argues regulation would be "counterproductive."' },
+      { id: 2, difficulty: 'easy',   questionType: 'speaker_view',
+        text: 'What is James Chen\'s main position on the plagiarism problem with AI?',
+        options: ['A) It is impossible to solve', 'B) It is a teaching and assessment problem, not a technology problem', 'C) Schools should ban AI to prevent plagiarism', 'D) Teachers cannot adapt to AI tools'],
+        answer: 1, explanation: 'Chen states: "that\'s a teaching and assessment problem, not a technology problem" and notes that good educators are "adapting by requiring process documentation, in-class writing."' },
+      { id: 3, difficulty: 'easy',   questionType: 'detail',
+        text: 'According to Dr. Liu, what is one reason AI systems in schools pose an ethical problem?',
+        options: ['A) Students cannot use them correctly', 'B) Teachers cannot supervise their use', 'C) AI companies profit from user data and content generated by students', 'D) AI is too expensive for schools'],
+        answer: 2, explanation: 'Dr. Liu states: "When students use free AI tools in school, they\'re generating training data that makes these companies richer. That\'s an ethical problem we should address."' },
+      { id: 4, difficulty: 'easy',   questionType: 'detail',
+        text: 'What does James Chen suggest as an example of a subject where students have always had access to copyable information?',
+        options: ['A) Mathematics textbooks', 'B) Wikipedia', 'C) Scientific journals', 'D) Government policy documents'],
+        answer: 1, explanation: 'Chen states: "For decades, students could copy from Wikipedia, and good teachers adapted by requiring process documentation, in-class writing, and other methods."' },
+      { id: 5, difficulty: 'medium', questionType: 'vocab_context',
+        text: 'In her opening paragraph, Dr. Liu uses the word "scrutiny" to mean:',
+        options: ['A) Marketing or promotion', 'B) Close and careful examination', 'C) Restriction or limitation', 'D) Investment or funding'],
+        targetWord: 'scrutiny',
+        answer: 1, explanation: '"We regulate pharmaceuticals, aviation, and automobiles because the stakes are high. Education deserves the same level of scrutiny" — here, scrutiny means careful, rigorous oversight and evaluation.' },
+      { id: 6, difficulty: 'medium', questionType: 'mcq',
+        text: 'On the issue of bias in AI systems, how do Dr. Liu and James Chen DIFFER?',
+        options: ['A) Dr. Liu acknowledges bias exists; Chen denies it', 'B) Dr. Liu wants regulation to address bias; Chen suggests teaching students to critically evaluate AI output', 'C) Chen believes bias is solved through transparency; Dr. Liu does not', 'D) Chen supports all AI use; Dr. Liu opposes all AI use'],
+        answer: 1, explanation: 'Dr. Liu: regulate systems and audit for bias standards. Chen: teach students to interrogate assumptions and compare against diverse sources. Both acknowledge bias, but differ on the solution.' },
+      { id: 7, difficulty: 'medium', questionType: 'inference',
+        text: 'Why does James Chen compare AI regulation to "banning electricity in schools because power companies collect billing data"?',
+        options: ['A) To suggest that all technology should be banned', 'B) To argue that data privacy is not important', 'C) To show that the problem (data harvesting) is separate from the solution (education)',  'D) To prove that electricity is more important than AI'],
+        answer: 2, explanation: 'Chen is drawing an analogy: just as we don\'t ban electricity because of data privacy concerns (the issue is data regulation, not electricity), we shouldn\'t ban AI in schools. The real problem is data protection law, not AI restriction.' },
+      { id: 8, difficulty: 'hard',   questionType: 'tone_purpose',
+        text: 'What is the tone of Dr. Liu\'s statement: "Struggle is uncomfortable, but it\'s where learning lives"?',
+        options: ['A) Pessimistic and defeatist', 'B) Reflective and philosophical', 'C) Angry and accusatory', 'D) Sarcastic and dismissive'],
+        answer: 1, explanation: 'The statement is thoughtful and poetic — Dr. Liu is offering a philosophical insight about the nature of learning, acknowledging difficulty but affirming its value. The tone is measured and wise, not emotional.' },
+      { id: 9, difficulty: 'hard',   questionType: 'inference',
+        text: 'Which of the following is an implied criticism in James Chen\'s argument?',
+        options: ['A) AI systems are not accurate enough for education', 'B) Dr. Liu\'s regulatory approach could create inequity by disadvantaging poorer schools', 'C) Teachers are unwilling to adapt their teaching methods', 'D) Technology companies should have more power in schools'],
+        answer: 1, explanation: 'Chen states: "Regulation will slow innovation and hand competitive advantage to wealthy schools that can navigate bureaucracy. Poorer schools will be locked out." This is an implied critique of Dr. Liu\'s regulatory approach.' },
+      { id: 10, difficulty: 'hard',   questionType: 'inference',
+        text: 'If Dr. Liu\'s recommendations were implemented, what kind of schools would be BEST POSITIONED to comply?',
+        options: ['A) Rural schools with limited budgets', 'B) Well-funded schools with compliance and IT resources', 'C) Schools with the least AI usage', 'D) All schools equally, regardless of size or funding'],
+        answer: 1, explanation: 'Regulations require infrastructure, auditing, documentation, and expertise. Well-funded schools can hire consultants and implement compliance systems more easily than underfunded schools — consistent with why Chen views regulation as problematic for equity.' },
     ],
   },
 }
