@@ -19,7 +19,7 @@
 
 // Where to send the data (your Supabase Edge Function)
 const SUPABASE_WEBHOOK = 'https://ljwnzakoqlydgcyxuqny.supabase.co/functions/v1/question-sync';
-const SUPABASE_API_KEY = 'zQxNjQ1MjMs1mV4cCl6Mj...';  // Replace with your anon key
+const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqd256YWtvcWx5ZGdjeXh1cW55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNjQ1MjMsImV4cCI6MjA4OTc0MDUyM30.6fgxOorqAyD9VU0_0mt7h7nXXW9I6kyCFEByAl2leu8';  // Replace with your anon key
 
 // Map your sheet columns to our system
 const CONFIG = {
@@ -76,30 +76,53 @@ function syncFromSheet() {
   }
 
   const headers = data[0];
-  const firstRow = data[1];
+  let successCount = 0;
+  let failCount = 0;
+  let skipCount = 0;
+  const errors = [];
 
   try {
-    const parsed = parseRow(headers, firstRow);
-    const errors = validatePayload(parsed);
-    
-    if (errors.length > 0) {
-      showAlert('Validation Error', errors.join('\n'));
-      return;
+    // Process ALL rows
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const parsed = parseRow(headers, row);
+      
+      if (!parsed) {
+        skipCount++;
+        continue; // Skip empty rows
+      }
+      
+      const validationErrors = validatePayload(parsed);
+      
+      if (validationErrors.length > 0) {
+        failCount++;
+        if (errors.length < 5) errors.push(`Row ${i+1}: ${validationErrors.join(', ')}`);
+        continue;
+      }
+
+      const response = forwardToSupabase(parsed);
+      if (response.success) {
+        successCount++;
+      } else {
+        failCount++;
+        if (errors.length < 5) errors.push(`Row ${i+1}: ${response.error}`);
+      }
     }
 
-    const response = forwardToSupabase(parsed);
+    Logger.log(`Processed: ${data.length - 1} rows | Success: ${successCount} | Failed: ${failCount} | Skipped: ${skipCount}`);
 
-    if (response.success) {
-      showAlert(
-        'Success ✅',
-        `Synced: ${parsed.section} ${parsed.part}\n${response.questionsCount} questions uploaded`
-      );
-      appendLog(`Synced ${parsed.section} ${parsed.part} (${response.questionsCount} questions)`);
+    if (successCount === 0) {
+      showAlert('Sync Error ❌', `No questions synced. ${failCount} had errors.\n\n${errors.join('\n')}`);
     } else {
-      showAlert('Error', response.error || 'Unknown error');
+      showAlert(
+        'Sync Success ✅',
+        `Synced ${successCount} questions${failCount > 0 ? ` (${failCount} failed, ${skipCount} skipped)` : ''}`
+      );
+      appendLog(`Synced ${successCount} questions`);
     }
   } catch (error) {
     showAlert('Error', error.toString());
+    Logger.log('Error: ' + error);
   }
 }
 
@@ -113,24 +136,35 @@ function validateSheet() {
   }
 
   const headers = data[0];
-  const firstRow = data[1];
+  let validCount = 0;
+  let errorCount = 0;
+  let errors = [];
 
-  try {
-    const parsed = parseRow(headers, firstRow);
-    const errors = validatePayload(parsed);
-
-    if (errors.length === 0) {
-      showAlert(
-        'Validation Success ✅',
-        `${parsed.section} ${parsed.part}\n${parsed.questions.length} questions are valid`
-      );
+  // Validate all rows
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const parsed = parseRow(headers, row);
+    
+    if (!parsed) continue; // Skip empty rows
+    
+    const rowErrors = validatePayload(parsed);
+    if (rowErrors.length > 0) {
+      errorCount++;
+      errors.push(`Row ${i+1}: ${rowErrors.join(', ')}`);
     } else {
-      showAlert('Validation Errors', errors.join('\n'));
+      validCount++;
     }
-  } catch (error) {
-    showAlert('Error', error.toString());
+  }
+
+  if (validCount === 0) {
+    showAlert('Validation Error', 'No valid questions found in sheet. ' + (errors.length > 0 ? 'First error: ' + errors[0] : ''));
+  } else if (errorCount === 0) {
+    showAlert('Validation Success ✅', `Found ${validCount} valid questions`);
+  } else {
+    showAlert('Validation Complete', `✅ ${validCount} valid | ❌ ${errorCount} errors\n\n${errors.slice(0, 5).join('\n')}`);
   }
 }
+
 
 function inspectColumns() {
   const sheet = SpreadsheetApp.getActiveSheet();
@@ -149,105 +183,99 @@ function inspectColumns() {
 // ═══════════════════════════════════════════════════════════════
 
 function parseRow(headers, row) {
-  const getColIndex = (colName) => {
-    const idx = headers.indexOf(colName);
-    return idx >= 0 ? idx : -1;
+  // Case-insensitive column finder
+  const findColIndex = (colName) => {
+    return headers.findIndex(h => h && h.toString().toLowerCase() === colName.toLowerCase());
   };
 
-  const section = row[getColIndex(CONFIG.section)] || '';
-  const part = row[getColIndex(CONFIG.part)] || '';
-  const title = row[getColIndex(CONFIG.title)] || '';
-  const passage = row[getColIndex(CONFIG.passage)] || '';
-  const instruction = row[getColIndex(CONFIG.instruction)] || '';
+  // Find columns dynamically (case-insensitive)
+  const section = (row[findColIndex('Section')] || '').toString().trim();
+  const part = (row[findColIndex('Part')] || '').toString().trim();
+  const number = (row[findColIndex('Number')] || '').toString().trim();
+  const title = (row[findColIndex('Title')] || '').toString().trim();
+  const passage = (row[findColIndex('Passage')] || '').toString().trim();
+  const instruction = (row[findColIndex('Instruction')] || '').toString().trim();
+  const questionText = (row[findColIndex('QuestionText')] || '').toString().trim();
+  const type = (row[findColIndex('Type')] || 'detail').toString().trim();
+  const correctAnswer = (row[findColIndex('CorrectAnswer')] || '').toString().trim();
+  const optionA = (row[findColIndex('OptionA')] || '').toString().trim();
+  const optionB = (row[findColIndex('OptionB')] || '').toString().trim();
+  const optionC = (row[findColIndex('OptionC')] || '').toString().trim();
+  const optionD = (row[findColIndex('OptionD')] || '').toString().trim();
+  const explanation = (row[findColIndex('Explanation')] || '').toString().trim();
+  const difficulty = (row[findColIndex('Difficulty')] || 'medium').toString().trim();
 
-  const questions = [];
-  let qNum = 1;
-
-  while (true) {
-    const textColName = `Q${qNum}_Text`;
-    const textIdx = getColIndex(textColName);
-    
-    if (textIdx === -1) break;
-
-    const text = row[textIdx];
-    if (!text) break;
-
-    const question = {
-      id: qNum,
-      text: text,
-      questionType: row[getColIndex(`Q${qNum}_Type`)] || 'mcq',
-      options: [
-        row[getColIndex(`Q${qNum}_Opts_A`)] || `Option ${qNum}.1`,
-        row[getColIndex(`Q${qNum}_Opts_B`)] || `Option ${qNum}.2`,
-        row[getColIndex(`Q${qNum}_Opts_C`)] || `Option ${qNum}.3`,
-        row[getColIndex(`Q${qNum}_Opts_D`)] || `Option ${qNum}.4`,
-      ],
-      answer: parseInt(row[getColIndex(`Q${qNum}_Answer`)] || 0),
-      explanation: row[getColIndex(`Q${qNum}_Explanation`)] || '',
-      difficulty: (row[getColIndex(`Q${qNum}_Difficulty`)] || 'medium').toLowerCase(),
-    };
-
-    questions.push(question);
-    qNum++;
+  // Skip empty rows (check if critical fields are empty)
+  if (!section || !part || !questionText) {
+    return null;
   }
 
+  // Build the question object for Supabase
   return {
-    section,
-    part,
-    title,
-    passage,
-    instruction,
-    questions,
+    section: section,
+    part: part,
+    number: parseInt(number) || 0,
+    title: title,
+    passage: passage,
+    instruction: instruction,
+    question_text: questionText,
+    type: type.toLowerCase(),
+    correct_answer: correctAnswer,
+    option_a: optionA,
+    option_b: optionB,
+    option_c: optionC,
+    option_d: optionD,
+    explanation: explanation,
+    difficulty: difficulty.toLowerCase(),
   };
 }
 
 function validatePayload(payload) {
   const errors = [];
 
-  if (!payload.section) errors.push('Missing "Section"');
-  if (!payload.part) errors.push('Missing "Part"');
-  if (!payload.title) errors.push('Missing "Title"');
-  if (payload.questions.length === 0) errors.push('No questions found');
+  // Validate required fields
+  if (!payload.section) errors.push('Missing "section"');
+  if (!payload.part) errors.push('Missing "part"');
+  if (!payload.question_text) errors.push('Missing "question_text"');
+  if (!payload.correct_answer) errors.push('Missing "correct_answer"');
 
-  payload.questions.forEach((q, idx) => {
-    if (!q.text) errors.push(`Q${idx + 1}: Missing text`);
-    if (q.options.length < 2) errors.push(`Q${idx + 1}: Less than 2 options`);
-    if (q.answer < 0 || q.answer >= q.options.length) {
-      errors.push(`Q${idx + 1}: Answer index out of range (got ${q.answer}, max ${q.options.length - 1})`);
-    }
-    if (!['easy', 'medium', 'hard'].includes(q.difficulty)) {
-      errors.push(`Q${idx + 1}: Invalid difficulty (use easy/medium/hard, got "${q.difficulty}")`);
-    }
-  });
+  // Validate difficulty
+  if (payload.difficulty && !['easy', 'medium', 'hard'].includes(payload.difficulty)) {
+    errors.push(`Invalid difficulty: "${payload.difficulty}" (use easy/medium/hard)`);
+  }
 
   return errors;
 }
 
 function forwardToSupabase(payload) {
+  // Insert directly into Supabase using REST API
+  const tableName = 'questions';
+  const url = `https://ljwnzakoqlydgcyxuqny.supabase.co/rest/v1/${tableName}?apikey=${SUPABASE_API_KEY}`;
+  
   const options = {
     method: 'post',
     contentType: 'application/json',
     headers: {
-      'Authorization': `Bearer ${SUPABASE_API_KEY}`,
+      'Prefer': 'return=minimal',
     },
     payload: JSON.stringify(payload),
     muteHttpExceptions: true,
   };
 
   try {
-    const response = UrlFetchApp.fetch(SUPABASE_WEBHOOK, options);
-    const result = JSON.parse(response.getContentText());
+    const response = UrlFetchApp.fetch(url, options);
+    const statusCode = response.getResponseCode();
 
-    if (response.getResponseCode() === 200) {
+    if (statusCode === 201 || statusCode === 200) {
       return {
         success: true,
-        questionsCount: payload.questions.length,
-        ...result,
+        message: 'Question inserted successfully',
       };
     } else {
+      const errorBody = response.getContentText();
       return {
         success: false,
-        error: result.error || `HTTP ${response.getResponseCode()}`,
+        error: `HTTP ${statusCode}: ${errorBody}`,
       };
     }
   } catch (error) {

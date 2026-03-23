@@ -46,59 +46,57 @@ export function usePracticeSet(section, part) {
     setError(null)
 
     async function load() {
-      const { data, error: err } = await supabase
-        .from('practice_sets')
-        .select(`
-          id,
-          set_number,
-          set_title,
-          instruction,
-          scenario,
-          difficulty,
-          passage,
-          diagram_html,
-          questions (
-            id,
-            question_order,
-            question_type,
-            question_text,
-            options,
-            correct_index,
-            explanation
-          )
-        `)
+      // Fetch questions directly by section and part
+      const { data: questionsData, error: questionsErr } = await supabase
+        .from('questions')
+        .select('*')
         .eq('section', section)
-        .eq('part',    part)
-        .order('set_number',      { ascending: true })
-        .order('question_order',  { ascending: true, foreignTable: 'questions' })
+        .eq('part', part)
+        .order('number', { ascending: true })
 
       if (cancelled) return
 
-      if (err) {
-        setError(err.message)
+      if (questionsErr) {
+        setError(questionsErr.message)
         setLoading(false)
         return
       }
 
-      // Map DB snake_case → camelCase expected by PracticeSetPage
-      const mapped = (data || []).map(set => ({
-        setNumber:   set.set_number,
-        setTitle:    set.set_title,
-        instruction: set.instruction,
-        scenario:    set.scenario,
-        difficulty:  set.difficulty,
-        passage:     set.passage     ?? null,
-        diagramHtml: set.diagram_html ?? null,
-        questions:   (set.questions || []).map(q => ({
-          id:           q.id,           // now a UUID (used as React key)
-          text:         q.question_text,
-          options:      q.options,       // JSONB → already an array
-          answer:       q.correct_index,
-          explanation:  q.explanation,
-          difficulty:   set.difficulty,  // inherit set difficulty
-          questionType: q.question_type, // 'mcq' | 'fill_blank'
-        })),
-      }))
+      // Group questions by part (usually just one group per part)
+      // and format them into practice sets
+      const mapped = [{
+        setNumber: 1,
+        setTitle: part === 'R1' ? 'Email Inquiry' 
+                : part === 'R2' ? 'Schedule Matching'
+                : part === 'R3' ? 'Digital Literacy'
+                : part === 'R4' ? 'AI Regulation'
+                : part === 'L1' ? 'Library Customer Service'
+                : part === 'L2' ? 'Friends Planning a Trip'
+                : part === 'L3' ? 'Community Centre'
+                : part === 'L4' ? 'City Transit News'
+                : part === 'L5' ? 'Remote Work Panel'
+                : `Part ${part}`,
+        instruction: questionsData?.[0]?.instruction || 'Answer the questions below.',
+        scenario: questionsData?.[0]?.title || '',
+        difficulty: questionsData?.[0]?.difficulty || 'medium',
+        passage: questionsData?.[0]?.passage || null,
+        diagramHtml: null,
+        questions: (questionsData || []).map(q => {
+          const options = [q.option_a, q.option_b, q.option_c, q.option_d].filter(Boolean)
+          // Find the index of the correct answer
+          const correctAnswerIndex = options.indexOf(q.correct_answer)
+          
+          return {
+            id:           q.id,
+            text:         q.question_text,
+            options:      options,
+            answer:       correctAnswerIndex >= 0 ? correctAnswerIndex : 0, // Use found index or default to 0
+            explanation:  q.explanation || '',
+            difficulty:   q.difficulty || 'medium',
+            questionType: q.type || 'mcq',
+          }
+        }),
+      }]
 
       setSets(mapped)
       setLoading(false)
