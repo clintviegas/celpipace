@@ -1,0 +1,755 @@
+Section,Part,Number,Title,Passage,Instruction,QuestionText,Type,CorrectAnswer,OptionA,OptionB,OptionC,OptionD,Explanation,Difficulty
+Reading,R1,1,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",What is the main purpose of Sarah's email?,gist,To request more information about membership options,,,,,Sarah is inquiring about specific details before joining,easy
+Reading,R1,2,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",According to the email what are Sarah's main concerns before joining?,detail,Accessibility; Premium package details; Membership pause policy,,,,,The email explicitly lists these three points,easy
+Reading,R1,3,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",Why does Sarah mention that she wakes at 5 AM?,inference,To demonstrate her preference for early morning fitness classes,,,,,This explains her interest in classes before 8 AM,medium
+Reading,R1,4,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.","In the passage, the word 'accommodate' most likely means:",mcq,B,To demand,To provide for,To argue with,To ignore,"Based on context: 'Do you accommodate members who prefer early morning sessions?' means 'Do you provide for' their needs",medium
+Reading,R1,5,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",What is the overall tone of this email?,tone_purpose,Professional and courteous,Demanding and rude,Apologetic and uncertain,Angry and threatening,Uses polite language: 'thank you' 'would appreciate' and formal structure,easy
+Reading,R1,6,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",What methods of payment does Sarah ask about?,detail,Bank account transfers and credit card payments,,,,,She specifically asks about these two payment options,medium
+Reading,R1,7,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",Can we infer that Sarah has looked for fitness facilities before?,inference,Yes; she states she has been searching for quite some time,,,,,Direct inference from: 'I have been searching for a suitable fitness facility in this area for quite some time',medium
+Reading,R1,8,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",Which two classes does Sarah express interest in?,detail,Yoga and pilates,,,,,She mentions: 'morning yoga and evening pilates sessions',easy
+Reading,R1,9,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",What can we infer about Sarah's work situation?,inference,She may need to travel occasionally for work,,,,,She mentions needing to pause her membership for work travel,hard
+Reading,R1,10,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",How would you describe Sarah's overall approach to this inquiry?,tone_purpose,Thorough and professional,Lazy and disinterested,Aggressive and demanding,Confused and unsure,She lists specific requirements and uses formal professional language,hard
+Reading,R1,11,Email Inquiry,"From: sarah.mitchell@email.com
+To: manager@fitnessdynamics.ca
+Subject: Re: Membership Inquiry
+Date: March 15, 2024
+
+Dear Manager,
+
+Thank you for your prompt response to my inquiry about your gymnasium 
+facilities. I am very interested in your new classes, particularly the 
+morning yoga and evening pilates sessions. However, before I commit to a 
+membership, I would appreciate more information.
+
+Specifically, I would like to know:
+1. Are the facilities wheelchair accessible?
+2. What is included in the premium membership package?
+3. Can I pause my membership temporarily without penalty if I need to 
+   travel for work?
+
+I am also curious about your class scheduling. I notice from your website 
+that most classes run in the evenings. Do you accommodate members who 
+prefer early morning sessions? I typically wake at 5 AM and would be 
+interested in classes before 8 AM.
+
+Regarding payment, would you accept monthly automatic transfers from my 
+bank account, or do you require credit card payments only?
+
+I look forward to your detailed response. I have been searching for a 
+suitable fitness facility in this area for quite some time.
+
+Best regards,
+Sarah Mitchell","Answer the following questions based on the email above.",What does Sarah's detailed list of questions reveal about her decision-making process?,inference,She makes careful informed decisions before committing,,,,,The specific nature of her questions shows she thinks things through thoroughly,hard
+Reading,R2,1,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",What is the best time for John to attend Spin Class if he works until 5:30 PM?,detail,6:30 PM on Monday or Thursday,,,,,Spin Classes are offered at 6:30 PM (Monday/Thursday) - after work hours,medium
+Reading,R2,2,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",How many times per week can Maria attend Yoga Flow classes if she is available afternoons and evenings?,detail,3 times (Tuesday afternoon; Wednesday evening; Friday afternoon),,,,,Yoga Flow: Tuesday 1:00 PM; Wednesday 6:00 PM; Friday 1:00 PM,medium
+Reading,R2,3,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",If David wants to do Badminton twice a week in the evening how many options does he have?,detail,2 options (Tuesday 7:00 PM and Thursday 7:00 PM),,,,,Badminton is offered at 7:00 PM on Tuesday and Thursday only,easy
+Reading,R2,4,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",Which class is offered the most times per week?,detail,Yoga Flow (offered 5 times) and Badminton (offered 4 times); or accept: Classes offered multiple times,,,,,Count: Yoga Flow on Wed 6am, Tues 1pm, Wed 6pm, Fri 1pm, plus Saturday = 5 times,hard
+Reading,R2,5,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",What can we infer about why the facility is closed on Sundays?,inference,The facility may be closed for maintenance or staff rest day,,,,,Not explicitly stated; requires inference based on common business practice,hard
+Reading,R2,6,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",How many different classes are available during morning hours?,detail,7 different classes,,,,,Sunrise Yoga; Pilates Core; Running Club; Yoga Flow; Zumba; Strength Training; Bootcamp,medium
+Reading,R2,7,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",What would be the best schedule for someone who wants to attend Pilates Core as many times as possible per week?,detail,Monday or Thursday morning (6:30 AM) and Friday evening (7:30 PM) = 3 times per week,,,,,Pilates Core: Monday 6:30am; Friday 6:30am (morning row says Friday morning); Monday and Friday evening 7:30pm = 3 times possible,hard
+Reading,R2,8,Schedule Matching,"FITNESS PLUS - Spring Class Schedule (Effective March 1, 2024)
+
+MORNING CLASSES (6:00 AM - 9:00 AM)
+Monday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Tuesday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Wednesday: Yoga Flow (6:00 AM), Zumba (8:00 AM)
+Thursday: Sunrise Yoga (6:30 AM), Strength Training (7:00 AM)
+Friday: Pilates Core (6:30 AM), Running Club (7:30 AM)
+Saturday: Community Yoga (9:00 AM), Bootcamp (8:00 AM)
+Sunday: Closed
+
+AFTERNOON CLASSES (12:00 PM - 3:00 PM)
+Monday: Spin Class (12:30 PM), Basketball (2:00 PM)
+Tuesday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Wednesday: Spin Class (12:30 PM), Swimming (1:30 PM)
+Thursday: Basketball (2:00 PM), Badminton (2:30 PM)
+Friday: Yoga Flow (1:00 PM), Aerobics (2:00 PM)
+Saturday: Open Court (1:00 PM)
+Sunday: Closed
+
+EVENING CLASSES (6:00 PM - 9:00 PM)
+Monday: Basketball (6:30 PM), Pilates Core (7:30 PM)
+Tuesday: Strength Training (6:00 PM), Badminton (7:00 PM)
+Wednesday: Yoga Flow (6:00 PM), Running Club (7:00 PM)
+Thursday: Spin Class (6:30 PM), Badminton (7:00 PM)
+Friday: Strength Training (6:00 PM), Pilates Core (7:30 PM)
+Saturday: Community Yoga (7:00 PM)
+Sunday: Closed","Use the schedule to match members with appropriate classes.",Based on the schedule what can you infer about member fitness goals?,inference,Members have diverse fitness goals (strength; flexibility; cardio); the variety suggests the facility serves different fitness levels,,,,,The variety of classes (yoga; cardio; strength) indicates different fitness preferences,medium
+Reading,R3,1,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curricula.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",Which paragraph introduces the definition of digital literacy?,detail,Paragraph A,,,,,The definition is provided in Paragraph A: 'the ability to find evaluate and create information using digital technologies',easy
+Reading,R3,2,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curricula.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",According to Paragraph B what do employers say about graduates without digital skills?,detail,They struggle to compete in the job market,,,,,Paragraph B states: 'employers report that graduates without these skills struggle to compete in the job market',easy
+Reading,R3,3,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curriculas.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",What challenges to digital literacy implementation are mentioned in Paragraph C?,detail,Unequal technology access; high costs for under-funded districts; lack of teacher training,,,,,Three specific challenges are listed in Paragraph C,medium
+Reading,R3,4,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curriculas.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.","In Paragraph D what does 'digital citizenship' mean according to the text?",vocab_context,How to behave responsibly online,,,,,Paragraph D defines it as: 'how to behave responsibly online',easy
+Reading,R3,5,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curriculas.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",What is the main idea of Paragraph E?,gist,The outlook for digital literacy in Canadian schools is positive with government support and technology partnerships,,,,,Paragraph E discusses positive developments and future prospects,medium
+Reading,R3,6,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curriculas.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",Which of the following best represents the main theme of the entire passage?,mcq,C,Digital literacy is no longer important in Canadian schools,Only wealthy schools should teach digital skills,Canadian schools are working to address digital literacy despite challenges,Teachers are refusing to teach digital skills,"The passage discusses the importance of digital literacy; the challenges; and the positive outlook with solutions. Option C best captures this balance.",hard
+Reading,R3,7,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curriculas.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",What can be inferred from Paragraph D about the author's perspective on digital literacy education?,inference,The author values a balanced approach that includes technical AND critical thinking skills,,,,,While Paragraph D presents an educators' argument; including both perspectives suggests balance is important,hard
+Reading,R3,8,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curriculas.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",Based on the passage what is one way the government is supporting digital literacy?,detail,Through funding initiatives and partnerships with technology companies,,,,,Paragraph E explicitly states these two methods of government support,medium
+Reading,R3,9,Digital Literacy,"Digital Literacy in Canadian Schools: A Growing Priority
+
+[Paragraph A] Over the past decade, digital literacy has become increasingly important in Canadian education. Digital literacy refers to the ability to find, evaluate, and create information using digital technologies. It goes beyond simply using computers or tablets; it encompasses critical thinking skills needed to navigate the modern digital world.
+
+[Paragraph B] The Canadian government recognizes that digital skills are essential for future employment. Many professions now require basic computer competency, and employers report that graduates without these skills struggle to compete in the job market. Schools across Canada have responded by integrating digital literacy into their curriculas.
+
+[Paragraph C] However, implementing digital literacy programs faces several challenges. Not all schools have equal access to technology, and the cost of purchasing computers and software can be prohibitive for under-funded districts. Additionally, teachers require training to effectively teach digital literacy concepts.
+
+[Paragraph D] Some educators argue that digital literacy should focus more on critical thinking and online safety than on technical skills. They contend that students can learn software tools easily, but understanding digital citizenship—how to behave responsibly online—is more valuable. This perspective challenges traditional computer training approaches.
+
+[Paragraph E] The future of digital literacy in Canadian schools appears promising. With government funding initiatives and partnerships with technology companies, more schools are gaining access to necessary resources. Furthermore, teacher training programs are being developed to ensure educators are equipped to teach these essential skills effectively.","Read the passage and answer the questions below.",What tone does the author use when discussing the future of digital literacy in Canadian schools?,tone_purpose,Optimistic and encouraging,Pessimistic and discouraging,Neutral and factual,Angry and critical,"Words like 'promising;' 'gaining access;' 'equipped' convey optimism about the future",easy
+Reading,R4,1,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What is Dr. Liu's main concern about AI in schools?,detail,Students using AI to avoid independent thinking and academic integrity concerns,,,,,Dr. Liu mentions ChatGPT homework use and risk of students not thinking/writing independently,easy
+Reading,R4,2,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What alternative does James Chen suggest instead of regulation?,detail,Teaching students AI literacy and digital citizenship; education instead of restriction,,,,,Chen states: 'teach students AI literacy and digital citizenship' and 'Rather than regulation I advocate for education',easy
+Reading,R4,3,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",Which speaker mentions that AI can help struggling students?,detail,James Chen,,,,,Chen states: 'intelligent tutoring systems can help struggling students',easy
+Reading,R4,4,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What concern does Dr. Liu raise about AI systems themselves (not usage)?,detail,They can contain biases that perpetuate educational inequalities,,,,,Liu specifically states: 'AI systems can contain biases that perpetuate educational inequalities',medium
+Reading,R4,5,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international computers who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What consequence does James Chen warn about if Canada adopts strict AI regulation?,inference,Canadian schools will fall behind international competitors who embrace AI technologies,,,,,Chen states: 'restricting AI will force Canadian schools to fall behind international competitors',medium
+Reading,R4,6,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What is the main difference between the two speakers' approaches to the AI problem?,gist,Liu advocates regulation and control; Chen advocates education and trust in students,,,,,This captures the fundamental difference in their strategies,hard
+Reading,R4,7,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What does Dr. Liu mean when she says AI should 'support learning rather than replacing it'?,vocab_context,AI should enhance and complement education but not substitute for human teaching and critical thinking,,,,,This means AI should be a tool that helps but doesn't take over the role of actual learning,medium
+Reading,R4,8,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What tone does Dr. Liu use when presenting her concerns about AI?,tone_purpose,Cautious and warning; she expresses worry about risks,,,,,Liu uses words like 'worry' 'risk' 'harmful' conveying a cautious tone,medium
+Reading,R4,9,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.","Based on the speeches which statement would both speakers likely AGREE with?",inference,AI will play an increasingly important role in Canadian education,,,,,Both acknowledge AI is advancing and significant; they just disagree on how to manage it,hard
+Reading,R4,10,AI Regulation,"AI Regulation in Canadian Schools: Two Perspectives
+
+Dr. Emily Liu - Pro-Regulation Viewpoint:
+
+Artificial intelligence is advancing rapidly in our education system and we must establish clear regulations. Students are using AI tools like ChatGPT for homework and I worry about academic integrity. If we don't regulate AI use we risk creating a generation of students who cannot think critically or write independently. Furthermore AI systems can contain biases that perpetuate educational inequalities. Regulation allows us to ensure AI supports learning rather than replacing it. Without guidelines schools will face unpredictable and potentially harmful consequences.
+
+James Chen - Against Strict Regulation Viewpoint:
+
+I understand Dr. Liu's concerns but I believe overly strict regulation will hinder innovation in education. AI offers tremendous opportunities—personalized learning paths adaptive assessments and intelligent tutoring systems can help struggling students. Banning or heavily restricting AI will force Canadian schools to fall behind international competitors who embrace these technologies. Rather than regulation I advocate for education. We should teach students AI literacy and digital citizenship so they can use these tools responsibly. This approach trusts student maturity and encourages innovation.","Analyze and compare the two speakers' positions on AI in schools.",What does James Chen's mention of 'international competitors' suggest about his reasoning?,inference,He believes Canada must stay competitive economically and educationally by not falling behind on technology adoption,,,,,Using competitiveness as an argument suggests economic/educational stakes and need to keep pace globally,hard
