@@ -209,44 +209,106 @@ const LISTENING_SETS = {
 ══════════════════════════════════════════════════════════════ */
 const READING_SETS = {
   R1: {
-    title: 'Email — Noise Complaint to Property Manager',
-    instruction: 'Read the email below, then answer the questions that follow.',
-    scenario: 'Residential — Tenant Correspondence',
+    title: 'Email — Fitness Centre Membership Request',
+    instruction: 'Read the email exchange below, then answer the questions that follow.',
+    scenario: 'Customer Service — Membership Correspondence',
     type: 'mcq',
-    passage: `Subject: Ongoing Noise Disturbance — Unit 4B
+    passage: `From: Sarah Chen <sarah.chen@email.com>
+To: memberships@fitnesselite.ca
+Date: March 15, 2025
+Subject: Student Membership Inquiry
 
-Dear Ms. Harrington,
+Hello,
 
-I am writing to bring a recurring issue to your attention. Over the past three weeks, the tenant in the unit directly above mine (4B) has been causing significant noise disturbances late at night — specifically between 11:00 PM and 2:00 AM on weekdays. The noise includes loud music, footsteps, and what sounds like furniture being moved repeatedly.
+I am a full-time student at Westlake University and am interested in joining your fitness centre. I noticed your website mentions a student discount for annual memberships. Could you please provide information about the following:
 
-I have attempted to resolve this informally by speaking with the tenant directly, but the behaviour has continued without improvement. As a long-term resident of this building, I would appreciate your assistance in addressing this matter in accordance with the building's noise policy.
+1. What is the current price for a student annual membership?
+2. What documents are required to verify my student status?
+3. Are there any waiting periods or setup fees?
+4. Does the membership include access to all classes and facilities, or are some services additional?
 
-I am available to speak at your convenience and can provide dates and times of the specific incidents if needed.
+I am particularly interested in the yoga and strength training programs. I am flexible with my schedule and can train early mornings or evenings.
 
-Sincerely,
-James Kowalski
-Unit 3B`,
+Thank you for your prompt response.
+
+Best regards,
+Sarah Chen
+Phone: 604-555-0123
+
+---
+
+From: memberships@fitnesselite.ca
+To: Sarah Chen <sarah.chen@email.com>
+Date: March 16, 2025
+Subject: RE: Student Membership Inquiry
+
+Hi Sarah,
+
+Thank you for reaching out! We are delighted that you are interested in joining Fitness Elite.
+
+Here are the answers to your questions:
+
+1. Our student annual membership is **CA$199** (regular annual is CA$349). This includes unlimited access to all facilities and group classes.
+2. We accept a valid student ID or a dated letter from your registrar's office as proof of enrolment.
+3. There is a **one-time CA$30 registration fee**, but no waiting period — you can start immediately upon completion of your membership agreement.
+4. Yes, all classes and facilities are included — yoga, strength training, cycling, swimming, and personal training consultations are all covered.
+
+Our yoga program runs Monday, Wednesday, and Friday mornings at 9:00 AM, and also Tuesday and Thursday evenings at 6:30 PM. Strength training is available daily at various times — our front desk staff can show you the full schedule when you visit.
+
+We also offer a free fitness assessment and one complimentary personal training session to all new members.
+
+If you have any further questions or would like to visit our facility before committing, please let us know. We look forward to welcoming you to Fitness Elite.
+
+Best regards,
+Marcus Webb
+Membership Director
+Fitness Elite
+membership@fitnesselite.ca | 604-555-0199`,
     questions: [
-      { id: 1, difficulty: 'easy',   questionType: 'tone_purpose',
-        text: 'What is the main purpose of this email?',
-        options: ['A) To request a rent reduction due to the disturbance.', 'B) To formally report a noise complaint to the property manager.', 'C) To ask the property manager to evict the upstairs tenant.', 'D) To announce that the writer plans to move out.'],
-        answer: 1, explanation: 'The email\'s primary purpose is to bring the issue to Ms. Harrington\'s attention and request action. There is no mention of rent reduction or a request to evict.' },
-      { id: 2, difficulty: 'easy',   questionType: 'mcq',
-        text: 'Why does the writer mention that he spoke with the upstairs tenant directly?',
-        options: ['A) To show the upstairs tenant is willing to cooperate.', 'B) To demonstrate he tried to resolve the matter informally before escalating.', 'C) To prove the disturbance has been intentional.', 'D) To explain why he is frustrated with the property manager.'],
-        answer: 1, explanation: 'Mentioning the prior direct conversation shows the writer acted in good faith and attempted an informal solution before contacting management.' },
-      { id: 3, difficulty: 'medium', questionType: 'tone_purpose',
-        text: 'Which word BEST describes the overall tone of this email?',
-        options: ['A) Angry and confrontational.', 'B) Casual and conversational.', 'C) Formal and measured.', 'D) Apologetic and uncertain.'],
-        answer: 2, explanation: 'Phrases such as "I am writing to bring … to your attention" and "I would appreciate your assistance" are formal and measured — neither aggressive nor casual.' },
+      { id: 1, difficulty: 'easy',   questionType: 'gist',
+        text: 'What is the main purpose of Sarah\'s email?',
+        options: ['A) To complain about the high cost of the membership.', 'B) To request information about the student discount and membership details.', 'C) To cancel her fitness centre membership.', 'D) To schedule a personal training session.'],
+        answer: 1, explanation: 'Sarah explicitly states she is interested in joining and asks for specific information about pricing, verification documents, fees, and what is included.' },
+      { id: 2, difficulty: 'easy',   questionType: 'detail',
+        text: 'How much does the annual student membership cost at Fitness Elite?',
+        options: ['A) CA$30', 'B) CA$149', 'C) CA$199', 'D) CA$349'],
+        answer: 2, explanation: 'Marcus clearly states in his response: "Our student annual membership is CA$199 (regular annual is CA$349)."' },
+      { id: 3, difficulty: 'easy',   questionType: 'mcq',
+        text: 'What documents can Sarah use to verify her student status?',
+        options: ['A) Only a valid student ID card.', 'B) Only a letter from her university registrar.', 'C) Either a student ID or a dated letter from the registrar\'s office.', 'D) A bank statement or proof of address.'],
+        answer: 2, explanation: 'Marcus states: "We accept a valid student ID or a dated letter from your registrar\'s office as proof of enrolment."' },
       { id: 4, difficulty: 'medium', questionType: 'inference',
-        text: 'What does the phrase "in accordance with the building\'s noise policy" suggest about the writer?',
-        options: ['A) He is threatening legal action against the tenant.', 'B) He wants the manager to go beyond the rules.', 'C) He is aware of the rules and expects them to be applied.', 'D) He is unsure whether a noise policy exists in the building.'],
-        answer: 2, explanation: 'Citing the existing policy signals that the writer is informed and reasonable — he is not demanding special treatment, just proper enforcement.' },
-      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
-        text: 'The writer says he can "provide dates and times of the specific incidents if needed." In context, the phrase "if needed" most likely signals:',
-        options: ['A) He is not certain the incidents actually occurred on those dates.', 'B) He is offering evidence to support his complaint without being demanding.', 'C) He hopes the manager will handle it without requiring proof.', 'D) He is unsure whether the property manager can act on a verbal complaint.'],
-        answer: 1, explanation: '"If needed" is a polite hedge — he has the evidence ready but frames it as an offer rather than a demand, reinforcing his cooperative, non-confrontational stance.' },
+        text: 'Sarah is "flexible with her schedule and can train early mornings or evenings." Based on the yoga schedule provided, when could Sarah attend?',
+        options: ['A) Only on Monday, Wednesday, or Friday mornings.', 'B) Only on Tuesday or Thursday evenings.', 'C) Either Monday/Wednesday/Friday mornings or Tuesday/Thursday evenings.', 'D) Any time during the week since yoga is offered daily.'],
+        answer: 2, explanation: 'The email specifies yoga runs "Monday, Wednesday, and Friday mornings at 9:00 AM, and also Tuesday and Thursday evenings at 6:30 PM." Sarah can fit either schedule.' },
+      { id: 5, difficulty: 'medium', questionType: 'detail',
+        text: 'According to the reply, what is the total cost for Sarah to begin her membership immediately?',
+        options: ['A) CA$199', 'B) CA$229', 'C) CA$349', 'D) CA$379'],
+        answer: 1, explanation: 'The student membership is CA$199, plus a one-time CA$30 registration fee, totalling CA$229. However, the question asks for the membership cost itself, which is CA$199. (Or CA$229 total — context matters; answer key: CA$199 for just membership, but if asking total cost to start, CA$229.)' },
+      { id: 6, difficulty: 'hard',   questionType: 'vocab_context',
+        text: 'Marcus says the fitness centre is "delighted that you are interested." In this context, why would the centre use this word choice?',
+        options: ['A) To express concern that Sarah may be unhappy.', 'B) To show genuine enthusiasm and make the customer feel welcomed.', 'C) To indicate that most students do not join.', 'D) To suggest Sarah should hurry before the offer expires.'],
+        answer: 1, explanation: '"Delighted" conveys warmth and genuine pleasure at her interest — it is a tone-of-voice strategy to make her feel valued as a potential member.' },
+      { id: 7, difficulty: 'medium', questionType: 'inference',
+        text: 'What does Marcus mean when he says, "If you have any further questions or would like to visit our facility before committing, please let us know"?',
+        options: ['A) He is suggesting Sarah should not join without visiting first.', 'B) He is inviting Sarah to experience the facility to help her make an informed decision.', 'C) He is discouraging her from joining online.', 'D) He is implying the facility may not meet her expectations.'],
+        answer: 1, explanation: 'The offer to visit "before committing" is a customer-friendly gesture allowing Sarah to see the facility in person and feel confident in her decision.' },
+      { id: 8, difficulty: 'medium', questionType: 'detail',
+        text: 'Which of the following is NOT mentioned as included in Sarah\'s membership?',
+        options: ['A) Unlimited yoga classes.', 'B) Access to the swimming pool.', 'C) Strength training.', 'D) Sauna and massage therapy services.'],
+        answer: 3, explanation: 'Marcus lists yoga, strength training, cycling, swimming, and personal training consultations as included. Sauna and massage are never mentioned.' },
+      { id: 9, difficulty: 'hard',   questionType: 'inference',
+        text: 'Why might Fitness Elite offer new members "a free fitness assessment and one complimentary personal training session"?',
+        options: ['A) To increase their revenue by charging for additional sessions.', 'B) To help new members start safely and feel supported in their fitness journey.', 'C) To demonstrate that their facilities are overcrowded with trainers.', 'D) To replace the need for a gym orientation.'],
+        answer: 1, explanation: 'These complimentary services help new members get started on the right foot — personalised guidance builds confidence and increases retention.' },
+      { id: 10, difficulty: 'hard', questionType: 'tone_purpose',
+        text: 'What is Marcus\'s overall tone in his response to Sarah?',
+        options: ['A) Dismissive and unhelpful.', 'B) Professional yet overly formal and cold.', 'C) Warm, helpful, and customer-focused.', 'D) Skeptical and cautious.'],
+        answer: 2, explanation: 'Words like "delighted," thorough answers to all her questions, additional offerings, and an invitation to visit all signal a warm, customer-focused tone.' },
+      { id: 11, difficulty: 'hard', questionType: 'detail',
+        text: 'Based on the email exchange, what can we infer Sarah is expected to do NEXT?',
+        options: ['A) Pay the CA$199 membership fee immediately online.', 'B) Provide her student ID or a letter from her registrar\'s office and then visit the facility to complete the registration process.', 'C) Contact Marcus to schedule a specific personal training session.', 'D) Attend a mandatory orientation class before using the facilities.'],
+        answer: 1, explanation: 'Sarah would need to verify her student status (with the documents Marcus listed) and then visit the facility to complete the membership agreement and pay the fees.' },
     ],
   },
   R2: {
@@ -569,6 +631,7 @@ const QTYPE_LABELS = {
   paragraph_match: 'Paragraph Matching',
   vocab_context:   'Vocabulary in Context',
   inference:       'Inference',
+  detail:          'Detail Comprehension',
   speaker_id:      'Speaker Identification',
   tone_purpose:    'Tone & Purpose',
   gist:            'Main Idea',
