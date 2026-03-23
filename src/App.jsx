@@ -58,7 +58,7 @@ export function AppInner() {
   return (
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
-      <Navbar currentPage={page} setPage={goPage} onSignIn={() => setAuthOpen(true)} />
+      <Navbar currentPage={page} setPage={goPage} setActivePart={setActivePart} onSignIn={() => setAuthOpen(true)} />
 
       {page === 'home' && <HomePage setPage={goPage} />}
 

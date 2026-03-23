@@ -75,18 +75,33 @@ const NAV_ITEMS = [
 ]
 
 /* ── Single dropdown item ── */
-function DropItem({ item, color, setPage, closeAll, parentId }) {
+function DropItem({ item, color, setPage, setActivePart, closeAll, parentId }) {
   const handleClick = () => {
     if (item.action) {
       setPage(item.action)
-    } else if (parentId === 'listening') {
-      setPage('listening')
-    } else if (parentId === 'reading') {
-      setPage('reading')
-    } else if (parentId === 'writing') {
-      setPage('writing')
-    } else if (parentId === 'speaking') {
-      setPage('speaking')
+      closeAll()
+      return
+    }
+
+    const sectionMap = { listening: 'listening', reading: 'reading', writing: 'writing', speaking: 'speaking' }
+    const section = sectionMap[parentId]
+
+    if (section && setActivePart) {
+      // Extract part ID from label like "L1 · Problem Solving" → "L1"
+      const match = item.label.match(/^([A-Z]\d+)/)
+      if (match) {
+        const partId = match[1]
+        const partLabel = item.label.replace(/^[A-Z]\d+\s*·\s*/, '')
+        setActivePart({ id: partId, section, label: partLabel })
+        setPage('practice-set')
+        closeAll()
+        return
+      }
+    }
+
+    // Fallback: go to section overview page
+    if (section) {
+      setPage(section)
     } else {
       setPage('exam')
     }
@@ -104,7 +119,7 @@ function DropItem({ item, color, setPage, closeAll, parentId }) {
 }
 
 /* ── Nav item with optional dropdown ── */
-function NavItem({ item, active, setPage, openId, setOpenId }) {
+function NavItem({ item, active, setPage, setActivePart, openId, setOpenId }) {
   const ref = useRef(null)
   const open = openId === item.id
 
@@ -160,6 +175,7 @@ function NavItem({ item, active, setPage, openId, setOpenId }) {
                 item={p}
                 color={item.color}
                 setPage={setPage}
+                setActivePart={setActivePart}
                 closeAll={() => setOpenId(null)}
                 parentId={item.id}
               />
@@ -182,7 +198,7 @@ function NavItem({ item, active, setPage, openId, setOpenId }) {
   )
 }
 
-export default function Navbar({ currentPage, setPage, onSignIn }) {
+export default function Navbar({ currentPage, setPage, setActivePart, onSignIn }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openId, setOpenId] = useState(null)   // only one dropdown open at a time
@@ -221,6 +237,7 @@ export default function Navbar({ currentPage, setPage, onSignIn }) {
               item={item}
               active={activeId === item.id}
               setPage={(p) => { setPage(p); setMenuOpen(false); setOpenId(null) }}
+              setActivePart={setActivePart}
               openId={openId}
               setOpenId={setOpenId}
             />
