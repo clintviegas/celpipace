@@ -1898,7 +1898,7 @@ export default function PracticeSetPage({ part, setPage }) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
           <div style={{ fontSize: 40 }}>📭</div>
           <p style={{ color: cfg.color, fontWeight: 600, fontSize: 18 }}>No questions found for {partId}</p>
-          <p style={{ color: '#666', fontSize: 14 }}>Checking database for section="reading" and part="{partId}"</p>
+          <p style={{ color: '#666', fontSize: 14 }}>Checking database for section="{partId.charAt(0).toUpperCase() + partId.slice(1)}" and part="{partId}"</p>
           <button className="ps-start-btn" onClick={() => setPage('reading')}>← Back to Reading</button>
         </div>
       </div>

@@ -46,14 +46,16 @@ export function usePracticeSet(section, part) {
     setError(null)
 
     async function load() {
-      console.log(`[usePracticeSet] Fetching for section="${section}", part="${part}"`)
+      // Normalize section to match database (capital first letter)
+      const normalizedSection = section ? section.charAt(0).toUpperCase() + section.slice(1) : section
+      console.log(`[usePracticeSet] Fetching for section="${normalizedSection}", part="${part}"`)
       
       try {
         // Fetch questions directly by section and part
         const { data: questionsData, error: questionsErr } = await supabase
           .from('questions')
           .select('*')
-          .eq('section', section)
+          .eq('section', normalizedSection)
           .eq('part', part)
           .order('number', { ascending: true })
 
