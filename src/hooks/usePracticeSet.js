@@ -48,64 +48,85 @@ export function usePracticeSet(section, part) {
     async function load() {
       console.log(`[usePracticeSet] Fetching for section="${section}", part="${part}"`)
       
-      // Fetch questions directly by section and part
-      const { data: questionsData, error: questionsErr } = await supabase
-        .from('questions')
-        .select('*')
-        .eq('section', section)
-        .eq('part', part)
-        .order('number', { ascending: true })
+      try {
+        // Fetch questions directly by section and part
+        const { data: questionsData, error: questionsErr } = await supabase
+          .from('questions')
+          .select('*')
+          .eq('section', section)
+          .eq('part', part)
+          .order('number', { ascending: true })
 
-      if (cancelled) return
+        if (cancelled) return
 
-      console.log(`[usePracticeSet] Query error:`, questionsErr)
-      console.log(`[usePracticeSet] Fetched ${questionsData?.length || 0} questions:`, questionsData)
+        console.log(`[usePracticeSet] Query error:`, questionsErr)
+        console.log(`[usePracticeSet] Fetched ${questionsData?.length || 0} questions:`, questionsData)
 
-      if (questionsErr) {
-        console.error('Error fetching questions:', questionsErr)
-        setError(questionsErr.message)
-        setLoading(false)
-        return
-      }
+        if (questionsErr) {
+          console.error('[usePracticeSet] Error fetching questions:', questionsErr)
+          setError(`Supabase query failed: ${questionsErr.message}`)
+          setLoading(false)
+          return
+        }
 
-      // Group questions by part (usually just one group per part)
-      // and format them into practice sets
-      const mapped = [{
-        setNumber: 1,
-        setTitle: part === 'R1' ? 'Email Inquiry' 
-                : part === 'R2' ? 'Schedule Matching'
-                : part === 'R3' ? 'Digital Literacy'
-                : part === 'R4' ? 'AI Regulation'
-                : part === 'L1' ? 'Library Customer Service'
-                : part === 'L2' ? 'Friends Planning a Trip'
-                : part === 'L3' ? 'Community Centre'
-                : part === 'L4' ? 'City Transit News'
-                : part === 'L5' ? 'Remote Work Panel'
-                : `Part ${part}`,
-        instruction: questionsData?.[0]?.instruction || 'Answer the questions below.',
-        scenario: questionsData?.[0]?.title || '',
-        difficulty: questionsData?.[0]?.difficulty || 'medium',
-        passage: questionsData?.[0]?.passage || null,
-        diagramHtml: null,
-        questions: (questionsData || []).map(q => {
-          const options = [q.option_a, q.option_b, q.option_c, q.option_d].filter(Boolean)
-          // Find the index of the correct answer
-          const correctAnswerIndex = options.indexOf(q.correct_answer)
+        if (!questionsData || questionsData.length === 0) {
+          console.warn(`[usePracticeSet] No questions found. Checking available data...`)
+          // Try to fetch all questions to see what's in the DB
+          const { data: allQuestions } = await supabase
+            .from('questions')
+            .select('*')
+            .limit(1)
+          console.log('[usePracticeSet] Sample of available data in DB:', allQuestions)
           
-          return {
-            id:           q.id,
-            text:         q.question_text,
-            options:      options,
-            answer:       correctAnswerIndex >= 0 ? correctAnswerIndex : 0, // Use found index or default to 0
-            explanation:  q.explanation || '',
-            difficulty:   q.difficulty || 'medium',
-            questionType: q.type || 'mcq',
-          }
-        }),
-      }]
+          setError(`No questions found for section="${section}" part="${part}"`)
+          setSets([])
+          setLoading(false)
+          return
+        }
 
-      setSets(mapped)
-      setLoading(false)
+        // Group questions by part (usually just one group per part)
+        // and format them into practice sets
+        const mapped = [{
+          setNumber: 1,
+          setTitle: part === 'R1' ? 'Email Inquiry' 
+                  : part === 'R2' ? 'Schedule Matching'
+                  : part === 'R3' ? 'Digital Literacy'
+                  : part === 'R4' ? 'AI Regulation'
+                  : part === 'L1' ? 'Library Customer Service'
+                  : part === 'L2' ? 'Friends Planning a Trip'
+                  : part === 'L3' ? 'Community Centre'
+                  : part === 'L4' ? 'City Transit News'
+                  : part === 'L5' ? 'Remote Work Panel'
+                  : `Part ${part}`,
+          instruction: questionsData?.[0]?.instruction || 'Answer the questions below.',
+          scenario: questionsData?.[0]?.title || '',
+          difficulty: questionsData?.[0]?.difficulty || 'medium',
+          passage: questionsData?.[0]?.passage || null,
+          diagramHtml: null,
+          questions: (questionsData || []).map(q => {
+            const options = [q.option_a, q.option_b, q.option_c, q.option_d].filter(Boolean)
+            // Find the index of the correct answer
+            const correctAnswerIndex = options.indexOf(q.correct_answer)
+            
+            return {
+              id:           q.id,
+              text:         q.question_text,
+              options:      options,
+              answer:       correctAnswerIndex >= 0 ? correctAnswerIndex : 0, // Use found index or default to 0
+              explanation:  q.explanation || '',
+              difficulty:   q.difficulty || 'medium',
+              questionType: q.type || 'mcq',
+            }
+          }),
+        }]
+
+        setSets(mapped)
+        setLoading(false)
+      } catch (err) {
+        console.error('[usePracticeSet] Unexpected error:', err)
+        setError(`Error: ${err.message}`)
+        setLoading(false)
+      }
     }
 
     load()
