@@ -3,16 +3,38 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl  = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+// Suppress the auth lock warning in development
+if (typeof window !== 'undefined') {
+  const originalWarn = console.warn
+  console.warn = function(...args) {
+    if (args[0]?.includes?.('Lock') || args[0]?.includes?.('auth-token')) {
+      return // Silently ignore Supabase auth lock warnings
+    }
+    originalWarn.apply(console, args)
+  }
+}
+
 let supabaseInstance = null
 
-export const supabase = (() => {
-  if (!supabaseInstance) {
-    supabaseInstance = createClient(supabaseUrl, supabaseAnon, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    })
-  }
+function initSupabase() {
+  if (supabaseInstance) return supabaseInstance
+  
+  supabaseInstance = createClient(supabaseUrl, supabaseAnon, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  })
+  
   return supabaseInstance
+}
+
+export const supabase = (() => {
+  try {
+    return initSupabase()
+  } catch (err) {
+    console.error('Failed to initialize Supabase:', err)
+    throw err
+  }
 })()
