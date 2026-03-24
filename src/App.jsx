@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
+import DashboardNavbar from './components/DashboardNavbar'
 import AuthModal from './components/AuthModal'
 import Hero from './components/Hero'
 import AIFeatures from './components/AIFeatures'
@@ -59,7 +60,12 @@ export function AppInner() {
   return (
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
-      <Navbar currentPage={page} setPage={goPage} setActivePart={setActivePart} onSignIn={() => setAuthOpen(true)} />
+      
+      {page === 'dashboard' ? (
+        <DashboardNavbar currentPage={page} setPage={goPage} onSignIn={() => setAuthOpen(true)} />
+      ) : (
+        <Navbar currentPage={page} setPage={goPage} setActivePart={setActivePart} onSignIn={() => setAuthOpen(true)} />
+      )}
 
       {page === 'home' && <HomePage setPage={goPage} />}
       {page === 'dashboard' && <DashboardPage setPage={goPage} />}
@@ -98,7 +104,7 @@ export function AppInner() {
         </main>
       )}
 
-      <Footer setPage={goPage} />
+      {page !== 'dashboard' && <Footer setPage={goPage} />}
     </>
   )
 }

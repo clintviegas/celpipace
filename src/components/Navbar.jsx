@@ -248,7 +248,14 @@ export default function Navbar({ currentPage, setPage, setActivePart, onSignIn }
         {/* Auth actions */}
         <div className="nav-actions">
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <button 
+                className="nav-dashboard-btn"
+                onClick={() => setPage('dashboard')}
+                title="Go to Dashboard"
+              >
+                📊 Dashboard
+              </button>
               <div className="nav-user-chip">
                 {user.user_metadata?.avatar_url
                   ? <img className="nav-user-avatar" src={user.user_metadata.avatar_url} alt={initials} />
