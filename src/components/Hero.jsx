@@ -1,209 +1,211 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
-const SHOWCASES = [
-  {
-    id: 'mock',
-    badge: 'Mock Exams',
-    title: 'Practice That Feels Just Like the Real CELPIP',
-    desc: 'Our mock exams match the official CELPIP format, timing, and difficulty. Practice all four skills in one sitting — with the same question types you will see on test day.',
-    cta: 'Try Mock Exams →',
-    ctaPage: 'exam',
-  },
-  {
-    id: 'ai',
-    badge: 'AI Scoring',
-    title: 'AI Feedback That Helps You Improve',
-    desc: 'Get instant, detailed scoring on your Writing and Speaking responses. Our AI analyzes coherence, vocabulary, grammar, and task fulfillment — then shows you exactly what to fix.',
-    cta: 'Try AI Scoring →',
-    ctaPage: 'writing',
-  },
-  {
-    id: 'explain',
-    badge: 'Smart Learning',
-    title: 'Detailed Explanations for Every Question',
-    desc: "Don't just memorize answers — understand why. Every question includes clear explanations, sample answers at different CLB levels, and actionable tips.",
-    cta: 'Try Practice Questions →',
-    ctaPage: 'reading',
-  },
+const HERO_BADGE = '⭐ Trusted CELPIP Practice Platform'
+const HERO_TITLE = 'Your Fastest Path to a 10+ CELPIP Score'
+const HERO_SUB = 'AI-powered practice questions, instant scoring, and detailed feedback across all 4 CELPIP skills. Boost your CRS by up to 50 points.'
+
+const SKILL_SECTIONS = [
+  { icon: '🏆', label: 'Mock Exams', page: 'exam' },
+  { icon: '🎧', label: 'Listening', page: 'listening' },
+  { icon: '📖', label: 'Reading', page: 'reading' },
+  { icon: '✍️', label: 'Writing', page: 'writing' },
+  { icon: '🎙️', label: 'Speaking', page: 'speaking' },
 ]
 
-const TRUST_STATS = [
-  { value: '200+', label: 'Practice Questions', icon: '📝' },
-  { value: '4.9', label: 'Google Rating', icon: '⭐' },
-  { value: '20+', label: 'Mock Exams', icon: '🏆' },
-  { value: 'AI', label: 'Instant Scoring', icon: '🤖' },
-]
-
-const SKILL_PILLS = [
-  { label: 'Mock Exams', page: 'exam', icon: '🏆' },
-  { label: 'Listening', page: 'listening', icon: '🎧' },
-  { label: 'Reading', page: 'reading', icon: '📖' },
-  { label: 'Writing', page: 'writing', icon: '✍️' },
-  { label: 'Speaking', page: 'speaking', icon: '🎙️' },
+const TRUST_BADGES = [
+  { emoji: '📝', value: '200+', label: 'Practice Questions' },
+  { emoji: '⭐', value: '4.9', label: 'Google Rating' },
+  { emoji: '🏆', value: '20+', label: 'Mock Exams' },
+  { emoji: '🤖', value: 'AI', label: 'Instant Scoring' },
 ]
 
 export default function Hero({ setPage }) {
-  const [activeIdx, setActiveIdx] = useState(0)
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveIdx(i => (i + 1) % SHOWCASES.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const active = SHOWCASES[activeIdx]
+  const [scoreData] = useState({
+    clb: '9',
+    maxClb: '12',
+    skills: [
+      { name: 'Coherence', score: 9, max: 12 },
+      { name: 'Vocabulary', score: 8, max: 12 },
+      { name: 'Grammar', score: 9, max: 12 },
+      { name: 'Fulfillment', score: 10, max: 12 },
+    ]
+  })
 
   return (
-    <section className="hero-v2" id="hero">
-      <div className="hero-v2-bg">
-        <div className="hero-v2-grid" />
-        <div className="hero-v2-glow hero-v2-glow-1" />
-        <div className="hero-v2-glow hero-v2-glow-2" />
-      </div>
+    <section className="hero-section-new" id="hero">
+      {/* Background elements */}
+      <div className="hero-bg-grid-new" />
+      <div className="hero-glow-1" />
+      <div className="hero-glow-2" />
 
-      <div className="hero-v2-inner">
-        <div className="hero-v2-content">
-          <motion.div className="hero-v2-trust-badge" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <span className="hero-v2-trust-dot" />
-            ★ Trusted CELPIP Practice Platform
+      <div className="hero-inner-new">
+        {/* Left: Hero Content */}
+        <motion.div 
+          className="hero-content-new"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div 
+            className="hero-badge-new"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="badge-pulse" />
+            {HERO_BADGE}
           </motion.div>
 
-          <motion.h1 className="hero-v2-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-            Your Fastest Path<br />to a{' '}
-            <span className="hero-v2-score-highlight">10+</span>{' '}
-            CELPIP Score
+          <motion.h1 
+            className="hero-title-new"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            Your Fastest Path<br />to a <span className="score-highlight">10+</span> CELPIP Score
           </motion.h1>
 
-          <motion.p className="hero-v2-sub" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-            AI-powered practice questions, instant scoring, and detailed feedback
-            across all 4 CELPIP skills. Boost your CRS by up to <strong>50 points</strong>.
+          <motion.p 
+            className="hero-subtitle-new"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+          >
+            {HERO_SUB}
           </motion.p>
 
-          <motion.div className="hero-v2-ctas" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
-            <button className="btn btn-primary btn-lg hero-v2-main-cta" onClick={() => setPage('exam')}>
+          <motion.div 
+            className="hero-ctas-new"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <button 
+              className="btn btn-primary btn-lg"
+              onClick={() => setPage('exam')}
+            >
               Start My Free Practice →
             </button>
-            <button className="btn btn-ghost btn-lg" onClick={() => setPage('calculator')}>
+            <button 
+              className="btn btn-outline btn-lg"
+              onClick={() => setPage('calculator')}
+            >
               Calculate My CRS Score
             </button>
           </motion.div>
 
-          <motion.div className="hero-v2-social-proof" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
-            <div className="hero-v2-avatars">
-              {['AK', 'MR', 'SL', 'JP', 'NW'].map((a, i) => (
-                <div key={a} className="hero-v2-avatar" style={{ zIndex: 5 - i }}>{a}</div>
+          <motion.div 
+            className="hero-social-proof-new"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+          >
+            <div className="avatar-stack">
+              {['AK', 'MR', 'SL', 'JP', 'NW'].map((initials, i) => (
+                <div 
+                  key={initials} 
+                  className="avatar"
+                  style={{ zIndex: 5 - i, marginLeft: i > 0 ? '-12px' : 0 }}
+                >
+                  {initials}
+                </div>
               ))}
             </div>
-            <span className="hero-v2-social-text">Trusted by test-takers across Canada</span>
+            <span className="social-proof-text">Trusted by test-takers across Canada</span>
           </motion.div>
 
-          <motion.div className="hero-v2-pills" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}>
-            {SKILL_PILLS.map(p => (
-              <button key={p.label} className="hero-v2-pill" onClick={() => setPage(p.page)}>
-                {p.icon} {p.label}
+          {/* Quick Access Pills */}
+          <motion.div 
+            className="hero-quick-access-new"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            {SKILL_SECTIONS.map(section => (
+              <button
+                key={section.label}
+                className="quick-access-pill"
+                onClick={() => setPage(section.page)}
+              >
+                <span className="pill-icon">{section.icon}</span>
+                <span className="pill-label">{section.label}</span>
               </button>
             ))}
           </motion.div>
-        </div>
+        </motion.div>
 
-        <motion.div className="hero-v2-visual" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.2 }}>
-          <div className="hero-v2-showcase-card">
-            <div className="hero-v2-showcase-dots">
-              {SHOWCASES.map((s, i) => (
-                <button key={s.id} className={`hero-v2-showcase-dot${i === activeIdx ? ' active' : ''}`} onClick={() => setActiveIdx(i)} />
-              ))}
+        {/* Right: AI Scoring Card */}
+        <motion.div 
+          className="hero-visual-new"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+        >
+          <div className="ai-scoring-card">
+            <div className="card-header">
+              <span className="card-badge">AI SCORING</span>
             </div>
 
-            <AnimatePresence mode="wait">
-              <motion.div key={active.id} className="hero-v2-showcase-body" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.35 }}>
-                <span className="hero-v2-showcase-badge">{active.badge}</span>
-                <h3 className="hero-v2-showcase-title">{active.title}</h3>
-                <p className="hero-v2-showcase-desc">{active.desc}</p>
-                <button className="btn btn-primary hero-v2-showcase-cta" onClick={() => setPage(active.ctaPage)}>
-                  {active.cta}
-                </button>
-              </motion.div>
-            </AnimatePresence>
+            <div className="card-title-section">
+              <h3 className="card-main-title">AI Feedback That Helps You Improve</h3>
+            </div>
 
-            {active.id === 'mock' && (
-              <motion.div className="hero-v2-mock-preview" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
-                <div className="hero-v2-mock-bar"><span>Mock Exam 1</span><span className="hero-v2-mock-timer">⏱ 49:23</span></div>
-                <div className="hero-v2-mock-q">
-                  <div className="hero-v2-mock-qtext">1. What is the main purpose?</div>
-                  <div className="hero-v2-mock-opts">
-                    <div className="hero-v2-mock-opt">A. To request a meeting</div>
-                    <div className="hero-v2-mock-opt hero-v2-mock-opt--selected">B. To propose a community project</div>
-                    <div className="hero-v2-mock-opt">C. To file a complaint</div>
-                    <div className="hero-v2-mock-opt">D. To offer congratulations</div>
-                  </div>
-                </div>
-                <div className="hero-v2-mock-sections">
-                  {['🎧 Listening', '📖 Reading', '✍️ Writing', '🎙️ Speaking'].map(s => (
-                    <span key={s} className="hero-v2-mock-sec">{s}</span>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+            <div className="card-content">
+              <p className="card-description">
+                Get instant, detailed scoring on your Writing and Speaking responses. Our AI analyzes coherence, vocabulary, grammar, and task fulfillment — then shows you exactly what to fix.
+              </p>
 
-            {active.id === 'ai' && (
-              <motion.div className="hero-v2-ai-preview" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
-                <div className="hero-v2-ai-score-circle">
-                  <span className="hero-v2-ai-big-score">9</span>
-                  <span className="hero-v2-ai-of">/12</span>
+              <button 
+                className="btn btn-primary"
+                onClick={() => setPage('writing')}
+              >
+                Try AI Scoring →
+              </button>
+
+              <div className="score-display">
+                <div className="score-circle">
+                  <span className="score-main">{scoreData.clb}</span>
+                  <span className="score-max">/{scoreData.maxClb}</span>
                 </div>
-                <div className="hero-v2-ai-bars">
-                  {[
-                    { label: 'Coherence', score: 9, pct: 75 },
-                    { label: 'Vocabulary', score: 8, pct: 67 },
-                    { label: 'Grammar', score: 9, pct: 75 },
-                    { label: 'Fulfillment', score: 10, pct: 83 },
-                  ].map(b => (
-                    <div key={b.label} className="hero-v2-ai-bar-row">
-                      <span className="hero-v2-ai-bar-label">{b.label}</span>
-                      <div className="hero-v2-ai-bar-track">
-                        <motion.div className="hero-v2-ai-bar-fill" initial={{ width: 0 }} animate={{ width: `${b.pct}%` }} transition={{ duration: 0.8, delay: 0.3 }} />
+
+                <div className="score-bars">
+                  {scoreData.skills.map((skill, i) => (
+                    <div key={skill.name} className="score-bar-item">
+                      <div className="bar-label">{skill.name}</div>
+                      <div className="bar-track">
+                        <motion.div 
+                          className="bar-fill"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(skill.score / skill.max) * 100}%` }}
+                          transition={{ duration: 0.8, delay: 0.3 + i * 0.1 }}
+                        />
                       </div>
-                      <span className="hero-v2-ai-bar-score">{b.score}</span>
+                      <div className="bar-score">{skill.score}</div>
                     </div>
                   ))}
                 </div>
-              </motion.div>
-            )}
-
-            {active.id === 'explain' && (
-              <motion.div className="hero-v2-explain-preview" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
-                <div className="hero-v2-explain-correct">
-                  <span className="hero-v2-explain-check">✓</span>
-                  <span>Correct!</span>
-                </div>
-                <p className="hero-v2-explain-text">
-                  The answer is <strong>B</strong> because the email specifically mentions proposing a partnership for the community garden project...
-                </p>
-                <div className="hero-v2-explain-samples">
-                  <div className="hero-v2-explain-sample-title">Sample Responses:</div>
-                  <div className="hero-v2-explain-sample-pills">
-                    <span className="hero-v2-explain-pill hero-v2-explain-pill--basic">Basic (CLB 5-6)</span>
-                    <span className="hero-v2-explain-pill hero-v2-explain-pill--good">Good (CLB 7-8)</span>
-                    <span className="hero-v2-explain-pill hero-v2-explain-pill--excellent">Excellent (CLB 9-10)</span>
-                  </div>
-                </div>
-              </motion.div>
-            )}
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
 
-      <motion.div className="hero-v2-stats-strip" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}>
-        {TRUST_STATS.map((s, i) => (
-          <div key={s.label} className="hero-v2-stat">
-            <span className="hero-v2-stat-icon">{s.icon}</span>
-            <div>
-              <div className="hero-v2-stat-value">{s.value}</div>
-              <div className="hero-v2-stat-label">{s.label}</div>
+      {/* Trust Stats Bar */}
+      <motion.div 
+        className="hero-stats-bar-new"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        {TRUST_BADGES.map((badge, i) => (
+          <div key={badge.label} className="stat-item-new">
+            <span className="stat-emoji">{badge.emoji}</span>
+            <div className="stat-content">
+              <div className="stat-value">{badge.value}</div>
+              <div className="stat-label">{badge.label}</div>
             </div>
-            {i < TRUST_STATS.length - 1 && <div className="hero-v2-stat-divider" />}
+            {i < TRUST_BADGES.length - 1 && <div className="stat-divider" />}
           </div>
         ))}
       </motion.div>
