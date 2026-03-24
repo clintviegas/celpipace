@@ -305,6 +305,25 @@ export default function Hero({ setPage }) {
         </motion.div>
       </div>
 
+      {/* Quick Access Pills - Bottom Center */}
+      <motion.div 
+        className="hero-quick-access-bottom"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        {SKILL_SECTIONS.map(section => (
+          <button
+            key={section.label}
+            className="quick-access-pill"
+            onClick={() => setPage(section.page)}
+          >
+            <span className="pill-icon">{section.icon}</span>
+            <span className="pill-label">{section.label}</span>
+          </button>
+        ))}
+      </motion.div>
+
       {/* Trust Stats Bar */}
       <motion.div 
         className="hero-stats-bar-new"
