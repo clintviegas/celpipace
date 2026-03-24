@@ -4,6 +4,8 @@ import Navbar from './components/Navbar'
 import AuthModal from './components/AuthModal'
 import Hero from './components/Hero'
 import WhyCELPIP from './components/WhyCELPIP'
+import AIFeatures from './components/AIFeatures'
+import MockShowcase from './components/MockShowcase'
 import CRSBooster from './components/CRSBooster'
 import HowItWorks from './components/HowItWorks'
 import Pricing from './components/Pricing'
@@ -26,7 +28,8 @@ function HomePage({ setPage }) {
   return (
     <main>
       <Hero setPage={setPage} />
-      <WhyCELPIP />
+      <AIFeatures />
+      <MockShowcase setPage={setPage} />
       <CRSBooster setPage={setPage} />
       <HowItWorks />
       <Pricing />
