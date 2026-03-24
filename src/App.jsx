@@ -20,6 +20,7 @@ import ReadingPage from './pages/ReadingPage'
 import WritingPage from './pages/WritingPage'
 import SpeakingPage from './pages/SpeakingPage'
 import PracticeSetPage from './pages/PracticeSetPage'
+import DashboardPage from './pages/DashboardPage'
 import './App.css'
 
 function HomePage({ setPage }) {
@@ -61,6 +62,7 @@ export function AppInner() {
       <Navbar currentPage={page} setPage={goPage} setActivePart={setActivePart} onSignIn={() => setAuthOpen(true)} />
 
       {page === 'home' && <HomePage setPage={goPage} />}
+      {page === 'dashboard' && <DashboardPage setPage={goPage} />}
 
       {page === 'practice' && (
         <PracticePage
