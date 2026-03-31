@@ -1,8 +1,60 @@
-import { motion } from 'framer-motion'
-import { Check, X } from 'lucide-react'
-import { PRICING_PLANS } from '../data/constants'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Check } from 'lucide-react'
 
-export default function Pricing() {
+const PREMIUM_FEATURES = [
+  'All Mock Exams (20+)',
+  'All Sample Questions (200+)',
+  'Unlimited AI Scoring',
+  'CELPIP Courses & Study Guides',
+  'CELPIP Vocabulary Bundles',
+  'Score Tracker & Progress Dashboard',
+  'Detailed Explanations for Every Question',
+  'CLB-Level Sample Responses',
+  'Priority Email Support',
+]
+
+const BILLING = [
+  { id: 'monthly',   label: 'Monthly',  price: 'CA$19.99', original: 'CA$29.99', save: '33% OFF', period: '/month' },
+  { id: 'quarterly', label: 'Quarterly', price: 'CA$39.99', original: 'CA$59.99', save: '33% OFF', period: '/quarter', popular: true },
+  { id: 'annual',    label: 'Annual',   price: 'CA$99.99', original: 'CA$239.88', save: '58% OFF', period: '/year' },
+]
+
+const FREE_FEATURES = [
+  '14 Practice Questions',
+  '1 Free Mock Exam Section',
+  'Basic Score Feedback',
+  'CLB to CRS Calculator',
+]
+
+const FAQS = [
+  {
+    q: 'What is CELPIPace Premium?',
+    a: 'CELPIPace Premium gives you full access to all mock exams, AI-powered scoring on Writing and Speaking, 200+ practice questions with explanations, study guides, vocabulary bundles, and your personal progress dashboard.',
+  },
+  {
+    q: 'Can I try CELPIPace for free before upgrading?',
+    a: 'Yes! Our free plan includes 14 practice questions, 1 mock exam section, and basic score feedback. No credit card required to start.',
+  },
+  {
+    q: 'Are there any limits on Premium usage?',
+    a: 'No limits. Premium members get unlimited AI scoring on Writing and Speaking, unlimited access to all mock exams and question banks, and full course materials.',
+  },
+  {
+    q: 'Does CELPIPace Premium auto-renew?',
+    a: 'Plans auto-renew but can be cancelled anytime from your account settings. You will receive an email reminder before each renewal.',
+  },
+  {
+    q: 'Will I get a receipt for my subscription?',
+    a: 'Yes, a receipt is emailed to you immediately after payment and before each renewal date.',
+  },
+]
+
+export default function Pricing({ onSignIn }) {
+  const [billing, setBilling] = useState('quarterly')
+  const [openFaq, setOpenFaq] = useState(null)
+  const plan = BILLING.find(b => b.id === billing)
+
   return (
     <section className="pricing-section" id="pricing">
       <div className="section-inner">
@@ -10,58 +62,151 @@ export default function Pricing() {
           Simple Pricing
         </motion.div>
         <motion.h2 className="section-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-          Invest in your score.<br />
-          <span className="highlight">Your PR is worth it.</span>
+          Choose your plan
         </motion.h2>
         <motion.p className="section-sub" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
-          Every plan includes a money-back guarantee. No contracts, cancel anytime.
+          Start free, upgrade when you're ready. 7-day money-back guarantee on all plans.
         </motion.p>
 
-        <div className="pricing-grid">
-          {PRICING_PLANS.map((p, i) => {
-            const desc = p.name === 'Free'
-              ? 'Start practicing today — no credit card required.'
-              : p.name === 'Pro'
-              ? 'Everything you need to reach CLB 9–10 and maximize your CRS score.'
-              : 'Intensive prep designed to hit CLB 10 across all four skills.'
-            const ctaCls = p.ctaStyle === 'primary' ? 'btn btn-primary pricing-cta'
-                         : p.ctaStyle === 'gold'    ? 'btn btn-gold pricing-cta'
-                         : 'btn btn-outline pricing-cta'
-            const featured = p.badge === '🔥 Most Popular'
-            return (
+        {/* Billing toggle */}
+        <motion.div
+          className="pricing-toggle"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          {BILLING.map(b => (
+            <button
+              key={b.id}
+              className={`pricing-toggle-btn${billing === b.id ? ' active' : ''}`}
+              onClick={() => setBilling(b.id)}
+            >
+              {b.label}
+              {b.save && <span className="pricing-toggle-save">{b.save}</span>}
+            </button>
+          ))}
+        </motion.div>
+
+        {/* Pricing cards */}
+        <div className="pricing-grid pricing-grid-2">
+          {/* Free card */}
+          <motion.div
+            className="pricing-card"
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="pricing-name">Free</div>
+            <div className="pricing-price">CA$0<span className="pricing-period"> forever</span></div>
+            <p className="pricing-desc">Start practicing today — no credit card required.</p>
+            <button className="btn btn-outline pricing-cta" onClick={onSignIn}>Get Started Free</button>
+            <ul className="pricing-features">
+              {FREE_FEATURES.map(f => (
+                <li key={f}>
+                  <Check size={15} className="check-icon" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Premium card */}
+          <motion.div
+            className="pricing-card pricing-card-featured"
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <div className="pricing-badge">⭐ CELPIPace Premium</div>
+            <AnimatePresence mode="wait">
               <motion.div
-                key={p.name}
-                className={`pricing-card${featured ? ' pricing-card-featured' : ''}`}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
+                key={billing}
+                className="pricing-price-block"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
               >
-                {p.badge && <div className="pricing-badge">{p.badge}</div>}
-                <div className="pricing-name">{p.name}</div>
                 <div className="pricing-price">
-                  {p.price}<span className="pricing-period">{p.period}</span>
+                  {plan.price}<span className="pricing-period">{plan.period}</span>
                 </div>
-                <p className="pricing-desc">{desc}</p>
-                <a href="#" className={ctaCls}>{p.cta}</a>
-                <ul className="pricing-features">
-                  {p.features.map(f => (
-                    <li key={f}>
-                      <Check size={15} className="check-icon" />
-                      {f}
-                    </li>
-                  ))}
-                  {(p.locked || []).map(f => (
-                    <li key={f} style={{ opacity: 0.38 }}>
-                      <X size={15} style={{ color: '#9CA3AF', flexShrink: 0, marginTop: 2 }} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+                <div className="pricing-original">{plan.original}</div>
               </motion.div>
-            )
-          })}
+            </AnimatePresence>
+            <p className="pricing-desc">Full access to everything you need to reach CLB 10 and maximize your CRS score.</p>
+            <button className="btn btn-primary pricing-cta" onClick={onSignIn}>Upgrade to Premium</button>
+            <p className="pricing-guarantee">🔒 7 days money-back guarantee</p>
+            <ul className="pricing-features">
+              {PREMIUM_FEATURES.map(f => (
+                <li key={f}>
+                  <Check size={15} className="check-icon" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </div>
+
+        {/* Social proof below plans */}
+        <motion.div
+          className="pricing-social-proof"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className="pricing-avatars">
+            {['MR', 'ST', 'MK', 'EA', 'RQ'].map((init, i) => (
+              <div key={init} className="pricing-avatar" style={{ marginLeft: i > 0 ? '-10px' : 0 }}>
+                {init}
+              </div>
+            ))}
+          </div>
+          <span className="pricing-social-text">
+            Trusted by <strong>90,000+</strong> test takers · <strong>⭐ 4.9</strong> on Google Reviews
+          </span>
+        </motion.div>
+
+        {/* FAQ Accordion */}
+        <motion.div
+          className="pricing-faq"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <h3 className="pricing-faq-title">CELPIPace Premium FAQ</h3>
+          {FAQS.map((faq, i) => (
+            <div
+              key={i}
+              className={`faq-item${openFaq === i ? ' open' : ''}`}
+            >
+              <button
+                className="faq-question"
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              >
+                {faq.q}
+                <span className="faq-chevron">{openFaq === i ? '▲' : '▼'}</span>
+              </button>
+              <AnimatePresence>
+                {openFaq === i && (
+                  <motion.div
+                    className="faq-answer"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <p>{faq.a}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   )

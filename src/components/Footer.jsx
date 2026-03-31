@@ -3,41 +3,43 @@ export default function Footer({ setPage }) {
 
   const cols = [
     {
-      heading: 'Practice',
+      heading: 'Practice Tests',
       links: [
-        { label: 'Listening Practice', page: 'practice' },
-        { label: 'Reading Practice',   page: 'practice' },
-        { label: 'Writing Practice',   page: 'practice' },
-        { label: 'Speaking Practice',  page: 'practice' },
-        { label: 'Full Mock Tests',    page: 'practice' },
+        { label: 'Mock Exams',          page: 'exam' },
+        { label: 'Listening Practice',  page: 'listening' },
+        { label: 'Reading Practice',    page: 'reading' },
+        { label: 'Writing Practice',    page: 'writing' },
+        { label: 'Speaking Practice',   page: 'speaking' },
       ],
     },
     {
-      heading: 'Express Entry',
+      heading: 'Learn',
       links: [
-        { label: 'What is CRS?',      page: 'calculator' },
-        { label: 'CLB to CRS Chart',  page: 'scores' },
-        { label: 'CELPIP vs IELTS',   page: 'scores' },
-        { label: 'Immigration FAQ',   page: 'scores' },
-        { label: 'Draw History',      page: 'scores' },
+        { label: 'Study Guides & Courses', page: 'tips' },
+        { label: 'Tips & Strategies',      page: 'tips' },
+        { label: 'Vocabulary Builder',     page: 'tips' },
+        { label: 'Score Tracker',          page: 'scores' },
+        { label: 'CLB to CRS Chart',       page: 'scores' },
+      ],
+    },
+    {
+      heading: 'Resources',
+      links: [
+        { label: 'Student Reviews',           page: 'home' },
+        { label: 'CELPIP vs IELTS',           page: 'scores' },
+        { label: 'CELPIP for Immigration',    page: 'calculator' },
+        { label: 'CRS Calculator',            page: 'calculator' },
+        { label: 'Pricing',                   page: 'pricing' },
       ],
     },
     {
       heading: 'Company',
       links: [
-        { label: 'About Us',      page: 'home' },
-        { label: 'Pricing',       page: 'pricing' },
-        { label: 'Blog',          page: 'home' },
-        { label: 'Testimonials',  page: 'home' },
-        { label: 'Contact',       page: 'home' },
-      ],
-    },
-    {
-      heading: 'Legal',
-      links: [
+        { label: 'About Us',         page: 'home' },
         { label: 'Privacy Policy',   page: 'home' },
         { label: 'Terms of Service', page: 'home' },
         { label: 'Refund Policy',    page: 'home' },
+        { label: 'Contact',          page: 'home' },
       ],
     },
   ]
@@ -52,8 +54,7 @@ export default function Footer({ setPage }) {
               <span className="logo-text">CELPIPace</span>
             </button>
             <p className="footer-tagline">
-              Canada's leading CELPIP prep platform for Express Entry applicants.
-              Boost your CRS score. Get your PR.
+              Your fastest path to a 10+ CELPIP score. Practice with AI-powered scoring across all 4 skills.
             </p>
             <div className="footer-socials">
               <a href="#" aria-label="TikTok">🎵</a>
@@ -84,7 +85,7 @@ export default function Footer({ setPage }) {
         <div className="footer-bottom">
           <p>© {year} CELPIPace. All rights reserved.</p>
           <p className="footer-disclaimer">
-            CELPIPace is an independent preparation platform. Not affiliated with Paragon Testing Enterprises or the official CELPIP® test.
+            CELPIPace is an independent practice tool and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
           </p>
         </div>
       </div>

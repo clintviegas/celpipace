@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
 import AuthModal from './components/AuthModal'
 import Hero from './components/Hero'
+import FeatureShowcase from './components/FeatureShowcase'
 import AIFeatures from './components/AIFeatures'
 import CRSBooster from './components/CRSBooster'
 import HowItWorks from './components/HowItWorks'
@@ -24,15 +25,16 @@ import PracticeSetPage from './pages/PracticeSetPage'
 import DashboardPage from './pages/DashboardPage'
 import './App.css'
 
-function HomePage({ setPage }) {
+function HomePage({ setPage, onSignIn }) {
   return (
     <main>
       <Hero setPage={setPage} />
+      <FeatureShowcase setPage={setPage} />
       <AIFeatures setPage={setPage} />
       <HowItWorks />
       <CRSBooster setPage={setPage} />
-      <Pricing />
       <Testimonials />
+      <Pricing onSignIn={onSignIn} />
       <CTA setPage={setPage} />
     </main>
   )
@@ -67,7 +69,7 @@ export function AppInner() {
         <Navbar currentPage={page} setPage={goPage} setActivePart={setActivePart} onSignIn={() => setAuthOpen(true)} />
       )}
 
-      {page === 'home' && <HomePage setPage={goPage} />}
+      {page === 'home' && <HomePage setPage={goPage} onSignIn={() => setAuthOpen(true)} />}
       {page === 'dashboard' && <DashboardPage setPage={goPage} />}
 
       {page === 'practice' && (
