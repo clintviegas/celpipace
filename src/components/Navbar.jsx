@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -194,6 +194,50 @@ function NavItem({ item, active, openId, setOpenId }) {
   )
 }
 
+/* ── User avatar dropdown ── */
+function UserMenu({ user, signOut }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  const navigate = useNavigate()
+
+  const initials = user?.user_metadata?.full_name
+    ? user.user_metadata.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : user?.email?.[0]?.toUpperCase() ?? '?'
+
+  const firstName = user?.user_metadata?.full_name?.split(' ')[0] ?? user?.email?.split('@')[0]
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  return (
+    <div ref={ref} className="nav-user-menu-wrap">
+      <button className="nav-user-chip" onClick={() => setOpen(v => !v)}>
+        {user.user_metadata?.avatar_url
+          ? <img className="nav-user-avatar" src={user.user_metadata.avatar_url} alt={initials} />
+          : <div className="nav-user-initials">{initials}</div>
+        }
+        <span>{firstName}</span>
+        <span className="nav-user-chevron" style={{ transform: open ? 'rotate(180deg)' : 'none' }}>▾</span>
+      </button>
+      {open && (
+        <div className="nav-user-menu">
+          <button className="nav-user-menu-item" onClick={() => { navigate('/dashboard'); setOpen(false) }}>
+            <span className="nav-user-menu-icon">▣</span> Dashboard
+          </button>
+          <div className="nav-user-menu-divider" />
+          <button className="nav-user-menu-item nav-user-menu-item--danger" onClick={() => { signOut(); setOpen(false) }}>
+            <span className="nav-user-menu-icon">↩</span> Sign out
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Navbar({ onSignIn }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -209,16 +253,10 @@ export default function Navbar({ onSignIn }) {
   }, [])
 
   const currentPath = location.pathname.replace('/', '') || 'home'
-  const isApp = ['practice','tips','scores','calculator','exam','listening','reading','writing','speaking','learn'].includes(currentPath)
-
-  const initials = user?.user_metadata?.full_name
-    ? user.user_metadata.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-    : user?.email?.[0]?.toUpperCase() ?? '?'
-
   const activeId = currentPath
 
   return (
-    <nav className={`navbar${scrolled || isApp ? ' scrolled' : ''}`}>
+    <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
       <div className="nav-inner">
         {/* Logo */}
         <button className="nav-logo" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
@@ -242,23 +280,7 @@ export default function Navbar({ onSignIn }) {
         {/* Auth actions */}
         <div className="nav-actions">
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <button
-                className="nav-dashboard-btn"
-                onClick={() => navigate('/dashboard')}
-                title="Go to Dashboard"
-              >
-                📊 Dashboard
-              </button>
-              <div className="nav-user-chip">
-                {user.user_metadata?.avatar_url
-                  ? <img className="nav-user-avatar" src={user.user_metadata.avatar_url} alt={initials} />
-                  : <div className="nav-user-initials">{initials}</div>
-                }
-                {user.user_metadata?.full_name?.split(' ')[0] ?? user.email?.split('@')[0]}
-              </div>
-              <button className="nav-signout-btn" onClick={signOut}>Sign out</button>
-            </div>
+            <UserMenu user={user} signOut={signOut} />
           ) : (
             <>
               <button className="btn btn-outline" onClick={onSignIn}>Log in</button>

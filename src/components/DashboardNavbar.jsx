@@ -59,7 +59,7 @@ export default function DashboardNavbar({ onSignIn }) {
           {user ? (
             <>
               <button className="dbn-upgrade-btn" onClick={() => navigate('/pricing')}>
-                ⭐ Upgrade
+                Upgrade
               </button>
               <div className="dbn-user">
                 {user.user_metadata?.avatar_url

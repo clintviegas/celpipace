@@ -9,15 +9,6 @@ const SECTIONS = [
   { key: 'speaking',  label: 'Speaking',  icon: '🎙️', color: '#C8102E', colorLight: '#FEF2F2', done: 0, total: 120 },
 ]
 
-const QUICK_START = [
-  { label: 'Mock Exams',         icon: '📋', color: '#C8102E', colorLight: '#FEF2F2', page: 'exam'      },
-  { label: 'Listening Practice', icon: '🎧', color: '#4A90D9', colorLight: '#EEF4FF', page: 'listening' },
-  { label: 'Reading Practice',   icon: '📖', color: '#2D8A56', colorLight: '#F0FDF4', page: 'reading'   },
-  { label: 'Writing Practice',   icon: '✍️',  color: '#C8972A', colorLight: '#FFFBEB', page: 'writing'   },
-  { label: 'Speaking Practice',  icon: '🎙️', color: '#C8102E', colorLight: '#FEF2F2', page: 'speaking'  },
-  { label: 'CRS Calculator',     icon: '🧮', color: '#6B4FAF', colorLight: '#F3EFFF', page: 'calculator' },
-]
-
 const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -36,10 +27,8 @@ const DashboardPage = () => {
       {/* ── Welcome ── */}
       <div className="db-welcome-bar">
         <div className="db-welcome-inner">
-          <div>
-            <h1 className="db-welcome-title">Welcome back, {firstName} 👋</h1>
-            <p className="db-welcome-sub">Track your progress and keep practicing</p>
-          </div>
+          <h1 className="db-welcome-title">Welcome back, {firstName}</h1>
+          <p className="db-welcome-sub">Keep practicing — every question gets you closer to your goal</p>
         </div>
       </div>
 
@@ -56,7 +45,7 @@ const DashboardPage = () => {
             <div className="db-upgrade-banner-left">
               <span className="db-upgrade-plan-tag">Free Plan</span>
               <span className="db-upgrade-banner-text">
-                Upgrade to access all practice questions and AI scoring
+                Unlock all practice questions and AI scoring with Premium
               </span>
             </div>
             <button className="db-upgrade-btn" onClick={() => navigate('/pricing')}>
@@ -68,10 +57,10 @@ const DashboardPage = () => {
         {/* ── Stat Tiles ── */}
         <div className="db-stat-tiles">
           {[
-            { icon: '✅', value: totalDone,      label: 'Completed'  },
-            { icon: '📚', value: totalAvailable, label: 'Available'  },
-            { icon: '📊', value: '—',            label: 'Avg Score'  },
-            { icon: '⭐', value: isPremium ? 'Premium' : 'Free', label: 'Plan', dim: !isPremium },
+            { value: totalDone,      label: 'Completed'  },
+            { value: totalAvailable, label: 'Available'  },
+            { value: '—',            label: 'Avg Score'  },
+            { value: isPremium ? 'Premium' : 'Free', label: 'Plan', dim: !isPremium },
           ].map((tile, i) => (
             <motion.div
               key={tile.label}
@@ -80,7 +69,6 @@ const DashboardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: i * 0.07 }}
             >
-              <div className="db-stat-tile-icon">{tile.icon}</div>
               <div className={`db-stat-tile-value${tile.dim ? ' db-stat-tile-value--dim' : ''}`}>
                 {tile.value}
               </div>
@@ -146,29 +134,6 @@ const DashboardPage = () => {
             <button className="db-activity-cta" onClick={() => navigate('/exam')}>
               Start a Mock Exam →
             </button>
-          </div>
-        </section>
-
-        {/* ── Quick Start ── */}
-        <section className="db-section">
-          <h2 className="db-section-title">Quick Start</h2>
-          <div className="db-quick-grid">
-            {QUICK_START.map((q, i) => (
-              <motion.button
-                key={q.label}
-                className="db-quick-card"
-                onClick={() => navigate('/' + q.page)}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.15 + i * 0.06 }}
-                whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}
-              >
-                <div className="db-quick-icon" style={{ background: q.colorLight, color: q.color }}>
-                  {q.icon}
-                </div>
-                <span className="db-quick-label">{q.label}</span>
-              </motion.button>
-            ))}
           </div>
         </section>
 
