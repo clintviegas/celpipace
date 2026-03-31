@@ -684,119 +684,97 @@ export default function ExamPage() {
         {/* ── LOBBY ── */}
         {view === 'lobby' && (
           <motion.div key="lobby"
+            className="ep-lobby"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}>
 
-            {/* Hero header */}
-            <div className="exam-hero">
-              <div className="exam-hero-inner">
-                <div className="exam-hero-eyebrow">CELPIP Practice Platform</div>
-                <h1 className="exam-hero-title">
-                  Real exam experience,<br />
-                  <span className="exam-hero-highlight">anytime you practice</span>
-                </h1>
-                <p className="exam-hero-sub">
-                  Full mock tests · Section drills · AI scoring — 4 sections, 20 parts, 1,200+ questions to reach CLB 9.
+            {/* Hero */}
+            <div className="ep-hero">
+              <div className="ep-hero-inner">
+                <h1 className="ep-hero-title">CELPIP Mock Exams</h1>
+                <p className="ep-hero-sub">
+                  Full-length practice tests with timed sections, real exam format, and{' '}
+                  <span className="ep-hero-highlight">AI-powered scoring</span>
                 </p>
-                <div className="exam-hero-actions">
-                  <button className="btn btn-primary btn-lg" onClick={() => handleModeStart(TEST_MODES[0])}>
-                    🏆 Start Full Mock Test
-                  </button>
-                  <button className="btn btn-outline btn-lg" onClick={() => setActiveTab('sections')}>
-                    ⚡ Section Drill
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <StatStrip />
-
-            {/* Tab switcher */}
-            <div className="exam-tab-bar">
-              <button
-                className={`exam-tab${activeTab === 'sections' ? ' active' : ''}`}
-                onClick={() => setActiveTab('sections')}>
-                📚 Practice by Section
-              </button>
-              <button
-                className={`exam-tab${activeTab === 'modes' ? ' active' : ''}`}
-                onClick={() => setActiveTab('modes')}>
-                🎯 Test Modes
-              </button>
-              <button
-                className={`exam-tab${activeTab === 'learn' ? ' active' : ''}`}
-                onClick={() => setActiveTab('learn')}>
-                🧠 Learning Hub
-              </button>
-            </div>
-
-            {/* Section cards */}
-            {activeTab === 'sections' && (
-              <motion.div key="sections"
-                className="exam-section-grid"
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}>
-                {SECTIONS.map(s => (
-                  <SectionCard
-                    key={s.id}
-                    section={s}
-                    onPractice={handleStartDrill}
-                    onMock={handleStartMock}
-                  />
-                ))}
-              </motion.div>
-            )}
-
-            {/* Mode cards */}
-            {activeTab === 'modes' && (
-              <motion.div key="modes"
-                className="exam-mode-grid"
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}>
-                {TEST_MODES.map(m => (
-                  <ModeCard key={m.id} mode={m} onStart={handleModeStart} />
-                ))}
-              </motion.div>
-            )}
-
-            {/* Learning Hub */}
-            {activeTab === 'learn' && (
-              <motion.div key="learn"
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}>
-                <div className="learn-hub-intro">
-                  <p>Everything you need to know about each CELPIP section — what's tested, how scoring works, timing strategies, and how to prepare effectively.</p>
-                </div>
-                <div className="learn-grid">
-                  {SECTIONS.map(s => (
-                    <LearningCard key={s.id} section={s} />
+                <div className="ep-feature-pills">
+                  {[
+                    { icon: '⏱', label: 'Timed Sections' },
+                    { icon: '📋', label: 'Actual Test Format' },
+                    { icon: '⭐', label: 'AI Scoring' },
+                    { icon: '✓',  label: 'All 4 Skills' },
+                  ].map(p => (
+                    <span key={p.label} className="ep-pill">
+                      <span className="ep-pill-icon">{p.icon}</span> {p.label}
+                    </span>
                   ))}
                 </div>
-              </motion.div>
-            )}
-
-            {/* CLB info strip */}
-            <div className="exam-clb-strip">
-              <div className="exam-clb-strip-title">CLB Score Reference</div>
-              <div className="exam-clb-table">
-                {[
-                  { clb:'4–5', label:'Below avg', color:'#DC2626', desc:'Needs significant improvement' },
-                  { clb:'6',   label:'Developing', color:'#C8972A', desc:'Approaching minimum standard' },
-                  { clb:'7',   label:'Adequate',   color:'#C8972A', desc:'Minimum for most programs' },
-                  { clb:'8',   label:'Good',        color:'#2D8A56', desc:'Competitive for Express Entry' },
-                  { clb:'9',   label:'Strong',      color:'#2D8A56', desc:'Target level — maximum lang pts' },
-                  { clb:'10+', label:'Excellent',   color:'#0F6B8A', desc:'Near-maximum CRS language points' },
-                ].map(row => (
-                  <div key={row.clb} className="exam-clb-row">
-                    <span className="exam-clb-num" style={{ color: row.color, borderColor: row.color + '40', background: row.color + '10' }}>CLB {row.clb}</span>
-                    <span className="exam-clb-level" style={{ color: row.color }}>{row.label}</span>
-                    <span className="exam-clb-desc">{row.desc}</span>
-                  </div>
-                ))}
               </div>
             </div>
 
+            <div className="ep-body">
+
+              {/* Unlock banner */}
+              <div className="ep-unlock-banner">
+                <div className="ep-unlock-left">
+                  <div className="ep-unlock-title">🔒 Unlock All Mock Exams</div>
+                  <div className="ep-unlock-sub">
+                    Get full access to all exams with AI scoring for Speaking &amp; Writing
+                  </div>
+                </div>
+                <button className="ep-unlock-btn" onClick={() => navigate('/pricing')}>
+                  Get Premium Access
+                </button>
+              </div>
+
+              <p className="ep-free-link">
+                Or try{' '}
+                <button className="ep-free-link-btn" onClick={() => navigate('/practice')}>
+                  <strong>FREE</strong> practice questions
+                </button>{' '}
+                first →
+              </p>
+
+              {/* Exam list */}
+              <div className="ep-exam-list">
+                {Array.from({ length: 20 }, (_, i) => {
+                  const num = 20 - i
+                  const isFree = num === 1
+                  return (
+                    <motion.div
+                      key={num}
+                      className="ep-exam-row"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, delay: i * 0.03 }}
+                    >
+                      <div className="ep-exam-row-left">
+                        <span className="ep-exam-name">Exam {num}</span>
+                        <span className="ep-exam-status">Not Started</span>
+                      </div>
+                      <div className="ep-exam-row-right">
+                        {isFree ? (
+                          <button
+                            className="ep-exam-start-btn"
+                            onClick={() => handleModeStart(TEST_MODES[0])}
+                          >
+                            ▶ Start Free
+                          </button>
+                        ) : (
+                          <button
+                            className="ep-exam-lock-btn"
+                            onClick={() => navigate('/pricing')}
+                          >
+                            🔒 Upgrade
+                          </button>
+                        )}
+                        <button className="ep-exam-score-btn">Score</button>
+                      </div>
+                    </motion.div>
+                  )
+                })}
+              </div>
+
+            </div>
           </motion.div>
         )}
 
