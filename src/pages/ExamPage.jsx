@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from '../components/AuthModal'
 
@@ -617,7 +618,7 @@ function ScoreReport({ section, onRetry, onHome }) {
 }
 
 /* ── Main ExamPage ─────────────────────────────────────────────── */
-export default function ExamPage({ setPage = () => {} }) {
+export default function ExamPage() {
   const { user } = useAuth()
 
   const [view, setView] = useState('lobby')       // 'lobby' | 'test' | 'report'

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 const HERO_BADGE = '⭐ Trusted CELPIP Practice Platform'
 const HERO_TITLE = 'Your Fastest Path to a 10+ CELPIP Score'
@@ -50,7 +51,8 @@ const SHOWCASE_SLIDES = [
   },
 ]
 
-export default function Hero({ setPage }) {
+export default function Hero() {
+  const navigate = useNavigate()
   const [activeSlide, setActiveSlide] = useState(0)
   const [scoreData] = useState({
     clb: '9',
@@ -123,13 +125,13 @@ export default function Hero({ setPage }) {
           >
             <button 
               className="btn btn-primary btn-lg"
-              onClick={() => setPage('exam')}
+              onClick={() => navigate('/exam')}
             >
               Start My Free Practice →
             </button>
             <button 
               className="btn btn-outline btn-lg"
-              onClick={() => setPage('calculator')}
+              onClick={() => navigate('/calculator')}
             >
               Calculate My CRS Score
             </button>
@@ -166,7 +168,7 @@ export default function Hero({ setPage }) {
               <button
                 key={section.label}
                 className="quick-access-pill"
-                onClick={() => setPage(section.page)}
+                onClick={() => navigate('/' + section.page)}
               >
                 <span className="pill-icon">{section.icon}</span>
                 <span className="pill-label">{section.label}</span>
@@ -211,7 +213,7 @@ export default function Hero({ setPage }) {
                 
                 <button 
                   className="btn btn-primary"
-                  onClick={() => setPage(currentSlide.ctaPage)}
+                  onClick={() => navigate('/' + currentSlide.ctaPage)}
                 >
                   {currentSlide.cta}
                 </button>
@@ -316,7 +318,7 @@ export default function Hero({ setPage }) {
           <button
             key={section.label}
             className="quick-access-pill"
-            onClick={() => setPage(section.page)}
+            onClick={() => navigate('/' + section.page)}
           >
             <span className="pill-icon">{section.icon}</span>
             <span className="pill-label">{section.label}</span>

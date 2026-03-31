@@ -1,4 +1,11 @@
 import { useState, useEffect } from 'react'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
@@ -25,26 +32,25 @@ import PracticeSetPage from './pages/PracticeSetPage'
 import DashboardPage from './pages/DashboardPage'
 import './App.css'
 
-function HomePage({ setPage, onSignIn }) {
+function HomePage({ onSignIn }) {
   return (
     <main>
-      <Hero setPage={setPage} />
-      <FeatureShowcase setPage={setPage} />
-      <AIFeatures setPage={setPage} />
+      <Hero />
+      <FeatureShowcase />
+      <AIFeatures />
       <HowItWorks />
-      <CRSBooster setPage={setPage} />
+      <CRSBooster />
       <Testimonials />
       <Pricing onSignIn={onSignIn} />
-      <CTA setPage={setPage} />
+      <CTA />
     </main>
   )
 }
 
 export function AppInner() {
-  const [page, setPage] = useState('home')
-  const [activeSection, setActiveSection] = useState('listening')
-  const [activePart, setActivePart] = useState(null)
   const [authOpen, setAuthOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   // Load Google Fonts
   useEffect(() => {
@@ -54,59 +60,40 @@ export function AppInner() {
     document.head.appendChild(link)
   }, [])
 
-  // Scroll to top on page change
-  useEffect(() => { window.scrollTo(0, 0) }, [page])
+  // Scroll to top on route change
+  useEffect(() => { window.scrollTo(0, 0) }, [location.pathname])
 
-  const goPage = (p) => setPage(p)
+  const isDashboard = location.pathname === '/dashboard'
 
   return (
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
-      
-      {page === 'dashboard' ? (
-        <DashboardNavbar currentPage={page} setPage={goPage} onSignIn={() => setAuthOpen(true)} />
+
+      {isDashboard ? (
+        <DashboardNavbar onSignIn={() => setAuthOpen(true)} />
       ) : (
-        <Navbar currentPage={page} setPage={goPage} setActivePart={setActivePart} onSignIn={() => setAuthOpen(true)} />
+        <Navbar onSignIn={() => setAuthOpen(true)} />
       )}
 
-      {page === 'home' && <HomePage setPage={goPage} onSignIn={() => setAuthOpen(true)} />}
-      {page === 'dashboard' && <DashboardPage setPage={goPage} />}
+      <Routes>
+        <Route path="/" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/practice" element={<PracticePage />} />
+        <Route path="/tips" element={<TipsPage />} />
+        <Route path="/scores" element={<ScoresPage />} />
+        <Route path="/calculator" element={<CRSCalculatorPage />} />
+        <Route path="/exam" element={<ExamPage />} />
+        <Route path="/listening" element={<ListeningPage />} />
+        <Route path="/reading" element={<ReadingPage />} />
+        <Route path="/writing" element={<WritingPage />} />
+        <Route path="/speaking" element={<SpeakingPage />} />
+        <Route path="/practice-set" element={<PracticeSetPage />} />
+        <Route path="/pricing" element={<main style={{ paddingTop: '80px' }}><Pricing /></main>} />
+        {/* catch-all */}
+        <Route path="*" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
+      </Routes>
 
-      {page === 'practice' && (
-        <PracticePage
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-        />
-      )}
-
-      {page === 'tips' && <TipsPage />}
-      {page === 'scores' && <ScoresPage />}
-      {page === 'calculator' && <CRSCalculatorPage setPage={goPage} />}
-      {page === 'exam' && <ExamPage setPage={goPage} />}
-      {page === 'listening' && (
-        <ListeningPage setPage={goPage} setActivePart={setActivePart} />
-      )}
-      {page === 'reading' && (
-        <ReadingPage setPage={goPage} setActivePart={setActivePart} />
-      )}
-      {page === 'writing' && (
-        <WritingPage setPage={goPage} setActivePart={setActivePart} />
-      )}
-      {page === 'speaking' && (
-        <SpeakingPage setPage={goPage} setActivePart={setActivePart} />
-      )}
-      {page === 'practice-set' && (
-        <PracticeSetPage part={activePart} setPage={goPage} />
-      )}
-
-      {/* Pricing still accessible from footer/CTA but not in main nav */}
-      {page === 'pricing' && (
-        <main style={{ paddingTop: '80px' }}>
-          <Pricing />
-        </main>
-      )}
-
-      {page !== 'dashboard' && <Footer setPage={goPage} />}
+      {!isDashboard && <Footer />}
     </>
   )
 }
@@ -114,7 +101,9 @@ export function AppInner() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppInner />
+      <BrowserRouter>
+        <AppInner />
+      </BrowserRouter>
     </AuthProvider>
   )
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const DASHBOARD_NAV_ITEMS = [
@@ -10,10 +11,14 @@ const DASHBOARD_NAV_ITEMS = [
   { id: 'speaking', label: 'Speaking', icon: '🎙️' },
 ]
 
-export default function DashboardNavbar({ currentPage, setPage, onSignIn }) {
+export default function DashboardNavbar({ onSignIn }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { user, signOut } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const currentPath = location.pathname.replace('/', '') || 'dashboard'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -26,12 +31,12 @@ export default function DashboardNavbar({ currentPage, setPage, onSignIn }) {
     : user?.email?.[0]?.toUpperCase() ?? '?'
 
   const handleNavClick = (pageId) => {
-    setPage(pageId)
+    navigate('/' + pageId)
     setMenuOpen(false)
   }
 
   const handleLogoClick = () => {
-    setPage('home')
+    navigate('/')
     setMenuOpen(false)
   }
 
@@ -56,7 +61,7 @@ export default function DashboardNavbar({ currentPage, setPage, onSignIn }) {
           {DASHBOARD_NAV_ITEMS.map(item => (
             <li key={item.id}>
               <button
-                className={`dashboard-nav-link${currentPage === item.id ? ' active' : ''}`}
+                className={`dashboard-nav-link${currentPath === item.id ? ' active' : ''}`}
                 onClick={() => handleNavClick(item.id)}
               >
                 <span className="dashboard-nav-icon">{item.icon}</span>

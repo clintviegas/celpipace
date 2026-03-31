@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
-export default function CTA({ setPage }) {
+export default function CTA() {
+  const navigate = useNavigate()
   return (
     <section className="cta-section">
       <div className="cta-inner">
@@ -19,8 +21,8 @@ export default function CTA({ setPage }) {
             Start free — no credit card required.
           </p>
           <div className="cta-actions">
-            <button className="btn btn-white btn-lg" onClick={() => setPage && setPage('practice')}>Start Practicing Free</button>
-            <button className="btn btn-ghost-white btn-lg" onClick={() => setPage && setPage('calculator')}>Calculate My CRS Boost →</button>
+            <button className="btn btn-white btn-lg" onClick={() => navigate('/practice')}>Start Practicing Free</button>
+            <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/calculator')}>Calculate My CRS Boost →</button>
           </div>
           <p className="cta-disclaimer">
             CELPIPace is an independent preparation platform and is not affiliated with

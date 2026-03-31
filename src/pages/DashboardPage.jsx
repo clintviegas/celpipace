@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
-const DashboardPage = ({ setPage }) => {
+const DashboardPage = () => {
+  const navigate = useNavigate()
   const [userData, setUserData] = useState({
     name: 'Alex Johnson',
     clb: 8,
@@ -261,7 +263,7 @@ const DashboardPage = ({ setPage }) => {
         <section className="dashboard-section">
           <div className="section-header">
             <h2>Recent Activity</h2>
-            <button className="view-all-btn" onClick={() => setPage('exam')}>
+            <button className="view-all-btn" onClick={() => navigate('/exam')}>
               View All Tests →
             </button>
           </div>
@@ -328,7 +330,7 @@ const DashboardPage = ({ setPage }) => {
               <div className="rec-icon">📍</div>
               <h3>Focus Area</h3>
               <p>Your Reading score needs the most improvement. Try 10 more Reading section tests this week.</p>
-              <button className="btn btn-primary btn-sm" onClick={() => setPage('reading')}>
+              <button className="btn btn-primary btn-sm" onClick={() => navigate('/reading')}>
                 Start Reading Practice →
               </button>
             </motion.div>
@@ -342,7 +344,7 @@ const DashboardPage = ({ setPage }) => {
               <div className="rec-icon">⭐</div>
               <h3>Your Strength</h3>
               <p>Speaking is your strongest skill at CLB 9. Keep practicing to reach your CLB 10 goal!</p>
-              <button className="btn btn-outline btn-sm" onClick={() => setPage('speaking')}>
+              <button className="btn btn-outline btn-sm" onClick={() => navigate('/speaking')}>
                 Continue Speaking →
               </button>
             </motion.div>
@@ -356,7 +358,7 @@ const DashboardPage = ({ setPage }) => {
               <div className="rec-icon">🎯</div>
               <h3>Next Milestone</h3>
               <p>You're 2 points away from CLB 10! Complete 3 more full mock tests to lock in your score.</p>
-              <button className="btn btn-primary btn-sm" onClick={() => setPage('exam')}>
+              <button className="btn btn-primary btn-sm" onClick={() => navigate('/exam')}>
                 Take a Mock Test →
               </button>
             </motion.div>

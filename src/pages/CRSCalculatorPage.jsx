@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import {
   CRS_AGE_WITH_SPOUSE, CRS_AGE_NO_SPOUSE,
   CRS_EDUCATION_WITH_SPOUSE, CRS_EDUCATION_NO_SPOUSE,
@@ -189,7 +190,8 @@ function ScoreBar({ label, points, max, color }) {
  * Uses calcSkillTransfer and lang1Pts which are already in scope.
  */
 function BoostCard({ currentCRS, lang1Min, nonLangCore, spouseTotal, additionalPts,
-                     education, canExp, foreignExp, hasCertQual, withSpouse, setPage }) {
+                     education, canExp, foreignExp, hasCertQual, withSpouse }) {
+  const navigate = useNavigate()
   // Simulate CRS if all 4 skills were CLB 9
   const targetCLB = 9
   const lp9  = lang1Pts(targetCLB, withSpouse)
@@ -257,7 +259,7 @@ function BoostCard({ currentCRS, lang1Min, nonLangCore, spouseTotal, additionalP
         <span className="boost-fact">✅ CLB 9 unlocks maximum language points in Express Entry</span>
       </div>
 
-      <button className="btn btn-primary boost-cta" onClick={() => setPage('practice')}>
+      <button className="btn btn-primary boost-cta" onClick={() => navigate('/practice')}>
         🎯 Start improving to CLB 9 — AI Practice
       </button>
     </motion.div>
@@ -265,7 +267,8 @@ function BoostCard({ currentCRS, lang1Min, nonLangCore, spouseTotal, additionalP
 }
 
 /* ── Main Component ───────────────────────────────────────────── */
-export default function CRSCalculatorPage({ setPage = () => {} }) {
+export default function CRSCalculatorPage() {
+  const navigate = useNavigate()
 
   /* ── Marital / Spouse ── */
   const [marital, setMarital]           = useState('single')
@@ -734,7 +737,6 @@ export default function CRSCalculatorPage({ setPage = () => {} }) {
             foreignExp={foreignExp}
             hasCertQual={hasCertQual}
             withSpouse={withSpouse}
-            setPage={setPage}
           />
 
           <div className="crs-score-card">
@@ -757,7 +759,7 @@ export default function CRSCalculatorPage({ setPage = () => {} }) {
               <button
                 className="btn btn-primary"
                 style={{ width:'100%', marginTop:16, fontSize:14 }}
-                onClick={() => setPage('practice')}
+                onClick={() => navigate('/practice')}
               >
                 🎯 Boost your score — Start AI practice
               </button>
@@ -862,7 +864,7 @@ export default function CRSCalculatorPage({ setPage = () => {} }) {
             <p style={{ fontSize:11, color:'var(--gray-500)', marginTop:10, marginBottom:12 }}>
               CLB 9 unlocks near-maximum language points — often the single biggest CRS lever available.
             </p>
-            <button className="btn btn-outline" style={{ width:'100%', fontSize:13 }} onClick={() => setPage('practice')}>
+            <button className="btn btn-outline" style={{ width:'100%', fontSize:13 }} onClick={() => navigate('/practice')}>
               📖 Practice CELPIP with AI — free
             </button>
           </div>

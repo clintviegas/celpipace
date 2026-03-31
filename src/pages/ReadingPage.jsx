@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 const COLOR = '#2D8A56'
 const COLOR_LIGHT = '#F0FDF4'
@@ -135,8 +136,9 @@ function PartCard({ part, onStart }) {
   )
 }
 
-export default function ReadingPage({ setPage, setActivePart }) {
-  const handleStart = (part) => { setActivePart({ ...part, section: 'reading' }); setPage('practice-set') }
+export default function ReadingPage() {
+  const navigate = useNavigate()
+  const handleStart = (part) => { navigate('/practice-set', { state: { part: { ...part, section: 'reading' } } }) }
 
   return (
     <div className="lp-root">

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 const features = [
   {
@@ -45,7 +46,8 @@ const features = [
   },
 ]
 
-export default function AIFeatures({ setPage }) {
+export default function AIFeatures() {
+  const navigate = useNavigate()
   return (
     <section className="ai-features-section" id="why">
       <div className="section-inner">
@@ -107,7 +109,7 @@ export default function AIFeatures({ setPage }) {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <button className="btn btn-primary btn-lg" onClick={() => setPage && setPage('exam')}>
+          <button className="btn btn-primary btn-lg" onClick={() => navigate('/exam')}>
             Start Practicing Free →
           </button>
           <p className="cta-note">14 practice questions included free. No credit card needed.</p>

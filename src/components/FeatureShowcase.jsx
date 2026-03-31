@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 const FEATURES = [
   {
@@ -108,7 +109,8 @@ const FEATURES = [
   },
 ]
 
-export default function FeatureShowcase({ setPage }) {
+export default function FeatureShowcase() {
+  const navigate = useNavigate()
   const [active, setActive] = useState(0)
   const f = FEATURES[active]
 
@@ -172,7 +174,7 @@ export default function FeatureShowcase({ setPage }) {
               <button
                 className="btn btn-primary"
                 style={{ background: f.color }}
-                onClick={() => setPage(f.ctaPage)}
+                onClick={() => navigate('/' + f.ctaPage)}
               >
                 {f.cta}
               </button>

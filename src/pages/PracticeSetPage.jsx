@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { usePracticeSet } from '../hooks/usePracticeSet'
 
 /* ══════════════════════════════════════════════════════════════
@@ -1840,7 +1841,11 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet 
 /* ══════════════════════════════════════════════════════════════
    MAIN PAGE
 ══════════════════════════════════════════════════════════════ */
-export default function PracticeSetPage({ part, setPage }) {
+export default function PracticeSetPage() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const part = location.state?.part || null
+
   // Per-set "started" flags (for listening audio gate / writing / speaking)
   const [startedSets, setStartedSets] = useState({})
 
@@ -1885,7 +1890,7 @@ export default function PracticeSetPage({ part, setPage }) {
           <div style={{ fontSize: 40 }}>⚠️</div>
           <p style={{ color: '#C8102E', fontWeight: 600, fontSize: 18 }}>Could not load questions</p>
           <p style={{ color: '#666', fontSize: 14 }}>{dbError}</p>
-          <button className="ps-start-btn" onClick={() => setPage('reading')}>← Back to Reading</button>
+          <button className="ps-start-btn" onClick={() => navigate('/reading')}>← Back to Reading</button>
         </div>
       </div>
     )
@@ -1899,7 +1904,7 @@ export default function PracticeSetPage({ part, setPage }) {
           <div style={{ fontSize: 40 }}>📭</div>
           <p style={{ color: cfg.color, fontWeight: 600, fontSize: 18 }}>No questions found for {partId}</p>
           <p style={{ color: '#666', fontSize: 14 }}>Checking database for section="{partId.charAt(0).toUpperCase() + partId.slice(1)}" and part="{partId}"</p>
-          <button className="ps-start-btn" onClick={() => setPage('reading')}>← Back to Reading</button>
+          <button className="ps-start-btn" onClick={() => navigate('/reading')}>← Back to Reading</button>
         </div>
       </div>
     )
@@ -1913,9 +1918,9 @@ export default function PracticeSetPage({ part, setPage }) {
 
       {/* Breadcrumb */}
       <div className="ps-breadcrumb">
-        <button className="ps-bc-link" onClick={() => setPage('home')}>Home</button>
+        <button className="ps-bc-link" onClick={() => navigate('/')}>Home</button>
         <span className="ps-bc-sep">›</span>
-        <button className="ps-bc-link" onClick={() => setPage(cfg.page)}>{cfg.label}</button>
+        <button className="ps-bc-link" onClick={() => navigate('/' + cfg.page)}>{cfg.label}</button>
         <span className="ps-bc-sep">›</span>
         <span className="ps-bc-current">{pageTitle}</span>
       </div>
@@ -1937,7 +1942,7 @@ export default function PracticeSetPage({ part, setPage }) {
           </p>
         </div>
         <div className="ps-nav-arrows">
-          <button className="ps-arrow-btn" onClick={() => setPage(cfg.page)}>← Back to {cfg.label}</button>
+          <button className="ps-arrow-btn" onClick={() => navigate('/' + cfg.page)}>← Back to {cfg.label}</button>
         </div>
       </div>
 

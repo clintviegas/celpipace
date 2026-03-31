@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 /* ── Listening Parts Data ─────────────────────────────────────── */
 const PARTS = [
@@ -178,10 +179,10 @@ function PartCard({ part, onStart }) {
 }
 
 /* ── Main ListeningPage ───────────────────────────────────────── */
-export default function ListeningPage({ setPage, setActivePart }) {
+export default function ListeningPage() {
+  const navigate = useNavigate()
   const handleStart = (part) => {
-    setActivePart(part)
-    setPage('practice-set')
+    navigate('/practice-set', { state: { part } })
   }
 
   return (

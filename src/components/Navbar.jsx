@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 /* ── Dropdown data matching CELTESTPIP nav ── */
@@ -75,10 +76,12 @@ const NAV_ITEMS = [
 ]
 
 /* ── Single dropdown item ── */
-function DropItem({ item, color, setPage, setActivePart, closeAll, parentId }) {
+function DropItem({ item, color, closeAll, parentId }) {
+  const navigate = useNavigate()
+
   const handleClick = () => {
     if (item.action) {
-      setPage(item.action)
+      navigate('/' + item.action)
       closeAll()
       return
     }
@@ -86,24 +89,18 @@ function DropItem({ item, color, setPage, setActivePart, closeAll, parentId }) {
     const sectionMap = { listening: 'listening', reading: 'reading', writing: 'writing', speaking: 'speaking' }
     const section = sectionMap[parentId]
 
-    if (section && setActivePart) {
-      // Extract part ID from label like "L1 · Problem Solving" → "L1"
+    if (section) {
       const match = item.label.match(/^([A-Z]\d+)/)
       if (match) {
         const partId = match[1]
         const partLabel = item.label.replace(/^[A-Z]\d+\s*·\s*/, '')
-        setActivePart({ id: partId, section, label: partLabel })
-        setPage('practice-set')
+        navigate('/practice-set', { state: { part: { id: partId, section, label: partLabel } } })
         closeAll()
         return
       }
-    }
-
-    // Fallback: go to section overview page
-    if (section) {
-      setPage(section)
+      navigate('/' + section)
     } else {
-      setPage('exam')
+      navigate('/exam')
     }
     closeAll()
   }
@@ -119,8 +116,9 @@ function DropItem({ item, color, setPage, setActivePart, closeAll, parentId }) {
 }
 
 /* ── Nav item with optional dropdown ── */
-function NavItem({ item, active, setPage, setActivePart, openId, setOpenId }) {
+function NavItem({ item, active, openId, setOpenId }) {
   const ref = useRef(null)
+  const navigate = useNavigate()
   const open = openId === item.id
 
   // Close on outside click
@@ -140,7 +138,7 @@ function NavItem({ item, active, setPage, setActivePart, openId, setOpenId }) {
       <li ref={ref}>
         <button
           className={`nav-link-btn${active ? ' nav-link-active' : ''}`}
-          onClick={() => { setPage(item.id); setOpenId(null) }}
+          onClick={() => { navigate('/' + item.id); setOpenId(null) }}
         >
           {item.label}
         </button>
@@ -174,8 +172,6 @@ function NavItem({ item, active, setPage, setActivePart, openId, setOpenId }) {
                 key={p.label}
                 item={p}
                 color={item.color}
-                setPage={setPage}
-                setActivePart={setActivePart}
                 closeAll={() => setOpenId(null)}
                 parentId={item.id}
               />
@@ -186,7 +182,7 @@ function NavItem({ item, active, setPage, setActivePart, openId, setOpenId }) {
               <button
                 className="nav-drop-cta"
                 style={{ background: item.color }}
-                onClick={() => { setPage(item.id === 'listening' ? 'listening' : item.id === 'reading' ? 'reading' : item.id === 'writing' ? 'writing' : item.id === 'speaking' ? 'speaking' : 'exam'); setOpenId(null) }}
+                onClick={() => { navigate('/' + item.id); setOpenId(null) }}
               >
                 Practice {item.label} →
               </button>
@@ -198,11 +194,13 @@ function NavItem({ item, active, setPage, setActivePart, openId, setOpenId }) {
   )
 }
 
-export default function Navbar({ currentPage, setPage, setActivePart, onSignIn }) {
+export default function Navbar({ onSignIn }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [openId, setOpenId] = useState(null)   // only one dropdown open at a time
+  const [openId, setOpenId] = useState(null)
   const { user, signOut } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -210,21 +208,20 @@ export default function Navbar({ currentPage, setPage, setActivePart, onSignIn }
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const isApp = ['practice','tips','scores','calculator','exam','listening','reading','writing','speaking','learn'].includes(currentPage)
+  const currentPath = location.pathname.replace('/', '') || 'home'
+  const isApp = ['practice','tips','scores','calculator','exam','listening','reading','writing','speaking','learn'].includes(currentPath)
 
   const initials = user?.user_metadata?.full_name
     ? user.user_metadata.full_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : user?.email?.[0]?.toUpperCase() ?? '?'
 
-  /* Section pages that map to the exam tab */
-  const sectionPages = ['listening','reading','writing','speaking']
-  const activeId = sectionPages.includes(currentPage) ? currentPage : currentPage
+  const activeId = currentPath
 
   return (
     <nav className={`navbar${scrolled || isApp ? ' scrolled' : ''}`}>
       <div className="nav-inner">
         {/* Logo */}
-        <button className="nav-logo" onClick={() => setPage('home')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+        <button className="nav-logo" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           <span className="logo-maple">🍁</span>
           <span className="logo-text">CELPIPace</span>
         </button>
@@ -236,22 +233,19 @@ export default function Navbar({ currentPage, setPage, setActivePart, onSignIn }
               key={item.id}
               item={item}
               active={activeId === item.id}
-              setPage={(p) => { setPage(p); setMenuOpen(false); setOpenId(null) }}
-              setActivePart={setActivePart}
               openId={openId}
-              setOpenId={setOpenId}
+              setOpenId={(id) => { setOpenId(id); if (!id) setMenuOpen(false) }}
             />
           ))}
-
         </ul>
 
         {/* Auth actions */}
         <div className="nav-actions">
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <button 
+              <button
                 className="nav-dashboard-btn"
-                onClick={() => setPage('dashboard')}
+                onClick={() => navigate('/dashboard')}
                 title="Go to Dashboard"
               >
                 📊 Dashboard

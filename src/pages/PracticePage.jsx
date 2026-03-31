@@ -93,7 +93,6 @@ export default function PracticePage({ activeSection, setActiveSection }) {
   const [showResult, setShowResult] = useState(false)
   const [showUpgrade, setShowUpgrade] = useState(false)
   const [writingText, setWritingText] = useState('')
-  const [setPage] = useState(null) // injected via prop if needed
 
   const section = SECTIONS.find(s => s.id === activeSection)
   const questions = MOCK_QUESTIONS[activeSection] || []

@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
-export default function MockShowcase({ setPage }) {
+export default function MockShowcase() {
+  const navigate = useNavigate()
   return (
     <section className="mock-showcase-section">
       <div className="section-inner">
@@ -44,7 +46,7 @@ export default function MockShowcase({ setPage }) {
             <p>Practice with the same format, difficulty, and timing as the real exam. Get instant CLB scores and detailed performance analytics after each test.</p>
             <button
               className="btn btn-primary"
-              onClick={() => setPage('exam')}
+              onClick={() => navigate('/exam')}
             >
               Start Practicing →
             </button>

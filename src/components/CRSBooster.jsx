@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 // Official CRS points for language ability (single applicant, first official language)
 // Source: IRCC Express Entry CRS tool
@@ -22,7 +23,8 @@ const celpipMap = [
   { clb: 'CLB 10', score: '10 – 12' },
 ]
 
-export default function CRSBooster({ setPage }) {
+export default function CRSBooster() {
+  const navigate = useNavigate()
   return (
     <section className="crs-section" id="crs">
       <div className="section-inner">
@@ -147,7 +149,7 @@ export default function CRSBooster({ setPage }) {
                 <a href="#pricing" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-block' }}>
                   Practice for CLB 10 →
                 </a>
-                <button className="btn btn-outline" onClick={() => setPage && setPage('calculator')} style={{ marginTop: '0.5rem', display: 'inline-block', marginLeft: '8px' }}>
+                <button className="btn btn-outline" onClick={() => navigate('/calculator')} style={{ marginTop: '0.5rem', display: 'inline-block', marginLeft: '8px' }}>
                   🧮 Open CRS Calculator
                 </button>
               </div>

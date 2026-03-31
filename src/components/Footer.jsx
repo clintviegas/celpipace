@@ -1,5 +1,8 @@
-export default function Footer({ setPage }) {
+import { useNavigate } from 'react-router-dom'
+
+export default function Footer() {
   const year = new Date().getFullYear()
+  const navigate = useNavigate()
 
   const cols = [
     {
@@ -49,7 +52,7 @@ export default function Footer({ setPage }) {
       <div className="footer-inner">
         <div className="footer-top">
           <div className="footer-brand">
-            <button onClick={() => setPage?.('home')} className="nav-logo footer-logo" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
+            <button onClick={() => navigate('/')} className="nav-logo footer-logo" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
               <span className="logo-maple">🍁</span>
               <span className="logo-text">CELPIPace</span>
             </button>
@@ -70,7 +73,7 @@ export default function Footer({ setPage }) {
                 {col.links.map(l => (
                   <li key={l.label}>
                     <button
-                      onClick={() => setPage?.(l.page)}
+                      onClick={() => navigate('/' + (l.page === 'home' ? '' : l.page))}
                       style={{background:'none',border:'none',cursor:'pointer',padding:0,font:'inherit',color:'inherit',textAlign:'left'}}
                     >
                       {l.label}
