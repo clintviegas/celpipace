@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { SECTIONS, MOCK_QUESTIONS } from '../data/constants'
 
 function LockBadge() {
@@ -13,7 +13,7 @@ function LockBadge() {
 function SpeakingTimer({ prepTime, speakTime }) {
   const [phase, setPhase] = useState('idle') // idle | prep | speaking | done
   const [seconds, setSeconds] = useState(0)
-  const timerRef = useState(null)
+  const timerRef = useRef(null)
 
   const start = () => {
     setPhase('prep')
@@ -36,14 +36,14 @@ function SpeakingTimer({ prepTime, speakTime }) {
             setSeconds(0)
           }
         }, 1000)
-        timerRef[0] = id2
+        timerRef.current = id2
       }
     }, 1000)
-    timerRef[0] = id
+    timerRef.current = id
   }
 
   const reset = () => {
-    if (timerRef[0]) clearInterval(timerRef[0])
+    if (timerRef.current) clearInterval(timerRef.current)
     setPhase('idle')
     setSeconds(0)
   }
@@ -87,7 +87,8 @@ function SpeakingTimer({ prepTime, speakTime }) {
   )
 }
 
-export default function PracticePage({ activeSection, setActiveSection }) {
+export default function PracticePage() {
+  const [activeSection, setActiveSection] = useState(SECTIONS[0]?.id ?? 'listening')
   const [activeQ, setActiveQ] = useState(null)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [showResult, setShowResult] = useState(false)

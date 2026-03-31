@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -11,10 +10,12 @@ const SECTIONS = [
 ]
 
 const QUICK_START = [
-  { label: 'Practice Listening', icon: '🎧', color: '#4A90D9', colorLight: '#EEF4FF', page: 'listening' },
-  { label: 'Practice Reading',   icon: '📖', color: '#2D8A56', colorLight: '#F0FDF4', page: 'reading'   },
-  { label: 'Practice Writing',   icon: '✍️',  color: '#C8972A', colorLight: '#FFFBEB', page: 'writing'   },
-  { label: 'Practice Speaking',  icon: '🎙️', color: '#C8102E', colorLight: '#FEF2F2', page: 'speaking'  },
+  { label: 'Mock Exams',         icon: '📋', color: '#C8102E', colorLight: '#FEF2F2', page: 'exam'      },
+  { label: 'Listening Practice', icon: '🎧', color: '#4A90D9', colorLight: '#EEF4FF', page: 'listening' },
+  { label: 'Reading Practice',   icon: '📖', color: '#2D8A56', colorLight: '#F0FDF4', page: 'reading'   },
+  { label: 'Writing Practice',   icon: '✍️',  color: '#C8972A', colorLight: '#FFFBEB', page: 'writing'   },
+  { label: 'Speaking Practice',  icon: '🎙️', color: '#C8102E', colorLight: '#FEF2F2', page: 'speaking'  },
+  { label: 'CRS Calculator',     icon: '🧮', color: '#6B4FAF', colorLight: '#F3EFFF', page: 'calculator' },
 ]
 
 const DashboardPage = () => {
@@ -27,23 +28,24 @@ const DashboardPage = () => {
 
   const isPremium = false
   const totalAvailable = SECTIONS.reduce((s, x) => s + x.total, 0)
-  const totalDone = SECTIONS.reduce((s, x) => s + x.done, 0)
-  const avgScore = '—'
+  const totalDone      = SECTIONS.reduce((s, x) => s + x.done,  0)
 
   return (
     <main className="db-page">
 
-      {/* Welcome */}
+      {/* ── Welcome ── */}
       <div className="db-welcome-bar">
         <div className="db-welcome-inner">
-          <h1 className="db-welcome-title">Welcome back, {firstName}</h1>
-          <p className="db-welcome-sub">Track your progress and keep practicing</p>
+          <div>
+            <h1 className="db-welcome-title">Welcome back, {firstName} 👋</h1>
+            <p className="db-welcome-sub">Track your progress and keep practicing</p>
+          </div>
         </div>
       </div>
 
       <div className="db-content">
 
-        {/* Upgrade Banner */}
+        {/* ── Upgrade Banner ── */}
         {!isPremium && (
           <motion.div
             className="db-upgrade-banner"
@@ -57,29 +59,29 @@ const DashboardPage = () => {
                 Upgrade to access all practice questions and AI scoring
               </span>
             </div>
-            <button className="btn btn-primary db-upgrade-btn" onClick={() => navigate('/pricing')}>
+            <button className="db-upgrade-btn" onClick={() => navigate('/pricing')}>
               Upgrade Now
             </button>
           </motion.div>
         )}
 
-        {/* Stat Tiles */}
+        {/* ── Stat Tiles ── */}
         <div className="db-stat-tiles">
           {[
             { icon: '✅', value: totalDone,      label: 'Completed'  },
             { icon: '📚', value: totalAvailable, label: 'Available'  },
-            { icon: '��', value: avgScore,       label: 'Avg Score'  },
-            { icon: '⭐', value: isPremium ? 'Premium' : 'Free', label: 'Plan', highlight: !isPremium },
+            { icon: '📊', value: '—',            label: 'Avg Score'  },
+            { icon: '⭐', value: isPremium ? 'Premium' : 'Free', label: 'Plan', dim: !isPremium },
           ].map((tile, i) => (
             <motion.div
               key={tile.label}
               className="db-stat-tile"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: i * 0.07 }}
+              transition={{ duration: 0.3, delay: i * 0.07 }}
             >
               <div className="db-stat-tile-icon">{tile.icon}</div>
-              <div className={`db-stat-tile-value${tile.highlight ? ' db-stat-tile-value--free' : ''}`}>
+              <div className={`db-stat-tile-value${tile.dim ? ' db-stat-tile-value--dim' : ''}`}>
                 {tile.value}
               </div>
               <div className="db-stat-tile-label">{tile.label}</div>
@@ -87,7 +89,7 @@ const DashboardPage = () => {
           ))}
         </div>
 
-        {/* Practice by Section */}
+        {/* ── Practice by Section ── */}
         <section className="db-section">
           <h2 className="db-section-title">Practice by Section</h2>
           <div className="db-section-rows">
@@ -99,10 +101,10 @@ const DashboardPage = () => {
                   className="db-section-row"
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.35, delay: 0.15 + i * 0.07 }}
+                  transition={{ duration: 0.3, delay: 0.1 + i * 0.07 }}
                 >
                   <div className="db-section-row-icon" style={{ background: s.colorLight }}>
-                    <span style={{ fontSize: '1.25rem' }}>{s.icon}</span>
+                    {s.icon}
                   </div>
                   <div className="db-section-row-body">
                     <div className="db-section-row-top">
@@ -120,11 +122,11 @@ const DashboardPage = () => {
                         style={{ background: s.color }}
                       />
                     </div>
-                    <div className="db-section-row-pct">{pct}% complete</div>
+                    <span className="db-section-row-pct">{pct}% complete</span>
                   </div>
                   <button
                     className="db-section-row-btn"
-                    style={{ color: s.color, borderColor: s.color + '40', background: s.colorLight }}
+                    style={{ color: s.color, borderColor: s.color + '50', background: s.colorLight }}
                     onClick={() => navigate('/' + s.key)}
                   >
                     Practice
@@ -135,7 +137,19 @@ const DashboardPage = () => {
           </div>
         </section>
 
-        {/* Quick Start */}
+        {/* ── Recent Activity ── */}
+        <section className="db-section">
+          <h2 className="db-section-title">Recent Activity</h2>
+          <div className="db-activity-empty">
+            <span className="db-activity-empty-icon">📭</span>
+            <p>No activity yet — start practising to see your history here.</p>
+            <button className="db-activity-cta" onClick={() => navigate('/exam')}>
+              Start a Mock Exam →
+            </button>
+          </div>
+        </section>
+
+        {/* ── Quick Start ── */}
         <section className="db-section">
           <h2 className="db-section-title">Quick Start</h2>
           <div className="db-quick-grid">
@@ -144,9 +158,9 @@ const DashboardPage = () => {
                 key={q.label}
                 className="db-quick-card"
                 onClick={() => navigate('/' + q.page)}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.2 + i * 0.07 }}
+                transition={{ duration: 0.3, delay: 0.15 + i * 0.06 }}
                 whileHover={{ y: -4, boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}
               >
                 <div className="db-quick-icon" style={{ background: q.colorLight, color: q.color }}>

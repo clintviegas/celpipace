@@ -65,11 +65,15 @@ export function AppInner() {
 
   const isDashboard = location.pathname === '/dashboard'
 
+  // Show the dashboard navbar on all inner app pages (when user is likely logged in)
+  const innerPaths = ['/dashboard','/exam','/listening','/reading','/writing','/speaking','/practice','/practice-set','/tips','/scores','/calculator','/pricing']
+  const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
+
   return (
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
 
-      {isDashboard ? (
+      {isInnerPage ? (
         <DashboardNavbar onSignIn={() => setAuthOpen(true)} />
       ) : (
         <Navbar onSignIn={() => setAuthOpen(true)} />
@@ -93,7 +97,7 @@ export function AppInner() {
         <Route path="*" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
       </Routes>
 
-      {!isDashboard && <Footer />}
+      {!isInnerPage && <Footer />}
     </>
   )
 }
