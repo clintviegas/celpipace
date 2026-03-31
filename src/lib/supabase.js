@@ -21,9 +21,9 @@ function initSupabase() {
   
   supabaseInstance = createClient(supabaseUrl, supabaseAnon, {
     auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
+      persistSession: true,        // save session to localStorage
+      autoRefreshToken: true,      // keep the token alive
+      detectSessionInUrl: true,    // pick up the OAuth token from the redirect URL
     },
   })
   
