@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { usePracticeSet } from '../hooks/usePracticeSet'
+import { READING_PRACTICE_SETS } from '../data/readingData'
 import SEO from '../components/SEO'
 
 /* ══════════════════════════════════════════════════════════════
@@ -1980,6 +1980,338 @@ function WritingLayout({ questions, color, partLabel }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   READING LAYOUT — Sidebar + Passage + MCQ (mirrors WritingLayout)
+   ┌────────┬───────────────────────────┐
+   │ SETS   │ PASSAGE + QUESTIONS       │
+   │ 1–5    │                           │
+   │ R1–R4  │                           │
+   └────────┴───────────────────────────┘
+══════════════════════════════════════════════════════════════ */
+function ReadingLayout({ color }) {
+  const [activeSet, setActiveSet]   = useState(0)
+  const [activePart, setActivePart] = useState(0)
+  const [answers, setAnswers]       = useState({})
+  const [revealed, setRevealed]     = useState({})
+  const [timeLeft, setTimeLeft]     = useState(null)
+  const [started, setStarted]       = useState(false)
+  const [overtime, setOvertime]     = useState(0)
+  const [showBanner, setShowBanner] = useState(false)
+  const timerRef  = useRef(null)
+  const otRef     = useRef(null)
+
+  const sets  = READING_PRACTICE_SETS
+  const set   = sets[activeSet]
+  const part  = set.parts[activePart]
+  const qs    = part.questions
+  const total = qs.length
+
+  const PART_LABELS = { R1: 'Correspondence', R2: 'Apply a Diagram', R3: 'Information', R4: 'Viewpoints' }
+  const DIFF_LABELS = { easy: 'Easy', medium: 'Medium', intermediate: 'Intermediate', hard: 'Hard', 'upper-intermediate': 'Upper Int.', advanced: 'Advanced' }
+
+  /* answer key helper */
+  const aKey = (si, pi, qi) => `${si}_${pi}_${qi}`
+  const partDoneCount = (si, pi) => {
+    const p = sets[si].parts[pi]
+    return p.questions.filter((_, qi) => answers[aKey(si, pi, qi)] !== undefined).length
+  }
+  const partCorrectCount = (si, pi) => {
+    const p = sets[si].parts[pi]
+    return p.questions.filter((q, qi) => answers[aKey(si, pi, qi)] === q.answer).length
+  }
+  const totalDone = sets.reduce((acc, s, si) => acc + s.parts.reduce((a2, _, pi) => a2 + partDoneCount(si, pi), 0), 0)
+  const totalQs   = sets.reduce((acc, s) => acc + s.parts.reduce((a2, p) => a2 + p.questions.length, 0), 0)
+
+  /* switch set/part */
+  const switchTo = (si, pi) => {
+    setActiveSet(si)
+    setActivePart(pi)
+    setShowBanner(false)
+    // reset timer
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current)    clearInterval(otRef.current)
+    setTimeLeft(null)
+    setOvertime(0)
+    setStarted(false)
+  }
+
+  /* timer */
+  const startTimer = () => {
+    const mins = part.timeLimitMinutes
+    setTimeLeft(mins * 60)
+    setStarted(true)
+    setOvertime(0)
+    setShowBanner(false)
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current)    clearInterval(otRef.current)
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) {
+          clearInterval(timerRef.current)
+          setShowBanner(true)
+          // start overtime counter
+          otRef.current = setInterval(() => setOvertime(o => o + 1), 1000)
+          return 0
+        }
+        return t - 1
+      })
+    }, 1000)
+  }
+
+  const fmtTime = (secs) => {
+    if (secs === null) return '--:--'
+    const m = Math.floor(Math.abs(secs) / 60)
+    const s = Math.abs(secs) % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
+  const timeCritical = timeLeft !== null && timeLeft <= 60 && timeLeft > 0
+  const timeAmber    = timeLeft !== null && timeLeft <= 300 && timeLeft > 60
+  const timeUp       = timeLeft === 0
+  const timerColor   = timeUp ? '#999' : timeCritical ? '#C8102E' : timeAmber ? '#C8972A' : color
+
+  /* select answer */
+  const handleAnswer = (qi, optIdx) => {
+    const key = aKey(activeSet, activePart, qi)
+    if (answers[key] !== undefined) return
+    setAnswers(a => ({ ...a, [key]: optIdx }))
+  }
+
+  /* reveal answer */
+  const toggleReveal = (qi) => {
+    const key = aKey(activeSet, activePart, qi)
+    setRevealed(r => ({ ...r, [key]: !r[key] }))
+  }
+
+  const LETTERS = ['A', 'B', 'C', 'D']
+  const diffC = DIFF_COLOURS[part?.difficulty] || DIFF_COLOURS.medium
+
+  return (
+    <div className="rl-shell">
+      {/* ── SIDEBAR ── */}
+      <aside className="rl-sidebar">
+        <div className="rl-sidebar-header">
+          <div className="rl-sidebar-title" style={{ color }}>Reading Practice</div>
+          <div className="rl-sidebar-progress">
+            <div className="rl-sidebar-progress-bar">
+              <div className="rl-sidebar-progress-fill" style={{ width: `${(totalDone / totalQs) * 100}%`, background: color }} />
+            </div>
+            <span className="rl-sidebar-progress-text">{totalDone}/{totalQs}</span>
+          </div>
+        </div>
+        <div className="rl-topic-list">
+          {sets.map((s, si) => (
+            <div key={si} className="rl-set-group">
+              <div className="rl-set-label">Set {s.setNumber}</div>
+              {s.parts.map((p, pi) => {
+                const isActive = si === activeSet && pi === activePart
+                const done = partDoneCount(si, pi)
+                const pTotal = p.questions.length
+                const allDone = done === pTotal && pTotal > 0
+                const dc = DIFF_COLOURS[p.difficulty] || DIFF_COLOURS.medium
+                return (
+                  <button
+                    key={p.partId}
+                    className={`rl-topic-row${isActive ? ' rl-topic-row--active' : ''}${allDone ? ' rl-topic-row--done' : ''}`}
+                    style={isActive ? { borderLeftColor: color } : {}}
+                    onClick={() => switchTo(si, pi)}
+                  >
+                    <span className={`rl-topic-icon${isActive ? ' rl-topic-icon--active' : ''}`} style={isActive ? { background: color } : {}}>
+                      {allDone ? '✓' : p.icon}
+                    </span>
+                    <div className="rl-topic-info">
+                      <span className="rl-topic-title">{p.partId} — {p.partLabel}</span>
+                      <span className="rl-topic-meta" style={{ color: dc.text }}>
+                        {DIFF_LABELS[p.difficulty] || 'Medium'} · {p.timeLimitMinutes} min · {done}/{pTotal}
+                      </span>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      {/* ── MAIN ── */}
+      <div className="rl-main">
+        {/* ─ Top bar ─ */}
+        <div className="rl-topbar">
+          <div className="rl-topbar-left">
+            <span className="rl-part-badge" style={{ background: color }}>{part.partId}</span>
+            <div className="rl-topbar-title-group">
+              <span className="rl-part-title">{part.partLabel}</span>
+              <span className="rl-part-diff" style={{ background: diffC.bg, color: diffC.text }}>
+                {DIFF_LABELS[part.difficulty] || 'Medium'}
+              </span>
+            </div>
+          </div>
+          <div className="rl-topbar-right">
+            {started ? (
+              <div className={`rl-timer${timeCritical ? ' rl-timer--critical' : ''}${timeAmber ? ' rl-timer--amber' : ''}${timeUp ? ' rl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
+                <span className="rl-timer-icon">⏱</span>
+                {timeUp ? (
+                  <span className="rl-timer-digits">+{fmtTime(overtime)}</span>
+                ) : (
+                  <span className="rl-timer-digits">{fmtTime(timeLeft)}</span>
+                )}
+                {timeUp && <span className="rl-timer-up-label">overtime</span>}
+              </div>
+            ) : (
+              <button className="rl-start-btn" style={{ background: color }} onClick={startTimer}>
+                ▶ Start Timer ({part.timeLimitMinutes} min)
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ─ Time nudge messages ─ */}
+        {timeAmber && !timeUp && (
+          <div className="rl-nudge rl-nudge--amber">⏳ 5 minutes remaining — keep a steady pace, you are doing great!</div>
+        )}
+        {timeCritical && !timeUp && (
+          <div className="rl-nudge rl-nudge--red">🔥 Under 1 minute left — trust your instincts and finish strong!</div>
+        )}
+
+        {/* ─ Time's up banner ─ */}
+        {showBanner && (
+          <div className="rl-banner">
+            <span>⏰ Time is up! On the real exam, you would stop here. But this is practice — take your time to think through your answers.</span>
+            <button className="rl-banner-close" onClick={() => setShowBanner(false)}>✕</button>
+          </div>
+        )}
+
+        {/* ─ Passage ─ */}
+        <div className="rl-passage-box">
+          <div className="rl-passage-header">
+            <span className="rl-passage-label" style={{ color }}>{part.icon} {part.partLabel} — Passage</span>
+            <span className="rl-passage-set-tag">Set {set.setNumber}</span>
+          </div>
+          <div className="rl-passage-divider" />
+          <div className="rl-passage-body">
+            <pre className="rl-passage-text">{part.passage}</pre>
+          </div>
+        </div>
+
+        {/* ─ Questions ─ */}
+        <div className="rl-questions">
+          <div className="rl-questions-label">Questions ({total})</div>
+          {qs.map((q, qi) => {
+            const key = aKey(activeSet, activePart, qi)
+            const sel = answers[key]
+            const answered = sel !== undefined
+            const isRevealed = revealed[key]
+            const correct = answered && sel === q.answer
+            const showFeedback = answered || isRevealed
+            const qDiffC = DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.medium
+
+            return (
+              <div key={q.id} className={`rl-q-card${answered ? (correct ? ' rl-q-card--correct' : ' rl-q-card--wrong') : ''}`}>
+                <div className="rl-q-header">
+                  <span className="rl-q-num" style={{ background: color }}>Q{qi + 1}</span>
+                  <span className="rl-q-type-tag">{QTYPE_LABELS[q.questionType] || 'Multiple Choice'}</span>
+                  <span className="rl-q-diff-tag" style={{ background: qDiffC.bg, color: qDiffC.text }}>
+                    {q.difficulty?.charAt(0).toUpperCase() + q.difficulty?.slice(1)}
+                  </span>
+                  {answered && (
+                    <span className={`rl-q-verdict ${correct ? 'rl-q-verdict--ok' : 'rl-q-verdict--err'}`}>
+                      {correct ? '✓ Correct' : '✗ Incorrect'}
+                    </span>
+                  )}
+                </div>
+                <p className="rl-q-stem">{q.text}</p>
+                <div className="rl-q-opts">
+                  {q.options.map((opt, oi) => {
+                    const letter = LETTERS[oi]
+                    const cleanOpt = opt.replace(/^[A-E]\)\s*/, '')
+                    let cls = 'rl-q-opt'
+                    if (showFeedback) {
+                      if (oi === q.answer)    cls += ' rl-q-opt--correct'
+                      else if (oi === sel)    cls += ' rl-q-opt--wrong'
+                      else                    cls += ' rl-q-opt--dim'
+                    } else if (sel === oi) {
+                      cls += ' rl-q-opt--sel'
+                    }
+                    return (
+                      <button
+                        key={oi}
+                        className={cls}
+                        onClick={() => handleAnswer(qi, oi)}
+                        disabled={showFeedback}
+                      >
+                        <span className="rl-q-letter" style={sel === oi && !showFeedback ? { background: color, color: '#fff', borderColor: color } : {}}>{letter}</span>
+                        <span className="rl-q-opt-text">{cleanOpt}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+                {/* Explanation */}
+                {showFeedback && q.explanation && (
+                  <div className={`rl-q-expl${correct ? ' rl-q-expl--ok' : ''}`}>
+                    {answered && !correct && (
+                      <div className="rl-q-correct-ans">
+                        ✓ Correct answer: <strong>{(q.options[q.answer] || '').replace(/^[A-E]\)\s*/, '')}</strong>
+                      </div>
+                    )}
+                    <div className="rl-q-expl-body">
+                      <span className="rl-q-expl-icon">{correct ? '✅' : '📘'}</span>
+                      <span>{q.explanation}</span>
+                    </div>
+                  </div>
+                )}
+                {/* Show answer button */}
+                {!answered && (
+                  <button className="rl-q-reveal" style={{ color, borderColor: color }} onClick={() => toggleReveal(qi)}>
+                    {isRevealed ? '🙈 Hide Answer' : '🔑 Show Answer'}
+                  </button>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* ─ Score summary ─ */}
+        {partDoneCount(activeSet, activePart) === total && total > 0 && (
+          <div className="rl-score-summary" style={{ borderColor: color }}>
+            <span className="rl-score-icon">🎯</span>
+            <span className="rl-score-text">
+              You scored <strong style={{ color }}>{partCorrectCount(activeSet, activePart)}/{total}</strong> on {part.partId} — {part.partLabel} (Set {set.setNumber})
+            </span>
+          </div>
+        )}
+
+        {/* ─ Navigation ─ */}
+        <div className="rl-nav">
+          <button
+            className="rl-nav-btn"
+            onClick={() => {
+              if (activePart > 0) switchTo(activeSet, activePart - 1)
+              else if (activeSet > 0) switchTo(activeSet - 1, sets[activeSet - 1].parts.length - 1)
+            }}
+            disabled={activeSet === 0 && activePart === 0}
+          >
+            ← Previous Part
+          </button>
+          <span className="rl-nav-counter" style={{ color }}>
+            Set {set.setNumber} · {part.partId}
+          </span>
+          <button
+            className="rl-nav-btn rl-nav-btn--next"
+            style={{ background: color, borderColor: color }}
+            onClick={() => {
+              if (activePart < set.parts.length - 1) switchTo(activeSet, activePart + 1)
+              else if (activeSet < sets.length - 1) switchTo(activeSet + 1, 0)
+            }}
+            disabled={activeSet === sets.length - 1 && activePart === set.parts.length - 1}
+          >
+            Next Part →
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
    SPEAKING — sample practice sets (prompt + model answer notes)
 ══════════════════════════════════════════════════════════════ */
 const SPEAKING_SETS = {
@@ -3300,13 +3632,10 @@ export default function PracticeSetPage() {
   const partId  = part?.id || 'L1'
   const cfg     = SECTION_CONFIG[section] || SECTION_CONFIG.listening
 
-  // ── Fetch reading questions live from Supabase ──────────────
+  // ── Reading now uses local READING_PRACTICE_SETS (no Supabase) ──
   const isReading = section === 'reading'
-  const { sets: dbSets, loading: dbLoading, error: dbError } =
-    usePracticeSet(isReading ? 'reading' : null, isReading ? partId : null)
 
   // ── For non-reading: build an array of all sets for this section ──
-  // Show ALL sets in the sidebar so the user can switch between topics
   const isWriting = section === 'writing'
   const writingQuestions = isWriting ? (WRITING_SETS[partId] || WRITING_SETS.W1) : []
 
@@ -3318,52 +3647,17 @@ export default function PracticeSetPage() {
     return [getSet(part)].filter(Boolean)
   })()
 
-  const activeSets = isReading ? dbSets : staticSets
-
-  // Loading state for reading
-  if (isReading && dbLoading) {
-    return (
-      <div className="ps-root">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
-          <div style={{ fontSize: 40 }}>📖</div>
-          <p style={{ color: cfg.color, fontWeight: 600, fontSize: 18 }}>Loading practice sets…</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Error state for reading
-  if (isReading && dbError) {
-    return (
-      <div className="ps-root">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
-          <div style={{ fontSize: 40 }}>⚠️</div>
-          <p style={{ color: '#C8102E', fontWeight: 600, fontSize: 18 }}>Could not load questions</p>
-          <p style={{ color: '#666', fontSize: 14 }}>{dbError}</p>
-          <button className="ps-start-btn" onClick={() => navigate('/reading')}>← Back to Reading</button>
-        </div>
-      </div>
-    )
-  }
-
-  // Empty state for reading
-  if (isReading && !dbLoading && (!dbSets || dbSets.length === 0)) {
-    return (
-      <div className="ps-root">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
-          <div style={{ fontSize: 40 }}>📭</div>
-          <p style={{ color: cfg.color, fontWeight: 600, fontSize: 18 }}>No questions found for {partId}</p>
-          <p style={{ color: '#666', fontSize: 14 }}>Checking database for section="{partId.charAt(0).toUpperCase() + partId.slice(1)}" and part="{partId}"</p>
-          <button className="ps-start-btn" onClick={() => navigate('/reading')}>← Back to Reading</button>
-        </div>
-      </div>
-    )
-  }
+  const activeSets = staticSets
 
   const pageTitle = `${partId} · ${part?.label || 'Practice'}`
+  const readingTotalQs = isReading
+    ? READING_PRACTICE_SETS.reduce((acc, s) => acc + s.parts.reduce((a2, p) => a2 + p.questions.length, 0), 0)
+    : 0
   const totalQs   = isWriting
     ? writingQuestions.length
-    : activeSets.reduce((s, x) => s + (x.questions?.length || 0), 0)
+    : isReading
+      ? readingTotalQs
+      : activeSets.reduce((s, x) => s + (x.questions?.length || 0), 0)
 
   return (
     <div className="ps-root">
@@ -3394,10 +3688,21 @@ export default function PracticeSetPage() {
         </div>
         <h1 className="ps-title">{part?.label || pageTitle}</h1>
         <p className="ps-scenario">
-          {isWriting ? `${writingQuestions.length} Questions` : `${activeSets.length} Practice Sets`}
-          {!isWriting && totalQs > 0 && ` · ${totalQs} Questions`}
+          {isReading
+            ? `${READING_PRACTICE_SETS.length} Sets · ${readingTotalQs} Questions`
+            : isWriting
+              ? `${writingQuestions.length} Questions`
+              : `${activeSets.length} Practice Sets`}
+          {!isWriting && !isReading && totalQs > 0 && ` · ${totalQs} Questions`}
         </p>
       </div>
+
+      {/* ── READING: Use ReadingLayout ── */}
+      {isReading && (
+        <div className="ps-writing-wrap">
+          <ReadingLayout color={cfg.color} />
+        </div>
+      )}
 
       {/* ── WRITING: Use WritingLayout ── */}
       {isWriting && writingQuestions.length > 0 && (
@@ -3411,7 +3716,7 @@ export default function PracticeSetPage() {
       )}
 
       {/* ── OTHER SECTIONS: Use PracticeLayout ── */}
-      {!isWriting && activeSets.length > 0 && (
+      {!isWriting && !isReading && activeSets.length > 0 && (
         <PracticeLayout
           sets={activeSets}
           color={cfg.color}
