@@ -478,59 +478,1506 @@ Regulation will slow innovation and hand competitive advantage to wealthy school
 }
 
 /* ══════════════════════════════════════════════════════════════
-   WRITING — sample practice sets (writing prompt + model answer)
+   WRITING — 20 W1 (email) + 20 W2 (survey) questions
+   W1 sorted easy → hard (Q1 easiest, Q20 hardest)
+   W2 difficulty is randomised (random order, same pool)
 ══════════════════════════════════════════════════════════════ */
-const WRITING_SETS = {
-  W1: {
-    title: 'Email to a Neighbour About a Lost Package',
+
+const W1_QUESTIONS = [
+  // ── 1 (easy) ──────────────────────────────────────────────────────────
+  {
+    id: 'w1_1', num: 1, section: 'W1', difficulty: 'easy',
+    title: 'Lost Package – Neighbour',
+    type: 'writing',
     instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
     scenario: 'Informal Email — Neighbourly Request',
-    type: 'writing',
-    prompt: `You recently ordered an important package online. The tracking system shows it was delivered to a neighbour's address by mistake three days ago. You have not been able to reach the neighbour by knocking on their door.
+    prompt: `You recently ordered an important package online. The tracking system shows it was delivered to your neighbour's address by mistake three days ago. You have not been able to reach the neighbour by knocking on the door.
 
-Write an email to your neighbour. In your email:
-• Explain what happened with the package
-• Describe the package so they can identify it
-• Ask them to contact you and explain how they can reach you`,
-    wordTarget: '150–200 words',
+Write an email to your neighbour. In your email:`,
+    bulletPoints: [
+      'Explain what happened with the package',
+      'Describe the package so they can identify it',
+      'Ask them to contact you and say how they can reach you',
+    ],
     tone: 'Informal — writing to a neighbour you do not know well',
-    criteria: ['Address all 3 bullet points', 'Match informal but polite tone', 'Use natural, varied vocabulary', 'Clear structure and readability'],
+    criteria: ['Address all 3 bullet points', 'Polite, informal tone', 'Natural vocabulary', 'Clear structure'],
     modelAnswer: `Hi,
 
 I hope this message finds you well. My name is Alex Chen and I live next door at number 42. I am writing because I believe a package of mine may have been delivered to your address by mistake.
 
-I ordered a pair of running shoes last week and the tracking information shows the parcel was delivered three days ago — but I never received it. The package is a medium-sized brown cardboard box with a blue shipping label from SportZone Canada. It would have been dropped off on Tuesday afternoon.
+I ordered a pair of running shoes last week and the tracking information shows the parcel was delivered three days ago — but I never received it. The package is a medium-sized brown cardboard box with a blue shipping label from SportZone Canada.
 
-I would really appreciate it if you could let me know whether you received a box like this. If you did, there is absolutely no rush — I completely understand this happens — but it would be great to arrange a pickup at a time convenient for you.
-
-You can reach me by phone at 416-555-0182 or simply knock on my door anytime after 5:00 PM on weekdays.
+I would really appreciate it if you could let me know whether you received a box like this. You can reach me by phone at 416-555-0182 or simply knock on my door anytime after 5:00 PM on weekdays.
 
 Thank you so much for your help!
 
 Best regards,
-Alex Chen`,
+Alex`,
   },
-  W2: {
-    title: 'Survey — Working from Home vs. Working in an Office',
-    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
-    scenario: 'Opinion Response — Workplace Preference',
+
+  // ── 2 (easy) ──────────────────────────────────────────────────────────
+  {
+    id: 'w1_2', num: 2, section: 'W1', difficulty: 'easy',
+    title: 'Thank You – Farewell Gift',
     type: 'writing',
-    prompt: `A research organization is conducting a survey about work preferences. They want to know your opinion on the following:
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Informal Email — Thank You',
+    prompt: `Your coworkers organised a farewell party for you and gave you a gift before your last day at work. You want to thank one close coworker in particular who you know organised most of it.
 
-Some people prefer working from home because it offers more flexibility and eliminates the daily commute. Others prefer working in an office because it provides better structure and face-to-face collaboration.
+Write an email to your coworker. In your email:`,
+    bulletPoints: [
+      'Thank them for organising the party and the gift',
+      'Share one specific memory from the party you enjoyed',
+      'Say you hope to stay in touch and suggest how',
+    ],
+    tone: 'Informal — writing to a close friend at work',
+    criteria: ['Address all 3 bullet points', 'Warm, friendly tone', 'Genuine and personal', 'Clear flow'],
+    modelAnswer: `Hi Priya,
 
-Which do you prefer — working from home or working in an office? Give specific reasons to support your choice.`,
-    wordTarget: '150–200 words',
-    tone: 'Semi-formal — clear, direct opinion writing',
-    criteria: ['State a clear position in the opening', 'Support with 2–3 specific reasons', 'Avoid switching positions mid-response', 'Use varied vocabulary and sentence structure'],
-    modelAnswer: `I strongly prefer working from home, primarily because it significantly increases my productivity and allows me to manage my time more effectively.
+I just wanted to reach out and say a huge thank you for organising yesterday's farewell party. I had absolutely no idea you had been planning it, and I was genuinely touched by everyone's effort.
 
-When I work from home, I eliminate approximately ninety minutes of daily commuting. That time is redirected into focused work, exercise, or rest — all of which contribute to better performance. Without the constant interruptions of an open office environment, I also find it much easier to concentrate on complex tasks that require sustained attention.
+The speech you gave was my favourite part — it made me laugh and nearly cry at the same time. I will definitely hold onto that memory for a long time.
 
-Beyond productivity, working from home has improved my work-life balance in ways I did not expect. I can attend to personal responsibilities — a medical appointment, a home delivery — without requesting time off. This flexibility reduces stress and, in my experience, makes me more motivated rather than less.
+The photo book you all put together is something I will treasure. Every time I look at it, I'll think of the amazing team I had the privilege to work with.
 
-I acknowledge that some collaboration is harder remotely. However, with video calls, shared documents, and clear communication habits, most teamwork translates well to an online environment. The benefits of remote work far outweigh the limitations for roles that do not require physical presence.`,
+I really hope we can stay in touch. I'd love to grab coffee sometime — I'll message you on WhatsApp to set something up once I've settled into the new role.
+
+Thank you again for everything. You made my last day truly special.
+
+Take care,
+Alex`,
   },
+
+  // ── 3 (easy) ──────────────────────────────────────────────────────────
+  {
+    id: 'w1_3', num: 3, section: 'W1', difficulty: 'easy',
+    title: 'Invite Friend to Community Event',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Informal Email — Invitation',
+    prompt: `A friend of yours is visiting your city next weekend. You are helping to organise a neighbourhood barbecue on Saturday afternoon and want to invite your friend.
+
+Write an email to your friend. In your email:`,
+    bulletPoints: [
+      'Tell them about the barbecue and when and where it is happening',
+      'Explain why you think they will enjoy it',
+      'Ask them to confirm whether they can attend',
+    ],
+    tone: 'Informal — writing to a close friend',
+    criteria: ['All 3 points addressed', 'Enthusiastic, friendly tone', 'Clear details provided', 'Natural English'],
+    modelAnswer: `Hey Marcus!
+
+It's so great that you're coming to visit next weekend — I've been looking forward to it. I wanted to tell you about something happening while you're here: our neighbourhood is having a big barbecue on Saturday afternoon from 2 PM to 7 PM at Riverside Park, just a short walk from my place.
+
+I think you're going to love it. There's going to be live music, homemade food from all the different families in the neighbourhood, and lawn games. It's always a really relaxed and fun afternoon — the kind of thing you can't really find elsewhere.
+
+A few of my friends you've met before will also be there, so it should be a great chance to catch up with everyone.
+
+Let me know if you're in! I'll plan the rest of our weekend around it. Just reply to this email or shoot me a text.
+
+Can't wait to see you!
+
+Sam`,
+  },
+
+  // ── 4 (easy) ──────────────────────────────────────────────────────────
+  {
+    id: 'w1_4', num: 4, section: 'W1', difficulty: 'easy',
+    title: 'Noise Complaint – Neighbour',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Polite Complaint — Neighbour',
+    prompt: `Your neighbour plays loud music late at night on weeknights, which affects your sleep and your ability to work the next morning. You want to resolve this politely without involving the building management yet.
+
+Write an email to your neighbour. In your email:`,
+    bulletPoints: [
+      'Explain the problem clearly and when it occurs',
+      'Describe how it is affecting you',
+      'Ask them to make a change and suggest a reasonable compromise',
+    ],
+    tone: 'Polite and diplomatic — writing to a neighbour you do not know well',
+    criteria: ['3 bullet points addressed', 'Polite without being passive', 'Specific details', 'Ends with a solution'],
+    modelAnswer: `Dear Neighbour,
+
+I hope you are well. I am writing because I wanted to speak with you about something that has been affecting me lately, and I hope we can work it out between us.
+
+Over the past few weeks, I have been hearing loud music coming from your apartment on weeknights, typically between 11 PM and 1 AM. I completely understand that everyone has different routines, and I do not want to come across as unreasonable.
+
+The issue is that I start work at 7 AM and the disrupted sleep has been making it really difficult to focus and stay alert. It has also been affecting my overall health.
+
+Would it be possible for you to keep the music at a lower volume after 10 PM on weeknights? I would be more than happy to discuss what works for both of us — weekends are perfectly fine, of course.
+
+Thank you so much for considering this. I appreciate your understanding.
+
+Kind regards,
+Unit 304`,
+  },
+
+  // ── 5 (easy) ──────────────────────────────────────────────────────────
+  {
+    id: 'w1_5', num: 5, section: 'W1', difficulty: 'easy',
+    title: 'Restaurant Feedback – Positive',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Semi-formal — Positive Customer Feedback',
+    prompt: `You recently had a very enjoyable meal at a local restaurant and want to share your positive experience with the restaurant manager.
+
+Write an email to the restaurant manager. In your email:`,
+    bulletPoints: [
+      'Describe specific things you enjoyed about your experience',
+      'Mention one small suggestion for improvement',
+      'Say that you plan to return and will recommend the restaurant',
+    ],
+    tone: 'Semi-formal — positive, polite customer feedback',
+    criteria: ['All 3 points addressed', 'Balanced (praise + 1 suggestion)', 'Specific details', 'Professional yet warm'],
+    modelAnswer: `Dear Manager,
+
+I am writing to share some feedback from my visit to The Maple Leaf Bistro last Saturday evening. I wanted to take a moment to express how much I enjoyed the experience.
+
+The food was exceptional — particularly the wild mushroom risotto, which was perfectly seasoned and beautifully presented. Our server, James, was attentive without being intrusive, and he made excellent wine recommendations throughout the meal. The warm and inviting atmosphere made it feel like a genuinely special occasion.
+
+My one small suggestion would be to consider adding a vegetarian dessert option to the menu. My dining companion follows a plant-based diet and found the dessert selection a little limited.
+
+Overall, the evening was a wonderful experience and I will absolutely be returning. I have already told several friends about the restaurant and will be recommending it without hesitation.
+
+Thank you for creating such a lovely dining environment. Please pass on my compliments to your kitchen team.
+
+Sincerely,
+Sarah Thompson`,
+  },
+
+  // ── 6 (easy–intermediate) ─────────────────────────────────────────────
+  {
+    id: 'w1_6', num: 6, section: 'W1', difficulty: 'easy',
+    title: 'School Enrolment Inquiry',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal Inquiry — School',
+    prompt: `You are moving to a new city in two months and want to enrol your child (currently in Grade 3) in a local elementary school. You have not yet chosen a school.
+
+Write an email to a local school. In your email:`,
+    bulletPoints: [
+      'Introduce yourself and explain your situation',
+      'Ask about the enrolment process and required documents',
+      'Ask whether Grade 3 spaces are available and when you should apply',
+    ],
+    tone: 'Formal — professional inquiry to a school administration',
+    criteria: ['All 3 points addressed', 'Formal and professional tone', 'Polite and clear request', 'Logical structure'],
+    modelAnswer: `Dear Admissions Team,
+
+My name is James Okafor and I am planning to relocate to Vancouver in approximately two months with my family. I am writing to inquire about enrolling my daughter, Emma, who is currently completing Grade 3, at your school for the upcoming September school year.
+
+I would be grateful if you could provide information about your enrolment process and any documents we will need to prepare. I understand this may include proof of address and immunisation records, but I want to make sure we do not miss any important requirements.
+
+I would also like to know whether Grade 3 spaces are currently available and whether there is a deadline or waiting period I should be aware of. Given our upcoming move, I want to start the process as early as possible to avoid any delays.
+
+Thank you for your time. I look forward to hearing from you and hope we can arrange a call or visit to learn more about your school community.
+
+Best regards,
+James Okafor`,
+  },
+
+  // ── 7 (intermediate) ──────────────────────────────────────────────────
+  {
+    id: 'w1_7', num: 7, section: 'W1', difficulty: 'intermediate',
+    title: 'Schedule Change Request – Manager',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal Email — Workplace Request',
+    prompt: `You currently work Monday to Friday, 9 AM to 5 PM. Due to a new family commitment, you need to request a temporary change to your schedule for the next two months.
+
+Write an email to your manager, Ms. Jennifer Watts. In your email:`,
+    bulletPoints: [
+      'Explain why you need the schedule change and what change you are requesting',
+      'Describe how you will ensure your work responsibilities are still met',
+      'Thank her and offer to discuss the request further',
+    ],
+    tone: 'Formal — writing to your direct manager',
+    criteria: ['All 3 points addressed', 'Professional and respectful tone', 'Solution-focused', 'Well-structured'],
+    modelAnswer: `Dear Ms. Watts,
+
+I am writing to request a temporary adjustment to my work schedule for the next two months, from July 1 to August 31. I recently became my mother's primary caregiver following her surgery, and I need to take her to weekly medical appointments on Wednesday mornings.
+
+I would like to request permission to shift my Wednesday hours to 11 AM – 7 PM rather than my usual 9 AM – 5 PM. All other days would remain unchanged. I have already spoken with my colleague David, who has agreed to cover any client calls during Wednesday mornings, and I will ensure that all my project deliverables are completed ahead of schedule during this period.
+
+I understand this is an unusual request and I am happy to discuss alternative arrangements if you prefer. I am confident I can continue meeting all performance expectations throughout this period.
+
+Thank you for your understanding, Ms. Watts. I would be glad to speak further at a time convenient for you.
+
+Best regards,
+Sarah Chen`,
+  },
+
+  // ── 8 (intermediate) ──────────────────────────────────────────────────
+  {
+    id: 'w1_8', num: 8, section: 'W1', difficulty: 'intermediate',
+    title: 'Apology to Colleague',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Semi-formal — Professional Apology',
+    prompt: `You missed an important project deadline last week because of a personal emergency. Your colleague Alex had to take on extra work to cover for you, which caused them significant stress.
+
+Write an email to your colleague Alex. In your email:`,
+    bulletPoints: [
+      'Apologise sincerely and briefly explain what happened',
+      'Acknowledge the extra work Alex had to do because of you',
+      'Offer to help Alex with a future task as a gesture of appreciation',
+    ],
+    tone: 'Semi-formal — writing to a colleague you know reasonably well',
+    criteria: ['All 3 points covered', 'Genuine apology (not excuses)', 'Acknowledges impact on Alex', 'Offers concrete help'],
+    modelAnswer: `Hi Alex,
+
+I wanted to write to you directly to apologise for what happened last week. A family emergency meant I had to leave unexpectedly and was unable to complete the quarterly report before the deadline — and I know that put a serious burden on you.
+
+I am truly sorry. You should not have had to pick up my work at such short notice, especially during what I know was already a busy period for your own projects. I can only imagine how stressful it must have been, and I am genuinely grateful that you stepped in the way you did.
+
+I would really like to make it up to you. If there is anything on your current workload that I can help with — whether it is the Henderson proposal or anything coming up next quarter — please just say the word. I am happy to take on extra work to give you some breathing room.
+
+Again, I am really sorry. Thank you for handling the situation with such professionalism.
+
+Best,
+Sam`,
+  },
+
+  // ── 9 (intermediate) ──────────────────────────────────────────────────
+  {
+    id: 'w1_9', num: 9, section: 'W1', difficulty: 'intermediate',
+    title: 'Follow-Up After Job Interview',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Professional Email — Post-Interview Follow-Up',
+    prompt: `You recently completed an interview for a Marketing Coordinator position at a company you are very interested in. You want to follow up with the hiring manager, Mr. Thomas Yuen.
+
+Write an email to Mr. Yuen. In your email:`,
+    bulletPoints: [
+      'Thank him for his time and the opportunity to interview',
+      'Reference one specific thing discussed in the interview that excited you',
+      'Reaffirm your interest and offer to provide any additional information',
+    ],
+    tone: 'Professional and warm — following up after a job interview',
+    criteria: ['All 3 points addressed', 'Professional but not stiff', 'Specific reference to the interview', 'Confident and genuine'],
+    modelAnswer: `Dear Mr. Yuen,
+
+Thank you very much for taking the time to meet with me yesterday afternoon. It was a pleasure learning more about the Marketing Coordinator role at Novex Solutions, and I left the conversation feeling genuinely excited about the opportunity.
+
+In particular, I was energised by our discussion about the upcoming product launch campaign and the company's focus on data-driven storytelling. The approach aligns very closely with the kind of work I have been doing over the past three years, and I believe I could contribute meaningfully to that initiative from day one.
+
+I remain very interested in the position and would welcome the opportunity to join the Novex team. Please do not hesitate to contact me if you need any additional information, references, or work samples to support your decision.
+
+Thank you again for your time and consideration. I look forward to hearing from you.
+
+Best regards,
+Michelle Park
+416-555-0247 | mpark@email.com`,
+  },
+
+  // ── 10 (intermediate) ─────────────────────────────────────────────────
+  {
+    id: 'w1_10', num: 10, section: 'W1', difficulty: 'intermediate',
+    title: 'Gym Membership Cancellation',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Semi-formal — Contract Cancellation Request',
+    prompt: `You joined a gym three months ago on a one-year contract. Due to a recent job loss you are experiencing financial hardship and need to cancel your membership. The contract includes a cancellation fee.
+
+Write an email to the gym manager, Mr. Sam Patel. In your email:`,
+    bulletPoints: [
+      'Explain your situation and why you need to cancel',
+      'Reference the contract terms and ask if a fee waiver is possible',
+      'Ask for a response within a specific number of days',
+    ],
+    tone: 'Semi-formal — polite request with personal context',
+    criteria: ['All 3 points addressed', 'Respectful, not confrontational', 'Explains circumstances clearly', 'Specific deadline requested'],
+    modelAnswer: `Dear Mr. Patel,
+
+I am writing regarding my FitCore membership, account number FC-21847. I am reaching out to request a cancellation of my membership due to a significant change in my financial circumstances.
+
+I recently lost my job and, despite my best efforts, I have not yet been able to secure new employment. As a result, I am no longer able to maintain the monthly fees. I understand my contract includes a cancellation fee, and I am writing to ask whether FitCore would be willing to waive this fee given my current situation. I have been a committed member since January and have always paid on time.
+
+I would be very grateful for your consideration and would be happy to provide documentation of my employment status if required.
+
+Could you please provide a response by Friday, July 18th, so I can plan my finances accordingly?
+
+Thank you for your understanding and for the excellent service I have received during my time as a member.
+
+Sincerely,
+Rachel Wong`,
+  },
+
+  // ── 11 (intermediate) ─────────────────────────────────────────────────
+  {
+    id: 'w1_11', num: 11, section: 'W1', difficulty: 'intermediate',
+    title: 'Condo Board – Outdoor Area Improvements',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal Email — Resident to Condo Board',
+    prompt: `You represent a group of 15 residents in your condominium building. The outdoor common area — including benches, lighting, and the children's play area — has been neglected and needs improvements.
+
+Write an email to the condo board president, Ms. Sandra Lee. In your email:`,
+    bulletPoints: [
+      'Describe the current problems with the outdoor common area',
+      'Explain why these improvements matter to residents',
+      'Propose two specific improvements and request a meeting to discuss',
+    ],
+    tone: 'Formal — representing a group of residents to a governance body',
+    criteria: ['All 3 points addressed', 'Professional and constructive', 'Specific proposals', 'Clear ask for next steps'],
+    modelAnswer: `Dear Ms. Lee,
+
+I am writing on behalf of fifteen residents in our building to raise a concern about the state of our outdoor common area, which has been deteriorating over recent months.
+
+Specifically, three of the four benches have broken armrests, the pathway lighting near the north entrance has not been functioning since March, and several play structures in the children's area have sharp edges and rusted joints that pose a safety risk. We have documented these issues with photographs, which we would be happy to share.
+
+The outdoor space is particularly important to families with young children and to older residents who rely on it for daily walks. A well-maintained space also enhances property values for all unit owners.
+
+We would like to propose two immediate improvements: the repair of all pathway lighting as a safety priority, and the replacement of the damaged play structures. We would be grateful for the opportunity to discuss a timeline and budget at your earliest convenience.
+
+Would it be possible to arrange a meeting in the coming weeks?
+
+Thank you for your attention to this matter.
+
+Respectfully,
+Daniel Torres
+Unit 217 (on behalf of 15 residents)`,
+  },
+
+  // ── 12 (intermediate) ─────────────────────────────────────────────────
+  {
+    id: 'w1_12', num: 12, section: 'W1', difficulty: 'intermediate',
+    title: 'Damaged Delivery – Online Retailer Complaint',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal Complaint — Online Retailer',
+    prompt: `You purchased an item from an online retailer (HomeStyle Direct, order #HS-99217) that arrived damaged. You contacted customer service 10 days ago and have received no response.
+
+Write an email to the customer service manager. In your email:`,
+    bulletPoints: [
+      'Describe the product and the damage you found when it arrived',
+      'Explain your attempts to contact customer service and the lack of response',
+      'State clearly what resolution you expect and by what date',
+    ],
+    tone: 'Formal and assertive — consumer complaint to a business',
+    criteria: ['All 3 points addressed', 'Firm but professional tone', 'Specific details and order number', 'Clear resolution demand'],
+    modelAnswer: `Dear Customer Service Manager,
+
+I am writing regarding order #HS-99217, placed on June 3rd, for a HomeStyle 6-person dining table (Item Code: HSD-DT-6OAK). When the item was delivered on June 8th, I discovered that the tabletop had a deep crack running across its surface, making it completely unusable.
+
+I contacted HomeStyle Direct's customer service team by phone and through your online portal on June 9th. Despite submitting photographs of the damage and a detailed account of the problem, I have received no response of any kind in the ten days since. This level of service is entirely unacceptable for a purchase of this value.
+
+I am requesting either a full replacement of the item or a complete refund to my original payment method. I ask that this matter be resolved by Friday, June 28th. If I do not receive a satisfactory response by that date, I will escalate this complaint to the Better Business Bureau and my credit card provider.
+
+I expect to hear from you promptly.
+
+Sincerely,
+Christine Osei
+416-555-0322`,
+  },
+
+  // ── 13 (intermediate–advanced) ────────────────────────────────────────
+  {
+    id: 'w1_13', num: 13, section: 'W1', difficulty: 'intermediate',
+    title: 'Thank You to a Mentor',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Warm Professional Email — Gratitude to Mentor',
+    prompt: `You are leaving your current company for a new opportunity. Over the past two years, your workplace mentor, Ms. Patricia Lam, has invested significant time helping you develop professionally.
+
+Write an email to Ms. Lam. In your email:`,
+    bulletPoints: [
+      'Thank her for specific ways she helped you develop',
+      'Mention one thing you learned from her that made a real difference to your career',
+      'Say you hope to stay in touch and wish her well',
+    ],
+    tone: 'Warm and personal — sincere professional gratitude',
+    criteria: ['All 3 points addressed', 'Personal and genuine (not generic)', 'Specific example or lesson mentioned', 'Graceful closing'],
+    modelAnswer: `Dear Ms. Lam,
+
+As I prepare to begin the next chapter of my career, I wanted to take a moment to express my sincere gratitude for everything you have done for me over the past two years.
+
+Your guidance has shaped my professional development in ways I am only beginning to fully appreciate. When I first joined the team, I struggled to communicate complex data clearly to non-technical stakeholders — something you identified early on and patiently helped me address. The advice you gave me about structuring presentations around the audience's needs, not the analyst's knowledge, has stayed with me and genuinely transformed how I approach my work.
+
+Beyond skills, you modelled what it means to lead with both confidence and humility, and I hope to carry that with me into my new role.
+
+I would love to stay connected. If you are ever in the area, I would be glad to meet for coffee. I will also make sure to reach out once I have settled in at the new company.
+
+Thank you for believing in me.
+
+With gratitude and warm regards,
+Mei Lin`,
+  },
+
+  // ── 14 (intermediate–advanced) ────────────────────────────────────────
+  {
+    id: 'w1_14', num: 14, section: 'W1', difficulty: 'intermediate',
+    title: 'Building Policy – Rooftop Terrace Review',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal — Tenant to Property Manager (Advocacy)',
+    prompt: `Your building management recently issued a notice banning all personal gatherings on the rooftop terrace. You and several other residents feel this is overly restrictive. You want to request a policy review.
+
+Write an email to the building manager, Mr. Kevin Marsh. In your email:`,
+    bulletPoints: [
+      "Acknowledge the building management's concern and show understanding",
+      'Explain why the rooftop terrace is valued and give examples of responsible use',
+      'Propose a reasonable compromise and request a policy review',
+    ],
+    tone: 'Respectful and constructive — tenant-management dialogue',
+    criteria: ['All 3 points addressed', 'Respectful, not confrontational', 'Empathises before advocating', 'Concrete compromise proposed'],
+    modelAnswer: `Dear Mr. Marsh,
+
+Thank you for the recent notice regarding rooftop terrace usage. I understand that management has legitimate reasons for wanting to minimise disruption and ensure the space is used appropriately, and I appreciate the effort to maintain a safe and comfortable environment for all residents.
+
+Speaking on behalf of several neighbours, I would like to respectfully ask that the complete ban be reconsidered. The rooftop terrace has been a valued part of our building's community. Most gatherings that take place there are small, quiet, and end well before 9 PM — residents typically use it for family dinners, birthday celebrations with close friends, or simply to enjoy the view.
+
+We understand the concerns and would welcome the introduction of reasonable guidelines rather than an outright ban. For example, a booking system with a maximum guest limit of eight people, a noise curfew of 9:30 PM, and a cleaning responsibility policy might address all of management's concerns while preserving residents' enjoyment.
+
+Could we arrange a brief meeting to discuss this? We are committed to finding a solution that works for everyone.
+
+With respect,
+Apartment 1204`,
+  },
+
+  // ── 15 (advanced) ─────────────────────────────────────────────────────
+  {
+    id: 'w1_15', num: 15, section: 'W1', difficulty: 'advanced',
+    title: 'Reference Letter Request – Professor',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal Academic Email — Reference Request',
+    prompt: `You are a recent university graduate applying for a competitive position at a national research institute. You want to ask your former professor, Dr. Rebecca Stone, to write a reference letter.
+
+Write an email to Dr. Stone. In your email:`,
+    bulletPoints: [
+      'Remind her who you are and mention the course you took with her',
+      'Explain the position and why you chose her as a reference',
+      'Provide relevant details and ask if she is willing and able to help',
+    ],
+    tone: 'Formal — writing to a professor and academic you respect',
+    criteria: ['All 3 points addressed', 'Formal academic tone', 'Specific and contextual reminder', 'Polite and deferential request'],
+    modelAnswer: `Dear Dr. Stone,
+
+I hope this message finds you well. My name is Jennifer Park and I had the pleasure of completing your Advanced Research Methods course in Winter 2024 — the seminar in which I presented my paper on longitudinal health data analysis, which you were kind enough to describe as one of the strongest submissions of the year.
+
+I am writing to ask whether you would be willing to write a reference letter on my behalf. I have been invited to apply for a Research Analyst position at the Canadian Institute for Health Information, a competitive role that requires three academic or professional references.
+
+I chose to reach out to you specifically because your expertise in quantitative research and your familiarity with my analytical work would make your endorsement particularly meaningful in this context. The application deadline is August 15th, so there would be no immediate urgency.
+
+I would be happy to provide my resume, the full job description, and any materials that might help you draft the letter. I am also available to meet if that would be helpful.
+
+Thank you very much for your time and consideration, Dr. Stone.
+
+Respectfully,
+Jennifer Park`,
+  },
+
+  // ── 16 (advanced) ─────────────────────────────────────────────────────
+  {
+    id: 'w1_16', num: 16, section: 'W1', difficulty: 'advanced',
+    title: 'Volunteer Application Inquiry',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal — Volunteer Inquiry to Non-profit',
+    prompt: `You want to volunteer with a local non-profit (New Horizons Support Centre) that helps newcomers to Canada. You have relevant professional skills and a strong personal motivation for this cause.
+
+Write an email to the volunteer coordinator, Ms. Angela Torres. In your email:`,
+    bulletPoints: [
+      'Introduce yourself and explain your personal motivation for volunteering with this organisation',
+      'Describe the relevant skills or experience you would bring',
+      'Ask about available volunteer positions and the application process',
+    ],
+    tone: 'Formal and enthusiastic — professional inquiry for a volunteer role',
+    criteria: ['All 3 points addressed', 'Genuine personal motivation included', 'Specific skills highlighted', 'Professional, not generic'],
+    modelAnswer: `Dear Ms. Torres,
+
+I am writing to express my interest in volunteering with New Horizons Support Centre. My name is Lucas Ferreira and I am a certified ESL instructor currently working in the private sector. Having immigrated to Canada from Brazil myself seven years ago, I have a deep personal understanding of the challenges newcomers face when navigating language, employment, and cultural adjustment — and a strong desire to give back to a community that once supported me.
+
+Over the past decade, I have worked with adult language learners in a range of settings, including one-on-one tutoring, workplace language programs, and community adult education. I am also experienced in resume writing and job search coaching, which I understand are among the services you provide.
+
+I would be very interested to learn about the specific volunteer roles currently available at New Horizons and the steps required to apply. I am flexible with my schedule and could commit to a regular weekly time slot.
+
+Thank you for the important work your organisation does. I would be honoured to contribute.
+
+Kind regards,
+Lucas Ferreira`,
+  },
+
+  // ── 17 (advanced) ─────────────────────────────────────────────────────
+  {
+    id: 'w1_17', num: 17, section: 'W1', difficulty: 'advanced',
+    title: 'Airline Complaint – Lost Luggage',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal Complaint — Airline',
+    prompt: `Your flight was cancelled by NorthStar Air (booking reference NSA-28471) five days ago, and your checked luggage has not been located or returned. You have attempted to contact the airline twice with no response.
+
+Write a formal complaint email to the airline. In your email:`,
+    bulletPoints: [
+      'State the flight cancellation issue and the lost luggage problem with key details',
+      'Describe how this situation has inconvenienced you',
+      'State what resolution you expect from the airline and set a specific deadline',
+    ],
+    tone: 'Formal and assertive — serious complaint requiring escalation',
+    criteria: ['All 3 points addressed', 'Firm, assertive, and professional', 'Specific details and reference numbers', 'Clear deadline and expectations set'],
+    modelAnswer: `To the NorthStar Air Customer Relations Department,
+
+I am writing to file a formal complaint regarding flight NSA-284 from Toronto (YYZ) to Vancouver (YVR), scheduled for June 14th, which was cancelled without prior notice. My booking reference is NSA-28471.
+
+In addition to the disruption caused by the cancellation, my two checked bags — containing essential clothing, professional equipment, and personal items valued at approximately $2,800 — have not been returned to me in the five days since the incident. I was given a property irregularity report (reference PIR-4483) at the time but have received no update despite two follow-up calls to your customer service line.
+
+The impact on my daily life has been significant. I was travelling for a work conference, and the loss of my equipment and professional attire directly affected my ability to fulfil my responsibilities. I have been forced to purchase replacement items totalling $340, for which I am retaining all receipts.
+
+I expect NorthStar Air to either locate and return my luggage within five business days or provide a full compensation of $2,800 for the lost items, plus reimbursement of the $340 in replacement costs. I also expect written confirmation of this resolution by July 1st.
+
+If I do not receive a satisfactory response by that date, I will file a formal complaint with the Canadian Transportation Agency.
+
+Sincerely,
+Andrew Whitfield`,
+  },
+
+  // ── 18 (advanced) ─────────────────────────────────────────────────────
+  {
+    id: 'w1_18', num: 18, section: 'W1', difficulty: 'advanced',
+    title: 'Speculative Job Application (Cover Letter)',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal — Unsolicited Professional Introduction',
+    prompt: `You are interested in working at Novex Solutions, a company you admire. There is no current job posting, but you believe your skills would be a strong fit. You want to introduce yourself proactively.
+
+Write an email to the Head of Talent, Ms. Rachel Kim. In your email:`,
+    bulletPoints: [
+      'Introduce yourself and explain why you are interested in this specific company',
+      'Highlight two or three key skills or accomplishments that make you a strong candidate',
+      'Express interest in any upcoming opportunities and offer to share your resume',
+    ],
+    tone: 'Formal and confident — proactive professional approach',
+    criteria: ['All 3 points addressed', 'Confident without arrogance', 'Company-specific reasoning', 'Specific accomplishments cited'],
+    modelAnswer: `Dear Ms. Kim,
+
+My name is Diana Osei and I am a Senior Data Analyst with seven years of experience in financial services. I am reaching out to express my strong interest in joining Novex Solutions, having followed the company's work closely — particularly your recent expansion into predictive analytics for community lending, an initiative that aligns closely with my professional values and expertise.
+
+Over the past three years at MapleTech Financial, I have led a team of five analysts, reduced reporting cycle time by 38% through process automation, and developed a customer risk model that improved approval accuracy by 22%. I believe these skills translate directly to the kind of data-led decision-making that Novex prioritises.
+
+I understand you may not have a current opening that matches my background, but I would welcome the opportunity to explore any positions that may be opening in the coming months. I have attached my resume and would be happy to schedule a brief introductory call at your convenience.
+
+Thank you for your time, Ms. Kim.
+
+Sincerely,
+Diana Osei
+diana.osei@email.com | 647-555-0134`,
+  },
+
+  // ── 19 (advanced) ─────────────────────────────────────────────────────
+  {
+    id: 'w1_19', num: 19, section: 'W1', difficulty: 'advanced',
+    title: 'Letter to City Councillor – Park Improvements',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal — Civic Advocacy to Elected Official',
+    prompt: `You live near a city park that has been poorly maintained for over a year. You represent a group of concerned residents and want to advocate for improvements.
+
+Write an email to your local city councillor, Councillor Maria Santos. In your email:`,
+    bulletPoints: [
+      "Describe the park's current state with specific evidence or examples",
+      'Explain why the park matters to the community and who is affected',
+      'Make two or three specific, realistic requests and offer to participate in a community consultation',
+    ],
+    tone: 'Formal — civic advocacy letter to an elected official',
+    criteria: ['All 3 points addressed', 'Formal civic tone', 'Evidence-based and specific', 'Solutions offered, not just complaints'],
+    modelAnswer: `Dear Councillor Santos,
+
+I am writing on behalf of a group of thirty-two residents from the Riverside Drive area regarding the deteriorating condition of Morrison Creek Park. Despite multiple requests submitted through the city's online reporting system since last autumn, we have seen no meaningful improvement.
+
+The park currently has five broken lights along the main pathway — which poses a safety risk to evening walkers and cyclists — as well as a vandalized washroom facility that has been out of service for four months and a playground surface that is damaged and potentially dangerous for young children. We have documented these issues with photographs and timestamped service request numbers that we are happy to share.
+
+The park is the primary outdoor space for hundreds of families in our neighbourhood, including a large elderly population that depends on it for daily physical activity. Its neglect disproportionately affects those with the fewest alternatives.
+
+We respectfully request: immediate restoration of pathway lighting as a safety priority; repair of the washroom facility within 60 days; and a full playground inspection with necessary resurfacing before September. We would also welcome the opportunity to participate in a formal community consultation regarding the park's future maintenance plan.
+
+Thank you for your service to this community, Councillor Santos.
+
+Respectfully submitted,
+Elena Marchetti
+(on behalf of the Riverside Drive Community Group)`,
+  },
+
+  // ── 20 (advanced) ─────────────────────────────────────────────────────
+  {
+    id: 'w1_20', num: 20, section: 'W1', difficulty: 'advanced',
+    title: 'Library Director – Adult Programming Proposal',
+    type: 'writing',
+    instruction: 'Read the situation below and write an email of 150–200 words. You have 27 minutes.',
+    scenario: 'Formal — Community Member Proposing Program to Institution',
+    prompt: `You have been using your local library for years and have noticed it offers very little programming for adults. You want to propose a new adult program to the library director.
+
+Write an email to the library director, Ms. Frances Okafor. In your email:`,
+    bulletPoints: [
+      "Acknowledge the library's strengths and your history as a user",
+      'Describe your specific program idea and explain its value to the community',
+      'Ask whether the library would consider the proposal and offer to help organise it',
+    ],
+    tone: 'Warm and constructive — community member with a positive, evidence-based proposal',
+    criteria: ['All 3 points addressed', 'Acknowledges before advocating', 'Specific and concrete proposal', 'Genuine, community-minded tone'],
+    modelAnswer: `Dear Ms. Okafor,
+
+I have been a member of this library for twelve years, and it has been a constant source of enrichment in my life. From the excellent digital resources to the welcoming children's programs, the library consistently serves our community well. I am writing because I would like to propose an idea that I believe could extend that impact to adult residents.
+
+I would like to suggest a monthly "Career and Professional Skills" evening workshop series. Each session could focus on a practical skill — resume writing, interview preparation, LinkedIn profile building, or navigating the Canadian workplace for newcomers. These topics are consistently requested in local community forums but are rarely offered through accessible, free channels.
+
+I work as a human resources professional and would be willing to lead or co-facilitate sessions at no cost to the library. I have also spoken informally with several neighbours and colleagues who expressed immediate interest in attending.
+
+I would be grateful if you could consider this proposal and let me know whether there is a process for submitting formal program suggestions. I am happy to provide a more detailed outline at your request.
+
+Thank you for the wonderful service you and your team provide.
+
+With appreciation,
+Thomas Ngozi`,
+  },
+]
+
+// ── W2 questions (survey) — 20 topics, difficulty randomised ─────────────────
+const W2_QUESTIONS = [
+  {
+    id: 'w2_1', num: 1, section: 'W2', difficulty: 'intermediate',
+    title: 'Public Transit vs. Roads',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — City Planning',
+    prompt: `A city planning organization is asking residents for their opinion:
+
+Some people believe expanding public transit (buses and subways) is the best way to reduce traffic in cities. Others believe that building more roads and highways is the better solution.
+
+Which approach do you think the city should prioritize? Give specific reasons to support your choice.`,
+    optionA: 'Expanding public transit (buses and subways)',
+    optionB: 'Building more roads and highways',
+    tone: 'Semi-formal — clear, direct opinion writing',
+    criteria: ['Clear position stated upfront', 'Two or three specific supporting reasons', 'Consistent position — no hedging', 'Varied sentence structure'],
+    modelAnswer: `I believe cities should prioritize expanding public transit rather than building new roads.
+
+The fundamental problem with adding more roads is that it generates more traffic rather than reducing it. This phenomenon, known as "induced demand," is well-documented in transportation research: more road capacity attracts more drivers. Cities like Los Angeles expanded their highway networks aggressively for decades, yet congestion only worsened.
+
+Public transit, by contrast, moves large numbers of people efficiently within a fixed right-of-way. A single subway line can carry the equivalent of twelve lanes of highway traffic. This is simply more efficient use of urban space.
+
+Beyond capacity, public transit has significant environmental advantages. Every commuter who switches from a personal vehicle to a bus or subway meaningfully reduces carbon emissions — an increasingly urgent priority for Canadian cities committed to their climate targets.
+
+Finally, transit expansion benefits those who cannot drive — the elderly, people with disabilities, and lower-income residents — making cities more equitable places to live.
+
+The evidence strongly favours transit investment over road expansion.`,
+  },
+  {
+    id: 'w2_2', num: 2, section: 'W2', difficulty: 'advanced',
+    title: 'Technology in Early Education',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Education Policy',
+    prompt: `A school board is surveying parents and community members:
+
+Some educators argue that technology — tablets, laptops, and apps — should be used extensively in classrooms from an early age because it prepares children for the modern world. Others believe that excessive screen time in schools is harmful and that traditional hands-on learning is more effective for young children.
+
+What is your opinion? Should schools use technology extensively in early childhood education? Support your position with specific reasons and examples.`,
+    optionA: 'Technology should be used extensively in early childhood classrooms',
+    optionB: 'Traditional hands-on learning is more effective for young children',
+    tone: 'Semi-formal — opinion writing with specific support',
+    criteria: ['Clear position stated', 'Specific examples or evidence used', 'Counterargument acknowledged', 'Well-structured and coherent'],
+    modelAnswer: `I believe that while technology has a place in education, traditional hands-on learning should remain the foundation for young children.
+
+Research in child development consistently shows that children under eight learn most effectively through physical exploration, social interaction, and direct sensory experience. Skills like fine motor coordination, spatial reasoning, and emotional intelligence develop through activities that screens simply cannot replicate — building blocks, drawing, outdoor play, and collaborative storytelling.
+
+There is also growing evidence that excessive screen time in early childhood is linked to shortened attention spans and reduced social development. The American Academy of Pediatrics has specifically recommended limiting recreational screen time for children under six for these reasons.
+
+I am not suggesting technology has no role. Used purposefully — for a 20-minute coding exercise or an interactive science simulation — it can be a valuable supplement. The concern is with extensive, undirected use replacing core developmental activities.
+
+Young children are not miniature adults. Their developmental needs require a curriculum designed around how children actually learn, not around what employers will expect of them in fifteen years.`,
+  },
+  {
+    id: 'w2_3', num: 3, section: 'W2', difficulty: 'easy',
+    title: 'Social Media Age Restrictions',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Child Safety & Technology',
+    prompt: `A community organization is asking residents for their views:
+
+Some people believe governments should strictly limit social media access for children under 16 to protect their mental health. Others argue that restricting social media takes away young people's freedom and that parents — not governments — should decide.
+
+What is your view? Should governments set age restrictions on social media? Explain your position with specific reasons.`,
+    optionA: 'Governments should set strict age restrictions on social media',
+    optionB: "Parents — not governments — should decide children's social media access",
+    tone: 'Semi-formal — clear opinion with reasoning',
+    criteria: ['Clear position', 'Two specific reasons', 'Direct and focused', 'Natural English'],
+    modelAnswer: `I believe governments should set clear age restrictions on social media access for children.
+
+The mental health consequences of early, unregulated social media use are well-documented. Studies have repeatedly linked heavy social media use by teenagers — particularly girls — to increased rates of anxiety, depression, and body image issues. When young people are developmentally vulnerable, exposure to constant social comparison and algorithmically amplified content can cause real, lasting harm.
+
+Parents undoubtedly play a critical role, but relying solely on individual parents is insufficient. Many parents lack the technical knowledge to monitor their children's online activity effectively. Others work long hours and cannot maintain consistent oversight. And some children simply find ways around parental controls.
+
+A government-set minimum age — similar to restrictions on alcohol, gambling, or driving — creates a consistent, enforceable standard that protects all children equally, not just those with attentive and technically literate parents.
+
+This is not about restricting freedom. It is about recognising that social media platforms are designed to be addictive and that children deserve protection from those design choices.`,
+  },
+  {
+    id: 'w2_4', num: 4, section: 'W2', difficulty: 'intermediate',
+    title: 'High-Rise vs. Suburban Housing',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Urban Planning & Lifestyle',
+    prompt: `A housing authority is gathering opinions:
+
+Some people prefer living in high-rise apartments in the city centre — close to work, restaurants, and transit — but smaller and more expensive. Others prefer suburban houses — more space and lower rent, but requiring a longer daily commute.
+
+Which type of housing do you think is better for families? Explain your position with specific reasons and examples.`,
+    optionA: 'High-rise apartments in the city centre',
+    optionB: 'Houses in suburban neighbourhoods',
+    tone: 'Semi-formal — personal opinion with specific support',
+    criteria: ['Clear position', 'Specific supporting reasons', 'Considers family context', 'Coherent argument'],
+    modelAnswer: `For families, I believe suburban houses offer a significantly better quality of life than city-centre apartments.
+
+Space is the most fundamental advantage. A house provides separate bedrooms, a yard, and storage — all of which matter enormously when you have children. City apartments, even expensive ones, typically cannot offer the same square footage. Children need room to play, make noise, and develop their independence in ways that a high-rise simply does not accommodate well.
+
+Cost is also an important consideration. While suburban homes require a commute, the financial savings can be substantial. Many families in Canadian cities spend 50 to 60 percent of their income on city-centre rent. A suburban mortgage, in many cases, is lower than a downtown apartment's rent — and builds equity over time.
+
+Yes, the commute is a real cost. But many suburban families find they can schedule work-from-home days to reduce it. Schools in suburban areas also tend to have more physical space, larger playgrounds, and easier access to outdoor activities.
+
+For raising a family, the suburb clearly wins on balance.`,
+  },
+  {
+    id: 'w2_5', num: 5, section: 'W2', difficulty: 'advanced',
+    title: 'Preventive vs. Treatment Healthcare',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Health Policy',
+    prompt: `A health policy think tank is collecting public opinions:
+
+Some people argue that governments should invest the majority of healthcare funding in preventive care — education, screenings, and lifestyle programs — to reduce disease before it occurs. Others believe healthcare funding should focus on treatment — hospitals, emergency care, and medication — to help people who are already sick.
+
+Where do you think healthcare funding should be prioritized? Explain your view with specific reasoning.`,
+    optionA: 'Governments should prioritize preventive healthcare',
+    optionB: 'Governments should prioritize treatment and emergency care',
+    tone: 'Semi-formal — structured argument with evidence',
+    criteria: ['Clear position', 'Evidence-based reasoning', 'Acknowledges counterargument', 'Logical and well-organised'],
+    modelAnswer: `I believe healthcare systems should significantly increase investment in preventive care, though not at the complete expense of treatment.
+
+The economic case is compelling. Every dollar invested in preventive care — early cancer screenings, diabetes management programs, vaccination campaigns, and smoking cessation support — has been estimated to save between three and seven dollars in future treatment costs. This is because diseases caught early are dramatically cheaper to treat and far less debilitating for patients.
+
+The human case is equally strong. Preventive care reduces the number of people who become severely ill in the first place, which relieves pressure on hospitals and emergency rooms that are already overburdened in most Canadian provinces.
+
+Critics correctly argue that we cannot simply let currently sick people go untreated. I agree entirely. A functional healthcare system must treat those in need. But the current balance — where the vast majority of funding goes to acute treatment while prevention receives a fraction — is inefficient and shortsighted.
+
+Investing more in prevention is not idealism. It is the fiscally responsible and morally sensible approach to managing a sustainable healthcare system.`,
+  },
+  {
+    id: 'w2_6', num: 6, section: 'W2', difficulty: 'easy',
+    title: 'Single-Use Plastic Bag Ban',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Environmental Policy',
+    prompt: `A city council is asking residents for input:
+
+Your city is deciding whether to ban single-use plastic bags in all retail stores. Some people support the ban because it reduces pollution and encourages sustainable habits. Others oppose it because it increases costs and inconvenience for shoppers and businesses.
+
+Do you support or oppose the ban on single-use plastic bags? Give specific reasons.`,
+    optionA: 'I support the ban on single-use plastic bags',
+    optionB: 'I oppose the ban on single-use plastic bags',
+    tone: 'Semi-formal — clear opinion with reasoning',
+    criteria: ['Clear position', 'Two or three reasons', 'Specific and direct', 'No switching sides'],
+    modelAnswer: `I strongly support a ban on single-use plastic bags, and I believe any short-term inconvenience is easily outweighed by the long-term benefits.
+
+Plastic bags are one of the most visible and damaging forms of pollution in Canadian cities. They clog drains, end up in waterways, and can take up to 1,000 years to break down in landfills. Unlike glass or paper, most plastic bags cannot be effectively recycled at scale — meaning that even "recyclable" bags typically end up in landfill.
+
+Switching to reusable bags is genuinely simple. Most people adapt within weeks, and the financial cost is minimal — a single reusable bag purchased for $2 can replace hundreds of plastic bags over its lifetime.
+
+Regarding cost to businesses: many cities that have already implemented bans — Vancouver, Montreal, and dozens of European cities — report that retail business was not negatively impacted. Shoppers adjusted quickly.
+
+We cannot claim to care about the environment while continuing to generate hundreds of millions of disposable plastic bags every year. This ban is a small, practical, and overdue step.`,
+  },
+  {
+    id: 'w2_7', num: 7, section: 'W2', difficulty: 'intermediate',
+    title: 'Community Centre vs. Roads Spending',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Municipal Spending',
+    prompt: `A municipal government is surveying residents on community spending:
+
+Your city has extra funding and must choose between expanding the community recreation centre (adding a gym, pool, and daycare) or improving roads and sidewalks in the neighbourhood.
+
+Which do you think is a better use of the funds? Support your opinion with specific reasons.`,
+    optionA: 'Expand the community recreation centre',
+    optionB: 'Improve roads and sidewalks in the neighbourhood',
+    tone: 'Semi-formal — community opinion writing',
+    criteria: ['Clear position', 'Specific practical reasoning', 'Community impact considered', 'Direct and focused'],
+    modelAnswer: `I believe the city should invest in improving roads and sidewalks rather than expanding the recreation centre.
+
+Infrastructure improvements benefit every resident equally and every day. A cracked sidewalk is a safety hazard for every pedestrian who walks it — elderly residents, parents with strollers, cyclists. Poor road conditions damage vehicles, increase maintenance costs, and can cause accidents. These are daily, tangible harms that affect the entire community regardless of income, age, or interest in fitness.
+
+A recreation centre expansion, while genuinely valuable, primarily benefits those who choose to use it. Many residents — particularly the elderly, those with young infants, or those with demanding work schedules — will rarely if ever use a new gym or pool. Their tax dollars would be funding a facility they cannot realistically access.
+
+I also think the argument about daycare deserves separate consideration — if childcare access is the goal, dedicated childcare funding is a more direct solution than attaching it to a recreation expansion.
+
+Basic infrastructure is a fundamental municipal responsibility. It should come first.`,
+  },
+  {
+    id: 'w2_8', num: 8, section: 'W2', difficulty: 'advanced',
+    title: 'Strict vs. Relaxed Parenting',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Parenting & Child Development',
+    prompt: `A parenting magazine is gathering views:
+
+Some people believe strict parenting — with clear rules, high expectations, and firm consequences — produces more disciplined and successful children. Others believe relaxed, child-led parenting — with more freedom, self-expression, and minimal rules — produces happier, more creative children.
+
+Which parenting style do you believe is more effective for raising well-rounded children? Give specific reasons and examples.`,
+    optionA: 'Strict parenting with clear rules and high expectations',
+    optionB: 'Relaxed, child-led parenting with freedom and minimal rules',
+    tone: 'Semi-formal — nuanced opinion with specific support',
+    criteria: ['Clear position', 'Nuanced argument (not binary)', 'Specific examples', 'Well-balanced reasoning'],
+    modelAnswer: `While I believe a degree of structure is essential for children's development, I think the most effective parenting style lies between strict and relaxed — leaning toward what researchers call "authoritative" parenting: high expectations combined with warmth and open communication.
+
+Pure strictness — rigid rules with no room for discussion — may produce compliance in the short term, but research consistently shows it is associated with lower self-esteem, reduced resilience, and difficulty making independent decisions in adulthood. Children raised in overly controlled environments often lack the internal motivation to succeed once external enforcement is removed.
+
+Equally, completely child-led parenting without structure leaves children without the boundaries they need to develop self-regulation. Young children do not yet have the cognitive capacity to manage complete freedom responsibly.
+
+The most successful approach, supported by decades of developmental psychology research, provides clear and consistent expectations while explaining the reasons behind rules, listening to children's perspectives, and allowing age-appropriate autonomy. Children raised this way tend to be both disciplined and creative — because structure and freedom are not opposites when implemented thoughtfully.`,
+  },
+  {
+    id: 'w2_9', num: 9, section: 'W2', difficulty: 'intermediate',
+    title: 'Immigration and the Economy',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Social Policy',
+    prompt: `An economics research group is asking for public opinion:
+
+Some people believe that immigration has a positive effect on a local economy because immigrants fill labour shortages, start businesses, and contribute to innovation. Others believe immigration puts pressure on local housing, public services, and wages for existing residents.
+
+What is your view on the effect of immigration on the local economy? Support your position with specific reasons and examples.`,
+    optionA: 'Immigration has an overall positive effect on the local economy',
+    optionB: 'Immigration puts excessive pressure on housing, services, and wages',
+    tone: 'Semi-formal — reasoned opinion on a social issue',
+    criteria: ['Clear position', 'Specific economic reasoning', 'Acknowledges counterargument', 'Evidence or example cited'],
+    modelAnswer: `I believe immigration has a net positive effect on Canada's economy, though this benefit is only fully realised when it is supported by appropriate investment in housing and public services.
+
+Canada's workforce is ageing rapidly. Without continued immigration, many critical sectors — healthcare, construction, technology, and elder care — simply would not have enough workers. Immigrants fill roles at every level of the economy, from skilled professionals to essential service workers, and studies consistently show they are among the most entrepreneurial demographic in Canada.
+
+Critics point to housing costs and wage pressure as valid concerns. I acknowledge these are real issues in cities like Toronto and Vancouver. However, the evidence suggests that housing affordability is primarily a supply problem — caused by restrictive zoning and slow construction — not by immigration per se.
+
+Canada has historically been one of the most successful immigrant-receiving countries in the world. Our national identity and economic prosperity are deeply intertwined with immigration. The solution to housing pressure is to build more housing — not to reduce the immigration that sustains our economy and demographic balance.`,
+  },
+  {
+    id: 'w2_10', num: 10, section: 'W2', difficulty: 'easy',
+    title: 'University vs. Skilled Trades',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Career & Education',
+    prompt: `A career guidance organization is collecting opinions:
+
+Some people believe a university degree is the best investment young people can make because it opens more doors and leads to higher salaries. Others believe skilled trades training is a better choice because it leads to stable, well-paying jobs without the cost and time of a degree.
+
+Which path do you think is better for young people entering the workforce today? Give specific reasons.`,
+    optionA: 'A university degree is the better investment',
+    optionB: 'Skilled trades training is the better path',
+    tone: 'Semi-formal — career and education opinion',
+    criteria: ['Clear position', 'Practical and specific reasons', 'Direct and confident', 'No ambiguity'],
+    modelAnswer: `For many young Canadians today, skilled trades training represents a smarter investment than a traditional university degree.
+
+The financial case is strong. A licensed electrician, plumber, or HVAC technician in Canada earns between $70,000 and $100,000 per year after a few years of experience. They typically enter the workforce two to three years earlier than university graduates — and without $40,000 to $80,000 in student debt. The combination of earlier earnings and no debt represents a financial head start that is very difficult for most university graduates to overcome.
+
+There is also exceptional job security. Canada currently faces critical shortages in the skilled trades, and that trend will only intensify as the existing workforce ages and retires. A trained trades worker is virtually guaranteed employment.
+
+I am not suggesting university is without value — for medicine, law, engineering, and many other professions, a degree is essential. But the cultural assumption that university is the default successful path leads many young people to take on expensive degrees in fields with limited job prospects. For a large number of students, trades training is the more practical, financially sound, and personally fulfilling choice.`,
+  },
+  {
+    id: 'w2_11', num: 11, section: 'W2', difficulty: 'intermediate',
+    title: 'Mandatory Volunteering for Students',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Education Policy',
+    prompt: `A youth development foundation is gathering opinions:
+
+Some educators believe mandatory community service should be a requirement for high school graduation because it builds empathy, responsibility, and civic engagement. Others believe mandatory volunteering removes the genuine spirit of service and that students should choose how to spend their time.
+
+What is your opinion? Should community service be mandatory for high school students?`,
+    optionA: 'Community service should be mandatory for graduation',
+    optionB: 'Community service should be voluntary — not a graduation requirement',
+    tone: 'Semi-formal — education policy opinion',
+    criteria: ['Clear position', 'Specific reasoning', 'Addresses the "spirit of volunteering" argument', 'Coherent'],
+    modelAnswer: `I support making community service a graduation requirement for high school students, and I believe the concern about "forced volunteering" misses the broader educational purpose.
+
+The argument that mandatory service undermines genuine altruism assumes that students will naturally choose to volunteer otherwise — and that is simply not borne out by experience. Most teenagers, without structured expectations, will not seek out community involvement on their own. The requirement is what creates the exposure, and in many cases, the experience itself fosters genuine interest that continues beyond graduation.
+
+Research consistently shows that students who complete community service hours report higher levels of empathy, civic awareness, and social responsibility — even when the participation was initially compelled. What begins as an obligation often becomes meaningful.
+
+This is no different from requiring students to study history, physical education, or the arts. We require these subjects not because every student loves them, but because we believe exposure to them produces a more complete, socially aware citizen.
+
+A minimum threshold — 30 to 40 hours spread across high school — is a modest ask with significant long-term social benefits.`,
+  },
+  {
+    id: 'w2_12', num: 12, section: 'W2', difficulty: 'advanced',
+    title: 'AI in the Workplace',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Technology & Society',
+    prompt: `A technology ethics panel is gathering public views:
+
+Some experts argue that AI is transforming the workplace in positive ways — increasing productivity, reducing repetitive tasks, and creating new job categories. Others warn that AI will lead to widespread job losses, growing inequality, and a workforce unprepared for rapid change.
+
+What is your view on the impact of AI on the workplace? Give a clear position supported by specific reasons and examples.`,
+    optionA: 'AI is transforming the workplace in largely positive ways',
+    optionB: 'AI poses serious risks of job loss and inequality',
+    tone: 'Semi-formal — technology and society opinion',
+    criteria: ['Clear position', 'Specific examples or evidence', 'Addresses opposing concerns', 'Sophisticated reasoning'],
+    modelAnswer: `AI represents the most significant transformation of the workplace since industrialisation — and like industrialisation, its impact will be both positive and deeply disruptive, depending almost entirely on how societies choose to manage it.
+
+I believe AI will ultimately benefit the workforce, but only if governments and employers act proactively to support workers through the transition. This is not a passive optimism — it is a conditional one.
+
+The productivity gains are real. AI tools are already helping radiologists detect cancers earlier, enabling lawyers to process large document sets in hours rather than weeks, and allowing small businesses to compete in marketing and customer service in ways that were previously impossible. These are genuine value additions.
+
+The displacement risk is also real. Routine cognitive tasks — data entry, basic customer service, standard document drafting — will be automated at scale. Workers in these roles need retraining support, which most governments are not providing at sufficient scale or speed.
+
+The trajectory is not fixed. AI's impact depends on policy choices about education, retraining investment, and labour protections. With the right framework, it is a powerful tool for human flourishing. Without one, it will deepen inequality.`,
+  },
+  {
+    id: 'w2_13', num: 13, section: 'W2', difficulty: 'easy',
+    title: 'Screen Time Limits for Teenagers',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Health & Parenting',
+    prompt: `A community wellness group is surveying residents:
+
+Some people believe there should be strict daily screen time limits for teenagers (no more than 2 hours outside school) to protect mental health and encourage physical activity. Others believe teenagers are responsible enough to manage their own screen time without imposed limits.
+
+What is your view? Should there be limits on teen screen time?`,
+    optionA: 'There should be strict daily limits on screen time',
+    optionB: 'Teenagers should manage their own screen time',
+    tone: 'Semi-formal — parenting and health opinion',
+    criteria: ['Clear position', 'Two specific reasons', 'Practical and realistic', 'Direct language'],
+    modelAnswer: `I believe some structured limits on teenage screen time are reasonable and beneficial, though the approach should be flexible rather than rigid.
+
+The mental health evidence is difficult to ignore. Multiple studies — including the work of psychologist Jean Twenge — have documented a strong correlation between the rise of smartphones and increasing rates of depression and anxiety among teenagers, particularly girls. Heavy social media use is consistently linked to sleep disruption, reduced concentration, and heightened social comparison. These are not trivial concerns.
+
+Physical health is also relevant. Adolescents who spend four or more hours per day on screens are significantly more likely to be sedentary, which has long-term consequences for cardiovascular health and overall wellbeing.
+
+I acknowledge that teenagers have genuine autonomy over their time, and that excessive parental control has its own downsides. But "managing your own screen time" at 15 is not comparable to the same decision at 25. Adolescent brains are still developing impulse control and are highly susceptible to addictive design patterns deliberately built into social media platforms.
+
+Reasonable daily guidance — not a punitive ban, but a structured limit — is a responsible and loving response to that reality.`,
+  },
+  {
+    id: 'w2_14', num: 14, section: 'W2', difficulty: 'intermediate',
+    title: 'Local Business vs. Chain Stores',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Community & Consumer Values',
+    prompt: `A business association is gathering opinions:
+
+Some people prefer shopping at locally owned small businesses because it supports the community, creates local jobs, and maintains neighbourhood character. Others prefer large chain stores because they offer lower prices, wider selection, and more consistent quality.
+
+Which do you prefer and why? Give specific reasons and examples.`,
+    optionA: 'I prefer locally owned small businesses',
+    optionB: 'I prefer large chain stores',
+    tone: 'Semi-formal — consumer opinion with values',
+    criteria: ['Clear preference stated', 'Community or value-based reasoning', 'Specific examples', 'Consistent position'],
+    modelAnswer: `I make a conscious effort to shop at locally owned businesses whenever possible, and I think that choice has a meaningful positive impact on the communities I care about.
+
+When I spend money at a local bookstore or independent grocery, a much higher proportion of that money stays within the local economy compared to spending at a national chain. Local business owners pay local taxes, hire local staff, and reinvest their profits locally. A neighbourhood with a diverse mix of independent businesses is also simply a better, more interesting place to live.
+
+I also genuinely enjoy the experience. Independent shop owners tend to have deeper knowledge of their products and more invested customer relationships. My local butcher knows my preferences and has introduced me to cuts I never would have found at a grocery chain.
+
+I understand that price is a real consideration for many families and that large chains offer undeniable conveniences. I am not suggesting everyone should pay more than they can afford. But for those who have the financial flexibility, choosing local is a way to align spending with community values. It is one of the most direct forms of civic participation available to consumers.`,
+  },
+  {
+    id: 'w2_15', num: 15, section: 'W2', difficulty: 'advanced',
+    title: 'Renewable Energy Investment',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Energy & Environment Policy',
+    prompt: `An energy policy organization is asking citizens for input:
+
+Some people believe governments should invest heavily in renewable energy (solar, wind, hydro) to combat climate change, even if it means higher short-term costs. Others argue that until renewables become cost-competitive, governments should continue supporting conventional energy to protect household budgets.
+
+What is your view on government investment in renewable energy?`,
+    optionA: 'Governments should invest heavily in renewables now, even at higher cost',
+    optionB: 'Governments should wait until renewables are cost-competitive',
+    tone: 'Semi-formal — policy and environment opinion',
+    criteria: ['Clear position', 'Economic and environmental reasoning', 'Addresses cost concern', 'Logical and specific'],
+    modelAnswer: `I believe governments must invest aggressively in renewable energy now, and I would argue the "higher short-term costs" framing significantly understates what we already pay for our current energy choices.
+
+Conventional fossil fuel energy carries enormous hidden costs: air pollution-related healthcare spending, climate-related disaster response, infrastructure damage from extreme weather events, and long-term environmental remediation. When these externalities are included in the calculation, renewable energy is already economically competitive in most contexts — and is becoming cheaper every year as technology improves and manufacturing scales up.
+
+The cost argument for delay is also eroding rapidly. Solar and wind energy have undergone a 90% cost reduction over the past decade. Every year governments delay transitioning infrastructure, they extend dependence on energy sources that are already more expensive when full costs are considered.
+
+The climate urgency is also non-negotiable. Canada has made international commitments to significant emissions reductions by 2030 and 2050. Waiting for perfect economic conditions before acting means missing those windows entirely.
+
+Strategic investment in renewables today — in grid infrastructure, energy storage, and clean manufacturing — is the fiscally responsible and environmentally essential path forward.`,
+  },
+  {
+    id: 'w2_16', num: 16, section: 'W2', difficulty: 'intermediate',
+    title: 'Four-Day Work Week',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Workplace Policy',
+    prompt: `A workplace research organization is collecting opinions:
+
+Many companies are experimenting with a four-day work week (32 hours, no reduction in pay). Supporters say it improves employee wellbeing, productivity, and retention. Critics argue it is impractical, increases costs, and reduces ability to serve customers.
+
+What is your opinion on the four-day work week?`,
+    optionA: 'The four-day work week should be adopted widely',
+    optionB: 'The four-day work week is impractical and would harm businesses',
+    tone: 'Semi-formal — workplace policy opinion',
+    criteria: ['Clear position', 'Practical reasoning', 'Addresses the productivity argument', 'Specific'],
+    modelAnswer: `I support the broader adoption of the four-day work week, particularly for knowledge-sector jobs, and the evidence increasingly backs this position.
+
+The most comprehensive trial to date — conducted across 61 UK companies in 2022 — found that 92% of participants chose to continue the four-day schedule after the trial ended. Revenue actually increased by an average of 8%, and employee sick days fell by 65%. These are not the results of a policy that harms productivity.
+
+The reason is intuitive: a well-rested employee with a meaningful work-life balance is more focused, more creative, and less likely to make costly errors than one who is perpetually fatigued and resentful of their schedule. The eighth hour of a long Friday afternoon is not the same as the eighth hour in a four-day week.
+
+I acknowledge this model does not fit every industry — healthcare, retail, emergency services, and hospitality all have staffing requirements that make a standard four-day schedule complicated. But for office-based and knowledge workers, the case is compelling.
+
+The question is not whether the four-day week works. The question is how to adapt it thoughtfully across different sectors.`,
+  },
+  {
+    id: 'w2_17', num: 17, section: 'W2', difficulty: 'easy',
+    title: 'Public Surveillance Cameras',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Safety and Civil Liberties',
+    prompt: `A city safety committee is gathering public views:
+
+Some people strongly support expanding public surveillance cameras in streets, parks, and transit stations because they deter crime and help police solve cases. Others oppose them because they invade privacy, create a culture of distrust, and are often misused.
+
+What is your view? Should cities expand their network of public surveillance cameras?`,
+    optionA: 'Cities should expand public surveillance cameras',
+    optionB: 'Cities should not expand surveillance — they invade privacy',
+    tone: 'Semi-formal — civic safety and privacy opinion',
+    criteria: ['Clear position', 'Two specific reasons', 'Addresses opposing view briefly', 'Direct'],
+    modelAnswer: `I believe cities should expand their public surveillance camera networks, with appropriate oversight measures in place.
+
+The safety benefits are well-documented and direct. Studies in British cities — where surveillance cameras have been in place for decades — consistently show that their presence reduces vandalism, assault, and vehicle theft in monitored areas. When crimes do occur, camera footage accelerates investigations and improves conviction rates. These are real benefits for real victims.
+
+The privacy concerns, while understandable, are somewhat overstated in the context of public spaces. There is no reasonable expectation of privacy when walking on a public sidewalk, waiting at a bus stop, or using a public park. These are by definition shared spaces. The analogy to government surveillance of private citizens in their homes is not an accurate comparison.
+
+That said, I agree that oversight is essential. Cameras should not be used to monitor lawful political protests, and access to footage should be strictly regulated and audited. With those safeguards, surveillance cameras are a practical and proportionate tool for improving urban safety.
+
+Refusing to deploy them is not protecting privacy — it is prioritising a principle over the actual safety of residents.`,
+  },
+  {
+    id: 'w2_18', num: 18, section: 'W2', difficulty: 'advanced',
+    title: 'Pet Ownership in Apartments',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Property and Tenant Rights',
+    prompt: `A civic engagement organization is asking residents for input:
+
+Some people believe tenants should have the right to keep pets in apartment buildings, as pets improve mental health and quality of life. Others believe building managers should have the authority to ban pets because they cause noise, property damage, and allergic reactions.
+
+What is your view on pet ownership in apartments?`,
+    optionA: 'Tenants should have the right to keep pets in apartments',
+    optionB: 'Building managers should have authority to ban pets',
+    tone: 'Semi-formal — property and tenant rights opinion',
+    criteria: ['Clear position', 'Specific supporting reasons', 'Acknowledges counterargument', 'Nuanced and specific'],
+    modelAnswer: `I believe tenants should have the right to keep pets in their homes, subject to reasonable and clearly stated building guidelines — but outright pet bans are excessive and paternalistic.
+
+The benefits of pet ownership are well-established and extend beyond sentiment. Studies consistently show that pets reduce stress, lower blood pressure, decrease feelings of isolation, and improve outcomes for people with depression and anxiety. For many people — particularly those who live alone, the elderly, or those dealing with mental health challenges — a pet is a genuine therapeutic presence.
+
+Blanket bans fail to distinguish between a 70-pound dog and a small indoor cat. They impose the same restriction regardless of circumstance, which is neither fair nor necessary.
+
+I do not dismiss the concerns about noise and property damage. These are legitimate issues and justify reasonable rules: a weight limit for dogs, a requirement for pet deposits, noise curfews, and documentation of liability insurance. These measures address the actual problems.
+
+What they should not justify is treating the desire to live with an animal as a privilege that landlords can arbitrarily revoke. Housing is a human need, and the way we live in our homes — including the company we keep — should be as protected as possible.`,
+  },
+  {
+    id: 'w2_19', num: 19, section: 'W2', difficulty: 'intermediate',
+    title: 'Free Public Wi-Fi Priorities',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Digital Equity & Public Policy',
+    prompt: `A city digital access committee is surveying residents:
+
+Some people believe the city's top priority for free public Wi-Fi should be low-income neighbourhoods and community centres. Others believe the city should focus on high-traffic public spaces like transit stations, parks, and downtown areas to benefit the largest number of users.
+
+What do you think should be the top priority for public Wi-Fi expansion?`,
+    optionA: 'Prioritize low-income neighbourhoods and community centres',
+    optionB: 'Prioritize high-traffic public spaces for the most users',
+    tone: 'Semi-formal — digital equity and public policy opinion',
+    criteria: ['Clear position', 'Equity vs. efficiency reasoning addressed', 'Specific and practical', 'Well-organised'],
+    modelAnswer: `I believe free public Wi-Fi should be prioritised in low-income neighbourhoods and community centres, because access to the internet is now a basic necessity — not a luxury — and the people who need it most are those who currently have the least access.
+
+Residents in high-traffic downtown areas and transit stations are overwhelmingly more likely to already have smartphone data plans and home broadband. For them, free public Wi-Fi is a convenience. For families in lower-income neighbourhoods who cannot afford home internet, it can mean the difference between accessing government services, applying for jobs, completing school assignments, or remaining digitally excluded.
+
+The equity argument is compelling on its own, but the economic case reinforces it. Digital exclusion directly limits employment, education, and social mobility — outcomes that cost the city far more in social services over time than the upfront investment in Wi-Fi infrastructure in underserved communities.
+
+Extending free Wi-Fi to tourist destinations and downtown parks is a perfectly sensible long-term goal. But using limited public funds to prioritise the already-connected — simply because they are numerous — inverts the purpose of public investment. Public services exist precisely to serve those who could not otherwise afford to serve themselves.`,
+  },
+  {
+    id: 'w2_20', num: 20, section: 'W2', difficulty: 'advanced',
+    title: 'Remote Work vs. Office',
+    type: 'writing',
+    instruction: 'Read the survey question below and write your response of 150–200 words. You have 26 minutes.',
+    scenario: 'Survey — Workplace Culture',
+    prompt: `A national debate organization is asking participants to share their views:
+
+Remote work has become common since 2020. Some people believe it is a permanent positive shift that benefits employee wellbeing, productivity, and work-life balance. Others argue that office work is essential for collaboration, company culture, and mentoring junior staff.
+
+What is your view? Is remote work a positive long-term shift, or should offices remain central?`,
+    optionA: 'Remote work is a positive long-term shift that should be widely adopted',
+    optionB: 'Office-based work should remain central to how we work',
+    tone: 'Semi-formal — workplace culture opinion with depth',
+    criteria: ['Clear position', 'Nuanced — acknowledges trade-offs', 'Specific professional context', 'Well-structured argument'],
+    modelAnswer: `I believe remote work represents a genuinely positive and permanent shift in how knowledge workers can be employed — but I want to qualify that view carefully, because the strongest arguments on this topic are more nuanced than either camp often acknowledges.
+
+The productivity case for remote work is now well-established. Multiple large-scale studies — including Stanford economist Nicholas Bloom's work — show that remote workers in structured roles are more productive, not less, when measured by output rather than presence. Eliminating commute time alone recovers 60 to 90 minutes of daily energy that most workers invest in better work, health, and family.
+
+However, I think remote work advocates often underestimate the real costs to junior employees and team culture. New professionals learn primarily through informal observation, spontaneous mentoring conversations, and social integration — all of which are meaningfully harder to replicate at home. A fully remote company that does not actively design for connection will see its culture erode over time.
+
+The answer is not a binary choice. A hybrid model — with intentional in-person time built around collaboration, onboarding, and culture — captures the benefits of both while mitigating the drawbacks. The future of work is flexible, not fully remote or fully in-office. Employers who understand this will attract and retain the best people.`,
+  },
+]
+
+// Combine into WRITING_SETS shape used by PracticeLayout
+const WRITING_SETS = {
+  W1: W1_QUESTIONS,
+  W2: W2_QUESTIONS,
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AI SCORING — STUB (replace with real API in next iteration)
+══════════════════════════════════════════════════════════════ */
+async function scoreWithAI(responseText, prompt, criteria) {
+  // TODO: Replace this mock with a real API call (e.g. OpenAI, Gemini)
+  // Expected input: { responseText, prompt, criteria }
+  // Expected output: { overall, scores: { taskFulfillment, coherence, vocabulary, readability }, feedback, suggestions }
+  await new Promise(r => setTimeout(r, 1800)) // simulate latency
+  const wordCount = responseText.trim().split(/\s+/).length
+  const hasLength = wordCount >= 140
+  const base = hasLength ? 7 + Math.random() * 2.5 : 4 + Math.random() * 3
+  const jitter = () => Math.max(3, Math.min(12, +(base + (Math.random() - 0.5) * 2).toFixed(1)))
+  const scores = {
+    taskFulfillment: jitter(),
+    coherence: jitter(),
+    vocabulary: jitter(),
+    readability: jitter(),
+  }
+  const overall = +((scores.taskFulfillment + scores.coherence + scores.vocabulary + scores.readability) / 4).toFixed(1)
+  return {
+    overall,
+    clbBand: overall >= 10 ? '10+' : overall >= 9 ? '9' : overall >= 7.5 ? '8' : overall >= 6 ? '7' : overall >= 5 ? '6' : '5',
+    scores,
+    feedback: hasLength
+      ? 'Your response demonstrates a solid understanding of the prompt. The structure is clear and your position is stated early. Consider varying your sentence openings and incorporating more specific examples to strengthen your argument.'
+      : 'Your response is below the recommended word count (150–200 words). Shorter responses typically score lower on Task Fulfillment. Expand your reasoning with more specific examples and develop each point more fully.',
+    suggestions: [
+      hasLength ? 'Use a wider range of transition words (Furthermore, In contrast, As a result)' : 'Aim for at least 150 words — expand each supporting reason with specific detail',
+      'Include one concrete example or statistic to make your argument more persuasive',
+      'Vary your sentence structure — mix simple, compound, and complex sentences',
+      'Review your opening sentence to ensure it clearly states your position',
+    ],
+  }
+}
+
+/* ── AI Feedback Panel ─────────────────────────────────────── */
+function AIFeedbackPanel({ result, color, onClose }) {
+  if (!result) return null
+  const CRITERIA_LABELS = {
+    taskFulfillment: 'Task Fulfillment',
+    coherence: 'Coherence & Organization',
+    vocabulary: 'Vocabulary Range',
+    readability: 'Readability & Grammar',
+  }
+  const bandColor = result.overall >= 9 ? '#2D8A56' : result.overall >= 7 ? '#4A90D9' : result.overall >= 5 ? '#C8972A' : '#C8102E'
+  return (
+    <motion.div
+      className="wl-ai-panel"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="wl-ai-header">
+        <div className="wl-ai-title">
+          <span className="wl-ai-icon">🤖</span>
+          <span>AI Score & Feedback</span>
+        </div>
+        <button className="wl-ai-close" onClick={onClose}>✕</button>
+      </div>
+      {/* Overall band */}
+      <div className="wl-ai-band" style={{ borderColor: bandColor }}>
+        <div className="wl-ai-band-score" style={{ color: bandColor }}>{result.overall}</div>
+        <div className="wl-ai-band-label">
+          <span>Estimated CLB Band</span>
+          <strong style={{ color: bandColor }}>CLB {result.clbBand}</strong>
+        </div>
+      </div>
+      {/* Score bars */}
+      <div className="wl-ai-scores">
+        {Object.entries(result.scores).map(([key, val]) => {
+          const pct = Math.min((val / 12) * 100, 100)
+          const barColor = val >= 9 ? '#2D8A56' : val >= 7 ? '#4A90D9' : val >= 5 ? '#C8972A' : '#C8102E'
+          return (
+            <div key={key} className="wl-ai-score-row">
+              <div className="wl-ai-score-label">
+                <span>{CRITERIA_LABELS[key] || key}</span>
+                <span className="wl-ai-score-val" style={{ color: barColor }}>{val}/12</span>
+              </div>
+              <div className="wl-ai-score-track">
+                <motion.div
+                  className="wl-ai-score-fill"
+                  style={{ background: barColor }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      {/* Feedback */}
+      <div className="wl-ai-feedback">
+        <div className="wl-ai-feedback-label">📝 Feedback</div>
+        <p>{result.feedback}</p>
+      </div>
+      {/* Suggestions */}
+      <div className="wl-ai-suggestions">
+        <div className="wl-ai-suggestions-label">💡 Suggestions</div>
+        <ul>
+          {result.suggestions.map((s, i) => <li key={i}>{s}</li>)}
+        </ul>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WRITING LAYOUT — Test-like 3-panel: sidebar + prompt + editor
+   ┌────────┬───────────────────────────┐
+   │ TOPICS │ PROMPT + EDITOR + AI      │
+   │ 1–20   │                           │
+   │ w/diff │                           │
+   └────────┴───────────────────────────┘
+══════════════════════════════════════════════════════════════ */
+function WritingLayout({ questions, color, partLabel }) {
+  const [activeIdx, setActiveIdx] = useState(0)
+  const [responses, setResponses] = useState({})   // { [idx]: text }
+  const [timeLeft, setTimeLeft]   = useState(null)
+  const [started, setStarted]     = useState(false)
+  const [showModel, setShowModel] = useState(false)
+  const [aiResult, setAiResult]   = useState(null)
+  const [aiLoading, setAiLoading] = useState(false)
+  const timerRef = useRef(null)
+
+  const q = questions[activeIdx]
+  const text = responses[activeIdx] || ''
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
+
+  // Sort questions ascending by num (they should already be, but ensure)
+  const sorted = [...questions].sort((a, b) => a.num - b.num)
+
+  const switchQ = (idx) => {
+    setActiveIdx(idx)
+    setShowModel(false)
+    setAiResult(null)
+    // Reset timer for new question
+    if (timerRef.current) clearInterval(timerRef.current)
+    setTimeLeft(null)
+    setStarted(false)
+  }
+
+  const startTimer = () => {
+    const mins = q.section === 'W1' ? 27 : 26
+    setTimeLeft(mins * 60)
+    setStarted(true)
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) { clearInterval(timerRef.current); return 0 }
+        return t - 1
+      })
+    }, 1000)
+  }
+
+  const fmtTime = (secs) => {
+    if (secs === null) return '--:--'
+    const m = Math.floor(secs / 60)
+    const s = secs % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
+  const handleAIScore = async () => {
+    if (!text.trim() || aiLoading) return
+    setAiLoading(true)
+    setAiResult(null)
+    const result = await scoreWithAI(text, q.prompt, q.criteria)
+    setAiResult(result)
+    setAiLoading(false)
+  }
+
+  const timeCritical = timeLeft !== null && timeLeft <= 120 && timeLeft > 0
+  const timeUp = timeLeft === 0
+  const timerColor = timeUp ? '#888' : timeCritical ? '#C8102E' : color
+
+  // Difficulty
+  const diffC = DIFF_COLOURS[q?.difficulty] || DIFF_COLOURS.medium
+
+  return (
+    <div className="wl-shell">
+      {/* ── LEFT SIDEBAR: Topic list ── */}
+      <div className="wl-sidebar">
+        <div className="wl-sidebar-title" style={{ color }}>{partLabel || 'Questions'}</div>
+        <div className="wl-topic-list">
+          {sorted.map((item, idx) => {
+            const dc = DIFF_COLOURS[item.difficulty] || DIFF_COLOURS.medium
+            const hasResponse = !!(responses[idx] && responses[idx].trim())
+            return (
+              <button
+                key={item.id}
+                className={`wl-topic-row${idx === activeIdx ? ' wl-topic-row--active' : ''}${hasResponse ? ' wl-topic-row--done' : ''}`}
+                style={idx === activeIdx ? { borderLeftColor: color } : {}}
+                onClick={() => switchQ(idx)}
+              >
+                <span className="wl-topic-num">{item.num}</span>
+                <span className="wl-topic-title">{item.title}</span>
+                <span className="wl-topic-diff" style={{ background: dc.bg, color: dc.text }}>
+                  {(item.difficulty || 'med').slice(0, 3).toUpperCase()}
+                </span>
+                {hasResponse && <span className="wl-topic-check">✓</span>}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ── MAIN CONTENT ── */}
+      <div className="wl-main">
+        {/* Top bar */}
+        <div className="wl-topbar">
+          <div className="wl-topbar-left">
+            <span className="wl-q-num-badge" style={{ background: color }}>Q{q.num}</span>
+            <span className="wl-q-title">{q.title}</span>
+            <span className="wl-q-diff" style={{ background: diffC.bg, color: diffC.text }}>
+              {q.difficulty?.charAt(0).toUpperCase() + q.difficulty?.slice(1)}
+            </span>
+          </div>
+          <div className="wl-topbar-right">
+            {started ? (
+              <span className={`wl-timer${timeCritical ? ' wl-timer--critical' : ''}${timeUp ? ' wl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
+                ⏱ {fmtTime(timeLeft)}
+                {timeUp && <span className="wl-timer-up-label">Time's up</span>}
+              </span>
+            ) : (
+              <button className="wl-start-btn" style={{ background: color }} onClick={startTimer}>
+                ▶ Start Timer ({q.section === 'W1' ? '27' : '26'} min)
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Prompt */}
+        <div className="wl-prompt-box">
+          <div className="wl-prompt-label" style={{ color }}>
+            {q.section === 'W1' ? '✉ Email Prompt' : '📋 Survey Prompt'}
+          </div>
+          <div className="wl-prompt-scenario">{q.scenario}</div>
+          <pre className="wl-prompt-text">{q.prompt}</pre>
+          {q.bulletPoints && (
+            <ul className="wl-bullet-list">
+              {q.bulletPoints.map((b, i) => <li key={i}>{b}</li>)}
+            </ul>
+          )}
+          {q.optionA && (
+            <div className="wl-options-row">
+              <div className="wl-option-pill"><strong>A:</strong> {q.optionA}</div>
+              <div className="wl-option-pill"><strong>B:</strong> {q.optionB}</div>
+            </div>
+          )}
+          <div className="wl-prompt-meta">
+            <span>🗣️ {q.tone}</span>
+            <span>🎯 150–200 words</span>
+          </div>
+        </div>
+
+        {/* Scoring criteria */}
+        {q.criteria && (
+          <div className="wl-criteria">
+            <span className="wl-criteria-label">Scoring Criteria:</span>
+            {q.criteria.map(c => <span key={c} className="wl-criteria-tag" style={{ background: `${color}18`, color }}>{c}</span>)}
+          </div>
+        )}
+
+        {/* Editor */}
+        <div className="wl-editor">
+          <textarea
+            className="wl-textarea"
+            value={text}
+            onChange={e => setResponses(r => ({ ...r, [activeIdx]: e.target.value }))}
+            placeholder="Write your response here…"
+            rows={14}
+            style={{ borderColor: text ? color : undefined }}
+          />
+          <div className="wl-editor-footer">
+            <span className={`wl-word-count${wordCount >= 150 && wordCount <= 200 ? ' wl-wc--good' : wordCount > 200 ? ' wl-wc--over' : ''}`}>
+              {wordCount} words
+              {wordCount >= 150 && wordCount <= 200 && ' ✓'}
+              {wordCount > 200 && ' — over limit'}
+              {wordCount > 0 && wordCount < 150 && ` — ${150 - wordCount} more needed`}
+            </span>
+            <div className="wl-editor-actions">
+              <button
+                className="wl-model-btn"
+                style={{ borderColor: color, color }}
+                onClick={() => { setShowModel(v => !v); setAiResult(null) }}
+              >
+                {showModel ? '🙈 Hide Model' : '📋 Model Answer'}
+              </button>
+              <button
+                className="wl-ai-btn"
+                style={{ background: aiLoading ? '#aaa' : color }}
+                onClick={handleAIScore}
+                disabled={aiLoading || !text.trim()}
+              >
+                {aiLoading ? '⏳ Scoring…' : '🤖 Get AI Score'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Model answer */}
+        <AnimatePresence>
+          {showModel && q.modelAnswer && (
+            <motion.div
+              className="wl-model-box"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="wl-model-label">📝 Model Answer</div>
+              <pre className="wl-model-text">{q.modelAnswer}</pre>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* AI Feedback */}
+        <AnimatePresence>
+          {aiResult && (
+            <AIFeedbackPanel result={aiResult} color={color} onClose={() => setAiResult(null)} />
+          )}
+        </AnimatePresence>
+
+        {/* Navigation */}
+        <div className="wl-nav">
+          <button
+            className="wl-nav-btn"
+            onClick={() => switchQ(Math.max(0, activeIdx - 1))}
+            disabled={activeIdx === 0}
+          >
+            ← Previous
+          </button>
+          <span className="wl-nav-counter" style={{ color }}>{activeIdx + 1} / {sorted.length}</span>
+          <button
+            className="wl-nav-btn wl-nav-btn--next"
+            style={{ background: color, borderColor: color }}
+            onClick={() => switchQ(Math.min(sorted.length - 1, activeIdx + 1))}
+            disabled={activeIdx === sorted.length - 1}
+          >
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -695,7 +2142,7 @@ function getSet(part) {
   const id  = part?.id || 'L1'
   if (sec === 'listening') return LISTENING_SETS[id] || LISTENING_SETS.L1
   if (sec === 'reading')   return READING_SETS[id]   || READING_SETS.R1
-  if (sec === 'writing')   return WRITING_SETS[id]   || WRITING_SETS.W1
+  if (sec === 'writing')   return (WRITING_SETS[id] || WRITING_SETS.W1)?.[0] || null
   if (sec === 'speaking')  return SPEAKING_SETS[id]  || SPEAKING_SETS.S1
   return LISTENING_SETS.L1
 }
@@ -1861,10 +3308,13 @@ export default function PracticeSetPage() {
 
   // ── For non-reading: build an array of all sets for this section ──
   // Show ALL sets in the sidebar so the user can switch between topics
+  const isWriting = section === 'writing'
+  const writingQuestions = isWriting ? (WRITING_SETS[partId] || WRITING_SETS.W1) : []
+
   const staticSets = (() => {
     if (isReading) return []
+    if (isWriting) return []   // writing uses WritingLayout instead
     if (section === 'listening') return Object.values(LISTENING_SETS).filter(Boolean)
-    if (section === 'writing')   return Object.values(WRITING_SETS).filter(Boolean)
     if (section === 'speaking')  return Object.values(SPEAKING_SETS).filter(Boolean)
     return [getSet(part)].filter(Boolean)
   })()
@@ -1912,7 +3362,9 @@ export default function PracticeSetPage() {
   }
 
   const pageTitle = `${partId} · ${part?.label || 'Practice'}`
-  const totalQs   = activeSets.reduce((s, x) => s + (x.questions?.length || 0), 0)
+  const totalQs   = isWriting
+    ? writingQuestions.length
+    : activeSets.reduce((s, x) => s + (x.questions?.length || 0), 0)
 
   return (
     <div className="ps-root">
@@ -1943,8 +3395,8 @@ export default function PracticeSetPage() {
           </div>
           <h1 className="ps-title">{part?.label || pageTitle}</h1>
           <p className="ps-scenario">
-            {activeSets.length} Practice Sets
-            {totalQs > 0 && ` · ${totalQs} Questions`}
+            {isWriting ? `${writingQuestions.length} Questions` : `${activeSets.length} Practice Sets`}
+            {!isWriting && totalQs > 0 && ` · ${totalQs} Questions`}
           </p>
         </div>
         <div className="ps-nav-arrows">
@@ -1952,8 +3404,17 @@ export default function PracticeSetPage() {
         </div>
       </div>
 
-      {/* ── NEW SIDEBAR LAYOUT ── */}
-      {activeSets.length > 0 && (
+      {/* ── WRITING: Use WritingLayout ── */}
+      {isWriting && writingQuestions.length > 0 && (
+        <WritingLayout
+          questions={writingQuestions}
+          color={cfg.color}
+          partLabel={partId === 'W1' ? 'W1 — Email Tasks' : 'W2 — Survey Tasks'}
+        />
+      )}
+
+      {/* ── OTHER SECTIONS: Use PracticeLayout ── */}
+      {!isWriting && activeSets.length > 0 && (
         <PracticeLayout
           sets={activeSets}
           color={cfg.color}
