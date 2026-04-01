@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import SEO from '../components/SEO'
 
 const COLOR = '#C8972A'
 const COLOR_LIGHT = '#FFFBEB'
@@ -116,6 +117,11 @@ export default function WritingPage() {
 
   return (
     <div className="lp-root">
+      <SEO
+        title="CELPIP Writing Practice – Email & Survey Response Tasks"
+        description="Prepare for CELPIP Writing tasks W1 and W2. Learn how to write a high-scoring email and survey response with time management and scoring tips."
+        canonical="/writing"
+      />
       <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #2d2010 60%, #3d2c10 100%)' }}>
         <div className="lp-hero-inner">
           <div className="lp-hero-badge" style={{ background: 'rgba(200,151,42,.2)', border: '1px solid rgba(200,151,42,.4)', color: '#e8c060' }}>

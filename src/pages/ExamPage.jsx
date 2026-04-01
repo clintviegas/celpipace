@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import AuthModal from '../components/AuthModal'
+import SEO from '../components/SEO'
 
 /* ── Constants ────────────────────────────────────────────────── */
 const SECTIONS = [
@@ -676,6 +677,12 @@ export default function ExamPage() {
 
   return (
     <div className="page-wrap exam-page-wrap">
+      <SEO
+        title="CELPIP Mock Exams – Full-Length Practice Tests"
+        description="Take full-length CELPIP mock exams with timed sections, realistic questions, and AI-powered scoring for Listening, Reading, Writing, and Speaking."
+        canonical="/exam"
+        noindex={true}
+      />
       {/* Auth modal — soft gate */}
       <AuthModal isOpen={authOpen} onClose={handleAuthClose} reason={authReason} />
 

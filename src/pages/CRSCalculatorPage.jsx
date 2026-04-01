@@ -9,6 +9,7 @@ import {
   CRS_LANG2_POINTS,
   CRS_SPOUSE_EDUCATION, CRS_SPOUSE_CAN_EXP,
 } from '../data/constants'
+import SEO from '../components/SEO'
 
 /* ── Helpers ──────────────────────────────────────────────────── */
 function clamp(val, min, max) { return Math.max(min, Math.min(max, val)) }
@@ -458,6 +459,11 @@ export default function CRSCalculatorPage() {
 
   return (
     <div className="page-wrap crs-calc-wrap">
+      <SEO
+        title="CRS Score Calculator – Express Entry Points Estimator"
+        description="Calculate your Express Entry Comprehensive Ranking System (CRS) score instantly. Supports single and married applicants with full IRCC formula."
+        canonical="/calculator"
+      />
       <div className="page-header">
         <h2 className="page-title">🧮 <span className="highlight">CRS Score Calculator</span></h2>
         <p className="page-sub">

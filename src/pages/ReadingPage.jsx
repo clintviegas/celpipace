@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import SEO from '../components/SEO'
 
 const COLOR = '#2D8A56'
 const COLOR_LIGHT = '#F0FDF4'
@@ -142,6 +143,11 @@ export default function ReadingPage() {
 
   return (
     <div className="lp-root">
+      <SEO
+        title="CELPIP Reading Practice – Correspondence, Diagrams & Viewpoints"
+        description="Practice all 4 CELPIP Reading parts with expert breakdowns, tips for inference questions, and strategies for apply-diagram and viewpoints tasks."
+        canonical="/reading"
+      />
       <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #0f3324 60%, #1a4a35 100%)' }}>
         <div className="lp-hero-inner">
           <div className="lp-hero-badge" style={{ background: 'rgba(45,138,86,.2)', border: '1px solid rgba(45,138,86,.4)', color: '#7dcfa0' }}>

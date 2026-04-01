@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { SECTIONS, MOCK_QUESTIONS } from '../data/constants'
+import SEO from '../components/SEO'
 
 function LockBadge() {
   return (
@@ -115,6 +116,12 @@ export default function PracticePage() {
 
   return (
     <div className="page-wrap">
+      <SEO
+        title="CELPIP Practice Questions"
+        description="Practice CELPIP with free sample questions for Listening, Reading, Writing, and Speaking. Instant feedback and answer explanations included."
+        canonical="/practice"
+        noindex={true}
+      />
       {/* Section tabs */}
       <div className="section-tabs">
         {SECTIONS.map(s => (

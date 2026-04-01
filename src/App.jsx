@@ -31,11 +31,17 @@ import SpeakingPage from './pages/SpeakingPage'
 import PracticeSetPage from './pages/PracticeSetPage'
 import DashboardPage from './pages/DashboardPage'
 import BlogPage from './pages/BlogPage'
+import SEO from './components/SEO'
 import './App.css'
 
 function HomePage({ onSignIn }) {
   return (
     <main>
+      <SEO
+        title="CELPIPace – CELPIP Practice Tests, Mock Exams & AI Scoring"
+        description="Prepare for CELPIP with full-length mock tests, AI-powered scoring, and practice for all 4 sections — Listening, Reading, Writing, and Speaking."
+        canonical="/"
+      />
       <Hero />
       <FeatureShowcase />
       <AIFeatures />

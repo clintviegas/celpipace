@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import SEO from '../components/SEO'
 
 const SECTIONS = [
   { key: 'listening', label: 'Listening', icon: '🎧', color: '#4A90D9', colorLight: '#EEF4FF', done: 0, total: 71 },
@@ -23,8 +24,11 @@ const DashboardPage = () => {
 
   return (
     <main className="db-page">
-
-      {/* ── Welcome ── */}
+      <SEO
+        title="Dashboard"
+        description="Your CELPIP practice dashboard. Track your progress, resume practice sets, and see your CLB score improvements."
+        noindex={true}
+      />
       <div className="db-welcome-bar">
         <div className="db-welcome-inner">
           <h1 className="db-welcome-title">Welcome back, {firstName}</h1>

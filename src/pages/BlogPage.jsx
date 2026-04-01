@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BLOG_ARTICLES, BLOG_CATEGORIES } from '../data/blogData'
+import SEO from '../components/SEO'
 
 /* ── Reading progress bar ── */
 function ReadingProgress({ articleRef }) {
@@ -204,6 +205,11 @@ export default function BlogPage() {
 
   return (
     <div className="blog-page">
+      <SEO
+        title="Blog & Articles – CELPIP Tips, Strategies & Immigration Guides"
+        description="Read expert CELPIP tips, section-by-section strategies, CLB scoring guides, and Express Entry immigration articles written by certified coaches."
+        canonical="/blog"
+      />
 
       <AnimatePresence mode="wait">
         {activeArticle ? (

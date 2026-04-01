@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import SEO from '../components/SEO'
 
 /* ── Listening Parts Data ─────────────────────────────────────── */
 const PARTS = [
@@ -187,6 +188,11 @@ export default function ListeningPage() {
 
   return (
     <div className="lp-root">
+      <SEO
+        title="CELPIP Listening Practice – All 6 Parts Explained"
+        description="Master CELPIP Listening with guided practice for all 6 parts: Problem Solving, Daily Life, News, Viewpoints, and more. Study strategies included."
+        canonical="/listening"
+      />
       {/* ── Hero ── */}
       <section className="lp-hero">
         <div className="lp-hero-inner">

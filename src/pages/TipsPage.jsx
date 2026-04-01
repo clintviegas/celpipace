@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { SECTIONS, TIPS } from '../data/constants'
+import SEO from '../components/SEO'
 
 function LockBadge() {
   return (
@@ -17,6 +18,11 @@ export default function TipsPage() {
 
   return (
     <div className="page-wrap">
+      <SEO
+        title="CELPIP Tips & Strategies"
+        description="Section-by-section CELPIP tips for Listening, Reading, Writing, and Speaking. Expert strategies to boost your CLB score."
+        canonical="/tips"
+      />
       <div className="page-header">
         <h2 className="page-title">Strategy & Tips</h2>
         <p className="page-sub">Expert guidance for every CELPIP section. Free tips are open — Pro tips unlock on upgrade.</p>

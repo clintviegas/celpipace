@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { usePracticeSet } from '../hooks/usePracticeSet'
+import SEO from '../components/SEO'
 
 /* ══════════════════════════════════════════════════════════════
    SECTION CONFIG — colours & icons per section
@@ -1915,6 +1916,11 @@ export default function PracticeSetPage() {
 
   return (
     <div className="ps-root">
+      <SEO
+        title="CELPIP Practice Set"
+        description="Work through a timed CELPIP practice set with real exam-format questions. AI scoring and instant feedback after every answer."
+        noindex={true}
+      />
 
       {/* Breadcrumb */}
       <div className="ps-breadcrumb">

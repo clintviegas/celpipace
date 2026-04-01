@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { SCORE_LEVELS } from '../data/constants'
+import SEO from '../components/SEO'
 
 /* ── CRS points table per CLB per skill (FSW core points) ── */
 const CLB_CRS = {
@@ -87,6 +88,11 @@ export default function ScoresPage() {
 
   return (
     <div className="page-wrap">
+      <SEO
+        title="CLB Score Tracker & CRS Calculator"
+        description="Track your CELPIP CLB scores across all 4 sections, see your live CRS points total, and check PR program eligibility for Express Entry."
+        canonical="/scores"
+      />
 
       {/* Tabs */}
       <div className="scores-tabs">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import SEO from '../components/SEO'
 
 const COLOR = '#C8102E'
 const COLOR_LIGHT = '#FEF2F2'
@@ -186,6 +187,11 @@ export default function SpeakingPage() {
 
   return (
     <div className="lp-root">
+      <SEO
+        title="CELPIP Speaking Practice – All 8 Tasks Explained"
+        description="Practice all 8 CELPIP Speaking tasks with expert tips on fluency, vocabulary, and task fulfillment. Includes prep timers and scoring guidance."
+        canonical="/speaking"
+      />
       <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #3d1020 60%, #4a1828 100%)' }}>
         <div className="lp-hero-inner">
           <div className="lp-hero-badge" style={{ background: 'rgba(200,16,46,.2)', border: '1px solid rgba(200,16,46,.4)', color: '#f07090' }}>
