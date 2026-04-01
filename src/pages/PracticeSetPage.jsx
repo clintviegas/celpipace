@@ -1750,24 +1750,24 @@ function AIFeedbackPanel({ result, color, onClose }) {
 ══════════════════════════════════════════════════════════════ */
 function WritingLayout({ questions, color, partLabel }) {
   const [activeIdx, setActiveIdx] = useState(0)
-  const [responses, setResponses] = useState({})   // { [idx]: text }
+  const [responses, setResponses] = useState({})
   const [timeLeft, setTimeLeft]   = useState(null)
   const [started, setStarted]     = useState(false)
   const [aiResult, setAiResult]   = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
   const timerRef = useRef(null)
 
-  const q = questions[activeIdx]
+  const sorted = [...questions].sort((a, b) => a.num - b.num)
+  const q = sorted[activeIdx]
   const text = responses[activeIdx] || ''
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
+  const doneCount = Object.keys(responses).filter(k => responses[k]?.trim()).length
 
-  // Sort questions ascending by num (they should already be, but ensure)
-  const sorted = [...questions].sort((a, b) => a.num - b.num)
+  const DIFF_LABELS = { easy: 'Easy', medium: 'Medium', intermediate: 'Medium', hard: 'Hard', 'upper-intermediate': 'Hard', advanced: 'Advanced' }
 
   const switchQ = (idx) => {
     setActiveIdx(idx)
     setAiResult(null)
-    // Reset timer for new question
     if (timerRef.current) clearInterval(timerRef.current)
     setTimeLeft(null)
     setStarted(false)
@@ -1804,56 +1804,69 @@ function WritingLayout({ questions, color, partLabel }) {
 
   const timeCritical = timeLeft !== null && timeLeft <= 120 && timeLeft > 0
   const timeUp = timeLeft === 0
-  const timerColor = timeUp ? '#888' : timeCritical ? '#C8102E' : color
-
-  // Difficulty
+  const timerColor = timeUp ? '#999' : timeCritical ? '#C8102E' : color
   const diffC = DIFF_COLOURS[q?.difficulty] || DIFF_COLOURS.medium
 
   return (
     <div className="wl-shell">
-      {/* ── LEFT SIDEBAR: Topic list ── */}
-      <div className="wl-sidebar">
-        <div className="wl-sidebar-title" style={{ color }}>{partLabel || 'Questions'}</div>
+      {/* ── SIDEBAR ── */}
+      <aside className="wl-sidebar">
+        <div className="wl-sidebar-header">
+          <div className="wl-sidebar-title" style={{ color }}>{partLabel || 'Questions'}</div>
+          <div className="wl-sidebar-progress">
+            <div className="wl-sidebar-progress-bar">
+              <div className="wl-sidebar-progress-fill" style={{ width: `${(doneCount / sorted.length) * 100}%`, background: color }} />
+            </div>
+            <span className="wl-sidebar-progress-text">{doneCount}/{sorted.length}</span>
+          </div>
+        </div>
         <div className="wl-topic-list">
           {sorted.map((item, idx) => {
             const dc = DIFF_COLOURS[item.difficulty] || DIFF_COLOURS.medium
             const hasResponse = !!(responses[idx] && responses[idx].trim())
+            const isActive = idx === activeIdx
             return (
               <button
                 key={item.id}
-                className={`wl-topic-row${idx === activeIdx ? ' wl-topic-row--active' : ''}${hasResponse ? ' wl-topic-row--done' : ''}`}
-                style={idx === activeIdx ? { borderLeftColor: color } : {}}
+                className={`wl-topic-row${isActive ? ' wl-topic-row--active' : ''}${hasResponse ? ' wl-topic-row--done' : ''}`}
+                style={isActive ? { borderLeftColor: color } : {}}
                 onClick={() => switchQ(idx)}
               >
-                <span className="wl-topic-num">{item.num}</span>
-                <span className="wl-topic-title">{item.title}</span>
-                <span className="wl-topic-diff" style={{ background: dc.bg, color: dc.text }}>
-                  {(item.difficulty || 'med').slice(0, 3).toUpperCase()}
+                <span className={`wl-topic-num${isActive ? ' wl-topic-num--active' : ''}`} style={isActive ? { background: color } : {}}>
+                  {hasResponse ? '✓' : item.num}
                 </span>
-                {hasResponse && <span className="wl-topic-check">✓</span>}
+                <div className="wl-topic-info">
+                  <span className="wl-topic-title">{item.title}</span>
+                  <span className="wl-topic-diff-text" style={{ color: dc.text }}>
+                    {DIFF_LABELS[item.difficulty] || 'Medium'}
+                  </span>
+                </div>
               </button>
             )
           })}
         </div>
-      </div>
+      </aside>
 
-      {/* ── MAIN CONTENT ── */}
+      {/* ── MAIN ── */}
       <div className="wl-main">
-        {/* Top bar */}
+        {/* ─ Top bar ─ */}
         <div className="wl-topbar">
           <div className="wl-topbar-left">
             <span className="wl-q-num-badge" style={{ background: color }}>Q{q.num}</span>
-            <span className="wl-q-title">{q.title}</span>
-            <span className="wl-q-diff" style={{ background: diffC.bg, color: diffC.text }}>
-              {q.difficulty?.charAt(0).toUpperCase() + q.difficulty?.slice(1)}
-            </span>
+            <div className="wl-topbar-title-group">
+              <span className="wl-q-title">{q.title}</span>
+              <span className="wl-q-diff" style={{ background: diffC.bg, color: diffC.text }}>
+                {DIFF_LABELS[q.difficulty] || 'Medium'}
+              </span>
+            </div>
           </div>
           <div className="wl-topbar-right">
             {started ? (
-              <span className={`wl-timer${timeCritical ? ' wl-timer--critical' : ''}${timeUp ? ' wl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
-                ⏱ {fmtTime(timeLeft)}
+              <div className={`wl-timer${timeCritical ? ' wl-timer--critical' : ''}${timeUp ? ' wl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
+                <span className="wl-timer-icon">⏱</span>
+                <span className="wl-timer-digits">{fmtTime(timeLeft)}</span>
                 {timeUp && <span className="wl-timer-up-label">Time's up</span>}
-              </span>
+              </div>
             ) : (
               <button className="wl-start-btn" style={{ background: color }} onClick={startTimer}>
                 ▶ Start Timer ({q.section === 'W1' ? '27' : '26'} min)
@@ -1862,40 +1875,48 @@ function WritingLayout({ questions, color, partLabel }) {
           </div>
         </div>
 
-        {/* Prompt */}
+        {/* ─ Prompt ─ */}
         <div className="wl-prompt-box">
-          <div className="wl-prompt-label" style={{ color }}>
-            {q.section === 'W1' ? '✉ Email Prompt' : '📋 Survey Prompt'}
+          <div className="wl-prompt-header">
+            <span className="wl-prompt-label" style={{ color }}>
+              {q.section === 'W1' ? '✉ Email Prompt' : '📋 Survey Prompt'}
+            </span>
+            <span className="wl-prompt-scenario-tag">{q.scenario}</span>
           </div>
-          <div className="wl-prompt-scenario">{q.scenario}</div>
-          <pre className="wl-prompt-text">{q.prompt}</pre>
-          {q.bulletPoints && (
-            <ul className="wl-bullet-list">
-              {q.bulletPoints.map((b, i) => <li key={i}>{b}</li>)}
-            </ul>
-          )}
-          {q.optionA && (
-            <div className="wl-options-row">
-              <div className="wl-option-pill"><strong>A:</strong> {q.optionA}</div>
-              <div className="wl-option-pill"><strong>B:</strong> {q.optionB}</div>
-            </div>
-          )}
-          <div className="wl-prompt-meta">
-            <span>🗣️ {q.tone}</span>
-            <span>🎯 150–200 words</span>
+          <div className="wl-prompt-divider" />
+          <div className="wl-prompt-body">
+            <pre className="wl-prompt-text">{q.prompt}</pre>
+            {q.bulletPoints && (
+              <ul className="wl-bullet-list">
+                {q.bulletPoints.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            )}
+            {q.optionA && (
+              <div className="wl-options-row">
+                <div className="wl-option-pill"><strong>Option A:</strong> {q.optionA}</div>
+                <div className="wl-option-pill"><strong>Option B:</strong> {q.optionB}</div>
+              </div>
+            )}
+          </div>
+          <div className="wl-prompt-footer">
+            <span className="wl-prompt-meta-item">🗣️ {q.tone}</span>
+            <span className="wl-prompt-meta-item">🎯 150–200 words</span>
           </div>
         </div>
 
-        {/* Scoring criteria */}
+        {/* ─ Criteria ─ */}
         {q.criteria && (
           <div className="wl-criteria">
             <span className="wl-criteria-label">Scoring Criteria:</span>
-            {q.criteria.map(c => <span key={c} className="wl-criteria-tag" style={{ background: `${color}18`, color }}>{c}</span>)}
+            <div className="wl-criteria-tags">
+              {q.criteria.map(c => <span key={c} className="wl-criteria-tag" style={{ background: `${color}12`, color, borderColor: `${color}30` }}>{c}</span>)}
+            </div>
           </div>
         )}
 
-        {/* Editor */}
+        {/* ─ Editor ─ */}
         <div className="wl-editor">
+          <div className="wl-editor-label">Your Response</div>
           <textarea
             className="wl-textarea"
             value={text}
@@ -1905,33 +1926,36 @@ function WritingLayout({ questions, color, partLabel }) {
             style={{ borderColor: text ? color : undefined }}
           />
           <div className="wl-editor-footer">
-            <span className={`wl-word-count${wordCount >= 150 && wordCount <= 200 ? ' wl-wc--good' : wordCount > 200 ? ' wl-wc--over' : ''}`}>
-              {wordCount} words
-              {wordCount >= 150 && wordCount <= 200 && ' ✓'}
-              {wordCount > 200 && ' — over limit'}
-              {wordCount > 0 && wordCount < 150 && ` — ${150 - wordCount} more needed`}
-            </span>
-            <div className="wl-editor-actions">
-              <button
-                className="wl-ai-btn"
-                style={{ background: aiLoading ? '#aaa' : color }}
-                onClick={handleAIScore}
-                disabled={aiLoading || !text.trim()}
-              >
-                {aiLoading ? '⏳ Scoring…' : '🤖 Get AI Score'}
-              </button>
+            <div className="wl-word-count-wrap">
+              <div className={`wl-word-count-bar`}>
+                <div className="wl-word-count-fill" style={{ width: `${Math.min((wordCount / 200) * 100, 100)}%`, background: wordCount >= 150 && wordCount <= 200 ? '#2D8A56' : wordCount > 200 ? '#C8102E' : color }} />
+              </div>
+              <span className={`wl-word-count${wordCount >= 150 && wordCount <= 200 ? ' wl-wc--good' : wordCount > 200 ? ' wl-wc--over' : ''}`}>
+                {wordCount}/200 words
+                {wordCount >= 150 && wordCount <= 200 && ' ✓'}
+                {wordCount > 200 && ' — over limit'}
+                {wordCount > 0 && wordCount < 150 && ` — ${150 - wordCount} more`}
+              </span>
             </div>
+            <button
+              className="wl-ai-btn"
+              style={{ background: aiLoading ? '#aaa' : color }}
+              onClick={handleAIScore}
+              disabled={aiLoading || !text.trim()}
+            >
+              {aiLoading ? '⏳ Scoring…' : '🤖 Get AI Score'}
+            </button>
           </div>
         </div>
 
-        {/* AI Feedback */}
+        {/* ─ AI Feedback ─ */}
         <AnimatePresence>
           {aiResult && (
             <AIFeedbackPanel result={aiResult} color={color} onClose={() => setAiResult(null)} />
           )}
         </AnimatePresence>
 
-        {/* Navigation */}
+        {/* ─ Navigation ─ */}
         <div className="wl-nav">
           <button
             className="wl-nav-btn"
@@ -1940,7 +1964,7 @@ function WritingLayout({ questions, color, partLabel }) {
           >
             ← Previous
           </button>
-          <span className="wl-nav-counter" style={{ color }}>{activeIdx + 1} / {sorted.length}</span>
+          <span className="wl-nav-counter" style={{ color }}>{activeIdx + 1} of {sorted.length}</span>
           <button
             className="wl-nav-btn wl-nav-btn--next"
             style={{ background: color, borderColor: color }}
