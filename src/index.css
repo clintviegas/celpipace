@@ -8475,3 +8475,444 @@ img { display: block; max-width: 100%; }
   line-height: 1.55;
 }
 
+/* ═══════════════════════════════════════════════════════
+   WRITING PRACTICE PAGE  (wp-*)
+   ═══════════════════════════════════════════════════════ */
+
+/* Root wrapper */
+.wp-root { padding-top: 88px; }
+
+/* ── Set Selector ──────────────────────────────────── */
+.wp-selector { max-width: 1060px; margin: 0 auto; padding: 0 0 80px; }
+
+.wp-selector-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.wp-selector-title {
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  color: #0F1F3D;
+  margin: 0 0 4px;
+}
+.wp-selector-sub {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+/* Random button */
+.wp-random-btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: .01em;
+  transition: opacity .15s, transform .1s;
+}
+.wp-random-btn:hover { opacity: .88; transform: translateY(-1px); }
+.wp-random-btn:active { transform: translateY(0); }
+
+/* Progress bar */
+.wp-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.wp-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.wp-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width .4s ease;
+}
+.wp-progress-label { font-size: 13px; font-weight: 600; color: #666; white-space: nowrap; }
+
+/* Grid of cards */
+.wp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+/* Set card */
+.wp-set-card {
+  background: #fff;
+  border: 1.5px solid #e8ecf4;
+  border-radius: 14px;
+  padding: 18px 18px 14px;
+  cursor: default;
+  transition: border-color .2s;
+}
+.wp-set-card--done { border-color: #d0eedd; background: #f9fefb; }
+.wp-set-card:hover { border-color: #C8972A; }
+
+.wp-set-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.wp-set-number {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0F1F3D;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.wp-done-chip {
+  font-size: 11px;
+  font-weight: 700;
+  background: #dcf5e7;
+  color: #2D8A56;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+.wp-progress-chip {
+  font-size: 11px;
+  font-weight: 700;
+  background: #EEF7FF;
+  color: #4A90D9;
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+
+/* Task rows within card */
+.wp-set-tasks { display: flex; flex-direction: column; gap: 8px; }
+.wp-task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: #f8f9fb;
+  border: 1.5px solid #eaedf3;
+  border-radius: 9px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  transition: background .15s, border-color .15s;
+  gap: 8px;
+  width: 100%;
+}
+.wp-task-row:hover { background: #fff5e0; border-color: #C8972A; }
+.wp-task-row--done { background: #f2fbf6; border-color: #c8e9d6; color: #555; }
+.wp-task-row-label { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+.wp-task-icon { font-size: 14px; flex-shrink: 0; }
+.wp-task-row-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.wp-task-time { font-size: 11px; color: #aaa; font-weight: 500; }
+.wp-check { color: #2D8A56; font-size: 13px; font-weight: 700; }
+
+/* Difficulty badge (shared across task rows and task screen) */
+.wp-diff-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 3px 9px;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+/* ── Task Screen ───────────────────────────────────── */
+.wp-task-screen { max-width: 820px; margin: 0 auto; padding: 0 0 80px; }
+
+/* Top bar: breadcrumb + timer */
+.wp-task-topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.wp-breadcrumb-btn {
+  background: none;
+  border: 1.5px solid #e0e4ed;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.wp-breadcrumb-btn:hover { border-color: #C8972A; color: #C8972A; }
+.wp-breadcrumb-sep { font-size: 13px; color: #aaa; flex: 1; }
+
+/* Timer pill */
+.wp-timer-wrap { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.wp-timer-pill {
+  font-size: 18px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 5px 16px;
+  letter-spacing: .04em;
+  transition: color .4s, border-color .4s;
+}
+.wp-timer-overtime-label { font-size: 11px; font-weight: 600; opacity: .75; }
+.wp-timer-nudge { font-size: 12px; font-weight: 600; margin: 0; text-align: right; }
+
+/* Overtime banner */
+.wp-overtime-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff8e1;
+  border: 1.5px solid #ffe082;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #7a5c00;
+  margin-bottom: 16px;
+}
+.wp-overtime-dismiss {
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.wp-overtime-dismiss:hover { color: #555; }
+
+/* Task header */
+.wp-task-header { margin-bottom: 16px; }
+.wp-task-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.wp-task-type-pill {
+  font-size: 12px;
+  font-weight: 700;
+  background: #f0f4ff;
+  color: #3b5bdb;
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+.wp-task-time-badge { font-size: 12px; color: #888; font-weight: 500; }
+.wp-task-title {
+  font-size: clamp(18px, 2.5vw, 22px);
+  font-weight: 800;
+  color: #0F1F3D;
+  margin: 0;
+}
+
+/* Prompt box */
+.wp-prompt-box {
+  background: #fffdf0;
+  border: 1.5px solid #e8dfc0;
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.wp-scenario {
+  background: #fff;
+  border: 1px solid #f0e8c4;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+.wp-scenario-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #C8972A;
+  margin-bottom: 4px;
+}
+.wp-prompt-text {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: #1a1a2e;
+  margin: 0 0 14px;
+}
+.wp-bullets { margin-top: 4px; }
+.wp-bullets-label { font-size: 13px; font-weight: 600; color: #555; margin: 0 0 8px; }
+.wp-bullet-list {
+  padding-left: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.wp-bullet-list li { font-size: 14px; line-height: 1.65; color: #333; }
+
+/* Option choice (Task 2) */
+.wp-options { margin-top: 14px; }
+.wp-options-label { font-size: 13px; font-weight: 600; color: #555; margin: 0 0 10px; }
+.wp-option-cards { display: flex; flex-direction: column; gap: 8px; }
+.wp-option-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 16px;
+  background: #fff;
+  border: 2px solid #e0e4ec;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #333;
+  font-weight: 500;
+  transition: border-color .15s, background .15s;
+  width: 100%;
+}
+.wp-option-card:hover { border-color: #C8972A; }
+.wp-option-card--selected { font-weight: 600; }
+.wp-option-letter {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f0ede4;
+  color: #555;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+/* Tone tip */
+.wp-tone-tip {
+  font-size: 12.5px;
+  color: #888;
+  margin: 12px 0 0;
+  font-style: italic;
+}
+
+/* Writing editor */
+.wp-editor-wrap { display: flex; flex-direction: column; gap: 8px; }
+.wp-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid #e0e8f4;
+  border-radius: 12px;
+  padding: 16px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #222;
+  resize: vertical;
+  min-height: 280px;
+  transition: border-color .2s, box-shadow .2s;
+  background: #fff;
+}
+.wp-textarea:focus {
+  outline: none;
+  border-color: #C8972A;
+  box-shadow: 0 0 0 3px rgba(200,151,42,.1);
+}
+.wp-editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.wp-word-count {
+  font-size: 13px;
+  font-weight: 600;
+  transition: color .2s;
+}
+.wp-wc-hint { font-weight: 400; font-size: 12px; opacity: .8; }
+
+/* Submit button */
+.wp-submit-btn {
+  padding: 11px 26px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .01em;
+  transition: opacity .15s, transform .1s;
+}
+.wp-submit-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+.wp-submit-btn:disabled { cursor: not-allowed; }
+
+.wp-save-error {
+  font-size: 12.5px;
+  color: #C8102E;
+  margin: 4px 0 0;
+}
+
+/* Back button */
+.wp-back-btn {
+  padding: 10px 22px;
+  background: none;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.wp-back-btn:hover { border-color: #C8972A; color: #C8972A; }
+
+/* Submitted state */
+.wp-submitted {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+.wp-submitted-card {
+  background: #fff;
+  border: 1.5px solid #d0eedd;
+  border-radius: 16px;
+  padding: 40px 40px 36px;
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+.wp-submitted-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #dcf5e7;
+  color: #2D8A56;
+  font-size: 26px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.wp-submitted-card h2 { font-size: 20px; font-weight: 800; color: #0F1F3D; margin: 0 0 8px; }
+.wp-submitted-card p { font-size: 14px; color: #666; margin: 0 0 6px; }
+.wp-submitted-wc { font-size: 14px; color: #888; margin: 12px 0 20px !important; }
+.wp-submitted-actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 600px) {
+  .wp-selector-header { flex-direction: column; align-items: flex-start; }
+  .wp-random-btn { width: 100%; }
+  .wp-grid { grid-template-columns: 1fr; }
+  .wp-task-topbar { flex-wrap: wrap; }
+  .wp-timer-wrap { margin-left: 0; width: 100%; align-items: flex-start; }
+  .wp-editor-footer { flex-direction: column; align-items: stretch; }
+  .wp-submit-btn { width: 100%; text-align: center; }
+  .wp-submitted-card { padding: 28px 20px; }
+}

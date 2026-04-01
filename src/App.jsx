@@ -31,6 +31,7 @@ import SpeakingPage from './pages/SpeakingPage'
 import PracticeSetPage from './pages/PracticeSetPage'
 import DashboardPage from './pages/DashboardPage'
 import BlogPage from './pages/BlogPage'
+import WritingPracticePage from './pages/WritingPracticePage'
 import SEO from './components/SEO'
 import './App.css'
 
@@ -73,7 +74,7 @@ export function AppInner() {
   const isDashboard = location.pathname === '/dashboard'
 
   // Show the dashboard navbar on all inner app pages (when user is likely logged in)
-  const innerPaths = ['/dashboard','/exam','/listening','/reading','/writing','/speaking','/practice','/practice-set','/tips','/scores','/calculator','/pricing','/blog']
+  const innerPaths = ['/dashboard','/exam','/listening','/reading','/writing','/speaking','/practice','/practice-set','/tips','/scores','/calculator','/pricing','/blog','/writing-practice']
   const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
 
   return (
@@ -101,6 +102,7 @@ export function AppInner() {
         <Route path="/practice-set" element={<PracticeSetPage />} />
         <Route path="/pricing" element={<main style={{ paddingTop: '80px' }}><Pricing /></main>} />
         <Route path="/blog" element={<BlogPage />} />
+        <Route path="/writing-practice" element={<WritingPracticePage />} />
         {/* catch-all */}
         <Route path="*" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
       </Routes>
