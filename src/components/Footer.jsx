@@ -54,7 +54,7 @@ export default function Footer() {
           <div className="footer-brand">
             <button onClick={() => navigate('/')} className="nav-logo footer-logo" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
               <span className="logo-maple">🍁</span>
-              <span className="logo-text">CELPIPace</span>
+              <span className="logo-text">CELPIPiQ</span>
             </button>
             <p className="footer-tagline">
               Your fastest path to a 10+ CELPIP score. Practice with AI-powered scoring across all 4 skills.
@@ -86,9 +86,9 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {year} CELPIPace. All rights reserved.</p>
+          <p>© {year} CELPIPiQ. All rights reserved.</p>
           <p className="footer-disclaimer">
-            CELPIPace is an independent practice tool and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
+            CELPIPiQ is an independent practice tool and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
           </p>
         </div>
       </div>

@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
-const HERO_BADGE = '⭐ Trusted CELPIP Practice Platform'
+const HERO_BADGE = '⭐ AI-Powered CELPIP Practice'
 const HERO_TITLE = 'Your Fastest Path to a 10+ CELPIP Score'
-const HERO_SUB = 'AI-powered practice questions, instant scoring, and detailed feedback across all 4 CELPIP skills. Boost your CRS by up to 50 points.'
+const HERO_SUB = 'Practice all 4 CELPIP skills with AI scoring and instant feedback. Boost your CLB band and CRS score.'
 
 const SKILL_SECTIONS = [
   { icon: '🏆', label: 'Mock Exams', page: 'exam' },
@@ -156,25 +156,6 @@ export default function Hero() {
             </div>
             <span className="social-proof-text">Trusted by test-takers across Canada</span>
           </motion.div>
-
-          {/* Quick Access Pills */}
-          <motion.div 
-            className="hero-quick-access-new"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            {SKILL_SECTIONS.map(section => (
-              <button
-                key={section.label}
-                className="quick-access-pill"
-                onClick={() => navigate('/' + section.page)}
-              >
-                <span className="pill-icon">{section.icon}</span>
-                <span className="pill-label">{section.label}</span>
-              </button>
-            ))}
-          </motion.div>
         </motion.div>
 
         {/* Right: Interactive Showcase Carousel */}
@@ -306,25 +287,6 @@ export default function Hero() {
           </div>
         </motion.div>
       </div>
-
-      {/* Quick Access Pills - Bottom Center */}
-      <motion.div 
-        className="hero-quick-access-bottom"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      >
-        {SKILL_SECTIONS.map(section => (
-          <button
-            key={section.label}
-            className="quick-access-pill"
-            onClick={() => navigate('/' + section.page)}
-          >
-            <span className="pill-icon">{section.icon}</span>
-            <span className="pill-label">{section.label}</span>
-          </button>
-        ))}
-      </motion.div>
 
       {/* Trust Stats Bar */}
       <motion.div 

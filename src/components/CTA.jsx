@@ -17,7 +17,7 @@ export default function CTA() {
             Your Canadian PR journey<br />starts with your CELPIP score.
           </h2>
           <p className="cta-sub">
-            Join thousands of Express Entry applicants who boosted their CRS with CELPIPace.
+            Join thousands of Express Entry applicants who boosted their CRS with CELPIPiQ.
             Start free — no credit card required.
           </p>
           <div className="cta-actions">
@@ -25,7 +25,7 @@ export default function CTA() {
             <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/calculator')}>Calculate My CRS Boost →</button>
           </div>
           <p className="cta-disclaimer">
-            CELPIPace is an independent preparation platform and is not affiliated with
+            CELPIPiQ is an independent preparation platform and is not affiliated with
             Paragon Testing Enterprises or the official CELPIP® test.
           </p>
         </motion.div>

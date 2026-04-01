@@ -100,7 +100,7 @@ const FAQ = [
   },
   {
     q: 'Can I replay the audio during the CELPIP Listening test?',
-    a: 'No — each audio clip plays only once on the real CELPIP test. This is one of the key differences from IELTS Listening. In CELPIPace practice, you can choose to replay audio in drill mode to study, or simulate real conditions by listening only once.',
+    a: 'No — each audio clip plays only once on the real CELPIP test. This is one of the key differences from IELTS Listening. In CELPIPiQ practice, you can choose to replay audio in drill mode to study, or simulate real conditions by listening only once.',
   },
   {
     q: 'Is CELPIP Listening harder than IELTS Listening?',

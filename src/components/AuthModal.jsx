@@ -59,7 +59,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
           >
             {/* ── Left panel — branding ── */}
             <div className="auth-panel-left">
-              <div className="auth-panel-logo">🍁 CELPIPace</div>
+              <div className="auth-panel-logo">🍁 CELPIPiQ</div>
               <div className="auth-panel-tagline">
                 Your fastest path to<br />
                 <span className="auth-panel-highlight">CLB 9+</span>

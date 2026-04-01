@@ -29,11 +29,11 @@ const FREE_FEATURES = [
 
 const FAQS = [
   {
-    q: 'What is CELPIPace Premium?',
-    a: 'CELPIPace Premium gives you full access to all mock exams, AI-powered scoring on Writing and Speaking, 200+ practice questions with explanations, study guides, vocabulary bundles, and your personal progress dashboard.',
+    q: 'What is CELPIPiQ Premium?',
+    a: 'CELPIPiQ Premium gives you full access to all mock exams, AI-powered scoring on Writing and Speaking, 200+ practice questions with explanations, study guides, vocabulary bundles, and your personal progress dashboard.',
   },
   {
-    q: 'Can I try CELPIPace for free before upgrading?',
+    q: 'Can I try CELPIPiQ for free before upgrading?',
     a: 'Yes! Our free plan includes 14 practice questions, 1 mock exam section, and basic score feedback. No credit card required to start.',
   },
   {
@@ -41,7 +41,7 @@ const FAQS = [
     a: 'No limits. Premium members get unlimited AI scoring on Writing and Speaking, unlimited access to all mock exams and question banks, and full course materials.',
   },
   {
-    q: 'Does CELPIPace Premium auto-renew?',
+    q: 'Does CELPIPiQ Premium auto-renew?',
     a: 'Plans auto-renew but can be cancelled anytime from your account settings. You will receive an email reminder before each renewal.',
   },
   {
@@ -120,7 +120,7 @@ export default function Pricing({ onSignIn }) {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="pricing-badge">⭐ CELPIPace Premium</div>
+            <div className="pricing-badge">⭐ CELPIPiQ Premium</div>
             <AnimatePresence mode="wait">
               <motion.div
                 key={billing}
@@ -178,7 +178,7 @@ export default function Pricing({ onSignIn }) {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <h3 className="pricing-faq-title">CELPIPace Premium FAQ</h3>
+          <h3 className="pricing-faq-title">CELPIPiQ Premium FAQ</h3>
           {FAQS.map((faq, i) => (
             <div
               key={i}

@@ -38,7 +38,7 @@ export default function DashboardNavbar({ onSignIn }) {
         {/* Logo */}
         <button className="dbn-logo" onClick={() => navigate('/')}>
           <span>🍁</span>
-          <span className="dbn-logo-text">CELPIPace</span>
+          <span className="dbn-logo-text">CELPIPiQ</span>
         </button>
 
         {/* Nav links */}

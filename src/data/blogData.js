@@ -1,4 +1,4 @@
-/* ─── CELPIPace Blog Articles ──────────────────────────────────
+/* ─── CELPIPiQ Blog Articles ──────────────────────────────────
    Each article has:
      slug, title, category, tag, readTime, date, excerpt,
      author, sections: [ { heading, body, list? } ]
@@ -62,7 +62,7 @@ export const BLOG_ARTICLES = [
       },
       {
         heading: 'Practice Routine That Works',
-        body: `Write one email and one survey response every 2–3 days. After writing, read the task again and check: Did I address all three bullet points? Is my position clear in the first sentence? Did I use at least 3 different sentence structures? Then use CELPIPace's AI scoring to get instant feedback on all four criteria.`,
+        body: `Write one email and one survey response every 2–3 days. After writing, read the task again and check: Did I address all three bullet points? Is my position clear in the first sentence? Did I use at least 3 different sentence structures? Then use CELPIPiQ's AI scoring to get instant feedback on all four criteria.`,
       },
     ],
   },
@@ -291,7 +291,7 @@ export const BLOG_ARTICLES = [
       },
       {
         heading: 'Strategy: Where to Focus',
-        body: `Use CELPIPace's CRS Calculator to see your current estimated score. Then run three scenarios: (1) Improve all skills by 1 CLB, (2) Improve only your two weakest skills by 1 CLB, (3) Add a second language test. Compare the CRS gain. In most cases, improving your weakest two skills by 1 CLB yields 30–40 more CRS points — and that is achievable in 6–8 weeks of focused practice.`,
+        body: `Use CELPIPiQ's CRS Calculator to see your current estimated score. Then run three scenarios: (1) Improve all skills by 1 CLB, (2) Improve only your two weakest skills by 1 CLB, (3) Add a second language test. Compare the CRS gain. In most cases, improving your weakest two skills by 1 CLB yields 30–40 more CRS points — and that is achievable in 6–8 weeks of focused practice.`,
       },
     ],
   },
@@ -340,7 +340,7 @@ export const BLOG_ARTICLES = [
       },
       {
         heading: 'After the Test',
-        body: `Your official score arrives in 4–8 business days via email. While you wait, do not second-guess your answers — there is nothing actionable. Use the time to review your practice history on CELPIPace so that if you need to retake, your preparation for the next attempt starts immediately.`,
+        body: `Your official score arrives in 4–8 business days via email. While you wait, do not second-guess your answers — there is nothing actionable. Use the time to review your practice history on CELPIPiQ so that if you need to retake, your preparation for the next attempt starts immediately.`,
       },
     ],
   },

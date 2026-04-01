@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const SITE_NAME = 'CELPIPace'
+const SITE_NAME = 'CELPIPiQ'
 const DEFAULT_OG_IMAGE = 'https://celpipace.vercel.app/og-image.png'
 const SITE_URL = 'https://celpipace.vercel.app'
 

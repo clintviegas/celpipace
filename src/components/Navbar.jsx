@@ -262,7 +262,7 @@ export default function Navbar({ onSignIn }) {
         {/* Logo */}
         <button className="nav-logo" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           <span className="logo-maple">🍁</span>
-          <span className="logo-text">CELPIPace</span>
+          <span className="logo-text">CELPIPiQ</span>
         </button>
 
         {/* Desktop nav */}

@@ -39,7 +39,7 @@ function HomePage({ onSignIn }) {
   return (
     <main>
       <SEO
-        title="CELPIPace – CELPIP Practice Tests, Mock Exams & AI Scoring"
+        title="CELPIPiQ – CELPIP Practice Tests, Mock Exams & AI Scoring"
         description="Prepare for CELPIP with full-length mock tests, AI-powered scoring, and practice for all 4 sections — Listening, Reading, Writing, and Speaking."
         canonical="/"
       />
