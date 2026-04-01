@@ -1753,7 +1753,6 @@ function WritingLayout({ questions, color, partLabel }) {
   const [responses, setResponses] = useState({})   // { [idx]: text }
   const [timeLeft, setTimeLeft]   = useState(null)
   const [started, setStarted]     = useState(false)
-  const [showModel, setShowModel] = useState(false)
   const [aiResult, setAiResult]   = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
   const timerRef = useRef(null)
@@ -1767,7 +1766,6 @@ function WritingLayout({ questions, color, partLabel }) {
 
   const switchQ = (idx) => {
     setActiveIdx(idx)
-    setShowModel(false)
     setAiResult(null)
     // Reset timer for new question
     if (timerRef.current) clearInterval(timerRef.current)
@@ -1915,13 +1913,6 @@ function WritingLayout({ questions, color, partLabel }) {
             </span>
             <div className="wl-editor-actions">
               <button
-                className="wl-model-btn"
-                style={{ borderColor: color, color }}
-                onClick={() => { setShowModel(v => !v); setAiResult(null) }}
-              >
-                {showModel ? '🙈 Hide Model' : '📋 Model Answer'}
-              </button>
-              <button
                 className="wl-ai-btn"
                 style={{ background: aiLoading ? '#aaa' : color }}
                 onClick={handleAIScore}
@@ -1932,22 +1923,6 @@ function WritingLayout({ questions, color, partLabel }) {
             </div>
           </div>
         </div>
-
-        {/* Model answer */}
-        <AnimatePresence>
-          {showModel && q.modelAnswer && (
-            <motion.div
-              className="wl-model-box"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.25 }}
-            >
-              <div className="wl-model-label">📝 Model Answer</div>
-              <pre className="wl-model-text">{q.modelAnswer}</pre>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* AI Feedback */}
         <AnimatePresence>
@@ -3374,43 +3349,41 @@ export default function PracticeSetPage() {
         noindex={true}
       />
 
-      {/* Breadcrumb */}
-      <div className="ps-breadcrumb">
-        <button className="ps-bc-link" onClick={() => navigate('/')}>Home</button>
-        <span className="ps-bc-sep">›</span>
-        <button className="ps-bc-link" onClick={() => navigate('/' + cfg.page)}>{cfg.label}</button>
-        <span className="ps-bc-sep">›</span>
-        <span className="ps-bc-current">{pageTitle}</span>
+      {/* Top bar: breadcrumb left, back button right */}
+      <div className="ps-topbar">
+        <div className="ps-topbar-left">
+          <button className="ps-bc-link" onClick={() => navigate('/')}>Home</button>
+          <span className="ps-bc-sep">›</span>
+          <button className="ps-bc-link" onClick={() => navigate('/' + cfg.page)}>{cfg.label}</button>
+          <span className="ps-bc-sep">›</span>
+          <span className="ps-bc-current">{pageTitle}</span>
+        </div>
+        <button className="ps-arrow-btn" onClick={() => navigate('/' + cfg.page)}>← Back to {cfg.label}</button>
       </div>
 
-      {/* Header */}
-      <div className="ps-header">
-        <div className="ps-header-inner">
-          <div className="ps-header-top">
-            <div className="ps-header-meta">
-              <span className="ps-header-section">{cfg.icon} {cfg.label}</span>
-              <span className="ps-bc-sep">›</span>
-              <span className="ps-header-part" style={{ color: cfg.color }}>{pageTitle}</span>
-            </div>
-          </div>
-          <h1 className="ps-title">{part?.label || pageTitle}</h1>
-          <p className="ps-scenario">
-            {isWriting ? `${writingQuestions.length} Questions` : `${activeSets.length} Practice Sets`}
-            {!isWriting && totalQs > 0 && ` · ${totalQs} Questions`}
-          </p>
+      {/* Page title block */}
+      <div className="ps-title-block">
+        <div className="ps-title-meta">
+          <span className="ps-header-section">{cfg.icon} {cfg.label}</span>
+          <span className="ps-bc-sep">·</span>
+          <span className="ps-header-part" style={{ color: cfg.color }}>{pageTitle}</span>
         </div>
-        <div className="ps-nav-arrows">
-          <button className="ps-arrow-btn" onClick={() => navigate('/' + cfg.page)}>← Back to {cfg.label}</button>
-        </div>
+        <h1 className="ps-title">{part?.label || pageTitle}</h1>
+        <p className="ps-scenario">
+          {isWriting ? `${writingQuestions.length} Questions` : `${activeSets.length} Practice Sets`}
+          {!isWriting && totalQs > 0 && ` · ${totalQs} Questions`}
+        </p>
       </div>
 
       {/* ── WRITING: Use WritingLayout ── */}
       {isWriting && writingQuestions.length > 0 && (
-        <WritingLayout
-          questions={writingQuestions}
-          color={cfg.color}
-          partLabel={partId === 'W1' ? 'W1 — Email Tasks' : 'W2 — Survey Tasks'}
-        />
+        <div className="ps-writing-wrap">
+          <WritingLayout
+            questions={writingQuestions}
+            color={cfg.color}
+            partLabel={partId === 'W1' ? 'W1 — Email Tasks' : 'W2 — Survey Tasks'}
+          />
+        </div>
       )}
 
       {/* ── OTHER SECTIONS: Use PracticeLayout ── */}

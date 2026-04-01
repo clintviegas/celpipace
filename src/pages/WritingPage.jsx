@@ -143,13 +143,6 @@ export default function WritingPage() {
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>150–200</strong><span>Words Each</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>CLB 4–12</strong><span>Score Range</span></div>
           </div>
-          <button
-            className="lp-hero-practice-btn"
-            style={{ marginTop: '28px', background: COLOR, color: '#fff', border: 'none', borderRadius: '10px', padding: '14px 32px', fontSize: '15px', fontWeight: 700, cursor: 'pointer', letterSpacing: '.01em' }}
-            onClick={() => navigate('/writing-practice')}
-          >
-            📝 Open Practice Sets (20 sets) →
-          </button>
         </div>
       </section>
 
