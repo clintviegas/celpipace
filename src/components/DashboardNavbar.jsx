@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { id: 'reading',   label: 'Reading'    },
   { id: 'writing',   label: 'Writing'    },
   { id: 'speaking',  label: 'Speaking'   },
+  { id: 'blog',      label: 'Blog'       },
 ]
 
 export default function DashboardNavbar({ onSignIn }) {

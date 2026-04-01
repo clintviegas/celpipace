@@ -71,6 +71,7 @@ const NAV_ITEMS = [
       { label: '🧮 CRS Calculator',      desc: 'Calculate your Express Entry CRS score instantly',  action: 'calculator' },
       { label: '💡 Tips & Strategies',   desc: 'Section-by-section tips to boost your CLB band', action: 'tips' },
       { label: '📈 Score Tracker',       desc: 'Track your CLB progress across all 4 sections', action: 'scores' },
+      { label: '✍️ Blog & Articles',     desc: 'Expert tips, strategies and immigration guides', action: 'blog' },
     ],
   },
 ]
