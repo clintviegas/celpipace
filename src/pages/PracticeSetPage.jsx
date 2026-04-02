@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { READING_PRACTICE_SETS } from '../data/readingData'
+import { READING_DATA } from '../data/readingData'
 import SEO from '../components/SEO'
 
 /* ══════════════════════════════════════════════════════════════
@@ -1980,53 +1980,51 @@ function WritingLayout({ questions, color, partLabel }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   READING LAYOUT — Sidebar + Passage + MCQ (mirrors WritingLayout)
-   ┌────────┬───────────────────────────┐
-   │ SETS   │ PASSAGE + QUESTIONS       │
-   │ 1–5    │                           │
-   │ R1–R4  │                           │
-   └────────┴───────────────────────────┘
+   READING LAYOUT — Sidebar (R1-R4) + Passage + Questions
+   Question types: MCQ, Dropdown (fill blanks), Drag & Drop (matching)
+   Matches WritingLayout pattern — timer with overtime
 ══════════════════════════════════════════════════════════════ */
-function ReadingLayout({ color }) {
-  const [activeSet, setActiveSet]   = useState(0)
-  const [activePart, setActivePart] = useState(0)
-  const [answers, setAnswers]       = useState({})
-  const [revealed, setRevealed]     = useState({})
-  const [timeLeft, setTimeLeft]     = useState(null)
-  const [started, setStarted]       = useState(false)
-  const [overtime, setOvertime]     = useState(0)
-  const [showBanner, setShowBanner] = useState(false)
-  const timerRef  = useRef(null)
-  const otRef     = useRef(null)
+function ReadingLayout({ color, partId }) {
+  const PARTS_ORDER = ['R1', 'R2', 'R3', 'R4']
+  const parts = PARTS_ORDER.map(id => READING_DATA[id])
+  const initIdx = Math.max(0, PARTS_ORDER.indexOf(partId))
 
-  const sets  = READING_PRACTICE_SETS
-  const set   = sets[activeSet]
-  const part  = set.parts[activePart]
-  const qs    = part.questions
+  const [activeIdx, setActiveIdx] = useState(initIdx)
+  const [answers, setAnswers]     = useState({})
+  const [timeLeft, setTimeLeft]   = useState(null)
+  const [started, setStarted]     = useState(false)
+  const [overtime, setOvertime]   = useState(0)
+  const [showBanner, setShowBanner] = useState(false)
+  const timerRef = useRef(null)
+  const otRef    = useRef(null)
+
+  const part = parts[activeIdx]
+  const qs   = part.questions
   const total = qs.length
 
-  const PART_LABELS = { R1: 'Correspondence', R2: 'Apply a Diagram', R3: 'Information', R4: 'Viewpoints' }
-  const DIFF_LABELS = { easy: 'Easy', medium: 'Medium', intermediate: 'Intermediate', hard: 'Hard', 'upper-intermediate': 'Upper Int.', advanced: 'Advanced' }
-
-  /* answer key helper */
-  const aKey = (si, pi, qi) => `${si}_${pi}_${qi}`
-  const partDoneCount = (si, pi) => {
-    const p = sets[si].parts[pi]
-    return p.questions.filter((_, qi) => answers[aKey(si, pi, qi)] !== undefined).length
+  /* answer key */
+  const aKey = (pi, qi) => `${pi}_${qi}`
+  const partDoneCount = (pi) => parts[pi].questions.filter((_, qi) => answers[aKey(pi, qi)] !== undefined).length
+  const partCorrectCount = (pi) => {
+    return parts[pi].questions.reduce((acc, q, qi) => {
+      const a = answers[aKey(pi, qi)]
+      if (a === undefined) return acc
+      if (q.type === 'drag_drop') {
+        // For drag_drop, a is an object { 0: 'B', 1: 'C', ... }
+        const items = q.matchItems
+        const correct = items.every((item, mi) => a[mi] === item.answer)
+        return acc + (correct ? 1 : 0)
+      }
+      return acc + (a === q.answer ? 1 : 0)
+    }, 0)
   }
-  const partCorrectCount = (si, pi) => {
-    const p = sets[si].parts[pi]
-    return p.questions.filter((q, qi) => answers[aKey(si, pi, qi)] === q.answer).length
-  }
-  const totalDone = sets.reduce((acc, s, si) => acc + s.parts.reduce((a2, _, pi) => a2 + partDoneCount(si, pi), 0), 0)
-  const totalQs   = sets.reduce((acc, s) => acc + s.parts.reduce((a2, p) => a2 + p.questions.length, 0), 0)
+  const totalDone = parts.reduce((acc, _, pi) => acc + partDoneCount(pi), 0)
+  const totalQs   = parts.reduce((acc, p) => acc + p.questions.length, 0)
 
-  /* switch set/part */
-  const switchTo = (si, pi) => {
-    setActiveSet(si)
-    setActivePart(pi)
+  /* switch part */
+  const switchPart = (idx) => {
+    setActiveIdx(idx)
     setShowBanner(false)
-    // reset timer
     if (timerRef.current) clearInterval(timerRef.current)
     if (otRef.current)    clearInterval(otRef.current)
     setTimeLeft(null)
@@ -2048,7 +2046,6 @@ function ReadingLayout({ color }) {
         if (t <= 1) {
           clearInterval(timerRef.current)
           setShowBanner(true)
-          // start overtime counter
           otRef.current = setInterval(() => setOvertime(o => o + 1), 1000)
           return 0
         }
@@ -2069,21 +2066,214 @@ function ReadingLayout({ color }) {
   const timeUp       = timeLeft === 0
   const timerColor   = timeUp ? '#999' : timeCritical ? '#C8102E' : timeAmber ? '#C8972A' : color
 
-  /* select answer */
-  const handleAnswer = (qi, optIdx) => {
-    const key = aKey(activeSet, activePart, qi)
+  /* answer handlers */
+  const handleMCQ = (qi, optIdx) => {
+    const key = aKey(activeIdx, qi)
     if (answers[key] !== undefined) return
     setAnswers(a => ({ ...a, [key]: optIdx }))
   }
 
-  /* reveal answer */
-  const toggleReveal = (qi) => {
-    const key = aKey(activeSet, activePart, qi)
-    setRevealed(r => ({ ...r, [key]: !r[key] }))
+  const handleDropdown = (qi, val) => {
+    const key = aKey(activeIdx, qi)
+    if (answers[key] !== undefined) return
+    const idx = parseInt(val, 10)
+    if (isNaN(idx)) return
+    setAnswers(a => ({ ...a, [key]: idx }))
   }
 
-  const LETTERS = ['A', 'B', 'C', 'D']
-  const diffC = DIFF_COLOURS[part?.difficulty] || DIFF_COLOURS.medium
+  const handleDragDrop = (qi, matchIdx, val) => {
+    const key = aKey(activeIdx, qi)
+    const prev = answers[key] || {}
+    // Once all items are answered, lock
+    const q = qs[qi]
+    const allDone = q.matchItems.every((_, mi) => prev[mi] !== undefined)
+    if (allDone) return
+    const next = { ...prev, [matchIdx]: val }
+    setAnswers(a => ({ ...a, [key]: next }))
+  }
+
+  const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
+
+  /* ── render a single question ── */
+  const renderQuestion = (q, qi) => {
+    const key = aKey(activeIdx, qi)
+    const ans = answers[key]
+
+    if (q.type === 'mcq') {
+      const answered = ans !== undefined
+      const correct  = answered && ans === q.answer
+      return (
+        <div key={q.id} className={`rl-q-card${answered ? (correct ? ' rl-q-card--correct' : ' rl-q-card--wrong') : ''}`}>
+          <div className="rl-q-header">
+            <span className="rl-q-num" style={{ background: color }}>Q{q.num}</span>
+            <span className="rl-q-type-tag">Multiple Choice</span>
+            {answered && (
+              <span className={`rl-q-verdict ${correct ? 'rl-q-verdict--ok' : 'rl-q-verdict--err'}`}>
+                {correct ? '\u2713 Correct' : '\u2717 Incorrect'}
+              </span>
+            )}
+          </div>
+          <p className="rl-q-stem">{q.text}</p>
+          <div className="rl-q-opts">
+            {q.options.map((opt, oi) => {
+              let cls = 'rl-q-opt'
+              if (answered) {
+                if (oi === q.answer)    cls += ' rl-q-opt--correct'
+                else if (oi === ans)    cls += ' rl-q-opt--wrong'
+                else                    cls += ' rl-q-opt--dim'
+              }
+              return (
+                <button key={oi} className={cls} onClick={() => handleMCQ(qi, oi)} disabled={answered}>
+                  <span className="rl-q-letter" style={!answered && ans === oi ? { background: color, color: '#fff', borderColor: color } : {}}>{LETTERS[oi]}</span>
+                  <span className="rl-q-opt-text">{opt}</span>
+                </button>
+              )
+            })}
+          </div>
+          {answered && q.explanation && (
+            <div className={`rl-q-expl${correct ? ' rl-q-expl--ok' : ''}`}>
+              {!correct && (
+                <div className="rl-q-correct-ans">{'\u2713'} Correct answer: <strong>{q.options[q.answer]}</strong></div>
+              )}
+              <div className="rl-q-expl-body">
+                <span className="rl-q-expl-icon">{correct ? '\u2705' : '\uD83D\uDCD8'}</span>
+                <span>{q.explanation}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    if (q.type === 'dropdown') {
+      const answered = ans !== undefined
+      const correct  = answered && ans === q.answer
+      return (
+        <div key={q.id} className={`rl-q-card${answered ? (correct ? ' rl-q-card--correct' : ' rl-q-card--wrong') : ''}`}>
+          <div className="rl-q-header">
+            <span className="rl-q-num" style={{ background: color }}>Q{q.num}</span>
+            <span className="rl-q-type-tag rl-q-type-tag--dropdown">Fill in the Blank</span>
+            {answered && (
+              <span className={`rl-q-verdict ${correct ? 'rl-q-verdict--ok' : 'rl-q-verdict--err'}`}>
+                {correct ? '\u2713 Correct' : '\u2717 Incorrect'}
+              </span>
+            )}
+          </div>
+          <div className="rl-q-dropdown-stem">
+            {q.text.split('______').map((chunk, ci, arr) => (
+              <span key={ci}>
+                {chunk}
+                {ci < arr.length - 1 && (
+                  answered ? (
+                    <span className={`rl-dd-answer ${correct ? 'rl-dd-answer--ok' : 'rl-dd-answer--err'}`}>
+                      {q.options[ans]}
+                    </span>
+                  ) : (
+                    <select
+                      className="rl-dd-select"
+                      style={{ borderColor: color }}
+                      value=""
+                      onChange={e => handleDropdown(qi, e.target.value)}
+                    >
+                      <option value="" disabled>Select...</option>
+                      {q.options.map((opt, oi) => (
+                        <option key={oi} value={oi}>{opt}</option>
+                      ))}
+                    </select>
+                  )
+                )}
+              </span>
+            ))}
+          </div>
+          {answered && q.explanation && (
+            <div className={`rl-q-expl${correct ? ' rl-q-expl--ok' : ''}`}>
+              {!correct && (
+                <div className="rl-q-correct-ans">{'\u2713'} Correct answer: <strong>{q.options[q.answer]}</strong></div>
+              )}
+              <div className="rl-q-expl-body">
+                <span className="rl-q-expl-icon">{correct ? '\u2705' : '\uD83D\uDCD8'}</span>
+                <span>{q.explanation}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    if (q.type === 'drag_drop') {
+      const selections = ans || {}
+      const items = q.matchItems
+      const opts = q.paragraphOptions || q.authorOptions || []
+      const allDone = items.every((_, mi) => selections[mi] !== undefined)
+      const allCorrect = allDone && items.every((item, mi) => selections[mi] === item.answer)
+      return (
+        <div key={q.id} className={`rl-q-card${allDone ? (allCorrect ? ' rl-q-card--correct' : ' rl-q-card--wrong') : ''}`}>
+          <div className="rl-q-header">
+            <span className="rl-q-num" style={{ background: color }}>Q{q.num}</span>
+            <span className="rl-q-type-tag rl-q-type-tag--dragdrop">Matching</span>
+            {allDone && (
+              <span className={`rl-q-verdict ${allCorrect ? 'rl-q-verdict--ok' : 'rl-q-verdict--err'}`}>
+                {allCorrect ? '\u2713 All Correct' : `${items.filter((item, mi) => selections[mi] === item.answer).length}/${items.length} Correct`}
+              </span>
+            )}
+          </div>
+          <p className="rl-q-stem">{q.text}</p>
+          <div className="rl-dd-match-list">
+            {items.map((item, mi) => {
+              const sel = selections[mi]
+              const isAnswered = sel !== undefined
+              const isCorrect = isAnswered && sel === item.answer
+              return (
+                <div key={mi} className={`rl-dd-match-row${isAnswered ? (isCorrect ? ' rl-dd-match-row--ok' : ' rl-dd-match-row--err') : ''}`}>
+                  <span className="rl-dd-match-num">{mi + 1}.</span>
+                  <span className="rl-dd-match-statement">{item.statement}</span>
+                  <div className="rl-dd-match-select-wrap">
+                    {isAnswered ? (
+                      <span className={`rl-dd-match-badge ${isCorrect ? 'rl-dd-match-badge--ok' : 'rl-dd-match-badge--err'}`}>
+                        {sel}
+                        {!isCorrect && <span className="rl-dd-match-correct"> \u2192 {item.answer}</span>}
+                      </span>
+                    ) : (
+                      <select
+                        className="rl-dd-select rl-dd-select--match"
+                        style={{ borderColor: color }}
+                        value=""
+                        onChange={e => handleDragDrop(qi, mi, e.target.value)}
+                      >
+                        <option value="" disabled>Select</option>
+                        {opts.map(o => <option key={o} value={o}>{o}</option>)}
+                      </select>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          {allDone && q.explanation && (
+            <div className={`rl-q-expl${allCorrect ? ' rl-q-expl--ok' : ''}`}>
+              <div className="rl-q-expl-body">
+                <span className="rl-q-expl-icon">{allCorrect ? '\u2705' : '\uD83D\uDCD8'}</span>
+                <span>{q.explanation}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    return null
+  }
+
+  /* count questions done for a part */
+  const isPartFullyDone = (pi) => {
+    const p = parts[pi]
+    return p.questions.every((q, qi) => {
+      const a = answers[aKey(pi, qi)]
+      if (a === undefined) return false
+      if (q.type === 'drag_drop') return q.matchItems.every((_, mi) => a[mi] !== undefined)
+      return true
+    })
+  }
 
   return (
     <div className="rl-shell">
@@ -2099,56 +2289,48 @@ function ReadingLayout({ color }) {
           </div>
         </div>
         <div className="rl-topic-list">
-          {sets.map((s, si) => (
-            <div key={si} className="rl-set-group">
-              <div className="rl-set-label">Set {s.setNumber}</div>
-              {s.parts.map((p, pi) => {
-                const isActive = si === activeSet && pi === activePart
-                const done = partDoneCount(si, pi)
-                const pTotal = p.questions.length
-                const allDone = done === pTotal && pTotal > 0
-                const dc = DIFF_COLOURS[p.difficulty] || DIFF_COLOURS.medium
-                return (
-                  <button
-                    key={p.partId}
-                    className={`rl-topic-row${isActive ? ' rl-topic-row--active' : ''}${allDone ? ' rl-topic-row--done' : ''}`}
-                    style={isActive ? { borderLeftColor: color } : {}}
-                    onClick={() => switchTo(si, pi)}
-                  >
-                    <span className={`rl-topic-icon${isActive ? ' rl-topic-icon--active' : ''}`} style={isActive ? { background: color } : {}}>
-                      {allDone ? '✓' : p.icon}
-                    </span>
-                    <div className="rl-topic-info">
-                      <span className="rl-topic-title">{p.partId} — {p.partLabel}</span>
-                      <span className="rl-topic-meta" style={{ color: dc.text }}>
-                        {DIFF_LABELS[p.difficulty] || 'Medium'} · {p.timeLimitMinutes} min · {done}/{pTotal}
-                      </span>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          ))}
+          {parts.map((p, pi) => {
+            const isActive = pi === activeIdx
+            const done = partDoneCount(pi)
+            const pTotal = p.questions.length
+            const allDone = isPartFullyDone(pi)
+            return (
+              <button
+                key={p.partId}
+                className={`rl-topic-row${isActive ? ' rl-topic-row--active' : ''}${allDone ? ' rl-topic-row--done' : ''}`}
+                style={isActive ? { borderLeftColor: color } : {}}
+                onClick={() => switchPart(pi)}
+              >
+                <span className={`rl-topic-icon${isActive ? ' rl-topic-icon--active' : ''}`} style={isActive ? { background: color } : {}}>
+                  {allDone ? '\u2713' : p.icon}
+                </span>
+                <div className="rl-topic-info">
+                  <span className="rl-topic-title">{p.partId} \u2014 {p.partLabel}</span>
+                  <span className="rl-topic-meta" style={{ color: '#888' }}>
+                    {p.timeLimitMinutes} min \u00B7 {done}/{pTotal} answered
+                  </span>
+                </div>
+              </button>
+            )
+          })}
         </div>
       </aside>
 
       {/* ── MAIN ── */}
       <div className="rl-main">
-        {/* ─ Top bar ─ */}
+        {/* Top bar */}
         <div className="rl-topbar">
           <div className="rl-topbar-left">
             <span className="rl-part-badge" style={{ background: color }}>{part.partId}</span>
             <div className="rl-topbar-title-group">
               <span className="rl-part-title">{part.partLabel}</span>
-              <span className="rl-part-diff" style={{ background: diffC.bg, color: diffC.text }}>
-                {DIFF_LABELS[part.difficulty] || 'Medium'}
-              </span>
+              <span className="rl-part-qs-tag">{total} Questions</span>
             </div>
           </div>
           <div className="rl-topbar-right">
             {started ? (
-              <div className={`rl-timer${timeCritical ? ' rl-timer--critical' : ''}${timeAmber ? ' rl-timer--amber' : ''}${timeUp ? ' rl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
-                <span className="rl-timer-icon">⏱</span>
+              <div className={`rl-timer${timeCritical ? ' rl-timer--critical' : ''}${timeUp ? ' rl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
+                <span className="rl-timer-icon">{'\u23F1'}</span>
                 {timeUp ? (
                   <span className="rl-timer-digits">+{fmtTime(overtime)}</span>
                 ) : (
@@ -2158,33 +2340,32 @@ function ReadingLayout({ color }) {
               </div>
             ) : (
               <button className="rl-start-btn" style={{ background: color }} onClick={startTimer}>
-                ▶ Start Timer ({part.timeLimitMinutes} min)
+                {'\u25B6'} Start Timer ({part.timeLimitMinutes} min)
               </button>
             )}
           </div>
         </div>
 
-        {/* ─ Time nudge messages ─ */}
+        {/* Nudges */}
         {timeAmber && !timeUp && (
-          <div className="rl-nudge rl-nudge--amber">⏳ 5 minutes remaining — keep a steady pace, you are doing great!</div>
+          <div className="rl-nudge rl-nudge--amber">{'\u23F3'} 5 minutes remaining \u2014 keep a steady pace!</div>
         )}
         {timeCritical && !timeUp && (
-          <div className="rl-nudge rl-nudge--red">🔥 Under 1 minute left — trust your instincts and finish strong!</div>
+          <div className="rl-nudge rl-nudge--red">{'\uD83D\uDD25'} Under 1 minute left \u2014 trust your instincts!</div>
         )}
 
-        {/* ─ Time's up banner ─ */}
+        {/* Time banner */}
         {showBanner && (
           <div className="rl-banner">
-            <span>⏰ Time is up! On the real exam, you would stop here. But this is practice — take your time to think through your answers.</span>
-            <button className="rl-banner-close" onClick={() => setShowBanner(false)}>✕</button>
+            <span>{'\u23F0'} Time is up! On the real exam you would stop here. But this is practice \u2014 take your time.</span>
+            <button className="rl-banner-close" onClick={() => setShowBanner(false)}>{'\u2715'}</button>
           </div>
         )}
 
-        {/* ─ Passage ─ */}
+        {/* Passage */}
         <div className="rl-passage-box">
           <div className="rl-passage-header">
-            <span className="rl-passage-label" style={{ color }}>{part.icon} {part.partLabel} — Passage</span>
-            <span className="rl-passage-set-tag">Set {set.setNumber}</span>
+            <span className="rl-passage-label" style={{ color }}>{part.icon} {part.partLabel}</span>
           </div>
           <div className="rl-passage-divider" />
           <div className="rl-passage-body">
@@ -2192,118 +2373,53 @@ function ReadingLayout({ color }) {
           </div>
         </div>
 
-        {/* ─ Questions ─ */}
+        {/* Diagram (R2 only) */}
+        {part.diagram && (
+          <div className="rl-diagram-box">
+            <div className="rl-diagram-header">
+              <span className="rl-diagram-label" style={{ color }}>{'\uD83D\uDCCA'} Program Schedule</span>
+            </div>
+            <div className="rl-diagram-body">
+              <pre className="rl-diagram-text">{part.diagram}</pre>
+            </div>
+          </div>
+        )}
+
+        {/* Questions */}
         <div className="rl-questions">
           <div className="rl-questions-label">Questions ({total})</div>
-          {qs.map((q, qi) => {
-            const key = aKey(activeSet, activePart, qi)
-            const sel = answers[key]
-            const answered = sel !== undefined
-            const isRevealed = revealed[key]
-            const correct = answered && sel === q.answer
-            const showFeedback = answered || isRevealed
-            const qDiffC = DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.medium
-
-            return (
-              <div key={q.id} className={`rl-q-card${answered ? (correct ? ' rl-q-card--correct' : ' rl-q-card--wrong') : ''}`}>
-                <div className="rl-q-header">
-                  <span className="rl-q-num" style={{ background: color }}>Q{qi + 1}</span>
-                  <span className="rl-q-type-tag">{QTYPE_LABELS[q.questionType] || 'Multiple Choice'}</span>
-                  <span className="rl-q-diff-tag" style={{ background: qDiffC.bg, color: qDiffC.text }}>
-                    {q.difficulty?.charAt(0).toUpperCase() + q.difficulty?.slice(1)}
-                  </span>
-                  {answered && (
-                    <span className={`rl-q-verdict ${correct ? 'rl-q-verdict--ok' : 'rl-q-verdict--err'}`}>
-                      {correct ? '✓ Correct' : '✗ Incorrect'}
-                    </span>
-                  )}
-                </div>
-                <p className="rl-q-stem">{q.text}</p>
-                <div className="rl-q-opts">
-                  {q.options.map((opt, oi) => {
-                    const letter = LETTERS[oi]
-                    const cleanOpt = opt.replace(/^[A-E]\)\s*/, '')
-                    let cls = 'rl-q-opt'
-                    if (showFeedback) {
-                      if (oi === q.answer)    cls += ' rl-q-opt--correct'
-                      else if (oi === sel)    cls += ' rl-q-opt--wrong'
-                      else                    cls += ' rl-q-opt--dim'
-                    } else if (sel === oi) {
-                      cls += ' rl-q-opt--sel'
-                    }
-                    return (
-                      <button
-                        key={oi}
-                        className={cls}
-                        onClick={() => handleAnswer(qi, oi)}
-                        disabled={showFeedback}
-                      >
-                        <span className="rl-q-letter" style={sel === oi && !showFeedback ? { background: color, color: '#fff', borderColor: color } : {}}>{letter}</span>
-                        <span className="rl-q-opt-text">{cleanOpt}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-                {/* Explanation */}
-                {showFeedback && q.explanation && (
-                  <div className={`rl-q-expl${correct ? ' rl-q-expl--ok' : ''}`}>
-                    {answered && !correct && (
-                      <div className="rl-q-correct-ans">
-                        ✓ Correct answer: <strong>{(q.options[q.answer] || '').replace(/^[A-E]\)\s*/, '')}</strong>
-                      </div>
-                    )}
-                    <div className="rl-q-expl-body">
-                      <span className="rl-q-expl-icon">{correct ? '✅' : '📘'}</span>
-                      <span>{q.explanation}</span>
-                    </div>
-                  </div>
-                )}
-                {/* Show answer button */}
-                {!answered && (
-                  <button className="rl-q-reveal" style={{ color, borderColor: color }} onClick={() => toggleReveal(qi)}>
-                    {isRevealed ? '🙈 Hide Answer' : '🔑 Show Answer'}
-                  </button>
-                )}
-              </div>
-            )
-          })}
+          {qs.map((q, qi) => renderQuestion(q, qi))}
         </div>
 
-        {/* ─ Score summary ─ */}
-        {partDoneCount(activeSet, activePart) === total && total > 0 && (
+        {/* Score summary */}
+        {isPartFullyDone(activeIdx) && (
           <div className="rl-score-summary" style={{ borderColor: color }}>
-            <span className="rl-score-icon">🎯</span>
+            <span className="rl-score-icon">{'\uD83C\uDFAF'}</span>
             <span className="rl-score-text">
-              You scored <strong style={{ color }}>{partCorrectCount(activeSet, activePart)}/{total}</strong> on {part.partId} — {part.partLabel} (Set {set.setNumber})
+              You scored <strong style={{ color }}>{partCorrectCount(activeIdx)}/{total}</strong> on {part.partId} \u2014 {part.partLabel}
             </span>
           </div>
         )}
 
-        {/* ─ Navigation ─ */}
+        {/* Navigation */}
         <div className="rl-nav">
           <button
             className="rl-nav-btn"
-            onClick={() => {
-              if (activePart > 0) switchTo(activeSet, activePart - 1)
-              else if (activeSet > 0) switchTo(activeSet - 1, sets[activeSet - 1].parts.length - 1)
-            }}
-            disabled={activeSet === 0 && activePart === 0}
+            onClick={() => switchPart(activeIdx - 1)}
+            disabled={activeIdx === 0}
           >
-            ← Previous Part
+            {'\u2190'} Previous Part
           </button>
           <span className="rl-nav-counter" style={{ color }}>
-            Set {set.setNumber} · {part.partId}
+            {part.partId} \u2014 {part.partLabel}
           </span>
           <button
             className="rl-nav-btn rl-nav-btn--next"
             style={{ background: color, borderColor: color }}
-            onClick={() => {
-              if (activePart < set.parts.length - 1) switchTo(activeSet, activePart + 1)
-              else if (activeSet < sets.length - 1) switchTo(activeSet + 1, 0)
-            }}
-            disabled={activeSet === sets.length - 1 && activePart === set.parts.length - 1}
+            onClick={() => switchPart(activeIdx + 1)}
+            disabled={activeIdx === parts.length - 1}
           >
-            Next Part →
+            Next Part {'\u2192'}
           </button>
         </div>
       </div>
@@ -3632,7 +3748,7 @@ export default function PracticeSetPage() {
   const partId  = part?.id || 'L1'
   const cfg     = SECTION_CONFIG[section] || SECTION_CONFIG.listening
 
-  // ── Reading now uses local READING_PRACTICE_SETS (no Supabase) ──
+  // ── Reading now uses local READING_DATA (no Supabase) ──
   const isReading = section === 'reading'
 
   // ── For non-reading: build an array of all sets for this section ──
@@ -3651,7 +3767,7 @@ export default function PracticeSetPage() {
 
   const pageTitle = `${partId} · ${part?.label || 'Practice'}`
   const readingTotalQs = isReading
-    ? READING_PRACTICE_SETS.reduce((acc, s) => acc + s.parts.reduce((a2, p) => a2 + p.questions.length, 0), 0)
+    ? Object.values(READING_DATA).reduce((acc, p) => acc + p.totalQuestions, 0)
     : 0
   const totalQs   = isWriting
     ? writingQuestions.length
@@ -3689,7 +3805,7 @@ export default function PracticeSetPage() {
         <h1 className="ps-title">{part?.label || pageTitle}</h1>
         <p className="ps-scenario">
           {isReading
-            ? `${READING_PRACTICE_SETS.length} Sets · ${readingTotalQs} Questions`
+            ? `${Object.keys(READING_DATA).length} Parts · ${readingTotalQs} Questions`
             : isWriting
               ? `${writingQuestions.length} Questions`
               : `${activeSets.length} Practice Sets`}
@@ -3700,7 +3816,7 @@ export default function PracticeSetPage() {
       {/* ── READING: Use ReadingLayout ── */}
       {isReading && (
         <div className="ps-writing-wrap">
-          <ReadingLayout color={cfg.color} />
+          <ReadingLayout color={cfg.color} partId={partId} />
         </div>
       )}
 
