@@ -2268,22 +2268,39 @@ function ReadingLayout({ color, partId }) {
   const [started, setStarted]     = useState(false)
   const [overtime, setOvertime]   = useState(0)
   const [showBanner, setShowBanner] = useState(false)
+  const [setIdxMap, setSetIdxMap]   = useState({})
   const timerRef = useRef(null)
   const otRef    = useRef(null)
 
   const part = parts[activeIdx]
-  const qs   = part.questions
+  const curSetIdx = part.sets ? (setIdxMap[part.partId] || 0) : -1
+  const curSet = part.sets ? part.sets[curSetIdx] : null
+  const qs   = curSet ? curSet.questions : part.questions
   const total = qs.length
 
-  /* answer key */
-  const aKey = (pi, qi) => `${pi}_${qi}`
-  const partDoneCount = (pi) => parts[pi].questions.filter((_, qi) => answers[aKey(pi, qi)] !== undefined).length
+  /* answer key — includes set index for multi-set parts */
+  const aKey = (pi, qi) => {
+    const p = parts[pi]
+    if (p.sets) {
+      const si = setIdxMap[p.partId] || 0
+      return `${pi}_s${si}_${qi}`
+    }
+    return `${pi}_${qi}`
+  }
+  const getPartQs = (pi) => {
+    const p = parts[pi]
+    if (p.sets) {
+      const si = setIdxMap[p.partId] || 0
+      return p.sets[si].questions
+    }
+    return p.questions
+  }
+  const partDoneCount = (pi) => getPartQs(pi).filter((_, qi) => answers[aKey(pi, qi)] !== undefined).length
   const partCorrectCount = (pi) => {
-    return parts[pi].questions.reduce((acc, q, qi) => {
+    return getPartQs(pi).reduce((acc, q, qi) => {
       const a = answers[aKey(pi, qi)]
       if (a === undefined) return acc
       if (q.type === 'drag_drop') {
-        // For drag_drop, a is an object { 0: 'B', 1: 'C', ... }
         const items = q.matchItems
         const correct = items.every((item, mi) => a[mi] === item.answer)
         return acc + (correct ? 1 : 0)
@@ -2292,7 +2309,7 @@ function ReadingLayout({ color, partId }) {
     }, 0)
   }
   const totalDone = parts.reduce((acc, _, pi) => acc + partDoneCount(pi), 0)
-  const totalQs   = parts.reduce((acc, p) => acc + p.questions.length, 0)
+  const totalQs   = parts.reduce((acc, _, pi) => acc + getPartQs(pi).length, 0)
 
   /* switch part */
   const switchPart = (idx) => {
@@ -2537,10 +2554,21 @@ function ReadingLayout({ color, partId }) {
     return null
   }
 
+  /* switch set within a multi-set part */
+  const switchSet = (si) => {
+    setSetIdxMap(m => ({ ...m, [part.partId]: si }))
+    setShowBanner(false)
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current)    clearInterval(otRef.current)
+    setTimeLeft(null)
+    setOvertime(0)
+    setStarted(false)
+  }
+
   /* count questions done for a part */
   const isPartFullyDone = (pi) => {
-    const p = parts[pi]
-    return p.questions.every((q, qi) => {
+    const pqs = getPartQs(pi)
+    return pqs.every((q, qi) => {
       const a = answers[aKey(pi, qi)]
       if (a === undefined) return false
       if (q.type === 'drag_drop') return q.matchItems.every((_, mi) => a[mi] !== undefined)
@@ -2565,7 +2593,7 @@ function ReadingLayout({ color, partId }) {
           {parts.map((p, pi) => {
             const isActive = pi === activeIdx
             const done = partDoneCount(pi)
-            const pTotal = p.questions.length
+            const pTotal = getPartQs(pi).length
             const allDone = isPartFullyDone(pi)
             return (
               <button
@@ -2635,6 +2663,26 @@ function ReadingLayout({ color, partId }) {
           </div>
         )}
 
+        {/* Set selector for multi-set parts */}
+        {part.sets && (
+          <div className="rl-set-strip">
+            <span className="rl-set-strip-label" style={{ color }}>Set:</span>
+            <div className="rl-set-strip-scroll">
+              {part.sets.map((s, si) => (
+                <button
+                  key={si}
+                  className={`rl-set-chip${si === curSetIdx ? ' rl-set-chip--active' : ''}`}
+                  style={si === curSetIdx ? { background: color, borderColor: color, color: '#fff' } : {}}
+                  onClick={() => switchSet(si)}
+                >
+                  {s.setNumber}
+                </button>
+              ))}
+            </div>
+            {curSet && <span className="rl-set-title">{curSet.title}</span>}
+          </div>
+        )}
+
         {/* Passage */}
         <div className="rl-passage-box">
           <div className="rl-passage-header">
@@ -2642,18 +2690,46 @@ function ReadingLayout({ color, partId }) {
           </div>
           <div className="rl-passage-divider" />
           <div className="rl-passage-body">
-            <pre className="rl-passage-text">{part.passage}</pre>
+            <pre className="rl-passage-text">{curSet ? curSet.passage : part.passage}</pre>
           </div>
         </div>
 
-        {/* Diagram (R2 only) */}
-        {part.diagram && (
+        {/* Diagram — ASCII (legacy) */}
+        {!curSet && part.diagram && (
           <div className="rl-diagram-box">
             <div className="rl-diagram-header">
               <span className="rl-diagram-label" style={{ color }}>{'\uD83D\uDCCA'} Program Schedule</span>
             </div>
             <div className="rl-diagram-body">
               <pre className="rl-diagram-text">{part.diagram}</pre>
+            </div>
+          </div>
+        )}
+
+        {/* Visual Data Table (multi-set R2) */}
+        {curSet && curSet.visualData && (
+          <div className="rl-diagram-box">
+            <div className="rl-diagram-header">
+              <span className="rl-diagram-label" style={{ color }}>{'\uD83D\uDCCA'} {curSet.visualTitle || 'Diagram'}</span>
+            </div>
+            <div className="rl-diagram-body rl-visual-table-wrap">
+              <table className="rl-visual-table">
+                <thead>
+                  <tr>
+                    {curSet.visualData[0].map((h, hi) => <th key={hi}>{h}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {curSet.visualData.slice(1).map((row, ri) => (
+                    <tr key={ri}>
+                      {row.map((cell, ci) => <td key={ci}>{cell}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {curSet.visualNotes && (
+                <div className="rl-visual-notes">{curSet.visualNotes}</div>
+              )}
             </div>
           </div>
         )}
