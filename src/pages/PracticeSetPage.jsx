@@ -1878,14 +1878,18 @@ function ListeningLayout({ sets, color, partLabel }) {
     setAudioError(false)
   }
 
-  const startTimer = () => {
-    const mins = set?.partId === 'L1' || set?.partId === 'L3' ? 10 : 7
-    setTimeLeft(mins * 60)
+  const startAudio = () => {
     setStarted(true)
-    setShowTranscript(true)
+    setShowTranscript(false)
     setAudioLineIdx(0)
     setAudioAllDone(false)
     setAudioError(false)
+    setTimeLeft(null)
+  }
+
+  const startTimer = () => {
+    const mins = set?.partId === 'L1' || set?.partId === 'L3' ? 10 : 7
+    setTimeLeft(mins * 60)
     if (timerRef.current) clearInterval(timerRef.current)
     timerRef.current = setInterval(() => {
       setTimeLeft(t => {
@@ -1901,6 +1905,7 @@ function ListeningLayout({ sets, color, partLabel }) {
       setAudioLineIdx(i => i + 1)
     } else {
       setAudioAllDone(true)
+      startTimer()
     }
   }
 
@@ -1986,9 +1991,6 @@ function ListeningLayout({ sets, color, partLabel }) {
                 </span>
                 <div className="wl-topic-info">
                   <span className="wl-topic-title">{item.title}</span>
-                  <span className="wl-topic-diff-text" style={{ color: dc.text }}>
-                    {DIFF_LABELS[item.difficulty] || 'Intermediate'} · {setQs.length}Q
-                  </span>
                 </div>
               </button>
             )
@@ -2004,9 +2006,6 @@ function ListeningLayout({ sets, color, partLabel }) {
             <span className="wl-q-num-badge" style={{ background: color }}>Set {set.setNumber}</span>
             <div className="wl-topbar-title-group">
               <span className="wl-q-title">{set.title}</span>
-              <span className="wl-q-diff" style={{ background: diffC.bg, color: diffC.text }}>
-                {DIFF_LABELS[set.difficulty] || 'Intermediate'}
-              </span>
             </div>
           </div>
           <div className="wl-topbar-right">
@@ -2022,8 +2021,8 @@ function ListeningLayout({ sets, color, partLabel }) {
                 {timeUp && <span className="wl-timer-up-label">Time's up</span>}
               </div>
             ) : (
-              <button className="wl-start-btn" style={{ background: color }} onClick={startTimer}>
-                ▶ Start ({set.partId === 'L1' || set.partId === 'L3' ? '10' : '7'} min)
+              <button className="wl-start-btn" style={{ background: color }} onClick={startAudio}>
+                ▶ Start
               </button>
             )}
           </div>
@@ -2034,7 +2033,7 @@ function ListeningLayout({ sets, color, partLabel }) {
           <div className="wl-prompt-box" style={{ marginBottom: 0 }}>
             <div className="wl-prompt-header">
               <span className="wl-prompt-label" style={{ color }}>🎧 Listening Context</span>
-              <span className="wl-prompt-scenario-tag">{set.partId} · {questions.length} Questions</span>
+              <span className="wl-prompt-scenario-tag">{set.partId}</span>
             </div>
             <div className="wl-prompt-divider" />
             <div className="wl-prompt-body">
@@ -2057,8 +2056,12 @@ function ListeningLayout({ sets, color, partLabel }) {
         {!started && (
           <div className="ll-start-gate">
             <div className="ll-gate-icon">🎧</div>
-            <p className="ll-gate-text">Press <strong>Start</strong> to begin the audio and timer.</p>
-            <button className="ll-gate-btn" style={{ background: color }} onClick={startTimer}>
+            <p className="ll-gate-text">Press <strong>Start</strong> to begin listening. The audio will play first — answer the questions after it finishes.</p>
+            <div className="ll-gate-disclaimer">
+              <span className="ll-gate-disclaimer-icon">ℹ️</span>
+              <span>In the official CELPIP test, you will <strong>not</strong> have access to transcripts. Transcripts are provided here as a study aid only.</span>
+            </div>
+            <button className="ll-gate-btn" style={{ background: color }} onClick={startAudio}>
               ▶ Start Listening
             </button>
           </div>
@@ -2110,8 +2113,8 @@ function ListeningLayout({ sets, color, partLabel }) {
           </div>
         )}
 
-        {/* ─ Transcript (after start) ─ */}
-        {started && showTranscript && transcriptLines.length > 0 && (
+        {/* ─ Transcript (after audio, as study aid) ─ */}
+        {started && audioAllDone && showTranscript && transcriptLines.length > 0 && (
           <div className="ll-transcript-box">
             <div className="ll-transcript-header">
               <span className="ll-transcript-label" style={{ color }}>📝 Transcript</span>
@@ -2142,14 +2145,14 @@ function ListeningLayout({ sets, color, partLabel }) {
           </div>
         )}
 
-        {started && !showTranscript && (
+        {started && audioAllDone && !showTranscript && (
           <button className="ll-show-transcript-btn" style={{ color, borderColor: color }} onClick={() => setShowTranscript(true)}>
-            📝 Show Transcript
+            📝 Show Transcript (Study Aid)
           </button>
         )}
 
-        {/* ─ Questions (after start) ─ */}
-        {started && questions.length > 0 && (
+        {/* ─ Questions (after audio completes) ─ */}
+        {started && audioAllDone && questions.length > 0 && (
           <>
             {/* Question dot nav */}
             <div className="ll-qnav-strip">
@@ -2262,11 +2265,12 @@ function ReadingLayout({ color, partId }) {
   const parts = PARTS_ORDER.map(id => READING_DATA[id])
   const initIdx = Math.max(0, PARTS_ORDER.indexOf(partId))
 
-  const [activeIdx, setActiveIdx] = useState(initIdx)
-  const [answers, setAnswers]     = useState({})
-  const [timeLeft, setTimeLeft]   = useState(null)
-  const [started, setStarted]     = useState(false)
-  const [overtime, setOvertime]   = useState(0)
+  const [activeIdx, setActiveIdx]   = useState(initIdx)
+  const [activeQIdx, setActiveQIdx] = useState(0)   // current question (one-at-a-time)
+  const [answers, setAnswers]       = useState({})
+  const [timeLeft, setTimeLeft]     = useState(null)
+  const [started, setStarted]       = useState(false)
+  const [overtime, setOvertime]     = useState(0)
   const [showBanner, setShowBanner] = useState(false)
   const [setIdxMap, setSetIdxMap]   = useState({})
   const timerRef = useRef(null)
@@ -2277,6 +2281,7 @@ function ReadingLayout({ color, partId }) {
   const curSet = part.sets ? part.sets[curSetIdx] : null
   const qs   = curSet ? curSet.questions : part.questions
   const total = qs.length
+  const q = qs[activeQIdx]  // currently displayed question
 
   /* answer key — includes set index for multi-set parts */
   const aKey = (pi, qi) => {
@@ -2314,6 +2319,7 @@ function ReadingLayout({ color, partId }) {
   /* switch part */
   const switchPart = (idx) => {
     setActiveIdx(idx)
+    setActiveQIdx(0)
     setShowBanner(false)
     if (timerRef.current) clearInterval(timerRef.current)
     if (otRef.current)    clearInterval(otRef.current)
@@ -2384,7 +2390,19 @@ function ReadingLayout({ color, partId }) {
 
   const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 
-  /* ── render a single question ── */
+  /* Q-nav status helper */
+  const getQStatus = (qi) => {
+    const key = aKey(activeIdx, qi)
+    const ans = answers[key]
+    if (ans === undefined) return 'unanswered'
+    const qItem = qs[qi]
+    if (qItem.type === 'drag_drop') {
+      return qItem.matchItems.every((item, mi) => ans[mi] === item.answer) ? 'correct' : 'wrong'
+    }
+    return ans === qItem.answer ? 'correct' : 'wrong'
+  }
+
+  /* ── render current question (one at a time) ── */
   const renderQuestion = (q, qi) => {
     const key = aKey(activeIdx, qi)
     const ans = answers[key]
@@ -2557,6 +2575,7 @@ function ReadingLayout({ color, partId }) {
   /* switch set within a multi-set part */
   const switchSet = (si) => {
     setSetIdxMap(m => ({ ...m, [part.partId]: si }))
+    setActiveQIdx(0)
     setShowBanner(false)
     if (timerRef.current) clearInterval(timerRef.current)
     if (otRef.current)    clearInterval(otRef.current)

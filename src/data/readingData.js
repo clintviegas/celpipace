@@ -1,17 +1,16 @@
 /* ══════════════════════════════════════════════════════════════
-   READING PRACTICE DATA — Proper CELPIP Format
-   
-   R1: Reading Correspondence (11 min) — 11 Questions
+   READING PRACTICE DATA — CELPIP Official Format
+
+   R1: Reading Correspondence (11 min) — 11 Questions × 20 Sets
        Q1-5: MCQ  |  Q6-11: Dropdown (fill blanks)
-   
-   R2: Reading to Apply a Diagram (13 min) — 8 Questions
+
+   R2: Reading to Apply a Diagram (13 min) — 8 Questions × 20 Sets
        Q1-5: Dropdown (fill blanks)  |  Q6-8: MCQ
-       Includes a diagram (ASCII table/chart)
-   
-   R3: Reading for Information (14 min) — 9 Questions
+
+   R3: Reading for Information (14 min) — 9 Questions × 20 Sets
        Q1-6: Drag & Drop (matching)  |  Q7-9: MCQ
-   
-   R4: Reading for Viewpoints (17 min) — 10 Questions
+
+   R4: Reading for Viewpoints (17 min) — 10 Questions × 20 Sets
        Q1-7: Drag & Drop (matching)  |  Q8-10: MCQ
 ══════════════════════════════════════════════════════════════ */
 
@@ -19,10 +18,16 @@ export const READING_DATA = {
   R1: {
     partId: 'R1',
     partLabel: 'Reading Correspondence',
-    icon: '\u2709\uFE0F',
+    icon: '✉️',
     timeLimitMinutes: 11,
     totalQuestions: 11,
-    passage: `From: James Whitfield <jwhitfield@greystone-apts.ca>
+    sets: [
+
+      // ── Set 1 ── Apartment Building Notices ─────────────────────────
+      {
+        setNumber: 1, difficulty: 'easy',
+        title: 'Apartment Building — Spring Notices',
+        passage: `From: James Whitfield <jwhitfield@greystone-apts.ca>
 To: All Residents — Greystone Apartments
 Date: March 18, 2026
 Subject: Important Updates — Parking, Recycling & Lobby Renovation
@@ -31,11 +36,11 @@ Dear Residents,
 
 I am writing to share three important updates that will affect everyone in the building over the coming weeks.
 
-First, our underground parking garage will be repainted and re-lined starting April 1. The work will take approximately two weeks and will proceed one level at a time. Residents on Level P1 will need to park temporarily on Level P3 from April 1-7, and Level P2 residents will relocate to P3 from April 8-14. Temporary parking passes will be placed under your door by March 28. If you have a motorcycle or oversized vehicle, please contact me directly so we can make alternative arrangements.
+First, our underground parking garage will be repainted and re-lined starting April 1. The work will take approximately two weeks and will proceed one level at a time. Residents on Level P1 will need to park temporarily on Level P3 from April 1–7, and Level P2 residents will relocate to P3 from April 8–14. Temporary parking passes will be placed under your door by March 28. If you have a motorcycle or oversized vehicle, please contact me directly so we can make alternative arrangements.
 
 Second, the city has updated its recycling guidelines effective April 15. Soft plastics (bags, wrappers, film packaging) will NO LONGER be accepted in blue bins. Instead, residents must take soft plastics to the collection depot at 440 Queen Street or use the new drop-off bin we are installing in the mail room. Please do not place soft plastics in the blue bin after April 15 — contaminated loads result in fines to the building, which are passed on through maintenance fees.
 
-Third, our lobby renovation is on track to begin May 5. The main entrance will be closed for 3-4 weeks. During this time, please use the side entrance on Elm Street. The renovation includes new flooring, a modernized mailbox area, updated lighting, and a small parcel room for package deliveries. I know the temporary inconvenience will be worth it.
+Third, our lobby renovation is on track to begin May 5. The main entrance will be closed for 3–4 weeks. During this time, please use the side entrance on Elm Street. The renovation includes new flooring, a modernized mailbox area, updated lighting, and a small parcel room for package deliveries. I know the temporary inconvenience will be worth it.
 
 If you have any questions about these changes, please do not hesitate to reach out. I will also host a short Q&A session in the common room on March 25 at 7:00 PM.
 
@@ -43,111 +48,911 @@ Best regards,
 James Whitfield
 Property Manager, Greystone Apartments
 (416) 555-0192 | jwhitfield@greystone-apts.ca`,
+        questions: [
+          { id: 'r1s1q1', type: 'mcq', num: 1, text: 'What is the main purpose of this email?', options: ['To announce an increase in maintenance fees', 'To inform residents about upcoming building changes', 'To invite residents to a lobby renovation party', 'To request that residents move their vehicles permanently'], answer: 1, explanation: 'The email covers three updates — parking, recycling, and lobby renovation. Its main purpose is to inform residents of upcoming changes.' },
+          { id: 'r1s1q2', type: 'mcq', num: 2, text: 'How long will the parking garage work take in total?', options: ['One week', 'Approximately two weeks', 'Three to four weeks', 'One month'], answer: 1, explanation: '"The work will take approximately two weeks and will proceed one level at a time."' },
+          { id: 'r1s1q3', type: 'mcq', num: 3, text: 'What should residents do with soft plastics after April 15?', options: ['Place them in the blue recycling bin as usual', 'Leave them outside their apartment door for collection', 'Take them to the depot at 440 Queen Street or use the mail room drop-off bin', 'Throw them in the regular garbage bin'], answer: 2, explanation: 'Soft plastics must go to "the collection depot at 440 Queen Street or use the new drop-off bin we are installing in the mail room."' },
+          { id: 'r1s1q4', type: 'mcq', num: 4, text: 'Why does James mention that contaminated recycling loads result in fines?', options: ['To explain why the city changed its guidelines', 'To encourage residents to stop recycling entirely', 'To motivate residents to follow the new rules to avoid extra costs', 'To announce that maintenance fees have already increased'], answer: 2, explanation: 'James mentions fines "passed on through maintenance fees" to motivate compliance with the new recycling rules.' },
+          { id: 'r1s1q5', type: 'mcq', num: 5, text: 'Which entrance should residents use during the lobby renovation?', options: ['The underground parking entrance', 'The back entrance on Oak Street', 'The side entrance on Elm Street', 'The emergency exit on the second floor'], answer: 2, explanation: '"please use the side entrance on Elm Street."' },
+          { id: 'r1s1q6', type: 'dropdown', num: 6, text: 'Residents on Level P1 must move their cars to Level ______ from April 1–7.', options: ['P2', 'P3', 'P4', 'the street'], answer: 1, explanation: '"Residents on Level P1 will need to park temporarily on Level P3 from April 1–7."' },
+          { id: 'r1s1q7', type: 'dropdown', num: 7, text: 'Temporary parking passes will be delivered by ______.', options: ['April 1', 'March 25', 'March 28', 'April 15'], answer: 2, explanation: '"Temporary parking passes will be placed under your door by March 28."' },
+          { id: 'r1s1q8', type: 'dropdown', num: 8, text: 'The new recycling rules take effect on ______.', options: ['April 1', 'April 15', 'May 5', 'March 25'], answer: 1, explanation: '"the city has updated its recycling guidelines effective April 15."' },
+          { id: 'r1s1q9', type: 'dropdown', num: 9, text: 'The lobby renovation will close the main entrance for ______.', options: ['one week', 'two weeks', '3–4 weeks', '2 months'], answer: 2, explanation: '"The main entrance will be closed for 3–4 weeks."' },
+          { id: 'r1s1q10', type: 'dropdown', num: 10, text: 'The renovation will include new flooring, updated lighting, modernized mailboxes, and a new ______.', options: ['gym', 'parcel room', 'laundry area', 'bike storage'], answer: 1, explanation: '"new flooring, a modernized mailbox area, updated lighting, and a small parcel room for package deliveries."' },
+          { id: 'r1s1q11', type: 'dropdown', num: 11, text: 'The Q&A session will be held in the ______ on March 25.', options: ['lobby', 'parking garage', 'common room', 'mail room'], answer: 2, explanation: '"I will also host a short Q&A session in the common room on March 25 at 7:00 PM."' },
+        ],
+      },
 
-    questions: [
+      // ── Set 2 ── Bank Fraud Alert ────────────────────────────────────
       {
-        id: 'r1q1', type: 'mcq', num: 1,
-        text: 'What is the main purpose of this email?',
-        options: [
-          'To announce an increase in maintenance fees',
-          'To inform residents about upcoming building changes',
-          'To invite residents to a lobby renovation party',
-          'To request that residents move their vehicles permanently'
+        setNumber: 2, difficulty: 'easy',
+        title: 'Bank — Fraud Alert & Account Security',
+        passage: `From: Security Team <security@northernbank.ca>
+To: Account Holder
+Date: April 2, 2026
+Subject: Important Security Notice — Unusual Activity on Your Account
+
+Dear Valued Customer,
+
+We are writing to notify you of unusual activity detected on your Northern Bank chequing account ending in 4821. On April 1, 2026, at 11:47 PM EST, our fraud detection system flagged three transactions that appear inconsistent with your normal spending patterns:
+
+1. Online purchase — Electronics retailer — $1,249.00 (declined)
+2. International wire transfer — $850.00 — destination: overseas (pending)
+3. ATM cash withdrawal — $500.00 — location: downtown Calgary (approved)
+
+To protect your account, we have temporarily placed a hold on outgoing transfers and new online purchases. Your debit card remains active for in-person purchases at Canadian retailers. The ATM withdrawal of $500.00 has already been processed.
+
+ACTION REQUIRED: You must verify these transactions within 48 hours to restore full account access. Please log in to your Northern Bank online portal at northernbank.ca/security or call our 24-hour fraud line at 1-800-555-0241. Do NOT click any links sent to you by email — always navigate directly to our website.
+
+If you recognize all three transactions, your hold will be lifted within two business hours of verification. If any transaction is unauthorized, our fraud team will begin an investigation immediately and issue a replacement card within 5–7 business days.
+
+We take the security of your finances seriously. We apologize for any inconvenience this temporary hold may cause.
+
+Sincerely,
+Northern Bank Fraud Prevention Team
+1-800-555-0241 (24 hours) | northernbank.ca/security`,
+        questions: [
+          { id: 'r1s2q1', type: 'mcq', num: 1, text: 'Why did Northern Bank send this email?', options: ['To offer the customer a new credit card', 'To notify the customer of unusual account activity', 'To confirm a large international wire transfer', 'To cancel the customer\'s account'], answer: 1, explanation: 'The email states it was sent "to notify you of unusual activity detected on your Northern Bank chequing account."' },
+          { id: 'r1s2q2', type: 'mcq', num: 2, text: 'Which of the three flagged transactions was successfully completed?', options: ['The electronics purchase of $1,249.00', 'The international wire transfer of $850.00', 'The ATM cash withdrawal of $500.00', 'None — all were blocked'], answer: 2, explanation: 'The ATM withdrawal of $500.00 is listed as "(approved)" and the email confirms "The ATM withdrawal of $500.00 has already been processed."' },
+          { id: 'r1s2q3', type: 'mcq', num: 3, text: 'What can the customer still do while the account hold is in place?', options: ['Make international wire transfers', 'Make online purchases', 'Make in-person purchases at Canadian retailers', 'Access full banking services online'], answer: 2, explanation: '"Your debit card remains active for in-person purchases at Canadian retailers."' },
+          { id: 'r1s2q4', type: 'mcq', num: 4, text: 'What does the bank warn the customer NOT to do?', options: ['Call the fraud line', 'Log into the online portal', 'Click links sent by email', 'Request a replacement card'], answer: 2, explanation: '"Do NOT click any links sent to you by email — always navigate directly to our website."' },
+          { id: 'r1s2q5', type: 'mcq', num: 5, text: 'If the customer verifies all transactions as legitimate, how long will it take to restore full access?', options: ['5–7 business days', 'Within 24 hours', 'Within two business hours', '48 hours exactly'], answer: 2, explanation: '"your hold will be lifted within two business hours of verification."' },
+          { id: 'r1s2q6', type: 'dropdown', num: 6, text: 'The fraud was flagged on ______ at 11:47 PM EST.', options: ['March 31, 2026', 'April 1, 2026', 'April 2, 2026', 'April 3, 2026'], answer: 1, explanation: '"On April 1, 2026, at 11:47 PM EST, our fraud detection system flagged three transactions."' },
+          { id: 'r1s2q7', type: 'dropdown', num: 7, text: 'The account number affected ends in ______.', options: ['4182', '8214', '4821', '2148'], answer: 2, explanation: '"unusual activity detected on your Northern Bank chequing account ending in 4821."' },
+          { id: 'r1s2q8', type: 'dropdown', num: 8, text: 'The customer must verify their transactions within ______ to restore full access.', options: ['24 hours', '48 hours', '5 business days', '7 business days'], answer: 1, explanation: '"You must verify these transactions within 48 hours to restore full account access."' },
+          { id: 'r1s2q9', type: 'dropdown', num: 9, text: 'If a transaction is unauthorized, a replacement card will arrive within ______.', options: ['24 hours', '2 business days', '5–7 business days', '10 business days'], answer: 2, explanation: '"issue a replacement card within 5–7 business days."' },
+          { id: 'r1s2q10', type: 'dropdown', num: 10, text: 'The fraud prevention phone line operates ______.', options: ['Monday to Friday', '9 AM to 5 PM', '24 hours a day', 'on weekdays only'], answer: 2, explanation: '"1-800-555-0241 (24 hours)"' },
+          { id: 'r1s2q11', type: 'dropdown', num: 11, text: 'The wire transfer destination was listed as ______.', options: ['a domestic account', 'a U.S. account', 'overseas', 'unknown'], answer: 2, explanation: '"International wire transfer — $850.00 — destination: overseas (pending)"' },
         ],
-        answer: 1,
-        explanation: 'The email covers three updates (parking, recycling, lobby renovation) — its main purpose is to inform residents about upcoming changes.'
       },
+
+      // ── Set 3 ── Job Offer Letter ────────────────────────────────────
       {
-        id: 'r1q2', type: 'mcq', num: 2,
-        text: 'How long will the parking garage work take in total?',
-        options: [
-          'One week',
-          'Approximately two weeks',
-          'Three to four weeks',
-          'One month'
+        setNumber: 3, difficulty: 'easy',
+        title: 'HR Department — Job Offer Letter',
+        passage: `From: Linda Okafor <l.okafor@horizoncorp.ca>
+To: Marcus Reyes <marcusreyes@email.com>
+Date: March 22, 2026
+Subject: Offer of Employment — Junior Data Analyst, Horizon Corporation
+
+Dear Marcus,
+
+On behalf of Horizon Corporation, I am delighted to offer you the position of Junior Data Analyst within our Analytics & Insights team, reporting to the Director of Business Intelligence, Mr. Paul Huang.
+
+Your start date is tentatively set for Monday, April 14, 2026. Please confirm your acceptance no later than Friday, March 28, 2026 so we can complete your onboarding paperwork in advance.
+
+The position is full-time, Monday through Friday, 9:00 AM to 5:00 PM, with occasional overtime during quarterly reporting periods. This role is hybrid: you will work from our downtown Vancouver office three days per week (Tuesday, Wednesday, Thursday) and remotely on Mondays and Fridays.
+
+Compensation & Benefits:
+- Annual base salary: $68,500
+- Performance bonus: up to 8% of base salary, paid annually in March
+- Extended health and dental: effective the first day of employment
+- RRSP matching: up to 4% of gross salary, after a 6-month probationary period
+- Three weeks of paid vacation per year (accrued monthly)
+- Professional development fund: $1,200 per year
+
+We will require a background check and verification of your academic credentials before your first day. These will be coordinated through our HR portal, which you will receive access to upon acceptance.
+
+We are excited about what you will bring to the team, Marcus. Please do not hesitate to contact me if you have any questions before signing.
+
+Warm regards,
+Linda Okafor
+Human Resources Manager
+Horizon Corporation | (604) 555-0187 | l.okafor@horizoncorp.ca`,
+        questions: [
+          { id: 'r1s3q1', type: 'mcq', num: 1, text: 'What is the purpose of this email?', options: ['To schedule a job interview for Marcus', 'To offer Marcus a position at Horizon Corporation', 'To inform Marcus that he was not selected for the role', 'To request references from Marcus'], answer: 1, explanation: 'The email explicitly states: "I am delighted to offer you the position of Junior Data Analyst."' },
+          { id: 'r1s3q2', type: 'mcq', num: 2, text: 'Who will Marcus report to in his new role?', options: ['Linda Okafor', 'The CEO of Horizon Corporation', 'Mr. Paul Huang', 'The Head of IT'], answer: 2, explanation: '"reporting to the Director of Business Intelligence, Mr. Paul Huang."' },
+          { id: 'r1s3q3', type: 'mcq', num: 3, text: 'How many days per week will Marcus work from the office?', options: ['Two', 'Three', 'Four', 'Five'], answer: 1, explanation: '"you will work from our downtown Vancouver office three days per week (Tuesday, Wednesday, Thursday)."' },
+          { id: 'r1s3q4', type: 'mcq', num: 4, text: 'When does extended health and dental coverage begin?', options: ['After a 6-month probationary period', 'After 3 months of employment', 'On the first day of employment', 'At the start of the following calendar year'], answer: 2, explanation: '"Extended health and dental: effective the first day of employment."' },
+          { id: 'r1s3q5', type: 'mcq', num: 5, text: 'What must Marcus do before his first day of work?', options: ['Attend an in-person orientation session', 'Complete a background check and academic credential verification', 'Purchase his own laptop and equipment', 'Sign a non-disclosure agreement in person'], answer: 1, explanation: '"We will require a background check and verification of your academic credentials before your first day."' },
+          { id: 'r1s3q6', type: 'dropdown', num: 6, text: 'Marcus must accept the offer no later than ______.', options: ['March 22, 2026', 'March 28, 2026', 'April 7, 2026', 'April 14, 2026'], answer: 1, explanation: '"Please confirm your acceptance no later than Friday, March 28, 2026."' },
+          { id: 'r1s3q7', type: 'dropdown', num: 7, text: 'The annual base salary offered is ______.', options: ['$62,500', '$65,000', '$68,500', '$72,000'], answer: 2, explanation: '"Annual base salary: $68,500"' },
+          { id: 'r1s3q8', type: 'dropdown', num: 8, text: 'The performance bonus is up to ______ of base salary, paid in March.', options: ['4%', '6%', '8%', '10%'], answer: 2, explanation: '"Performance bonus: up to 8% of base salary, paid annually in March."' },
+          { id: 'r1s3q9', type: 'dropdown', num: 9, text: 'RRSP matching begins after a ______ probationary period.', options: ['3-month', '6-month', '9-month', '12-month'], answer: 1, explanation: '"RRSP matching: up to 4% of gross salary, after a 6-month probationary period."' },
+          { id: 'r1s3q10', type: 'dropdown', num: 10, text: 'The annual professional development fund is ______.', options: ['$800', '$1,000', '$1,200', '$1,500'], answer: 2, explanation: '"Professional development fund: $1,200 per year."' },
+          { id: 'r1s3q11', type: 'dropdown', num: 11, text: 'Marcus\'s tentative start date is ______.', options: ['March 28, 2026', 'April 7, 2026', 'April 14, 2026', 'May 1, 2026'], answer: 2, explanation: '"Your start date is tentatively set for Monday, April 14, 2026."' },
         ],
-        answer: 1,
-        explanation: 'The email states: "The work will take approximately two weeks and will proceed one level at a time."'
       },
+
+      // ── Set 4 ── Library Overdue Notice ──────────────────────────────
       {
-        id: 'r1q3', type: 'mcq', num: 3,
-        text: 'What should residents do with soft plastics after April 15?',
-        options: [
-          'Place them in the blue recycling bin as usual',
-          'Leave them outside their apartment door for collection',
-          'Take them to the depot at 440 Queen Street or use the mail room drop-off bin',
-          'Throw them in the regular garbage bin'
+        setNumber: 4, difficulty: 'easy',
+        title: 'Public Library — Overdue Items & Fine Notice',
+        passage: `From: Vancouver Public Library <accounts@vpl.ca>
+To: Priya Sharma <priya.sharma@email.com>
+Date: April 5, 2026
+Subject: Overdue Items — Action Required to Avoid Suspension
+
+Dear Priya Sharma,
+
+This is a reminder that your Vancouver Public Library account (Card #VPL-88341) has items that are significantly overdue. Your borrowing privileges have been temporarily suspended until these items are returned and any applicable fines are paid.
+
+OVERDUE ITEMS:
+1. "The Midnight Library" by Matt Haig — due March 10, 2026 (26 days overdue) — Fine: $3.90
+2. "The Wim Hof Method" — due March 17, 2026 (19 days overdue) — Fine: $2.85
+3. "Excel for Beginners" (DVD) — due March 20, 2026 (16 days overdue) — Fine: $4.80
+Total outstanding fine: $11.55
+
+Our standard fine rate is $0.15 per day for books and $0.30 per day for DVDs. Fines continue to accrue until items are returned. You may pay your fine online at vpl.ca/account, in person at any branch, or by calling our automated payment line at 604-555-0188.
+
+Once items are returned and the balance is paid, your account will be restored within one hour during branch operating hours.
+
+If you believe any of these items have already been returned, please contact your branch directly with your receipt or date of return, as processing delays occasionally occur. Items more than 60 days overdue are assumed lost and charged at full replacement cost.
+
+Please return your items at your earliest convenience. Branch hours are Monday–Thursday 10 AM–8 PM, Friday–Saturday 10 AM–6 PM, and Sunday 12 PM–5 PM.
+
+Thank you for your continued support of your local library.
+
+Vancouver Public Library
+accounts@vpl.ca | 604-555-0120`,
+        questions: [
+          { id: 'r1s4q1', type: 'mcq', num: 1, text: 'Why has Priya\'s borrowing account been suspended?', options: ['She has not paid her annual library membership fee', 'She has overdue items and outstanding fines', 'She attempted to borrow more items than the limit allows', 'Her library card has expired'], answer: 1, explanation: '"Your borrowing privileges have been temporarily suspended until these items are returned and any applicable fines are paid."' },
+          { id: 'r1s4q2', type: 'mcq', num: 2, text: 'What is the fine rate for DVDs per day?', options: ['$0.15', '$0.20', '$0.25', '$0.30'], answer: 3, explanation: '"Our standard fine rate is $0.15 per day for books and $0.30 per day for DVDs."' },
+          { id: 'r1s4q3', type: 'mcq', num: 3, text: 'How long after returning items and paying the balance will Priya\'s account be restored?', options: ['Immediately', 'Within one hour during branch hours', 'Within one business day', 'Within 48 hours'], answer: 1, explanation: '"your account will be restored within one hour during branch operating hours."' },
+          { id: 'r1s4q4', type: 'mcq', num: 4, text: 'What happens to items that are more than 60 days overdue?', options: ['They are written off with no charge to the borrower', 'They are charged at full replacement cost', 'The borrower is charged a flat $50 late fee', 'The library contacts law enforcement'], answer: 1, explanation: '"Items more than 60 days overdue are assumed lost and charged at full replacement cost."' },
+          { id: 'r1s4q5', type: 'mcq', num: 5, text: 'What should Priya do if she thinks she already returned an item?', options: ['Email the library and wait for a response', 'Go to court to dispute the fine', 'Contact her branch directly with her receipt or date of return', 'Simply ignore the notice'], answer: 2, explanation: '"please contact your branch directly with your receipt or date of return, as processing delays occasionally occur."' },
+          { id: 'r1s4q6', type: 'dropdown', num: 6, text: 'Priya\'s library card number is ______.', options: ['VPL-83341', 'VPL-88341', 'VPL-83841', 'VPL-88431'], answer: 1, explanation: '"your Vancouver Public Library account (Card #VPL-88341)"' },
+          { id: 'r1s4q7', type: 'dropdown', num: 7, text: 'The total outstanding fine on Priya\'s account is ______.', options: ['$7.50', '$9.75', '$11.55', '$13.80'], answer: 2, explanation: '"Total outstanding fine: $11.55"' },
+          { id: 'r1s4q8', type: 'dropdown', num: 8, text: 'The most overdue item is "The Midnight Library," which was due on ______.', options: ['March 1', 'March 10', 'March 17', 'March 20'], answer: 1, explanation: '"The Midnight Library" by Matt Haig — due March 10, 2026 (26 days overdue).' },
+          { id: 'r1s4q9', type: 'dropdown', num: 9, text: 'The DVD fine rate results in a fine of ______ for the 16-day overdue DVD.', options: ['$2.40', '$3.60', '$4.80', '$6.00'], answer: 2, explanation: '$0.30/day × 16 days = $4.80. The email confirms: "Excel for Beginners" (DVD) — Fine: $4.80.' },
+          { id: 'r1s4q10', type: 'dropdown', num: 10, text: 'On Sundays, the library is open from ______.', options: ['10 AM–5 PM', '11 AM–5 PM', '12 PM–5 PM', '12 PM–6 PM'], answer: 2, explanation: '"Sunday 12 PM–5 PM."' },
+          { id: 'r1s4q11', type: 'dropdown', num: 11, text: 'Fines can be paid online, in person, or by calling ______.', options: ['604-555-0120', '604-555-0188', '604-555-0241', '604-555-0199'], answer: 1, explanation: '"by calling our automated payment line at 604-555-0188."' },
         ],
-        answer: 2,
-        explanation: 'The email says soft plastics must go to "the collection depot at 440 Queen Street or use the new drop-off bin we are installing in the mail room."'
       },
+
+      // ── Set 5 ── Dental Appointment Reminder ────────────────────────
       {
-        id: 'r1q4', type: 'mcq', num: 4,
-        text: 'Why does James mention that contaminated recycling loads result in fines?',
-        options: [
-          'To explain why the city changed its guidelines',
-          'To encourage residents to stop recycling entirely',
-          'To motivate residents to follow the new rules to avoid extra costs',
-          'To announce that maintenance fees have already increased'
+        setNumber: 5, difficulty: 'easy',
+        title: 'Dental Clinic — Appointment Reminder & Rescheduling',
+        passage: `From: Maple Leaf Dental <appointments@mapleleafdental.ca>
+To: David Kim <dkim@email.com>
+Date: April 3, 2026
+Subject: Appointment Reminder — Thursday, April 10 at 2:30 PM
+
+Dear David,
+
+This is a friendly reminder that you have a dental appointment scheduled for Thursday, April 10, 2026 at 2:30 PM with Dr. Sophie Tremblay at Maple Leaf Dental, 820 Main Street, Suite 210, Mississauga.
+
+Your appointment includes a full examination, professional cleaning, and updated dental X-rays. Please plan for approximately 75 minutes.
+
+IMPORTANT — Before Your Visit:
+- Eat normally before your appointment. If you are receiving a local anaesthetic for any reason, avoid eating for 2 hours prior.
+- Bring your current insurance card. We will submit your claim directly to your provider. Our office accepts most major dental plans, including Sun Life, Great-West Life, and Manulife.
+- Brush and floss before your appointment out of courtesy to your hygienist.
+- If you take daily medications, continue as normal unless your doctor has advised otherwise.
+
+CANCELLATION POLICY:
+We request a minimum of 48 hours' notice for all cancellations. Cancellations with less than 48 hours' notice will incur a $50 cancellation fee. To reschedule, please call 905-555-0173 or reply to this email. Online booking is also available at mapleleafdental.ca/book.
+
+We have a new patient intake form available on our website if your address, insurance, or health information has changed since your last visit. Please complete it prior to arriving to reduce your wait time.
+
+We look forward to seeing you!
+
+Maple Leaf Dental Team
+905-555-0173 | mapleleafdental.ca`,
+        questions: [
+          { id: 'r1s5q1', type: 'mcq', num: 1, text: 'What is the primary purpose of this email?', options: ['To confirm that David\'s insurance claim was approved', 'To remind David of an upcoming dental appointment', 'To inform David that his appointment has been cancelled', 'To request that David update his insurance information'], answer: 1, explanation: '"This is a friendly reminder that you have a dental appointment scheduled for Thursday, April 10, 2026."' },
+          { id: 'r1s5q2', type: 'mcq', num: 2, text: 'How long should David plan for his appointment?', options: ['30 minutes', '45 minutes', '60 minutes', 'Approximately 75 minutes'], answer: 3, explanation: '"Please plan for approximately 75 minutes."' },
+          { id: 'r1s5q3', type: 'mcq', num: 3, text: 'What will David\'s appointment include?', options: ['Only a cleaning and X-rays', 'A full examination, cleaning, and updated X-rays', 'A root canal and crown fitting', 'A consultation and treatment plan only'], answer: 1, explanation: '"Your appointment includes a full examination, professional cleaning, and updated dental X-rays."' },
+          { id: 'r1s5q4', type: 'mcq', num: 4, text: 'What will happen if David cancels with less than 48 hours\' notice?', options: ['His next appointment will be cancelled automatically', 'He will be charged a $50 cancellation fee', 'He will be charged the full cost of the missed appointment', 'He will be required to pay the fee upfront at his next visit'], answer: 1, explanation: '"Cancellations with less than 48 hours\' notice will incur a $50 cancellation fee."' },
+          { id: 'r1s5q5', type: 'mcq', num: 5, text: 'What can David do online before his appointment to reduce his wait time?', options: ['Pay for his appointment in advance', 'Request a prescription refill', 'Complete a new patient intake form', 'Confirm his appointment by email'], answer: 2, explanation: '"We have a new patient intake form available on our website... Please complete it prior to arriving to reduce your wait time."' },
+          { id: 'r1s5q6', type: 'dropdown', num: 6, text: 'David\'s appointment is with Dr. ______ at 2:30 PM.', options: ['Paul Huang', 'Linda Okafor', 'Sophie Tremblay', 'James Whitfield'], answer: 2, explanation: '"appointment scheduled for Thursday, April 10, 2026 at 2:30 PM with Dr. Sophie Tremblay."' },
+          { id: 'r1s5q7', type: 'dropdown', num: 7, text: 'The dental clinic is located at ______ in Mississauga.', options: ['820 Elm Street, Suite 210', '820 Main Street, Suite 210', '280 Main Street, Suite 210', '820 Main Street, Suite 120'], answer: 1, explanation: '"Maple Leaf Dental, 820 Main Street, Suite 210, Mississauga."' },
+          { id: 'r1s5q8', type: 'dropdown', num: 8, text: 'If David is receiving a local anaesthetic, he should avoid eating for ______ before his appointment.', options: ['1 hour', '2 hours', '4 hours', '6 hours'], answer: 1, explanation: '"If you are receiving a local anaesthetic for any reason, avoid eating for 2 hours prior."' },
+          { id: 'r1s5q9', type: 'dropdown', num: 9, text: 'To reschedule, David can call, reply to this email, or book online at ______.', options: ['mapleleafdental.ca/contact', 'mapleleafdental.ca/book', 'mapleleafdental.ca/schedule', 'mapleleafdental.ca/appointment'], answer: 1, explanation: '"Online booking is also available at mapleleafdental.ca/book."' },
+          { id: 'r1s5q10', type: 'dropdown', num: 10, text: 'The clinic accepts dental plans including Sun Life, Manulife, and ______.', options: ['Blue Cross', 'Desjardins', 'Great-West Life', 'Canada Life'], answer: 2, explanation: '"Our office accepts most major dental plans, including Sun Life, Great-West Life, and Manulife."' },
+          { id: 'r1s5q11', type: 'dropdown', num: 11, text: 'The cancellation notice period required is ______ hours.', options: ['24', '36', '48', '72'], answer: 2, explanation: '"We request a minimum of 48 hours\' notice for all cancellations."' },
         ],
-        answer: 2,
-        explanation: 'James mentions fines "passed on through maintenance fees" to motivate compliance with the new recycling rules.'
       },
+
+      // ── Set 6 ── City Road Construction Notice ───────────────────────
       {
-        id: 'r1q5', type: 'mcq', num: 5,
-        text: 'Which entrance should residents use during the lobby renovation?',
-        options: [
-          'The underground parking entrance',
-          'The back entrance on Oak Street',
-          'The side entrance on Elm Street',
-          'The emergency exit on the second floor'
+        setNumber: 6, difficulty: 'easy',
+        title: 'City of Burlington — Road Construction Detour',
+        passage: `From: City of Burlington Public Works <publicworks@burlington.ca>
+To: All Residents — Brant Street Corridor
+Date: March 30, 2026
+Subject: Road Construction Notice — Brant Street Closure, April 7–May 2
+
+Dear Resident,
+
+The City of Burlington will begin major infrastructure work on Brant Street between Caroline Street and Victoria Avenue beginning Monday, April 7, 2026. This work is scheduled to be completed by Friday, May 2, 2026, weather permitting.
+
+The work includes full replacement of a 40-year-old water main, resurfacing of the road surface, and installation of new bicycle lane markings. During construction, Brant Street will be CLOSED to all through traffic between Caroline Street and Victoria Avenue.
+
+DETOUR ROUTE FOR DRIVERS:
+Northbound: Take Guelph Line north, then left on Plains Road East, then right on Victoria Avenue.
+Southbound: Take Victoria Avenue west, then left on Plains Road East, then right on Guelph Line south.
+Local access will be maintained for residents within the construction zone.
+
+WHAT TO EXPECT:
+- Daytime work only: Monday to Friday, 7:00 AM to 7:00 PM
+- No weekend construction
+- Occasional short-term water service interruptions (maximum 4 hours) — you will receive 24-hour advance notice by door hanger
+- Construction noise and dust are unavoidable; we ask for your patience
+
+BUS ROUTES 10 AND 14 AFFECTED: Both routes will be rerouted during construction. Temporary bus stops are being set up on Guelph Line. Updated route maps are available at burlington.ca/transit or at all city libraries.
+
+For questions or concerns, contact our Construction Hotline at 905-555-0142 (Monday–Friday, 8:00 AM–4:30 PM) or email publicworks@burlington.ca.
+
+We apologize for the inconvenience and appreciate your understanding as we make this important investment in Burlington's infrastructure.
+
+Burlington Public Works Department`,
+        questions: [
+          { id: 'r1s6q1', type: 'mcq', num: 1, text: 'What is the main purpose of this letter?', options: ['To announce a new bicycle lane on Guelph Line', 'To inform residents about upcoming road construction and a detour', 'To request feedback from residents about infrastructure priorities', 'To warn residents about a water main emergency'], answer: 1, explanation: 'The letter informs residents about the Brant Street construction, the closure, and the detour route.' },
+          { id: 'r1s6q2', type: 'mcq', num: 2, text: 'What THREE things will be done during the Brant Street construction?', options: ['Water main replacement, road resurfacing, and new sidewalks', 'Water main replacement, road resurfacing, and bicycle lane markings', 'Traffic light installation, road resurfacing, and water main replacement', 'Bicycle lanes, new sidewalks, and storm drain replacement'], answer: 1, explanation: '"This work includes full replacement of a 40-year-old water main, resurfacing of the road surface, and installation of new bicycle lane markings."' },
+          { id: 'r1s6q3', type: 'mcq', num: 3, text: 'How will residents know in advance about water service interruptions?', options: ['By email notification 48 hours in advance', 'By a door hanger delivered 24 hours in advance', 'By a voicemail from the city 24 hours in advance', 'By a notice posted at the construction site'], answer: 1, explanation: '"Occasional short-term water service interruptions... you will receive 24-hour advance notice by door hanger."' },
+          { id: 'r1s6q4', type: 'mcq', num: 4, text: 'Where can residents find the updated bus route maps?', options: ['Only at City Hall', 'On the Burlington transit website or at city libraries', 'At construction site notices', 'By calling the Construction Hotline'], answer: 1, explanation: '"Updated route maps are available at burlington.ca/transit or at all city libraries."' },
+          { id: 'r1s6q5', type: 'mcq', num: 5, text: 'Who will still be able to access Brant Street during the closure?', options: ['No one — access will be completely blocked', 'Only emergency vehicles', 'Local residents within the construction zone', 'Only cyclists and pedestrians'], answer: 2, explanation: '"Local access will be maintained for residents within the construction zone."' },
+          { id: 'r1s6q6', type: 'dropdown', num: 6, text: 'Construction on Brant Street will run from April 7 to ______.', options: ['April 30, 2026', 'May 2, 2026', 'May 9, 2026', 'May 15, 2026'], answer: 1, explanation: '"scheduled to be completed by Friday, May 2, 2026."' },
+          { id: 'r1s6q7', type: 'dropdown', num: 7, text: 'The water main being replaced is ______ years old.', options: ['20', '30', '40', '50'], answer: 2, explanation: '"full replacement of a 40-year-old water main."' },
+          { id: 'r1s6q8', type: 'dropdown', num: 8, text: 'Construction work will take place from ______ AM to 7:00 PM, Monday to Friday.', options: ['6:00', '7:00', '8:00', '9:00'], answer: 1, explanation: '"Daytime work only: Monday to Friday, 7:00 AM to 7:00 PM."' },
+          { id: 'r1s6q9', type: 'dropdown', num: 9, text: 'Water service interruptions will last a maximum of ______ hours.', options: ['2', '4', '6', '8'], answer: 1, explanation: '"Occasional short-term water service interruptions (maximum 4 hours)."' },
+          { id: 'r1s6q10', type: 'dropdown', num: 10, text: 'The Construction Hotline is available Monday to Friday from 8:00 AM to ______.', options: ['4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM'], answer: 1, explanation: '"905-555-0142 (Monday–Friday, 8:00 AM–4:30 PM)."' },
+          { id: 'r1s6q11', type: 'dropdown', num: 11, text: 'Bus routes ______ and 14 are affected by the construction.', options: ['8', '10', '12', '16'], answer: 1, explanation: '"BUS ROUTES 10 AND 14 AFFECTED."' },
         ],
-        answer: 2,
-        explanation: 'The email states: "please use the side entrance on Elm Street."'
       },
+
+      // ── Set 7 ── Insurance Renewal ───────────────────────────────────
       {
-        id: 'r1q6', type: 'dropdown', num: 6,
-        text: 'Residents on Level P1 must move their cars to Level ______ from April 1-7.',
-        options: ['P2', 'P3', 'P4', 'the street'],
-        answer: 1,
-        explanation: 'The email says "Residents on Level P1 will need to park temporarily on Level P3 from April 1-7."'
+        setNumber: 7, difficulty: 'intermediate',
+        title: 'Insurance Company — Policy Renewal Notice',
+        passage: `From: Dominion Insurance Group <renewals@dominioninsurance.ca>
+To: Helen Fontaine <h.fontaine@email.com>
+Date: April 1, 2026
+Subject: Your Home Insurance Policy — Renewal Notice (Policy #DI-447832)
+
+Dear Helen Fontaine,
+
+Your home insurance policy (#DI-447832) is scheduled to renew automatically on May 1, 2026. We are writing to inform you of the updated terms and premium for the coming year.
+
+RENEWAL SUMMARY:
+- Policy period: May 1, 2026 – April 30, 2027
+- Dwelling coverage: $620,000 (previously $580,000 — updated to reflect current replacement costs)
+- Contents coverage: $85,000 (unchanged)
+- Additional living expenses: $40,000
+- Annual premium: $1,847.00 (previously $1,690.00 — an increase of $157.00)
+- Monthly payment option: $157.92/month (includes $3.67 instalment fee)
+
+REASON FOR PREMIUM INCREASE:
+Your premium has increased by 9.3% due to two factors: (1) rising construction costs in your area mean your dwelling coverage has been increased by $40,000 to ensure full replacement value, and (2) a slight adjustment in regional risk ratings reflecting increased storm claims across southwestern Ontario.
+
+YOUR DEDUCTIBLE:
+Standard deductible: $1,000 per claim
+Water damage deductible: $2,500 per claim (this deductible type applies specifically to water backup events)
+
+If you would like to discuss your coverage, adjust your deductible, or explore discounts such as our new home security discount (up to 10%) or our multi-policy discount (up to 8%), please call our renewals team at 1-888-555-0293 or log in to your account at dominioninsurance.ca.
+
+Your policy will renew automatically unless you contact us before April 25, 2026. To decline renewal, you must notify us in writing.
+
+Thank you for being a valued Dominion Insurance customer.
+
+Sincerely,
+Renewals Department
+Dominion Insurance Group
+1-888-555-0293 | dominioninsurance.ca`,
+        questions: [
+          { id: 'r1s7q1', type: 'mcq', num: 1, text: 'Why is Helen\'s premium increasing?', options: ['She filed a water damage claim last year', 'Rising construction costs increased her dwelling coverage, and regional risk ratings adjusted', 'She added a new vehicle to her policy', 'Her credit score decreased'], answer: 1, explanation: '"Your premium has increased by 9.3% due to two factors: (1) rising construction costs... and (2) a slight adjustment in regional risk ratings."' },
+          { id: 'r1s7q2', type: 'mcq', num: 2, text: 'What changed in Helen\'s dwelling coverage?', options: ['It decreased by $40,000', 'It remained unchanged at $580,000', 'It increased from $580,000 to $620,000', 'It increased from $620,000 to $660,000'], answer: 2, explanation: '"Dwelling coverage: $620,000 (previously $580,000 — updated to reflect current replacement costs)."' },
+          { id: 'r1s7q3', type: 'mcq', num: 3, text: 'If Helen chooses the monthly payment option, what additional cost does she pay?', options: ['A $5.00 processing fee', 'A $3.67 instalment fee per month', 'An annual administration fee of $25.00', 'No additional cost'], answer: 1, explanation: '"Monthly payment option: $157.92/month (includes $3.67 instalment fee)."' },
+          { id: 'r1s7q4', type: 'mcq', num: 4, text: 'What must Helen do if she does NOT want her policy to renew?', options: ['Simply do nothing', 'Call the renewals team before May 1', 'Notify Dominion in writing before April 25', 'Email the company and wait for confirmation'], answer: 2, explanation: '"Your policy will renew automatically unless you contact us before April 25, 2026. To decline renewal, you must notify us in writing."' },
+          { id: 'r1s7q5', type: 'mcq', num: 5, text: 'Which deductible applies specifically to water backup events?', options: ['The standard $1,000 deductible', 'The $2,500 water damage deductible', 'There is no deductible for water damage', 'The deductible for water events is $1,500'], answer: 1, explanation: '"Water damage deductible: $2,500 per claim (this deductible type applies specifically to water backup events)."' },
+          { id: 'r1s7q6', type: 'dropdown', num: 6, text: 'Helen\'s policy number is ______.', options: ['DI-447382', 'DI-447832', 'DI-474832', 'DI-447823'], answer: 1, explanation: '"Your home insurance policy (#DI-447832)."' },
+          { id: 'r1s7q7', type: 'dropdown', num: 7, text: 'The new annual premium is ______, up from $1,690.00.', options: ['$1,750.00', '$1,800.00', '$1,847.00', '$1,900.00'], answer: 2, explanation: '"Annual premium: $1,847.00 (previously $1,690.00)."' },
+          { id: 'r1s7q8', type: 'dropdown', num: 8, text: 'The premium increase percentage is ______.', options: ['7.5%', '8.0%', '9.3%', '10.1%'], answer: 2, explanation: '"Your premium has increased by 9.3%."' },
+          { id: 'r1s7q9', type: 'dropdown', num: 9, text: 'The multi-policy discount offered is up to ______.', options: ['5%', '8%', '10%', '12%'], answer: 1, explanation: '"multi-policy discount (up to 8%)."' },
+          { id: 'r1s7q10', type: 'dropdown', num: 10, text: 'The new policy period runs from May 1, 2026 to ______.', options: ['April 30, 2026', 'April 30, 2027', 'May 1, 2027', 'December 31, 2027'], answer: 1, explanation: '"Policy period: May 1, 2026 – April 30, 2027."' },
+          { id: 'r1s7q11', type: 'dropdown', num: 11, text: 'Additional living expenses coverage is set at ______.', options: ['$25,000', '$35,000', '$40,000', '$50,000'], answer: 2, explanation: '"Additional living expenses: $40,000."' },
+        ],
       },
+
+      // ── Set 8 ── Landlord Lease Renewal ─────────────────────────────
       {
-        id: 'r1q7', type: 'dropdown', num: 7,
-        text: 'Temporary parking passes will be delivered by ______.',
-        options: ['April 1', 'March 25', 'March 28', 'April 15'],
-        answer: 2,
-        explanation: '"Temporary parking passes will be placed under your door by March 28."'
+        setNumber: 8, difficulty: 'intermediate',
+        title: 'Landlord — Lease Renewal & Rent Increase Notice',
+        passage: `From: Teresa Morin <t.morin@silvermapleproperties.ca>
+To: Aidan Clarke <aidanclarke@email.com>
+Date: March 25, 2026
+Subject: Lease Renewal — Unit 308, 1450 Lakeview Drive, Ottawa
+
+Dear Aidan,
+
+I am writing to inform you that your current one-year lease for Unit 308 at 1450 Lakeview Drive will expire on June 30, 2026. I would like to offer you the opportunity to renew.
+
+RENEWAL OPTIONS:
+1. One-year fixed lease (July 1, 2026 – June 30, 2027): Monthly rent of $1,875/month (current rent: $1,780/month — increase of $95/month, which is within Ontario's 2026 rent increase guideline of 2.5%).
+2. Month-to-month tenancy: Monthly rent of $1,875/month, with either party providing 60 days' written notice to terminate.
+
+WHAT STAYS THE SAME:
+- All current lease terms remain in effect (no pets permitted, no smoking anywhere on the property, parking space #14 included).
+- Utilities: hydro and internet are tenant responsibility; heat and water remain included.
+- Building laundry and storage locker access continue at no additional cost.
+
+WHAT'S NEW IN THE BUILDING:
+We have completed renovations to the rooftop patio, which is now open to all residents from 8:00 AM to 10:00 PM. A new secure parcel room was also installed in the lobby in January.
+
+NEXT STEPS:
+Please let me know your decision by April 25, 2026. If I do not hear from you, Ontario tenancy law allows your tenancy to automatically continue on a month-to-month basis at the new rent. To accept the one-year renewal, please sign and return the enclosed renewal agreement.
+
+Please feel free to call me at 613-555-0182 or reply to this email if you have any questions.
+
+Warm regards,
+Teresa Morin
+Property Manager, Silver Maple Properties`,
+        questions: [
+          { id: 'r1s8q1', type: 'mcq', num: 1, text: 'What is the purpose of this email?', options: ['To inform Aidan that his lease will not be renewed', 'To offer Aidan lease renewal options and inform him of the new rent', 'To notify Aidan of an emergency maintenance issue', 'To invite Aidan to a building meeting'], answer: 1, explanation: 'Teresa writes "to inform you that your current one-year lease... will expire on June 30, 2026" and offers renewal options.' },
+          { id: 'r1s8q2', type: 'mcq', num: 2, text: 'By how much is the monthly rent increasing?', options: ['$50/month', '$75/month', '$95/month', '$120/month'], answer: 2, explanation: '"Monthly rent of $1,875/month (current rent: $1,780/month — increase of $95/month)."' },
+          { id: 'r1s8q3', type: 'mcq', num: 3, text: 'What happens if Aidan does not respond by April 25?', options: ['His tenancy ends automatically on June 30', 'His lease automatically renews for another year at the same rent', 'His tenancy continues month-to-month at the new rent', 'He will be issued an eviction notice'], answer: 2, explanation: '"Ontario tenancy law allows your tenancy to automatically continue on a month-to-month basis at the new rent."' },
+          { id: 'r1s8q4', type: 'mcq', num: 4, text: 'Which utilities are included in Aidan\'s rent?', options: ['Hydro and internet', 'Hydro and heat', 'Heat and water', 'Heat, water, and internet'], answer: 2, explanation: '"hydro and internet are tenant responsibility; heat and water remain included."' },
+          { id: 'r1s8q5', type: 'mcq', num: 5, text: 'What new amenity has been added to the building?', options: ['An indoor swimming pool', 'A rooftop garden with a BBQ area', 'A secure parcel room in the lobby', 'A fitness centre on the ground floor'], answer: 2, explanation: '"A new secure parcel room was also installed in the lobby in January."' },
+          { id: 'r1s8q6', type: 'dropdown', num: 6, text: 'Aidan\'s current monthly rent is ______.', options: ['$1,750', '$1,780', '$1,875', '$1,900'], answer: 1, explanation: '"current rent: $1,780/month."' },
+          { id: 'r1s8q7', type: 'dropdown', num: 7, text: 'The rent increase is within Ontario\'s 2026 guideline of ______.', options: ['1.5%', '2.0%', '2.5%', '3.0%'], answer: 2, explanation: '"which is within Ontario\'s 2026 rent increase guideline of 2.5%."' },
+          { id: 'r1s8q8', type: 'dropdown', num: 8, text: 'Aidan\'s parking space number is ______.', options: ['12', '14', '16', '18'], answer: 1, explanation: '"parking space #14 included."' },
+          { id: 'r1s8q9', type: 'dropdown', num: 9, text: 'The rooftop patio is open to residents from 8:00 AM to ______.', options: ['9:00 PM', '10:00 PM', '11:00 PM', 'midnight'], answer: 1, explanation: '"open to all residents from 8:00 AM to 10:00 PM."' },
+          { id: 'r1s8q10', type: 'dropdown', num: 10, text: 'Aidan must respond to the renewal offer by ______.', options: ['April 15, 2026', 'April 25, 2026', 'May 1, 2026', 'June 30, 2026'], answer: 1, explanation: '"Please let me know your decision by April 25, 2026."' },
+          { id: 'r1s8q11', type: 'dropdown', num: 11, text: 'The month-to-month option requires ______ days\' written notice to terminate.', options: ['30', '45', '60', '90'], answer: 2, explanation: '"Month-to-month tenancy... with either party providing 60 days\' written notice to terminate."' },
+        ],
       },
+
+      // ── Set 9 ── School Cafeteria Policy ─────────────────────────────
       {
-        id: 'r1q8', type: 'dropdown', num: 8,
-        text: 'The new recycling rules take effect on ______.',
-        options: ['April 1', 'April 15', 'May 5', 'March 25'],
-        answer: 1,
-        explanation: '"the city has updated its recycling guidelines effective April 15."'
+        setNumber: 9, difficulty: 'intermediate',
+        title: 'School District — New Cafeteria Nutrition Policy',
+        passage: `From: Westfield School District <communications@westfieldsd.ca>
+To: Parents and Guardians — Westfield Elementary & Middle Schools
+Date: April 2, 2026
+Subject: Important Update — Nutrition and Cafeteria Policy, Effective September 2026
+
+Dear Parent or Guardian,
+
+We are pleased to announce the implementation of Westfield School District's updated Nutrition and Cafeteria Policy, which will take effect at the beginning of the 2026–2027 school year (September 2, 2026). This policy was developed with input from parents, teachers, nutritionists, and the school board, and is designed to promote healthy habits and improve student focus and energy throughout the school day.
+
+KEY CHANGES:
+1. Sugar-sweetened beverages (soft drinks, fruit-flavoured drinks with added sugar) will no longer be sold in school cafeterias or vending machines. Water, milk (dairy and unsweetened plant-based), and 100% fruit juice (one serving) will remain available.
+2. All cafeteria meals will follow Canada's Food Guide, ensuring each meal includes a protein, whole grain, and at least one vegetable or fruit serving.
+3. "Treat days" — previously held every Friday — will be reduced to once per month. On treat days, one low-sugar dessert option will be available.
+4. A new allergen management system will be introduced: all dishes will be labelled with the top 14 allergens (including peanuts, tree nuts, dairy, eggs, gluten, and shellfish).
+
+WHAT THIS MEANS FOR PACKED LUNCHES:
+The policy does NOT restrict what students bring from home. However, we ask that families avoid sending nut products, as we have students with severe allergies. Existing allergen-free guidelines for classrooms remain in place.
+
+We will host an information session for parents on May 14, 2026, at 6:30 PM in the school gymnasium to answer questions and share sample meal plans. A full copy of the policy is available at westfieldsd.ca/nutrition.
+
+Thank you for your partnership in supporting student health and wellbeing.
+
+Westfield School District Administration`,
+        questions: [
+          { id: 'r1s9q1', type: 'mcq', num: 1, text: 'What is the main purpose of this letter?', options: ['To ask parents to volunteer in the cafeteria', 'To announce and explain an updated cafeteria and nutrition policy', 'To report a food safety incident at the school', 'To request dietary information from all students'], answer: 1, explanation: 'The letter announces "the implementation of Westfield School District\'s updated Nutrition and Cafeteria Policy."' },
+          { id: 'r1s9q2', type: 'mcq', num: 2, text: 'Which beverages will still be available in school cafeterias?', options: ['Soft drinks and milk', 'Only water and milk', 'Water, milk, and 100% fruit juice', 'Sports drinks and water'], answer: 2, explanation: '"Water, milk (dairy and unsweetened plant-based), and 100% fruit juice (one serving) will remain available."' },
+          { id: 'r1s9q3', type: 'mcq', num: 3, text: 'How has the "treat day" frequency changed?', options: ['Treat days have been completely eliminated', 'They have changed from daily to once per week', 'They have changed from once per week to once per month', 'They remain unchanged at once per week'], answer: 2, explanation: '"\'Treat days\' — previously held every Friday — will be reduced to once per month."' },
+          { id: 'r1s9q4', type: 'mcq', num: 4, text: 'Does the new policy restrict what children bring from home?', options: ['Yes, all lunches must follow Canada\'s Food Guide', 'Yes, no sugar is allowed in packed lunches', 'No, the policy does not restrict packed lunches, though nut products are discouraged', 'No restrictions at all are mentioned for packed lunches'], answer: 2, explanation: '"The policy does NOT restrict what students bring from home. However, we ask that families avoid sending nut products."' },
+          { id: 'r1s9q5', type: 'mcq', num: 5, text: 'How many allergens will be labelled on all cafeteria dishes under the new system?', options: ['8', '10', '12', '14'], answer: 3, explanation: '"all dishes will be labelled with the top 14 allergens (including peanuts, tree nuts, dairy, eggs, gluten, and shellfish)."' },
+          { id: 'r1s9q6', type: 'dropdown', num: 6, text: 'The new policy will take effect on ______.', options: ['January 6, 2026', 'April 2, 2026', 'September 2, 2026', 'September 7, 2026'], answer: 2, explanation: '"which will take effect at the beginning of the 2026–2027 school year (September 2, 2026)."' },
+          { id: 'r1s9q7', type: 'dropdown', num: 7, text: 'The parent information session will be held on ______ at 6:30 PM.', options: ['April 14, 2026', 'May 1, 2026', 'May 14, 2026', 'September 2, 2026'], answer: 2, explanation: '"We will host an information session for parents on May 14, 2026, at 6:30 PM."' },
+          { id: 'r1s9q8', type: 'dropdown', num: 8, text: 'The parent information session will be held in the school ______.', options: ['cafeteria', 'gymnasium', 'library', 'auditorium'], answer: 1, explanation: '"at 6:30 PM in the school gymnasium."' },
+          { id: 'r1s9q9', type: 'dropdown', num: 9, text: 'The full policy document is available at ______.', options: ['westfieldsd.ca/policy', 'westfieldsd.ca/nutrition', 'westfieldsd.ca/cafeteria', 'westfieldsd.ca/health'], answer: 1, explanation: '"A full copy of the policy is available at westfieldsd.ca/nutrition."' },
+          { id: 'r1s9q10', type: 'dropdown', num: 10, text: 'Each cafeteria meal will include a protein, whole grain, and at least one ______.', options: ['dessert option', 'vitamin supplement', 'vegetable or fruit serving', 'dairy product'], answer: 2, explanation: '"each meal includes a protein, whole grain, and at least one vegetable or fruit serving."' },
+          { id: 'r1s9q11', type: 'dropdown', num: 11, text: 'The policy was developed with input from parents, teachers, nutritionists, and ______.', options: ['the ministry of education', 'the school board', 'a dietitian council', 'Health Canada'], answer: 1, explanation: '"developed with input from parents, teachers, nutritionists, and the school board."' },
+        ],
       },
+
+      // ── Set 10 ── Online Order Delay ─────────────────────────────────
       {
-        id: 'r1q9', type: 'dropdown', num: 9,
-        text: 'The lobby renovation will close the main entrance for ______.',
-        options: ['one week', 'two weeks', '3-4 weeks', '2 months'],
-        answer: 2,
-        explanation: '"The main entrance will be closed for 3-4 weeks."'
+        setNumber: 10, difficulty: 'intermediate',
+        title: 'Online Retailer — Order Delay & Shipping Update',
+        passage: `From: NorthShop Canada <orders@northshop.ca>
+To: Fatima Al-Hassan <fatima.alhassan@email.com>
+Date: April 4, 2026
+Subject: Update on Your Order #NS-2026-08817
+
+Dear Fatima,
+
+Thank you for shopping with NorthShop Canada. We are writing to inform you of an unexpected delay affecting your order #NS-2026-08817, placed on March 28, 2026.
+
+YOUR ORDER:
+- Portable Bluetooth Speaker (Model: SoundWave Pro X) × 1 — $89.99
+- Laptop Sleeve — 15-inch Charcoal Grey × 1 — $34.99
+- USB-C Hub 7-Port × 1 — $44.99
+Order subtotal: $169.97 + HST ($22.10) = $192.07 (paid via Visa ending 3312)
+
+WHAT HAPPENED:
+The USB-C Hub you ordered is currently out of stock at our fulfillment centre due to an unexpected supplier delay. Your SoundWave Pro X speaker and laptop sleeve are ready to ship and will be sent within 24–48 hours. The USB-C Hub is expected to be restocked by April 14–18, 2026.
+
+YOUR OPTIONS:
+1. Wait for the full order: We can ship everything together when the hub arrives (estimated delivery: April 21–25).
+2. Split shipment: We ship the speaker and sleeve now at no extra cost; the hub ships when restocked (additional 3–5 business days after restocking).
+3. Cancel the USB-C Hub: We will refund $44.99 + applicable tax ($5.85) = $50.84 to your Visa ending 3312 within 3–5 business days.
+
+Please reply to this email or contact us at 1-800-555-0311 by April 8, 2026 to let us know your preference. If we do not hear from you by April 8, we will proceed with Option 1 (ship together).
+
+We apologize for this inconvenience and have applied a $10 discount code to your account (code: DELAY10) for use on your next order.
+
+NorthShop Canada Customer Care`,
+        questions: [
+          { id: 'r1s10q1', type: 'mcq', num: 1, text: 'Why is Fatima\'s order delayed?', options: ['The warehouse lost her order', 'The USB-C Hub is out of stock due to a supplier delay', 'The payment on her Visa card was declined', 'Bad weather disrupted the shipping route'], answer: 1, explanation: '"The USB-C Hub you ordered is currently out of stock at our fulfillment centre due to an unexpected supplier delay."' },
+          { id: 'r1s10q2', type: 'mcq', num: 2, text: 'Which items are ready to ship immediately?', options: ['Only the USB-C Hub', 'The SoundWave Pro X speaker and laptop sleeve', 'The laptop sleeve and USB-C Hub only', 'None of the items are ready'], answer: 1, explanation: '"Your SoundWave Pro X speaker and laptop sleeve are ready to ship and will be sent within 24–48 hours."' },
+          { id: 'r1s10q3', type: 'mcq', num: 3, text: 'What happens if Fatima does not respond by April 8?', options: ['Her entire order will be cancelled', 'NorthShop will ship the ready items immediately', 'NorthShop will ship everything together (Option 1)', 'A refund will be issued automatically'], answer: 2, explanation: '"If we do not hear from you by April 8, we will proceed with Option 1 (ship together)."' },
+          { id: 'r1s10q4', type: 'mcq', num: 4, text: 'If Fatima cancels the USB-C Hub, how much will she be refunded?', options: ['$44.99', '$49.00', '$50.84', '$53.19'], answer: 2, explanation: '"refund $44.99 + applicable tax ($5.85) = $50.84 to your Visa ending 3312."' },
+          { id: 'r1s10q5', type: 'mcq', num: 5, text: 'What has NorthShop done to compensate for the delay?', options: ['Offered free expedited shipping on this order', 'Applied a $10 discount code for Fatima\'s next order', 'Upgraded her to a premium speaker model', 'Waived the HST on her order'], answer: 1, explanation: '"we have applied a $10 discount code to your account (code: DELAY10) for use on your next order."' },
+          { id: 'r1s10q6', type: 'dropdown', num: 6, text: 'Fatima\'s order number is ______.', options: ['NS-2026-08817', 'NS-2026-08871', 'NS-2026-08718', 'NS-2026-08178'], answer: 0, explanation: '"your order #NS-2026-08817."' },
+          { id: 'r1s10q7', type: 'dropdown', num: 7, text: 'The total amount Fatima paid including HST was ______.', options: ['$169.97', '$180.07', '$192.07', '$199.97'], answer: 2, explanation: '"$169.97 + HST ($22.10) = $192.07."' },
+          { id: 'r1s10q8', type: 'dropdown', num: 8, text: 'The USB-C Hub is expected to be restocked by ______.', options: ['April 8–10, 2026', 'April 14–18, 2026', 'April 21–25, 2026', 'May 1–5, 2026'], answer: 1, explanation: '"The USB-C Hub is expected to be restocked by April 14–18, 2026."' },
+          { id: 'r1s10q9', type: 'dropdown', num: 9, text: 'If Fatima chooses a split shipment, the hub will arrive ______ business days after restocking.', options: ['1–2', '3–5', '5–7', '7–10'], answer: 1, explanation: '"the hub ships when restocked (additional 3–5 business days after restocking)."' },
+          { id: 'r1s10q10', type: 'dropdown', num: 10, text: 'The discount code for Fatima\'s next order is ______.', options: ['SORRY10', 'WAIT10', 'DELAY10', 'LATE10'], answer: 2, explanation: '"discount code: DELAY10."' },
+          { id: 'r1s10q11', type: 'dropdown', num: 11, text: 'Fatima\'s Visa card ends in ______.', options: ['3132', '3312', '3321', '3231'], answer: 1, explanation: '"paid via Visa ending 3312."' },
+        ],
       },
+
+      // ── Set 11 ── Noise Bylaw Response ───────────────────────────────
       {
-        id: 'r1q10', type: 'dropdown', num: 10,
-        text: 'The renovation will include new flooring, updated lighting, modernized mailboxes, and a new ______.',
-        options: ['gym', 'parcel room', 'laundry area', 'bike storage'],
-        answer: 1,
-        explanation: '"new flooring, a modernized mailbox area, updated lighting, and a small parcel room for package deliveries."'
+        setNumber: 11, difficulty: 'intermediate',
+        title: 'Municipal Bylaw Office — Noise Complaint Response',
+        passage: `From: City of Hamilton Bylaw Services <bylaw@hamilton.ca>
+To: Residence at 44 Maple Crescent
+Date: April 5, 2026
+Subject: Response to Noise Complaint — File #BL-2026-1144
+
+Dear Resident,
+
+Thank you for submitting a noise complaint (File #BL-2026-1144) regarding the property at 46 Maple Crescent. We are writing to inform you of the outcome of our investigation.
+
+INVESTIGATION SUMMARY:
+A bylaw officer visited the property on April 3, 2026 at 9:45 PM in response to your complaint about repeated late-night noise (music and gatherings). The officer confirmed that noise levels at the property at the time of the visit were within acceptable limits under the City of Hamilton Noise By-law No. 96-136. No violation was issued.
+
+However, our records show that this address has received two previous noise complaints in the past 12 months (filed October 2025 and January 2026). The resident at 46 Maple Crescent has been issued a formal written warning, which has been placed on file. A second violation within 24 months may result in a fine of up to $500 under the City of Hamilton Noise By-law.
+
+YOUR RIGHTS AS A COMPLAINANT:
+If the noise issue continues, you may:
+1. Submit a new complaint online at hamilton.ca/bylaw or by calling 905-546-2489 (available 24 hours).
+2. Document the noise with timestamps and, if possible, a brief recording on your phone.
+3. Request mediation through the Hamilton Community Mediation Service at no cost (905-526-8100).
+
+All complaints are handled confidentially. The identity of complainants is not disclosed to the subject of the investigation.
+
+We encourage neighbours to attempt direct communication where safe to do so, as many disputes are resolved without bylaw involvement.
+
+Thank you for helping maintain a peaceful community.
+
+Bylaw Services Division — City of Hamilton`,
+        questions: [
+          { id: 'r1s11q1', type: 'mcq', num: 1, text: 'What was the result of the bylaw officer\'s investigation?', options: ['A $500 fine was issued to 46 Maple Crescent', 'The noise at the time of the visit was within acceptable limits; no violation was issued', 'The property was shut down for 30 days', 'A warning was issued to both properties'], answer: 1, explanation: '"noise levels at the property at the time of the visit were within acceptable limits... No violation was issued."' },
+          { id: 'r1s11q2', type: 'mcq', num: 2, text: 'How many previous noise complaints had 46 Maple Crescent received in the past 12 months?', options: ['None', 'One', 'Two', 'Three'], answer: 2, explanation: '"our records show that this address has received two previous noise complaints in the past 12 months."' },
+          { id: 'r1s11q3', type: 'mcq', num: 3, text: 'What could happen if the resident at 46 Maple Crescent receives another violation within 24 months?', options: ['Immediate eviction from the property', 'A fine of up to $500', 'Criminal charges for disturbing the peace', 'Automatic suspension of their noise complaint history'], answer: 1, explanation: '"A second violation within 24 months may result in a fine of up to $500."' },
+          { id: 'r1s11q4', type: 'mcq', num: 4, text: 'What is the Community Mediation Service option?', options: ['A free service provided by the city to help resolve neighbour disputes', 'A paid service that requires a court order', 'A service provided only for repeat offenders', 'A service that forces the noisy neighbour to relocate'], answer: 0, explanation: '"Request mediation through the Hamilton Community Mediation Service at no cost."' },
+          { id: 'r1s11q5', type: 'mcq', num: 5, text: 'Is the complainant\'s identity disclosed to the person being investigated?', options: ['Yes, always, to maintain transparency', 'Only if a fine is issued', 'No — complaints are handled confidentially', 'Only with the complainant\'s written permission'], answer: 2, explanation: '"All complaints are handled confidentially. The identity of complainants is not disclosed to the subject of the investigation."' },
+          { id: 'r1s11q6', type: 'dropdown', num: 6, text: 'The complaint file number is ______.', options: ['BL-2026-1114', 'BL-2026-1141', 'BL-2026-1144', 'BL-2026-4114'], answer: 2, explanation: '"File #BL-2026-1144."' },
+          { id: 'r1s11q7', type: 'dropdown', num: 7, text: 'The bylaw officer visited the property on April 3, 2026 at ______ PM.', options: ['8:45', '9:15', '9:45', '10:15'], answer: 2, explanation: '"A bylaw officer visited the property on April 3, 2026 at 9:45 PM."' },
+          { id: 'r1s11q8', type: 'dropdown', num: 8, text: 'The resident at 46 Maple Crescent received a formal ______.', options: ['court summons', 'written warning', '$250 fine', 'eviction notice'], answer: 1, explanation: '"The resident at 46 Maple Crescent has been issued a formal written warning."' },
+          { id: 'r1s11q9', type: 'dropdown', num: 9, text: 'Bylaw complaints can be submitted 24 hours a day by calling ______.', options: ['905-526-8100', '905-546-2489', '905-555-0142', '905-555-0188'], answer: 1, explanation: '"Submit a new complaint online at hamilton.ca/bylaw or by calling 905-546-2489 (available 24 hours)."' },
+          { id: 'r1s11q10', type: 'dropdown', num: 10, text: 'The previous complaints were filed in October 2025 and ______.', options: ['November 2025', 'December 2025', 'January 2026', 'February 2026'], answer: 2, explanation: '"two previous noise complaints in the past 12 months (filed October 2025 and January 2026)."' },
+          { id: 'r1s11q11', type: 'dropdown', num: 11, text: 'The applicable noise bylaw is City of Hamilton By-law No. ______.', options: ['96-113', '96-136', '96-163', '96-316'], answer: 1, explanation: '"within acceptable limits under the City of Hamilton Noise By-law No. 96-136."' },
+        ],
       },
+
+      // ── Set 12 ── Hybrid Work Policy ─────────────────────────────────
       {
-        id: 'r1q11', type: 'dropdown', num: 11,
-        text: 'The Q&A session will be held in the ______ on March 25.',
-        options: ['lobby', 'parking garage', 'common room', 'mail room'],
-        answer: 2,
-        explanation: '"I will also host a short Q&A session in the common room on March 25 at 7:00 PM."'
-      }
-    ]
+        setNumber: 12, difficulty: 'intermediate',
+        title: 'Employer — Hybrid Work Policy Announcement',
+        passage: `From: Rachel Stern, Chief People Officer <r.stern@clearpath.ca>
+To: All Staff — Clearpath Consulting
+Date: March 31, 2026
+Subject: Hybrid Work Policy — Effective May 1, 2026
+
+Dear Clearpath Team,
+
+After extensive consultation with department heads, employee working groups, and our external HR advisors, Clearpath Consulting is implementing a formal Hybrid Work Policy effective May 1, 2026.
+
+KEY ELEMENTS OF THE POLICY:
+
+In-Office Requirements: All permanent employees are expected to work from the office a minimum of three days per week. Your team lead will coordinate specific in-office days to ensure team overlap. The expectation is that most teams will align on a Tuesday–Thursday core in-office schedule, with flexibility on Mondays and Fridays.
+
+Remote Days: On remote days, employees are expected to be available during core hours (10:00 AM–3:00 PM Eastern), regardless of their time zone. Cameras should be on for team meetings unless technical issues are present.
+
+Equipment: Employees working remotely are responsible for maintaining a reliable internet connection. The company will provide one ergonomic chair, one external monitor, and a laptop stand for home offices through our Equipment Request Portal (clearpath.ca/equipment). Requests must be submitted by April 20, 2026.
+
+Exceptions: Roles that are fully remote by original designation (certain IT and contractor positions) are exempt. Employees with documented medical accommodations remain in effect. Requests for additional remote flexibility will be reviewed by HR on a case-by-case basis.
+
+We understand change is not always easy. A full FAQ and a recorded town hall session from last week are available at clearpath.ca/hybridwork. One-on-one meetings with your manager to discuss any concerns are encouraged and can be scheduled through the HR portal.
+
+Thank you for your continued dedication. We believe this balanced approach will strengthen our culture while preserving the flexibility many of us value.
+
+Rachel Stern
+Chief People Officer, Clearpath Consulting`,
+        questions: [
+          { id: 'r1s12q1', type: 'mcq', num: 1, text: 'What is the minimum number of days per week all permanent employees must work from the office?', options: ['One day', 'Two days', 'Three days', 'Four days'], answer: 2, explanation: '"All permanent employees are expected to work from the office a minimum of three days per week."' },
+          { id: 'r1s12q2', type: 'mcq', num: 2, text: 'What are "core hours" on remote days?', options: ['9:00 AM–5:00 PM Eastern', '9:00 AM–12:00 PM Eastern', '10:00 AM–3:00 PM Eastern', '10:00 AM–4:00 PM Eastern'], answer: 2, explanation: '"employees are expected to be available during core hours (10:00 AM–3:00 PM Eastern)."' },
+          { id: 'r1s12q3', type: 'mcq', num: 3, text: 'What home office equipment will Clearpath provide?', options: ['A desk, chair, and monitor', 'A laptop, chair, and mouse', 'An ergonomic chair, external monitor, and laptop stand', 'A second monitor, keyboard, and webcam'], answer: 2, explanation: '"The company will provide one ergonomic chair, one external monitor, and a laptop stand for home offices."' },
+          { id: 'r1s12q4', type: 'mcq', num: 4, text: 'Who is exempt from the in-office requirement?', options: ['All employees who prefer remote work', 'Employees with more than 5 years of seniority', 'Certain IT and contractor positions originally designated as fully remote, and medical accommodation holders', 'Department managers and team leads'], answer: 2, explanation: '"Roles that are fully remote by original designation (certain IT and contractor positions) are exempt. Employees with documented medical accommodations remain in effect."' },
+          { id: 'r1s12q5', type: 'mcq', num: 5, text: 'Where can employees find the FAQ and town hall recording?', options: ['In a PDF attached to this email', 'On the HR portal clearpath.ca/hybridwork', 'Distributed by their team lead in the next meeting', 'Only available in the office on request'], answer: 1, explanation: '"A full FAQ and a recorded town hall session from last week are available at clearpath.ca/hybridwork."' },
+          { id: 'r1s12q6', type: 'dropdown', num: 6, text: 'The hybrid work policy takes effect on ______.', options: ['April 1, 2026', 'April 20, 2026', 'May 1, 2026', 'June 1, 2026'], answer: 2, explanation: '"implementing a formal Hybrid Work Policy effective May 1, 2026."' },
+          { id: 'r1s12q7', type: 'dropdown', num: 7, text: 'Equipment requests must be submitted by ______.', options: ['April 15, 2026', 'April 20, 2026', 'April 30, 2026', 'May 1, 2026'], answer: 1, explanation: '"Requests must be submitted by April 20, 2026."' },
+          { id: 'r1s12q8', type: 'dropdown', num: 8, text: 'The expected core in-office days for most teams are ______.', options: ['Monday to Wednesday', 'Tuesday to Thursday', 'Wednesday to Friday', 'Monday, Wednesday, Friday'], answer: 1, explanation: '"most teams will align on a Tuesday–Thursday core in-office schedule."' },
+          { id: 'r1s12q9', type: 'dropdown', num: 9, text: 'The sender\'s title is ______.', options: ['Chief Executive Officer', 'Chief Operating Officer', 'Chief People Officer', 'Head of Human Resources'], answer: 2, explanation: '"Rachel Stern, Chief People Officer."' },
+          { id: 'r1s12q10', type: 'dropdown', num: 10, text: 'Requests for additional remote flexibility are reviewed by ______ on a case-by-case basis.', options: ['the CEO', 'the department head', 'HR', 'the company board'], answer: 2, explanation: '"Requests for additional remote flexibility will be reviewed by HR on a case-by-case basis."' },
+          { id: 'r1s12q11', type: 'dropdown', num: 11, text: 'On remote days, cameras should be on for team meetings unless ______.', options: ['the employee is working from a café', 'technical issues are present', 'the meeting is with external clients', 'the employee has prior approval'], answer: 1, explanation: '"Cameras should be on for team meetings unless technical issues are present."' },
+        ],
+      },
+
+      // ── Set 13 ── Doctor Referral ─────────────────────────────────────
+      {
+        setNumber: 13, difficulty: 'intermediate',
+        title: "Doctor's Office — Test Results & Specialist Referral",
+        passage: `From: Dr. Ana Pereira <dr.pereira@northtownfamilyhealth.ca>
+To: Thomas Bergstrom <t.bergstrom@email.com>
+Date: April 6, 2026
+Subject: Your Recent Blood Work Results & Specialist Referral
+
+Dear Thomas,
+
+Thank you for visiting our clinic last week. Your blood work results are now available, and I would like to share them with you and discuss next steps.
+
+YOUR RESULTS SUMMARY:
+- Complete blood count (CBC): Normal
+- Liver enzymes (ALT/AST): Mildly elevated — ALT at 52 U/L (normal range: 7–40 U/L)
+- Fasting glucose: 6.1 mmol/L (normal: below 6.0 — borderline; monitoring recommended)
+- Total cholesterol: 5.4 mmol/L (borderline high — target below 5.2)
+- Thyroid (TSH): Normal
+
+WHAT THIS MEANS:
+The mildly elevated liver enzymes may be related to a medication you are taking, recent alcohol use, or other factors. This is not an emergency, but it warrants follow-up. Your borderline fasting glucose and cholesterol readings also suggest we should monitor your cardiovascular risk factors more closely over the coming months.
+
+NEXT STEPS:
+I have referred you to Dr. Mark Elias, a gastroenterologist at Sunridge Medical Specialists. His office will contact you within 5 business days to schedule an appointment. In the meantime, I recommend: (1) avoiding alcohol for at least 3 weeks before your specialist visit; (2) a low-saturated-fat diet to help bring your cholesterol into target range; and (3) a 30-minute walk most days of the week.
+
+A repeat blood panel is scheduled for 3 months from now. Please book this through our front desk at 905-555-0161.
+
+If you have any questions or experience new symptoms — particularly abdominal pain, jaundice, or unusual fatigue — please call our office immediately or visit an urgent care clinic.
+
+Kind regards,
+Dr. Ana Pereira
+North Town Family Health Centre`,
+        questions: [
+          { id: 'r1s13q1', type: 'mcq', num: 1, text: 'Why is Dr. Pereira writing to Thomas?', options: ['To reschedule his annual physical examination', 'To share his blood work results and outline next steps', 'To refer him directly to an emergency department', 'To inform him that all his results are normal'], answer: 1, explanation: 'Dr. Pereira writes: "Your blood work results are now available, and I would like to share them with you and discuss next steps."' },
+          { id: 'r1s13q2', type: 'mcq', num: 2, text: 'Which test result was flagged as mildly elevated?', options: ['Complete blood count (CBC)', 'Thyroid (TSH)', 'Liver enzyme ALT', 'Fasting glucose'], answer: 2, explanation: '"Liver enzymes (ALT/AST): Mildly elevated — ALT at 52 U/L (normal range: 7–40 U/L)."' },
+          { id: 'r1s13q3', type: 'mcq', num: 3, text: 'Why might Thomas\'s liver enzymes be elevated?', options: ['Due to a serious liver disease', 'Possibly due to a medication, recent alcohol use, or other factors', 'Because of his thyroid condition', 'Because his cholesterol is too high'], answer: 1, explanation: '"The mildly elevated liver enzymes may be related to a medication you are taking, recent alcohol use, or other factors."' },
+          { id: 'r1s13q4', type: 'mcq', num: 4, text: 'What should Thomas call the clinic immediately about?', options: ['Questions about his diet plan', 'Booking his 3-month blood panel', 'New symptoms such as abdominal pain, jaundice, or unusual fatigue', 'Confirming his specialist appointment'], answer: 2, explanation: '"If you have any questions or experience new symptoms — particularly abdominal pain, jaundice, or unusual fatigue — please call our office immediately."' },
+          { id: 'r1s13q5', type: 'mcq', num: 5, text: 'Which two test results are described as "borderline" or higher than the target range?', options: ['CBC and TSH', 'ALT and CBC', 'Fasting glucose and total cholesterol', 'TSH and total cholesterol'], answer: 2, explanation: 'Fasting glucose at 6.1 mmol/L is "borderline" and total cholesterol at 5.4 is "borderline high — target below 5.2."' },
+          { id: 'r1s13q6', type: 'dropdown', num: 6, text: 'Thomas has been referred to Dr. Mark Elias, a ______.', options: ['cardiologist', 'endocrinologist', 'gastroenterologist', 'hepatologist'], answer: 2, explanation: '"Dr. Mark Elias, a gastroenterologist at Sunridge Medical Specialists."' },
+          { id: 'r1s13q7', type: 'dropdown', num: 7, text: 'The specialist\'s office will contact Thomas within ______ business days.', options: ['2', '3', '5', '7'], answer: 2, explanation: '"His office will contact you within 5 business days to schedule an appointment."' },
+          { id: 'r1s13q8', type: 'dropdown', num: 8, text: 'Thomas should avoid alcohol for at least ______ before his specialist visit.', options: ['1 week', '2 weeks', '3 weeks', '1 month'], answer: 2, explanation: '"avoiding alcohol for at least 3 weeks before your specialist visit."' },
+          { id: 'r1s13q9', type: 'dropdown', num: 9, text: 'Thomas\'s ALT level was ______ U/L, compared to the normal upper limit of 40 U/L.', options: ['42', '48', '52', '58'], answer: 2, explanation: '"ALT at 52 U/L (normal range: 7–40 U/L)."' },
+          { id: 'r1s13q10', type: 'dropdown', num: 10, text: 'A repeat blood panel is scheduled in ______ from now.', options: ['1 month', '2 months', '3 months', '6 months'], answer: 2, explanation: '"A repeat blood panel is scheduled for 3 months from now."' },
+          { id: 'r1s13q11', type: 'dropdown', num: 11, text: 'To book the repeat blood panel, Thomas should contact the clinic at ______.', options: ['905-555-0142', '905-555-0161', '905-555-0173', '905-555-0188'], answer: 1, explanation: '"Please book this through our front desk at 905-555-0161."' },
+        ],
+      },
+
+      // ── Set 14 ── Condo Pet Policy ────────────────────────────────────
+      {
+        setNumber: 14, difficulty: 'advanced',
+        title: 'Condo Board — Pet Policy Amendment Notice',
+        passage: `From: Thornwood Place Condominium Corporation <board@thornwoodplace.ca>
+To: All Unit Owners and Residents
+Date: April 1, 2026
+Subject: Amendment to Declaration — Pet Ownership Policy (Effective June 1, 2026)
+
+Dear Owner/Resident,
+
+The Board of Directors of Thornwood Place Condominium Corporation (TPCC) hereby provides formal notice of an amendment to the condominium declaration regarding pet ownership on the property, in accordance with the Condominium Act of Ontario, 1998.
+
+CURRENT POLICY:
+The current declaration prohibits ALL pets in the building with no exceptions.
+
+AMENDED POLICY (Effective June 1, 2026):
+Following a unit owner vote conducted February 28, 2026, at which 68% of voting owners approved the amendment (the Condominium Act requires a minimum of 66⅔%), the following changes take effect:
+
+1. Residents may keep one (1) cat or one (1) dog per unit. Dogs must weigh 10 kg or less at full maturity.
+2. All pets must be registered with the Property Management Office within 30 days of acquisition or within 30 days of June 1, 2026, for existing pets.
+3. Dogs must be leashed at all times in common areas. Cats are not permitted in common areas.
+4. Pet owners are financially responsible for any damage caused by their pet to common elements or other units.
+5. Fish tanks, small caged birds, and reptiles (in enclosed terrariums) remain permitted without registration.
+6. Emotional support animals and service animals remain fully permitted under existing provincial law, independent of this policy.
+
+REGISTRATION PROCESS:
+A Pet Registration Form is available at the property management office (Room 101) and online at thornwoodplace.ca/pets. A one-time registration fee of $75 per pet applies. Registration must include proof of current rabies vaccination for all dogs and cats.
+
+Owners who do not comply with registration by the deadline may receive a Notice of Violation and a compliance fine of $250 under TPCC By-law No. 4.
+
+For questions, contact Property Management at 416-555-0177 or board@thornwoodplace.ca.
+
+Thornwood Place Board of Directors`,
+        questions: [
+          { id: 'r1s14q1', type: 'mcq', num: 1, text: 'What was the result of the February 28 unit owner vote?', options: ['The vote failed, and the pet ban continues', '68% of voting owners approved the amendment, meeting the required threshold', '66⅔% voted against the amendment', 'The vote was postponed due to insufficient participation'], answer: 1, explanation: '"68% of voting owners approved the amendment (the Condominium Act requires a minimum of 66⅔%)."' },
+          { id: 'r1s14q2', type: 'mcq', num: 2, text: 'Under the new policy, what size restriction applies to dogs?', options: ['Dogs must weigh under 5 kg', 'Dogs must weigh 10 kg or less at full maturity', 'Dogs may be any size but must be kept indoors', 'There is no size restriction; any breed is permitted'], answer: 1, explanation: '"Dogs must weigh 10 kg or less at full maturity."' },
+          { id: 'r1s14q3', type: 'mcq', num: 3, text: 'What must be included when registering a dog or cat?', options: ['A photo ID of the owner and pet', 'Proof of current rabies vaccination', 'A signed neighbour consent form', 'A veterinary health certificate from the past 6 months'], answer: 1, explanation: '"Registration must include proof of current rabies vaccination for all dogs and cats."' },
+          { id: 'r1s14q4', type: 'mcq', num: 4, text: 'Which pets are permitted in common areas?', options: ['Cats and dogs on leash', 'Dogs on leash only; cats are not allowed in common areas', 'Cats only; dogs must use a private entrance', 'No pets are allowed in common areas'], answer: 1, explanation: '"Dogs must be leashed at all times in common areas. Cats are not permitted in common areas."' },
+          { id: 'r1s14q5', type: 'mcq', num: 5, text: 'What do emotional support animals and service animals NOT need to comply with?', options: ['Provincial law', 'This condominium pet policy', 'Any rules regarding common areas', 'Vaccination requirements under provincial law'], answer: 1, explanation: '"Emotional support animals and service animals remain fully permitted under existing provincial law, independent of this policy."' },
+          { id: 'r1s14q6', type: 'dropdown', num: 6, text: 'The new pet policy takes effect on ______.', options: ['March 1, 2026', 'April 1, 2026', 'June 1, 2026', 'July 1, 2026'], answer: 2, explanation: '"AMENDED POLICY (Effective June 1, 2026)."' },
+          { id: 'r1s14q7', type: 'dropdown', num: 7, text: 'The one-time pet registration fee is ______.', options: ['$50', '$75', '$100', '$250'], answer: 1, explanation: '"A one-time registration fee of $75 per pet applies."' },
+          { id: 'r1s14q8', type: 'dropdown', num: 8, text: 'Owners who fail to register on time may receive a compliance fine of ______.', options: ['$75', '$150', '$200', '$250'], answer: 3, explanation: '"a compliance fine of $250 under TPCC By-law No. 4."' },
+          { id: 'r1s14q9', type: 'dropdown', num: 9, text: 'Existing pet owners must register within ______ days of June 1, 2026.', options: ['15', '30', '45', '60'], answer: 1, explanation: '"within 30 days of June 1, 2026, for existing pets."' },
+          { id: 'r1s14q10', type: 'dropdown', num: 10, text: 'The Pet Registration Form can be obtained at Room ______ in the building.', options: ['001', '101', '201', '301'], answer: 1, explanation: '"available at the property management office (Room 101)."' },
+          { id: 'r1s14q11', type: 'dropdown', num: 11, text: 'Items that remain permitted without registration include fish tanks, small caged birds, and ______.', options: ['hamsters', 'guinea pigs', 'rabbits', 'reptiles in enclosed terrariums'], answer: 3, explanation: '"Fish tanks, small caged birds, and reptiles (in enclosed terrariums) remain permitted without registration."' },
+        ],
+      },
+
+      // ── Set 15 ── University Tuition Increase ─────────────────────────
+      {
+        setNumber: 15, difficulty: 'advanced',
+        title: 'University Registrar — Tuition Fee Increase',
+        passage: `From: Office of the Registrar — Maple Ridge University <registrar@mru.ca>
+To: All Registered Students
+Date: April 3, 2026
+Subject: 2026–2027 Tuition and Fee Schedule — Important Notice
+
+Dear Student,
+
+Maple Ridge University is writing to inform you of approved tuition and ancillary fee rates for the 2026–2027 academic year. These rates were approved by the Board of Governors on March 20, 2026, following a review of operating costs, provincial funding levels, and peer institution benchmarks.
+
+TUITION CHANGES FOR DOMESTIC UNDERGRADUATE STUDENTS:
+Effective September 2026, domestic undergraduate tuition will increase by 3.2%, in line with the provincial tuition framework. This translates to an increase of approximately $288 per year for full-time students based on the current average annual tuition of $9,000.
+
+ANCILLARY FEES:
+Ancillary fees (student services, athletics, bus pass, student union) increase by an average of 1.8% across all programs. The student transit pass — which provides unlimited regional transit access for the full academic year — remains the best-value component at $185/year (increasing from $175/year). More detailed breakdowns by program are available at mru.ca/fees.
+
+INTERNATIONAL STUDENTS:
+International undergraduate tuition varies by program. Sciences and Engineering programs will see a 5% increase; Humanities and Social Sciences will increase by 4%; Business programs will increase by 6%. The International Student Bursary, providing up to $3,000 in annual assistance, has been expanded to support 200 additional students in 2026–2027.
+
+FINANCIAL AID:
+All students facing financial difficulty are encouraged to contact the Financial Aid Office at finaid@mru.ca or 1-800-555-0238. Applications for emergency bursaries, payment plans, and OSAP support are available year-round. The deadline to apply for major bursaries for the 2026–2027 year is June 15, 2026.
+
+Your tuition invoice for Fall 2026 will be posted to your student account in July 2026. The first payment due date is August 15, 2026.
+
+Office of the Registrar — Maple Ridge University`,
+        questions: [
+          { id: 'r1s15q1', type: 'mcq', num: 1, text: 'Who approved the new tuition rates?', options: ['The provincial Ministry of Education', 'The Student Union by referendum', 'The Board of Governors', 'The University President unilaterally'], answer: 2, explanation: '"These rates were approved by the Board of Governors on March 20, 2026."' },
+          { id: 'r1s15q2', type: 'mcq', num: 2, text: 'By approximately how much will domestic undergraduate tuition increase per year?', options: ['$144', '$220', '$288', '$350'], answer: 2, explanation: '"an increase of approximately $288 per year for full-time students based on the current average annual tuition of $9,000."' },
+          { id: 'r1s15q3', type: 'mcq', num: 3, text: 'Which international program will see the highest tuition increase?', options: ['Sciences and Engineering at 5%', 'Humanities and Social Sciences at 4%', 'Business programs at 6%', 'Arts programs at 3%'], answer: 2, explanation: '"Business programs will increase by 6%."' },
+          { id: 'r1s15q4', type: 'mcq', num: 4, text: 'What has changed about the International Student Bursary?', options: ['It has been reduced due to budget constraints', 'It has been eliminated for 2026–2027', 'It has been expanded to support 200 additional students', 'The amount has been increased from $2,000 to $3,000'], answer: 2, explanation: '"The International Student Bursary... has been expanded to support 200 additional students in 2026–2027."' },
+          { id: 'r1s15q5', type: 'mcq', num: 5, text: 'When will students receive their Fall 2026 tuition invoice?', options: ['April 2026', 'June 2026', 'July 2026', 'August 2026'], answer: 2, explanation: '"Your tuition invoice for Fall 2026 will be posted to your student account in July 2026."' },
+          { id: 'r1s15q6', type: 'dropdown', num: 6, text: 'Domestic undergraduate tuition will increase by ______ per cent.', options: ['2.5%', '3.0%', '3.2%', '3.5%'], answer: 2, explanation: '"domestic undergraduate tuition will increase by 3.2%."' },
+          { id: 'r1s15q7', type: 'dropdown', num: 7, text: 'The student transit pass increases from $175/year to ______.', options: ['$180', '$185', '$190', '$195'], answer: 1, explanation: '"The student transit pass... remains the best-value component at $185/year (increasing from $175/year)."' },
+          { id: 'r1s15q8', type: 'dropdown', num: 8, text: 'The deadline to apply for major bursaries for 2026–2027 is ______.', options: ['April 15, 2026', 'May 31, 2026', 'June 15, 2026', 'July 1, 2026'], answer: 2, explanation: '"The deadline to apply for major bursaries for the 2026–2027 year is June 15, 2026."' },
+          { id: 'r1s15q9', type: 'dropdown', num: 9, text: 'The first tuition payment due date for Fall 2026 is ______.', options: ['July 15, 2026', 'July 31, 2026', 'August 15, 2026', 'September 1, 2026'], answer: 2, explanation: '"The first payment due date is August 15, 2026."' },
+          { id: 'r1s15q10', type: 'dropdown', num: 10, text: 'The International Student Bursary provides up to ______ in annual assistance.', options: ['$1,500', '$2,000', '$2,500', '$3,000'], answer: 3, explanation: '"The International Student Bursary, providing up to $3,000 in annual assistance."' },
+          { id: 'r1s15q11', type: 'dropdown', num: 11, text: 'Ancillary fees increase by an average of ______ across all programs.', options: ['1.2%', '1.5%', '1.8%', '2.0%'], answer: 2, explanation: '"Ancillary fees... increase by an average of 1.8% across all programs."' },
+        ],
+      },
+
+      // ── Set 16 ── Pest Control Access ─────────────────────────────────
+      {
+        setNumber: 16, difficulty: 'advanced',
+        title: 'Property Manager — Pest Control Access Notice',
+        passage: `From: Derek Sawyer <d.sawyer@urbanedge-pm.ca>
+To: All Residents — Hazel Park Apartments, 88 Hazel Drive
+Date: April 7, 2026
+Subject: Mandatory Pest Control Inspection & Treatment — April 22–25, 2026
+
+Dear Resident,
+
+We are writing to advise you that Hazel Park Apartments will be undergoing a scheduled pest control inspection and preventive treatment program from Tuesday, April 22 to Friday, April 25, 2026. This program is conducted annually to maintain a pest-free environment for all residents and is administered by certified pest control technicians from GreenShield Pest Solutions.
+
+YOUR UNIT'S SCHEDULED DATE:
+Each unit has been assigned a specific date and two-hour access window for the technician visit. Your unit's date and time will be communicated by a notice placed under your door no later than April 14, 2026.
+
+ACCESS REQUIREMENTS:
+- You are NOT required to be present during the inspection, but you must unlock your unit.
+- If you cannot unlock your unit during your scheduled window, contact our office by April 19 to arrange key access (a building key will be used with your prior written consent, signed on file).
+- Remove pets from the unit during treatment. If you have fish tanks, cover them and turn off the filter 30 minutes before the technician arrives and for 2 hours after treatment.
+- Clear under sinks, behind the fridge, and around baseboards to allow access to treatment areas.
+
+POST-TREATMENT PRECAUTIONS:
+- Keep windows open for at least 2 hours after treatment to ventilate the unit.
+- Wipe down any food preparation surfaces before use.
+- The treatment products used are Health Canada–approved and safe for adults and children once dry (approximately 30 minutes after application).
+
+If you have allergies, asthma, or chemical sensitivities, please notify us before April 17, 2026, and we will schedule an alternative low-chemical treatment for your unit.
+
+For questions, contact the management office at 905-555-0199 or d.sawyer@urbanedge-pm.ca.
+
+Derek Sawyer
+Property Manager, Urban Edge Property Management`,
+        questions: [
+          { id: 'r1s16q1', type: 'mcq', num: 1, text: 'Is the pest control inspection mandatory, and must residents be home?', options: ['Yes, it is mandatory, and residents must be present the entire time', 'Yes it is mandatory, but residents do not need to be present — only the unit must be unlocked', 'No, residents can opt out if they prefer', 'Yes, it is mandatory and residents must sign a consent form in person'], answer: 1, explanation: '"You are NOT required to be present during the inspection, but you must unlock your unit."' },
+          { id: 'r1s16q2', type: 'mcq', num: 2, text: 'By when will residents receive their specific access window notice?', options: ['April 7, 2026', 'April 14, 2026', 'April 19, 2026', 'April 22, 2026'], answer: 1, explanation: '"Your unit\'s date and time will be communicated by a notice placed under your door no later than April 14, 2026."' },
+          { id: 'r1s16q3', type: 'mcq', num: 3, text: 'What should residents with fish tanks do before the technician arrives?', options: ['Remove the fish tank from the unit entirely', 'Cover the tank and turn off the filter 30 minutes before the visit', 'Cover the tank and leave the filter running throughout', 'Seal the fish tank with plastic wrap for 2 hours during treatment'], answer: 1, explanation: '"cover them and turn off the filter 30 minutes before the technician arrives and for 2 hours after treatment."' },
+          { id: 'r1s16q4', type: 'mcq', num: 4, text: 'When is the treatment considered safe for adults and children?', options: ['Immediately after application', 'After 15 minutes', 'Once dry, approximately 30 minutes after application', 'After 2 hours when the windows have been open'], answer: 2, explanation: '"safe for adults and children once dry (approximately 30 minutes after application)."' },
+          { id: 'r1s16q5', type: 'mcq', num: 5, text: 'What should residents with chemical sensitivities do?', options: ['Vacate their unit during the four-day program', 'Purchase their own alternative treatment products', 'Notify management before April 17 to arrange a low-chemical alternative', 'Request to opt out of the mandatory program'], answer: 2, explanation: '"If you have allergies, asthma, or chemical sensitivities, please notify us before April 17, 2026, and we will schedule an alternative low-chemical treatment."' },
+          { id: 'r1s16q6', type: 'dropdown', num: 6, text: 'The pest control program runs from April 22 to ______.', options: ['April 23', 'April 24', 'April 25', 'April 26'], answer: 2, explanation: '"from Tuesday, April 22 to Friday, April 25, 2026."' },
+          { id: 'r1s16q7', type: 'dropdown', num: 7, text: 'The pest control company is called ______.', options: ['SafeGuard Pest Solutions', 'GreenShield Pest Solutions', 'ClearPath Pest Control', 'EcoSafe Exterminators'], answer: 1, explanation: '"certified pest control technicians from GreenShield Pest Solutions."' },
+          { id: 'r1s16q8', type: 'dropdown', num: 8, text: 'Windows should be kept open for at least ______ after treatment.', options: ['30 minutes', '1 hour', '2 hours', '4 hours'], answer: 2, explanation: '"Keep windows open for at least 2 hours after treatment to ventilate the unit."' },
+          { id: 'r1s16q9', type: 'dropdown', num: 9, text: 'Residents who cannot unlock their unit should contact the office by ______.', options: ['April 14', 'April 17', 'April 19', 'April 22'], answer: 2, explanation: '"contact our office by April 19 to arrange key access."' },
+          { id: 'r1s16q10', type: 'dropdown', num: 10, text: 'Residents should clear under sinks, behind the fridge, and around ______ before the visit.', options: ['windows', 'doors', 'baseboards', 'furniture'], answer: 2, explanation: '"Clear under sinks, behind the fridge, and around baseboards to allow access to treatment areas."' },
+          { id: 'r1s16q11', type: 'dropdown', num: 11, text: 'The notification of specific access windows will be delivered ______.', options: ['by email', 'by phone call', 'under the resident\'s door', 'posted on the building bulletin board'], answer: 2, explanation: '"Your unit\'s date and time will be communicated by a notice placed under your door."' },
+        ],
+      },
+
+      // ── Set 17 ── Property Tax Reassessment ──────────────────────────
+      {
+        setNumber: 17, difficulty: 'advanced',
+        title: 'Municipal Assessment — Property Tax Reassessment',
+        passage: `From: Municipal Property Assessment Corporation (MPAC)
+To: Property Owner — 12 Ridgewood Lane, Brampton, ON
+Date: April 1, 2026
+Subject: Property Assessment Notice — 2026 Reassessment
+
+Dear Property Owner,
+
+The Municipal Property Assessment Corporation (MPAC) has completed its 2026 assessment of your property. This notice provides your assessed value, which will be used by your municipality to calculate your 2026–2027 property tax.
+
+ASSESSMENT DETAILS:
+- Property address: 12 Ridgewood Lane, Brampton, ON
+- Roll number: 2110.350.010.28200
+- 2026 assessed value: $875,000
+- Previous assessed value (2024): $795,000
+- Change: +$80,000 (+10.1%)
+
+The assessed value reflects the estimated market value of your property as of January 1, 2026, and takes into account recent comparable sales in your area, improvements made to the property, and current market conditions. Brampton properties in this area have seen strong demand due to transit expansion and new commercial development nearby.
+
+YOUR ESTIMATED TAX IMPACT:
+This is an estimate only, as tax rates are set by Brampton City Council and the Region of Peel. Based on the current combined residential tax rate of approximately 0.97%, your estimated 2026 property tax would be approximately $8,488/year (or ~$707/month if you are enrolled in the monthly payment plan), up from approximately $7,712/year based on the previous assessment.
+
+YOUR RIGHT TO REQUEST A RECONSIDERATION:
+If you believe the assessed value does not accurately reflect your property's market value, you have the right to file a Request for Reconsideration (RfR) by June 30, 2026. There is no fee to file an RfR. More information is available at mpac.ca or by calling 1-866-296-6722.
+
+Phased-in assessments ensure that significant increases are introduced gradually over four years to limit the impact on taxpayers. Please see mpac.ca/phasedin for details on whether phased-in values apply to your property.
+
+MPAC — 1-866-296-6722 | mpac.ca`,
+        questions: [
+          { id: 'r1s17q1', type: 'mcq', num: 1, text: 'What is the purpose of this assessment notice?', options: ['To inform the owner of an unpaid property tax bill', 'To provide the 2026 assessed value used for property tax calculation', 'To announce a new municipal tax rate for Brampton', 'To request the owner pay for a property inspection'], answer: 1, explanation: '"This notice provides your assessed value, which will be used by your municipality to calculate your 2026–2027 property tax."' },
+          { id: 'r1s17q2', type: 'mcq', num: 2, text: 'By what percentage did the assessed value increase from 2024 to 2026?', options: ['5.5%', '8.0%', '10.1%', '12.5%'], answer: 2, explanation: '"Change: +$80,000 (+10.1%)."' },
+          { id: 'r1s17q3', type: 'mcq', num: 3, text: 'Why did property values in this area of Brampton increase?', options: ['New schools and parks were built nearby', 'Government-subsidized housing was introduced', 'Transit expansion and new commercial development', 'The city of Brampton changed zoning laws'], answer: 2, explanation: '"Brampton properties in this area have seen strong demand due to transit expansion and new commercial development nearby."' },
+          { id: 'r1s17q4', type: 'mcq', num: 4, text: 'What does a phased-in assessment do?', options: ['Freezes the property assessment for 4 years', 'Reduces the tax rate for properties that increase in value', 'Introduces significant assessment increases gradually over four years', 'Eliminates the need for annual property tax payments'], answer: 2, explanation: '"Phased-in assessments ensure that significant increases are introduced gradually over four years to limit the impact on taxpayers."' },
+          { id: 'r1s17q5', type: 'mcq', num: 5, text: 'What is the fee to file a Request for Reconsideration?', options: ['$50 processing fee', '$100 administration fee', '$250 per property', 'There is no fee'], answer: 3, explanation: '"There is no fee to file an RfR."' },
+          { id: 'r1s17q6', type: 'dropdown', num: 6, text: 'The 2026 assessed value of the property is ______.', options: ['$795,000', '$850,000', '$875,000', '$900,000'], answer: 2, explanation: '"2026 assessed value: $875,000."' },
+          { id: 'r1s17q7', type: 'dropdown', num: 7, text: 'The estimated 2026 annual property tax is approximately ______.', options: ['$7,712', '$8,200', '$8,488', '$9,000'], answer: 2, explanation: '"your estimated 2026 property tax would be approximately $8,488/year."' },
+          { id: 'r1s17q8', type: 'dropdown', num: 8, text: 'The combined residential tax rate used in the estimate is approximately ______.', options: ['0.77%', '0.87%', '0.97%', '1.07%'], answer: 2, explanation: '"the current combined residential tax rate of approximately 0.97%."' },
+          { id: 'r1s17q9', type: 'dropdown', num: 9, text: 'The deadline to file a Request for Reconsideration is ______.', options: ['April 30, 2026', 'May 31, 2026', 'June 30, 2026', 'September 30, 2026'], answer: 2, explanation: '"you have the right to file a Request for Reconsideration (RfR) by June 30, 2026."' },
+          { id: 'r1s17q10', type: 'dropdown', num: 10, text: 'The assessed value reflects the estimated market value as of ______.', options: ['January 1, 2025', 'January 1, 2026', 'April 1, 2026', 'December 31, 2025'], answer: 1, explanation: '"The assessed value reflects the estimated market value of your property as of January 1, 2026."' },
+          { id: 'r1s17q11', type: 'dropdown', num: 11, text: 'Monthly property tax payments would be approximately ______.', options: ['$650', '$685', '$707', '$725'], answer: 2, explanation: '"~$707/month if you are enrolled in the monthly payment plan."' },
+        ],
+      },
+
+      // ── Set 18 ── Travel Insurance Claim ─────────────────────────────
+      {
+        setNumber: 18, difficulty: 'advanced',
+        title: 'Travel Insurance — Claim Approval & Reimbursement',
+        passage: `From: Voyager Travel Insurance <claims@voyagerinsurance.ca>
+To: Christine Osei <c.osei@email.com>
+Date: April 5, 2026
+Subject: Claim Approval — File #VTI-2026-04419
+
+Dear Ms. Osei,
+
+We are pleased to inform you that your travel insurance claim (File #VTI-2026-04419) has been approved. Thank you for your patience while our team reviewed your documentation.
+
+CLAIM SUMMARY:
+- Insured: Christine Osei
+- Policy number: VPI-887-22C
+- Trip destination: Costa Rica (February 14 – March 2, 2026)
+- Claim type: Emergency medical / Trip interruption
+- Submitted documentation: Medical reports, receipts, and airline rebooking confirmation — all received February 28, 2026
+
+APPROVED AMOUNTS:
+- Emergency medical treatment (Hospital San José, February 17–19): $3,840.00 (USD converted at rate of 1.365 = CAD $5,241.60)
+- Emergency physician fees: $620.00 CAD
+- Prescription medications during trip: $184.30 CAD
+- Return flight rebooking (Air Canada, economy class, February 21): $1,175.00 CAD
+- Hotel accommodation during recovery (2 nights, February 19–21): $364.00 CAD
+
+TOTAL APPROVED: CAD $7,584.90
+LESS: Policy deductible ($500.00)
+NET REIMBURSEMENT: CAD $7,084.90
+
+The reimbursement will be deposited via EFT (Electronic Funds Transfer) to your bank account on file within 5 to 7 business days. If you do not receive the deposit by April 16, 2026, please contact us at 1-888-555-0294.
+
+Please note that your claim for trip cancellation insurance on the unused Costa Rica hotel nights (February 17–21) has been reviewed separately under your policy and was NOT approved, as the policy excludes reimbursement for pre-booked hotel stays when the cause of interruption is a medical condition that was diagnosed prior to the policy purchase date. Our team has mailed a detailed explanation letter to your home address.
+
+Voyager Travel Insurance — Claims Division
+1-888-555-0294 | voyagerinsurance.ca`,
+        questions: [
+          { id: 'r1s18q1', type: 'mcq', num: 1, text: 'What is the purpose of this email?', options: ['To request additional documentation for a pending claim', 'To inform Christine that her travel insurance claim has been approved', 'To cancel Christine\'s travel insurance policy', 'To deny Christine\'s full claim for trip cancellation'], answer: 1, explanation: '"We are pleased to inform you that your travel insurance claim (File #VTI-2026-04419) has been approved."' },
+          { id: 'r1s18q2', type: 'mcq', num: 2, text: 'Why was the trip cancellation portion of the claim NOT approved?', options: ['The hotel did not provide valid receipts', 'Christine did not submit the claim within the required timeframe', 'The medical condition was diagnosed before the policy purchase date', 'Trip cancellation insurance was not included in Christine\'s policy'], answer: 2, explanation: '"the policy excludes reimbursement for pre-booked hotel stays when the cause of interruption is a medical condition that was diagnosed prior to the policy purchase date."' },
+          { id: 'r1s18q3', type: 'mcq', num: 3, text: 'How will the reimbursement be sent to Christine?', options: ['By cheque mailed to her home address', 'Via EFT to her bank account on file', 'By wire transfer to her travel credit card', 'By a prepaid Visa gift card'], answer: 1, explanation: '"The reimbursement will be deposited via EFT (Electronic Funds Transfer) to your bank account on file."' },
+          { id: 'r1s18q4', type: 'mcq', num: 4, text: 'What is the net reimbursement amount after the deductible?', options: ['$3,840.00', '$7,084.90', '$7,584.90', '$8,084.90'], answer: 1, explanation: '"TOTAL APPROVED: CAD $7,584.90 — LESS: Policy deductible ($500.00) — NET REIMBURSEMENT: CAD $7,084.90."' },
+          { id: 'r1s18q5', type: 'mcq', num: 5, text: 'If Christine does not receive her deposit by April 16, what should she do?', options: ['Resubmit her entire claim application', 'Contact her bank to investigate the delay', 'Contact Voyager Travel Insurance at 1-888-555-0294', 'Mail a formal written inquiry to Voyager\'s head office'], answer: 2, explanation: '"If you do not receive the deposit by April 16, 2026, please contact us at 1-888-555-0294."' },
+          { id: 'r1s18q6', type: 'dropdown', num: 6, text: 'Christine\'s claim file number is ______.', options: ['VTI-2026-04149', 'VTI-2026-04419', 'VTI-2026-04491', 'VTI-2026-04914'], answer: 1, explanation: '"your travel insurance claim (File #VTI-2026-04419)."' },
+          { id: 'r1s18q7', type: 'dropdown', num: 7, text: 'Christine was hospitalized from February ______ to 19.', options: ['15', '16', '17', '18'], answer: 2, explanation: '"Emergency medical treatment (Hospital San José, February 17–19)."' },
+          { id: 'r1s18q8', type: 'dropdown', num: 8, text: 'The USD-to-CAD conversion rate used for the hospital bill was ______.', options: ['1.285', '1.310', '1.365', '1.420'], answer: 2, explanation: '"USD converted at rate of 1.365 = CAD $5,241.60."' },
+          { id: 'r1s18q9', type: 'dropdown', num: 9, text: 'The policy deductible is ______.', options: ['$250', '$500', '$750', '$1,000'], answer: 1, explanation: '"LESS: Policy deductible ($500.00)."' },
+          { id: 'r1s18q10', type: 'dropdown', num: 10, text: 'Christine\'s return flight rebooking cost ______ CAD.', options: ['$975.00', '$1,075.00', '$1,175.00', '$1,275.00'], answer: 2, explanation: '"Return flight rebooking (Air Canada, economy class, February 21): $1,175.00 CAD."' },
+          { id: 'r1s18q11', type: 'dropdown', num: 11, text: 'The claim documentation was received on ______.', options: ['February 21, 2026', 'February 28, 2026', 'March 2, 2026', 'April 1, 2026'], answer: 1, explanation: '"all received February 28, 2026."' },
+        ],
+      },
+
+      // ── Set 19 ── Workplace Health & Safety ──────────────────────────
+      {
+        setNumber: 19, difficulty: 'advanced',
+        title: 'Workplace Safety Committee — Updated H&S Protocols',
+        passage: `From: WorkSafe Committee <safety@granitelogistics.ca>
+To: All Employees — Granite Logistics Inc.
+Date: April 3, 2026
+Subject: Updated Workplace Health & Safety Protocols — Effective Immediately
+
+Dear Team,
+
+Granite Logistics Inc.'s Joint Health and Safety Committee (JHSC) has completed its quarterly review and is issuing updated protocols in three areas following our internal audit on March 20, 2026. These changes are effective immediately for all employees, contractors, and visitors.
+
+1. WAREHOUSE AISLE CLEARANCE:
+All walking aisles in the warehouse must maintain a minimum clearance of 1.2 metres at all times. Pallets, equipment, or materials left in aisles — even temporarily — are a leading cause of slip-and-fall incidents. Team leads are empowered to immediately remove any obstruction and issue a verbal warning. A third violation by any individual within a 90-day period will be escalated to the Operations Manager and may result in formal corrective action.
+
+2. PERSONAL PROTECTIVE EQUIPMENT (PPE) COMPLIANCE:
+Effective immediately, all warehouse and loading dock employees must wear steel-toed safety boots, high-visibility vests, and safety glasses at all times while on the warehouse floor — not just when operating equipment. Office staff entering the warehouse are required to wear high-visibility vests (available at the entrance kiosk). PPE non-compliance will now be tracked in our safety management system.
+
+3. INCIDENT REPORTING:
+All workplace incidents — including near-misses — must be reported to a supervisor within 2 hours of occurrence and documented using the updated Incident Report Form (available on the company intranet at granitelogistics.ca/safety). The previous 24-hour reporting window has been reduced to 2 hours in compliance with updated Ontario Occupational Health and Safety Act guidelines.
+
+TRAINING REMINDER:
+Annual Workplace Safety Awareness training is mandatory for all employees. Those who have not completed this year's module must do so by April 30, 2026. Check your training status in the HR portal.
+
+Please direct questions to the JHSC Co-Chairs: Maria Santos (employee representative, ext. 204) or Devon Blake (management representative, ext. 311).
+
+Joint Health and Safety Committee — Granite Logistics Inc.`,
+        questions: [
+          { id: 'r1s19q1', type: 'mcq', num: 1, text: 'What triggered these protocol updates?', options: ['A serious workplace injury reported in January 2026', 'An internal audit conducted on March 20, 2026', 'New federal workplace safety legislation effective April 1', 'A complaint filed by a worker to the Ministry of Labour'], answer: 1, explanation: '"following our internal audit on March 20, 2026."' },
+          { id: 'r1s19q2', type: 'mcq', num: 2, text: 'What is the minimum aisle clearance required in the warehouse?', options: ['0.9 metres', '1.0 metres', '1.2 metres', '1.5 metres'], answer: 2, explanation: '"All walking aisles in the warehouse must maintain a minimum clearance of 1.2 metres at all times."' },
+          { id: 'r1s19q3', type: 'mcq', num: 3, text: 'What happens after a third aisle violation within 90 days?', options: ['The employee is immediately terminated', 'The issue is escalated to the Operations Manager and may result in formal corrective action', 'The employee is required to complete safety retraining', 'A fine is applied to the department budget'], answer: 1, explanation: '"A third violation by any individual within a 90-day period will be escalated to the Operations Manager and may result in formal corrective action."' },
+          { id: 'r1s19q4', type: 'mcq', num: 4, text: 'What PPE are office staff required to wear when entering the warehouse?', options: ['Steel-toed boots and safety glasses', 'High-visibility vests only', 'High-visibility vests and safety glasses', 'All the same PPE as warehouse staff'], answer: 1, explanation: '"Office staff entering the warehouse are required to wear high-visibility vests (available at the entrance kiosk)."' },
+          { id: 'r1s19q5', type: 'mcq', num: 5, text: 'Why was the incident reporting window reduced from 24 hours to 2 hours?', options: ['To reduce paperwork processing time', 'To comply with updated Ontario Occupational Health and Safety Act guidelines', 'Due to a recent serious injury that went unreported for too long', 'Because the previous rule was not in line with company policy'], answer: 1, explanation: '"in compliance with updated Ontario Occupational Health and Safety Act guidelines."' },
+          { id: 'r1s19q6', type: 'dropdown', num: 6, text: 'Incidents must now be reported to a supervisor within ______ of occurrence.', options: ['30 minutes', '1 hour', '2 hours', '4 hours'], answer: 2, explanation: '"All workplace incidents... must be reported to a supervisor within 2 hours of occurrence."' },
+          { id: 'r1s19q7', type: 'dropdown', num: 7, text: 'Annual Workplace Safety Awareness training must be completed by ______.', options: ['April 15, 2026', 'April 30, 2026', 'May 15, 2026', 'May 31, 2026'], answer: 1, explanation: '"must do so by April 30, 2026."' },
+          { id: 'r1s19q8', type: 'dropdown', num: 8, text: 'The Incident Report Form is available on the intranet at ______.', options: ['granitelogistics.ca/forms', 'granitelogistics.ca/hr', 'granitelogistics.ca/safety', 'granitelogistics.ca/incidents'], answer: 2, explanation: '"using the updated Incident Report Form (available on the company intranet at granitelogistics.ca/safety)."' },
+          { id: 'r1s19q9', type: 'dropdown', num: 9, text: 'The employee JHSC co-chair is Maria Santos, reachable at extension ______.', options: ['104', '204', '211', '311'], answer: 1, explanation: '"Maria Santos (employee representative, ext. 204)."' },
+          { id: 'r1s19q10', type: 'dropdown', num: 10, text: 'PPE non-compliance will be tracked in the company\'s ______.', options: ['HR portal', 'safety management system', 'operations database', 'training records system'], answer: 1, explanation: '"PPE non-compliance will now be tracked in our safety management system."' },
+          { id: 'r1s19q11', type: 'dropdown', num: 11, text: 'These protocols apply to employees, contractors, and ______.', options: ['management only', 'union members', 'visitors', 'supervisors only'], answer: 2, explanation: '"effective immediately for all employees, contractors, and visitors."' },
+        ],
+      },
+
+      // ── Set 20 ── Community Center Cancellation ───────────────────────
+      {
+        setNumber: 20, difficulty: 'advanced',
+        title: 'Community Centre — Program Cancellation & Alternatives',
+        passage: `From: Westside Community Centre <programs@westsidecc.ca>
+To: Registered Participants — Spring 2026 Programs
+Date: April 6, 2026
+Subject: Important Notice — Cancellation of Select Spring Programs
+
+Dear Participant,
+
+We are writing to inform you that due to an unexpected shortfall in the seasonal program budget and a lower-than-anticipated registration rate, Westside Community Centre has made the difficult decision to cancel the following Spring 2026 programs:
+
+CANCELLED PROGRAMS (effective immediately):
+1. Beginner Watercolour Painting — Thursdays, 6:00–8:00 PM (8-week session)
+2. Adult Conversational Spanish — Saturdays, 10:00 AM–12:00 PM (10-week session)
+3. Youth Photography Workshop — Sundays, 2:00–4:00 PM (6-week session)
+
+We sincerely apologize for this disruption, particularly for those who have already registered and made arrangements to attend.
+
+REFUNDS:
+Full refunds will be issued to all registered participants within 10 business days. If you paid by credit card, the refund will appear on your statement within the standard processing time of 3–5 business days after our refund is issued. If you paid by cheque or cash, a refund cheque will be mailed to your address on file.
+
+ALTERNATIVE OPTIONS:
+We want to support you in continuing your learning journey. Below are alternatives within our network:
+
+- Watercolour Painting: Hillcrest Arts Centre (hillcrestarts.ca) is offering the same class starting April 20. Call 905-555-0162 to register.
+- Conversational Spanish: A 10-week online option is offered by the YMCA Learning Hub (ymcalearning.ca). Registration closes April 15.
+- Youth Photography: The Eastside Community Centre has one remaining spot in their Sunday workshop. Call 416-555-0198 immediately if interested.
+
+As a gesture of goodwill, all affected participants will receive a 15% discount code by email within 3 business days for use on any future Westside Community Centre program registration.
+
+We deeply value your support and participation. If you have questions or concerns, please contact us at 905-555-0177 or programs@westsidecc.ca.
+
+Westside Community Centre Programs Team`,
+        questions: [
+          { id: 'r1s20q1', type: 'mcq', num: 1, text: 'Why were these programs cancelled?', options: ['The instructors resigned without notice', 'Due to a budget shortfall and lower-than-expected registration', 'The centre is undergoing renovations during the spring', 'New provincial regulations required programme cancellations'], answer: 1, explanation: '"due to an unexpected shortfall in the seasonal program budget and a lower-than-anticipated registration rate."' },
+          { id: 'r1s20q2', type: 'mcq', num: 2, text: 'How will participants who paid by cash receive their refund?', options: ['As a credit toward a future program', 'As a cheque mailed to their address on file', 'Via EFT to their bank account', 'By picking up cash at the community centre front desk'], answer: 1, explanation: '"If you paid by cheque or cash, a refund cheque will be mailed to your address on file."' },
+          { id: 'r1s20q3', type: 'mcq', num: 3, text: 'What should a participant interested in the Eastside Youth Photography spot do?', options: ['Email the Eastside Community Centre directly', 'Register online at eastsidecc.ca immediately', 'Call 416-555-0198 immediately, as only one spot remains', 'Join the Westside waiting list for next semester'], answer: 2, explanation: '"The Eastside Community Centre has one remaining spot... Call 416-555-0198 immediately if interested."' },
+          { id: 'r1s20q4', type: 'mcq', num: 4, text: 'What goodwill offer is being made to all affected participants?', options: ['A free registration for any one program in the fall session', 'A 10% discount on their next Westside registration', 'A 15% discount code for use on any future Westside program', 'An invitation to a free community event this summer'], answer: 2, explanation: '"all affected participants will receive a 15% discount code by email within 3 business days for use on any future Westside Community Centre program registration."' },
+          { id: 'r1s20q5', type: 'mcq', num: 5, text: 'What is the deadline to register for the YMCA\'s online Spanish course?', options: ['April 6, 2026', 'April 15, 2026', 'April 20, 2026', 'April 30, 2026'], answer: 1, explanation: '"A 10-week online option is offered by the YMCA Learning Hub (ymcalearning.ca). Registration closes April 15."' },
+          { id: 'r1s20q6', type: 'dropdown', num: 6, text: 'Full refunds will be issued within ______ business days.', options: ['5', '7', '10', '14'], answer: 2, explanation: '"Full refunds will be issued to all registered participants within 10 business days."' },
+          { id: 'r1s20q7', type: 'dropdown', num: 7, text: 'Credit card refunds will appear on statements within ______ business days after the refund is issued.', options: ['1–2', '2–3', '3–5', '5–7'], answer: 2, explanation: '"the refund will appear on your statement within the standard processing time of 3–5 business days after our refund is issued."' },
+          { id: 'r1s20q8', type: 'dropdown', num: 8, text: 'The Hillcrest Arts Centre watercolour class starts on ______.', options: ['April 10', 'April 15', 'April 20', 'April 27'], answer: 2, explanation: '"Hillcrest Arts Centre (hillcrestarts.ca) is offering the same class starting April 20."' },
+          { id: 'r1s20q9', type: 'dropdown', num: 9, text: 'The discount code will be emailed to affected participants within ______ business days.', options: ['1', '2', '3', '5'], answer: 2, explanation: '"will receive a 15% discount code by email within 3 business days."' },
+          { id: 'r1s20q10', type: 'dropdown', num: 10, text: 'The cancelled Adult Conversational Spanish was a ______ session.', options: ['6-week', '8-week', '10-week', '12-week'], answer: 2, explanation: '"Adult Conversational Spanish — Saturdays, 10:00 AM–12:00 PM (10-week session)."' },
+          { id: 'r1s20q11', type: 'dropdown', num: 11, text: 'The Watercolour alternative is at Hillcrest Arts Centre. To register, participants should call ______.', options: ['905-555-0162', '905-555-0177', '416-555-0198', '905-555-0199'], answer: 0, explanation: '"Hillcrest Arts Centre (hillcrestarts.ca)... Call 905-555-0162 to register."' },
+        ],
+      },
+
+    ], // end R1.sets
   },
 
   R2: {

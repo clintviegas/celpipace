@@ -149,9 +149,6 @@ function PartCard({ part, onStart }) {
       <div className="lp-part-card-header">
         <span className="lp-part-num">{part.num}</span>
         <span className="lp-part-icon">{part.icon}</span>
-        <span className={`lp-part-diff lp-diff-${part.difficulty.toLowerCase().replace(' ', '-')}`}>
-          {part.difficulty}
-        </span>
       </div>
       <h3 className="lp-part-name">{part.label}</h3>
       <p className="lp-part-desc">{part.description}</p>
@@ -163,7 +160,6 @@ function PartCard({ part, onStart }) {
       </div>
 
       <div className="lp-part-meta">
-        <span className="lp-part-meta-item">❓ {part.questions} questions</span>
         <span className="lp-part-meta-item">⏱ {part.duration}</span>
       </div>
 
