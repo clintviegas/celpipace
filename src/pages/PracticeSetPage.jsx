@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { READING_DATA } from '../data/readingData'
@@ -1826,10 +1826,17 @@ function ListeningLayout({ sets, color, partLabel }) {
   const timerRef = useRef(null)
   const audioRef = useRef(null)
 
-  const sorted = [...sets].sort((a, b) => {
-    const dRank = { easy: 0, intermediate: 1, advanced: 2 }
-    return (dRank[a.difficulty] ?? 1) - (dRank[b.difficulty] ?? 1)
-  })
+  /* Deterministic shuffle — mix easy/medium/advanced */
+  const sorted = useMemo(() => {
+    const arr = [...sets]
+    let seed = 42
+    for (let i = arr.length - 1; i > 0; i--) {
+      seed = (seed * 16807 + 0) % 2147483647
+      const j = seed % (i + 1)
+      ;[arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+    return arr
+  }, [sets])
   const set = sorted[activeIdx]
   const questions = set?.questions || []
   const q = questions[qIndex]
@@ -1991,6 +1998,9 @@ function ListeningLayout({ sets, color, partLabel }) {
                 </span>
                 <div className="wl-topic-info">
                   <span className="wl-topic-title">{item.title}</span>
+                  <span className="wl-topic-diff-text" style={{ color: dc.text }}>
+                    {DIFF_LABELS[item.difficulty] || 'Intermediate'}
+                  </span>
                 </div>
               </button>
             )
