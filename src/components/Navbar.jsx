@@ -67,11 +67,11 @@ const NAV_ITEMS = [
     color: '#6B4FAF',
     colorLight: '#F3EFFF',
     parts: [
-      { label: '📊 CLB Scoring Guide',   desc: 'Understand CLB levels and how scores map to CRS' },
-      { label: '🧮 CRS Calculator',      desc: 'Calculate your Express Entry CRS score instantly',  action: 'calculator' },
-      { label: '💡 Tips & Strategies',   desc: 'Section-by-section tips to boost your CLB band', action: 'tips' },
-      { label: '📈 Score Tracker',       desc: 'Track your CLB progress across all 4 sections', action: 'scores' },
-      { label: '✍️ Blog & Articles',     desc: 'Expert tips, strategies and immigration guides', action: 'blog' },
+      { label: 'CLB Scoring Guide',   desc: 'Understand CLB levels and how scores map to CRS' },
+      { label: 'CRS Calculator',      desc: 'Calculate your Express Entry CRS score instantly',  action: 'calculator' },
+      { label: 'Tips & Strategies',   desc: 'Section-by-section tips to boost your CLB band', action: 'tips' },
+      { label: 'Score Tracker',       desc: 'Track your CLB progress across all 4 sections', action: 'scores' },
+      { label: 'Blog & Articles',     desc: 'Expert tips, strategies and immigration guides', action: 'blog' },
     ],
   },
 ]
@@ -276,9 +276,16 @@ export default function Navbar({ onSignIn }) {
               setOpenId={(id) => { setOpenId(id); if (!id) setMenuOpen(false) }}
             />
           ))}
+          {/* Mobile-only auth buttons at bottom of dropdown */}
+          {menuOpen && !user && (
+            <li className="nav-mobile-auth">
+              <button className="btn btn-outline" onClick={() => { onSignIn(); setMenuOpen(false) }}>Log in</button>
+              <button className="btn btn-primary" onClick={() => { onSignIn(); setMenuOpen(false) }}>Sign up free</button>
+            </li>
+          )}
         </ul>
 
-        {/* Auth actions */}
+        {/* Auth actions (desktop only) */}
         <div className="nav-actions">
           {user ? (
             <UserMenu user={user} signOut={signOut} />

@@ -38,7 +38,7 @@ const features = [
     colorLight: '#E0F7FA',
   },
   {
-    icon: '�',
+    icon: '🍁',
     title: 'Built for Canadian Life',
     desc: 'All scenarios use authentic Canadian contexts — workplace, community, and everyday situations.',
     color: '#B91C1C',
@@ -57,7 +57,7 @@ export default function AIFeatures() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          AI-Powered CELPIP Practice
+          Why CELPIPiQ
         </motion.div>
         <motion.h2
           className="section-title"
@@ -66,8 +66,8 @@ export default function AIFeatures() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Everything you need to<br />
-          <span className="highlight">ace your CELPIP exam</span>
+          Six ways we help you<br />
+          <span className="highlight">score higher on CELPIP</span>
         </motion.h2>
         <motion.p
           className="section-sub"
@@ -76,7 +76,7 @@ export default function AIFeatures() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Practice with real exams, get AI feedback, track progress, and hit your CLB target.
+          Structured practice, expert strategy, and AI-powered feedback — everything built around the real CELPIP format.
         </motion.p>
 
         <div className="ai-features-grid ai-features-grid-6">

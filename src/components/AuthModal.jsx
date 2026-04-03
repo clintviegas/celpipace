@@ -67,7 +67,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
               <div className="auth-panel-perks">
                 {[
                   { icon: '📊', text: 'Track every score & CLB band' },
-                  { icon: '🏆', text: '12 full-length mock tests' },
+                  { icon: '🏆', text: '20+ full-length mock tests' },
                   { icon: '⚡', text: 'Section drills, anytime' },
                   { icon: '🎯', text: 'CRS boost calculator' },
                 ].map(p => (

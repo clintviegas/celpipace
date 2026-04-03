@@ -166,7 +166,7 @@ export default function Pricing({ onSignIn }) {
             ))}
           </div>
           <span className="pricing-social-text">
-            Trusted by <strong>90,000+</strong> test takers · <strong>⭐ 4.9</strong> on Google Reviews
+            Trusted by CELPIP test-takers across Canada · <strong>7-day money-back guarantee</strong>
           </span>
         </motion.div>
 

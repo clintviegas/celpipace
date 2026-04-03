@@ -4,48 +4,48 @@ const testimonials = [
   {
     name: 'Amira K.',
     initials: 'AK',
-    result: 'Scored 10 in Writing',
-    quote: 'The practice tests were incredibly close to the real CELPIP format. The AI feedback on my writing helped me improve my score from 7 to 10 in just two weeks.',
+    result: 'Writing: 7 → 9',
+    quote: 'The writing practice was the closest thing to the real test I found. The explanations for every question helped me understand what examiners look for.',
     stars: 5,
     color: '#C8102E',
   },
   {
     name: 'Marcus R.',
     initials: 'MR',
-    result: 'CLB 9 in all sections',
-    quote: 'I was nervous about the speaking section, but after practicing here with timed prompts and sample answers, I felt completely ready on test day.',
+    result: 'CLB 9 across all sections',
+    quote: 'I struggled most with the Speaking timed format. Practicing with the structured prompts and reviewing sample answers made a real difference on test day.',
     stars: 5,
     color: '#7C3AED',
   },
   {
     name: 'Sofia L.',
     initials: 'SL',
-    result: 'PR application approved',
-    quote: 'The detailed explanations for every question made the difference. Instead of just memorizing answers, I actually understood the reasoning.',
+    result: 'Reading improved by 2 bands',
+    quote: 'I kept losing points on the inference questions. The detailed explanations showed me exactly how to approach them — my Reading score went from CLB 6 to CLB 8.',
     stars: 5,
     color: '#059669',
   },
   {
     name: 'Priya S.',
     initials: 'PS',
-    result: '+62 CRS · ITA Received',
-    quote: 'My CRS was stuck at 468 for two draws. After 8 weeks on CELPIPiQ, I hit CLB 10 in all four sections and received my ITA the very next draw.',
+    result: 'CLB 9 → +46 CRS points',
+    quote: 'I used the CRS calculator to understand exactly how much each CLB band was worth. Knowing the numbers gave me real motivation to keep practicing.',
     stars: 5,
     color: '#C8972A',
   },
   {
     name: 'Daniel F.',
     initials: 'DF',
-    result: 'CLB 9 · +50 CRS',
-    quote: 'I was scoring CLB 7 consistently. The AI feedback on my writing tasks showed exactly where I was losing points. Jumped to CLB 9 in six weeks.',
+    result: 'Listening: CLB 7 → CLB 9',
+    quote: 'The Listening section breakdown by part was exactly what I needed. I focused on L5 and L6 where I was losing the most marks and brought my band up significantly.',
     stars: 5,
     color: '#0F6B8A',
   },
   {
-    name: 'Ahmed R.',
-    initials: 'AR',
-    result: 'CLB 10 · PR Granted',
-    quote: "The CRS points table was an eye-opener. I didn't realize a single CLB band jump could add 66 points. CELPIPiQ helped me achieve that in 10 weeks.",
+    name: 'Neha W.',
+    initials: 'NW',
+    result: 'Passed citizenship test: CLB 8',
+    quote: 'I was aiming for CLB 7 for citizenship and ended up hitting CLB 8 in all four sections. The mock exam format really prepares you for the real thing.',
     stars: 5,
     color: '#B91C1C',
   },
@@ -64,18 +64,18 @@ export default function Testimonials() {
           transition={{ duration: 0.5 }}
         >
           <div className="t-proof-item">
-            <div className="t-proof-value">90,000+</div>
-            <div className="t-proof-label">test takers trust us</div>
+            <div className="t-proof-value">200+</div>
+            <div className="t-proof-label">practice questions</div>
           </div>
           <div className="t-proof-divider" />
           <div className="t-proof-item">
-            <div className="t-proof-value">⭐ 4.9</div>
-            <div className="t-proof-label">Google rating</div>
+            <div className="t-proof-value">4 Sections</div>
+            <div className="t-proof-label">fully covered</div>
           </div>
           <div className="t-proof-divider" />
           <div className="t-proof-item">
-            <div className="t-proof-value">CLB 10</div>
-            <div className="t-proof-label">avg. target achieved</div>
+            <div className="t-proof-value">CLB 1–12</div>
+            <div className="t-proof-label">full score range</div>
           </div>
         </motion.div>
 

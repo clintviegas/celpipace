@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { id: 'reading',   label: 'Reading'    },
   { id: 'writing',   label: 'Writing'    },
   { id: 'speaking',  label: 'Speaking'   },
+  { id: 'calculator', label: 'CRS Score' },
   { id: 'blog',      label: 'Blog'       },
 ]
 

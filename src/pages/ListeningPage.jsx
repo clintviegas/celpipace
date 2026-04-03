@@ -67,7 +67,7 @@ const PARTS = [
     difficulty: 'Advanced',
     description:
       'Multiple speakers debate or discuss a topic from different angles — a panel discussion, a team meeting, or a group conversation. You need to track who said what, which position each speaker holds, and how the conversation evolves.',
-    tip: 'Assign a shorthand to each speaker right away (A, B, C or initials). Questions will ask things like "Which speaker agrees with..." or "What does the second speaker suggest?" — and mixing up speakers is a common mistake here.',
+    tip: 'Listen carefully for opinion markers — "I think", "I disagree", "my concern is" — to attribute positions to the correct speaker. Questions often test whether you can distinguish who said what and who changed their mind.',
     skills: ['Multi-speaker tracking', 'Opinion attribution', 'Perspective comparison', 'Critical listening'],
   },
   {
@@ -79,8 +79,8 @@ const PARTS = [
     duration: '6–8 min',
     difficulty: 'Advanced',
     description:
-      'Two speakers present opposing viewpoints on the same topic — a debate format with structured arguments and counter-arguments. This is the most linguistically complex part of the Listening test, requiring you to separate, compare, and evaluate two distinct positions.',
-    tip: 'Each speaker has one main argument and one or two supporting points. Sketch a simple two-column table as you listen. The final question often tests whether you can identify a point that both speakers agree on — which is usually buried inside the disagreement.',
+      'Two speakers present opposing viewpoints on the same topic — a debate format with structured arguments and counter-arguments. This is the most linguistically complex part, requiring you to separate, compare, and evaluate two distinct positions.',
+    tip: 'Map each speaker to their position early. Pay attention to concessions — when a speaker says "I\'ll give you that" or "that\'s fair" — as questions often test whether you caught the nuance of partial agreement.',
     skills: ['Argument analysis', 'Contrast & comparison', 'Inference', 'Nuanced comprehension'],
   },
 ]
@@ -88,7 +88,7 @@ const PARTS = [
 const FAQ = [
   {
     q: 'What is the CELPIP Listening test format?',
-    a: 'The CELPIP Listening test has 6 parts and takes 47 to 55 minutes. It includes 38 multiple choice questions. All audio uses Canadian English and each clip plays only once on the real test.',
+    a: 'The CELPIP Listening test has 6 parts and includes 38 multiple choice questions. All audio uses Canadian English and each clip plays only once on the real test.',
   },
   {
     q: 'How is CELPIP Listening scored?',
@@ -183,14 +183,14 @@ function PartCard({ part, onStart }) {
 export default function ListeningPage() {
   const navigate = useNavigate()
   const handleStart = (part) => {
-    navigate('/practice-set', { state: { part } })
+    navigate('/practice-set', { state: { part: { ...part, section: 'listening' } } })
   }
 
   return (
     <div className="lp-root">
       <SEO
         title="CELPIP Listening Practice – All 6 Parts Explained"
-        description="Master CELPIP Listening with guided practice for all 6 parts: Problem Solving, Daily Life, News, Viewpoints, and more. Study strategies included."
+        description="Master CELPIP Listening with guided practice for all 6 parts: Problem Solving, Daily Life, Information, News Item, Discussion, and Viewpoints. Study strategies included."
         canonical="/listening"
       />
       {/* ── Hero ── */}
@@ -207,7 +207,7 @@ export default function ListeningPage() {
           <p className="lp-hero-desc">
             The CELPIP Listening test assesses your ability to understand spoken Canadian English
             across six real-life formats — from two-person conversations and informational passages
-            to multi-speaker discussions and opposing viewpoints. Every question is multiple choice,
+            to multi-speaker discussions and opposing viewpoints debates. Every question is multiple choice,
             and each audio clip plays only once on the real test.
           </p>
           <div className="lp-hero-stats">
@@ -242,10 +242,9 @@ export default function ListeningPage() {
               <div className="lp-info-icon">📋</div>
               <h3>What the Test Includes</h3>
               <p>
-                The Listening test runs 47 to 55 minutes with 6 parts and 38 multiple choice questions.
-                Part 1 is a problem-solving dialogue. Part 2 covers an everyday conversation. Part 3 is
-                an informational monologue. Part 4 is a news-style broadcast. Part 5 is a multi-speaker
-                discussion. Part 6 presents two contrasting viewpoints.
+                The Listening test covers 6 parts with 38 multiple choice questions.
+                Parts 1–4 cover problem-solving, daily conversations, informational monologues, and news reports.
+                Part 5 is a multi-speaker discussion. Part 6 is a viewpoints debate.
               </p>
               <p style={{ marginTop: 10 }}>
                 All audio reflects real-life Canadian English — accents, idioms, and vocabulary you would

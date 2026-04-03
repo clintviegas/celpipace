@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
-const HERO_BADGE = '⭐ AI-Powered CELPIP Practice'
+const HERO_BADGE = 'AI-Powered CELPIP Practice'
 const HERO_TITLE = 'Your Fastest Path to a 10+ CELPIP Score'
 const HERO_SUB = 'Practice all 4 CELPIP skills with AI scoring and instant feedback. Boost your CLB band and CRS score.'
 
@@ -15,10 +15,10 @@ const SKILL_SECTIONS = [
 ]
 
 const TRUST_BADGES = [
-  { emoji: '📝', value: '200+', label: 'Practice Questions' },
-  { emoji: '⭐', value: '4.9', label: 'Google Rating' },
-  { emoji: '🏆', value: '20+', label: 'Mock Exams' },
-  { emoji: '🤖', value: 'AI', label: 'Instant Scoring' },
+  { value: '200+', label: 'Practice Questions' },
+  { value: '20+', label: 'Mock Exams' },
+  { value: 'CLB 1–12', label: 'Full Score Range' },
+  { value: 'AI', label: 'Instant Scoring' },
 ]
 
 const SHOWCASE_SLIDES = [
@@ -89,14 +89,13 @@ export default function Hero() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.div 
+          <motion.div
             className="hero-badge-new"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="badge-pulse" />
-            {HERO_BADGE}
+            🍁 {HERO_BADGE}
           </motion.div>
 
           <motion.h1 
@@ -297,7 +296,6 @@ export default function Hero() {
       >
         {TRUST_BADGES.map((badge, i) => (
           <div key={badge.label} className="stat-item-new">
-            <span className="stat-emoji">{badge.emoji}</span>
             <div className="stat-content">
               <div className="stat-value">{badge.value}</div>
               <div className="stat-label">{badge.label}</div>

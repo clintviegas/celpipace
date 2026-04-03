@@ -146,11 +146,11 @@ export default function CRSBooster() {
                   <strong> +66 CRS points</strong>, which can be the difference between
                   sitting out a draw and receiving your ITA.
                 </p>
-                <a href="#pricing" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-block' }}>
+                <button className="btn btn-primary" onClick={() => navigate('/pricing')} style={{ marginTop: '1rem' }}>
                   Practice for CLB 10 →
-                </a>
-                <button className="btn btn-outline" onClick={() => navigate('/calculator')} style={{ marginTop: '0.5rem', display: 'inline-block', marginLeft: '8px' }}>
-                  🧮 Open CRS Calculator
+                </button>
+                <button className="btn btn-outline" onClick={() => navigate('/calculator')} style={{ marginTop: '0.5rem', marginLeft: '8px' }}>
+                  Open CRS Calculator
                 </button>
               </div>
             </motion.div>
