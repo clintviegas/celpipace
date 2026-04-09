@@ -67,7 +67,7 @@ const NAV_ITEMS = [
     color: '#6B4FAF',
     colorLight: '#F3EFFF',
     parts: [
-      { label: 'CLB Scoring Guide',   desc: 'Understand CLB levels and how scores map to CRS' },
+      { label: 'CLB Scoring Guide',   desc: 'Understand CLB levels and how scores map to CRS', action: 'scores' },
       { label: 'CRS Calculator',      desc: 'Calculate your Express Entry CRS score instantly',  action: 'calculator' },
       { label: 'Tips & Strategies',   desc: 'Section-by-section tips to boost your CLB band', action: 'tips' },
       { label: 'Score Tracker',       desc: 'Track your CLB progress across all 4 sections', action: 'scores' },
@@ -147,11 +147,20 @@ function NavItem({ item, active, openId, setOpenId }) {
     )
   }
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+
   return (
     <li ref={ref} className="nav-has-drop">
       <button
         className={`nav-link-btn nav-link-drop${active ? ' nav-link-active' : ''} ${open ? 'nav-link-drop--open' : ''}`}
-        onClick={() => setOpenId(open ? null : item.id)}
+        onClick={() => {
+          if (isMobile) {
+            setOpenId(open ? null : item.id)
+          } else {
+            navigate('/' + item.id)
+            setOpenId(null)
+          }
+        }}
         onMouseEnter={() => setOpenId(item.id)}
       >
         {item.label}

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { SCORE_LEVELS } from '../data/constants'
+import { useProgress } from '../hooks/useProgress'
 import SEO from '../components/SEO'
 
 /* ── CRS points table per CLB per skill (FSW core points) ── */
@@ -67,7 +68,8 @@ function CLBSelector({ value, onChange, color }) {
 export default function ScoresPage() {
   const navigate = useNavigate()
   const [clbScores, setClbScores] = useState({ listening: 7, reading: 7, writing: 7, speaking: 7 })
-  const [activeTab, setActiveTab] = useState('tracker')
+  const [activeTab, setActiveTab] = useState('practice')
+  const { stats, getPartStats, activity, streak } = useProgress()
 
   const setSkill = (id, val) => setClbScores(prev => ({ ...prev, [id]: val }))
 
@@ -97,10 +99,16 @@ export default function ScoresPage() {
       {/* Tabs */}
       <div className="scores-tabs">
         <button
+          className={`scores-tab${activeTab === 'practice' ? ' scores-tab--active' : ''}`}
+          onClick={() => setActiveTab('practice')}
+        >
+          📈 Practice Scores
+        </button>
+        <button
           className={`scores-tab${activeTab === 'tracker' ? ' scores-tab--active' : ''}`}
           onClick={() => setActiveTab('tracker')}
         >
-          🎯 Progress Tracker
+          🎯 CLB Tracker
         </button>
         <button
           className={`scores-tab${activeTab === 'levels' ? ' scores-tab--active' : ''}`}
@@ -109,6 +117,101 @@ export default function ScoresPage() {
           📊 CLB Score Levels
         </button>
       </div>
+
+      {/* ── TAB 0: Practice Scores (LIVE) ── */}
+      {activeTab === 'practice' && (
+        <div className="tracker-root">
+          <div className="tracker-intro">
+            <h2 className="tracker-intro-title">Your Practice Performance</h2>
+            <p className="tracker-intro-sub">
+              Live scores from your completed practice sets. Complete more sets to build your performance profile.
+            </p>
+          </div>
+
+          {/* Overall stats */}
+          <div className="practice-overview-tiles">
+            {[
+              { val: stats.totalCompleted, label: 'Sets Done', icon: '✅', color: '#2D8A56' },
+              { val: stats.avgScore !== null ? `${stats.avgScore}%` : '—', label: 'Avg Score', icon: '📊', color: '#4A90D9' },
+              { val: streak.current, label: 'Day Streak', icon: '🔥', color: '#C8972A' },
+              { val: `${stats.totalPct}%`, label: 'Progress', icon: '🏆', color: '#C8102E' },
+            ].map((t, i) => (
+              <motion.div
+                key={t.label}
+                className="practice-tile"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.06 }}
+              >
+                <span className="practice-tile-icon">{t.icon}</span>
+                <span className="practice-tile-val" style={{ color: t.color }}>{t.val}</span>
+                <span className="practice-tile-label">{t.label}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Section breakdown */}
+          <div className="practice-sections">
+            {SKILLS.map((s, i) => {
+              const ss = stats.sections[s.id] || { done: 0, total: 0, pct: 0, avgScore: null }
+              return (
+                <motion.div
+                  key={s.id}
+                  className="practice-section-card"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.08 }}
+                  style={{ borderTopColor: s.color }}
+                >
+                  <div className="practice-section-header">
+                    <span className="practice-section-icon" style={{ background: s.colorLight }}>{s.icon}</span>
+                    <span className="practice-section-name">{s.label}</span>
+                    <span className="practice-section-pct" style={{ color: s.color }}>{ss.pct}%</span>
+                  </div>
+                  <div className="practice-section-bar-track">
+                    <motion.div
+                      className="practice-section-bar-fill"
+                      animate={{ width: `${ss.pct}%` }}
+                      transition={{ duration: 0.6 }}
+                      style={{ background: s.color }}
+                    />
+                  </div>
+                  <div className="practice-section-stats">
+                    <span>{ss.done}/{ss.total} sets</span>
+                    <span style={{ color: s.color, fontWeight: 600 }}>
+                      {ss.avgScore !== null ? `${ss.avgScore}% avg` : 'No scores yet'}
+                    </span>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          {/* Recent scores feed */}
+          {activity.length > 0 && (
+            <div className="practice-recent">
+              <h3 className="practice-recent-title">Recent Scores</h3>
+              <div className="practice-recent-list">
+                {activity.slice(0, 10).map((a, i) => {
+                  const s = SKILLS.find(sk => sk.id === a.section)
+                  return (
+                    <div key={`${a.ts}-${i}`} className="practice-recent-row">
+                      <span className="practice-recent-icon" style={{ background: s?.colorLight || '#f3f4f6' }}>{s?.icon || '📝'}</span>
+                      <span className="practice-recent-part">{a.partId} Set {a.setNum}</span>
+                      <span className="practice-recent-score" style={{
+                        color: a.pct >= 80 ? '#2D8A56' : a.pct >= 60 ? '#C8972A' : '#C8102E'
+                      }}>
+                        {a.score}/{a.total} ({a.pct}%)
+                      </span>
+                      <span className="practice-recent-time">{new Date(a.ts).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── TAB 1: Progress Tracker ── */}
       {activeTab === 'tracker' && (

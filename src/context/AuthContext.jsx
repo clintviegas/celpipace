@@ -59,11 +59,12 @@ export function AuthProvider({ children }) {
   }
 
   /* ── Magic Link (passwordless email) ── */
-  const signInWithMagicLink = async (email) => {
+  const signInWithMagicLink = async (email, displayName) => {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: window.location.origin,
+        data: displayName ? { full_name: displayName } : undefined,
       },
     })
     if (error) {
