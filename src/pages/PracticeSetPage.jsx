@@ -1637,35 +1637,29 @@ const WRITING_SETS = {
 /* ══════════════════════════════════════════════════════════════
    AI SCORING — STUB (replace with real API in next iteration)
 ══════════════════════════════════════════════════════════════ */
-async function scoreWithAI(responseText, prompt, criteria) {
-  // TODO: Replace this mock with a real API call (e.g. OpenAI, Gemini)
-  // Expected input: { responseText, prompt, criteria }
-  // Expected output: { overall, scores: { taskFulfillment, coherence, vocabulary, readability }, feedback, suggestions }
-  await new Promise(r => setTimeout(r, 1800)) // simulate latency
-  const wordCount = responseText.trim().split(/\s+/).length
-  const hasLength = wordCount >= 140
-  const base = hasLength ? 7 + Math.random() * 2.5 : 4 + Math.random() * 3
-  const jitter = () => Math.max(3, Math.min(12, +(base + (Math.random() - 0.5) * 2).toFixed(1)))
-  const scores = {
-    taskFulfillment: jitter(),
-    coherence: jitter(),
-    vocabulary: jitter(),
-    readability: jitter(),
-  }
-  const overall = +((scores.taskFulfillment + scores.coherence + scores.vocabulary + scores.readability) / 4).toFixed(1)
-  return {
-    overall,
-    clbBand: overall >= 10 ? '10+' : overall >= 9 ? '9' : overall >= 7.5 ? '8' : overall >= 6 ? '7' : overall >= 5 ? '6' : '5',
-    scores,
-    feedback: hasLength
-      ? 'Your response demonstrates a solid understanding of the prompt. The structure is clear and your position is stated early. Consider varying your sentence openings and incorporating more specific examples to strengthen your argument.'
-      : 'Your response is below the recommended word count (150–200 words). Shorter responses typically score lower on Task Fulfillment. Expand your reasoning with more specific examples and develop each point more fully.',
-    suggestions: [
-      hasLength ? 'Use a wider range of transition words (Furthermore, In contrast, As a result)' : 'Aim for at least 150 words — expand each supporting reason with specific detail',
-      'Include one concrete example or statistic to make your argument more persuasive',
-      'Vary your sentence structure — mix simple, compound, and complex sentences',
-      'Review your opening sentence to ensure it clearly states your position',
-    ],
+async function scoreWithAI(responseText, prompt, criteria, taskType) {
+  try {
+    const res = await fetch('/api/score-writing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ responseText, prompt, criteria, taskType }),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.error || 'Scoring failed')
+    }
+    return await res.json()
+  } catch (err) {
+    console.error('AI scoring error:', err)
+    // Fallback: return error state so UI can handle it
+    return {
+      overall: 0,
+      clbBand: '–',
+      scores: { taskFulfillment: 0, coherence: 0, vocabulary: 0, readability: 0 },
+      feedback: `Scoring unavailable: ${err.message}. Please try again.`,
+      suggestions: [],
+      error: true,
+    }
   }
 }
 
@@ -1749,264 +1743,42 @@ function AIFeedbackPanel({ result, color, onClose }) {
    │ w/diff │                           │
    └────────┴───────────────────────────┘
 ══════════════════════════════════════════════════════════════ */
-function WritingLayout({ questions, color, partLabel }) {
+function WritingLayout({ questions, color, partId, partLabel, partIcon }) {
   const [activeIdx, setActiveIdx] = useState(0)
   const [responses, setResponses] = useState({})   // { [idx]: text }
   const [timeLeft, setTimeLeft]   = useState(null)
   const [started, setStarted]     = useState(false)
+  const [overtime, setOvertime]   = useState(0)
+  const [showBanner, setShowBanner] = useState(false)
   const [aiResult, setAiResult]   = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
+  const [showModel, setShowModel] = useState(false)
   const timerRef = useRef(null)
+  const otRef    = useRef(null)
 
-  const q = questions[activeIdx]
+  const sorted = [...questions].sort((a, b) => a.num - b.num)
+  const q = sorted[activeIdx]
   const text = responses[activeIdx] || ''
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
 
-  // Sort questions ascending by num (they should already be, but ensure)
-  const sorted = [...questions].sort((a, b) => a.num - b.num)
+  /* Sidebar helpers */
+  const completedCount = sorted.filter((_, i) => !!(responses[i] && responses[i].trim())).length
+  const DIFF_COLORS = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
 
   const switchQ = (idx) => {
     setActiveIdx(idx)
     setAiResult(null)
-    // Reset timer for new question
-    if (timerRef.current) clearInterval(timerRef.current)
-    setTimeLeft(null)
-    setStarted(false)
-  }
-
-  const startTimer = () => {
-    const mins = q.section === 'W1' ? 27 : 26
-    setTimeLeft(mins * 60)
-    setStarted(true)
-    if (timerRef.current) clearInterval(timerRef.current)
-    timerRef.current = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) { clearInterval(timerRef.current); return 0 }
-        return t - 1
-      })
-    }, 1000)
-  }
-
-  const fmtTime = (secs) => {
-    if (secs === null) return '--:--'
-    const m = Math.floor(secs / 60)
-    const s = secs % 60
-    return `${m}:${s.toString().padStart(2, '0')}`
-  }
-
-  const handleAIScore = async () => {
-    if (!text.trim() || aiLoading) return
-    setAiLoading(true)
-    setAiResult(null)
-    const result = await scoreWithAI(text, q.prompt, q.criteria)
-    setAiResult(result)
-    setAiLoading(false)
-  }
-
-  const timeCritical = timeLeft !== null && timeLeft <= 120 && timeLeft > 0
-  const timeUp = timeLeft === 0
-  const timerColor = timeUp ? '#888' : timeCritical ? '#C8102E' : color
-
-  // Difficulty
-  const diffC = DIFF_COLOURS[q?.difficulty] || DIFF_COLOURS.medium
-
-  return (
-    <div className="wl-shell">
-      {/* ── LEFT SIDEBAR: Topic list ── */}
-      <div className="wl-sidebar">
-        <div className="wl-sidebar-title" style={{ color }}>{partLabel || 'Questions'}</div>
-        <div className="wl-topic-list">
-          {sorted.map((item, idx) => {
-            const dc = DIFF_COLOURS[item.difficulty] || DIFF_COLOURS.medium
-            const hasResponse = !!(responses[idx] && responses[idx].trim())
-            return (
-              <button
-                key={item.id}
-                className={`wl-topic-row${idx === activeIdx ? ' wl-topic-row--active' : ''}${hasResponse ? ' wl-topic-row--done' : ''}`}
-                style={idx === activeIdx ? { borderLeftColor: color } : {}}
-                onClick={() => switchQ(idx)}
-              >
-                <span className="wl-topic-num">{item.num}</span>
-                <span className="wl-topic-title">{item.title}</span>
-                <span className="wl-topic-diff" style={{ background: dc.bg, color: dc.text }}>
-                  {(item.difficulty || 'med').slice(0, 3).toUpperCase()}
-                </span>
-                {hasResponse && <span className="wl-topic-check">✓</span>}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* ── MAIN CONTENT ── */}
-      <div className="wl-main">
-        {/* Top bar */}
-        <div className="wl-topbar">
-          <div className="wl-topbar-left">
-            <span className="wl-q-num-badge" style={{ background: color }}>Q{q.num}</span>
-            <span className="wl-q-title">{q.title}</span>
-            <span className="wl-q-diff" style={{ background: diffC.bg, color: diffC.text }}>
-              {q.difficulty?.charAt(0).toUpperCase() + q.difficulty?.slice(1)}
-            </span>
-          </div>
-          <div className="wl-topbar-right">
-            {started ? (
-              <span className={`wl-timer${timeCritical ? ' wl-timer--critical' : ''}${timeUp ? ' wl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
-                ⏱ {fmtTime(timeLeft)}
-                {timeUp && <span className="wl-timer-up-label">Time's up</span>}
-              </span>
-            ) : (
-              <button className="wl-start-btn" style={{ background: color }} onClick={startTimer}>
-                ▶ Start Timer ({q.section === 'W1' ? '27' : '26'} min)
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Prompt */}
-        <div className="wl-prompt-box">
-          <div className="wl-prompt-label" style={{ color }}>
-            {q.section === 'W1' ? '✉ Email Prompt' : '📋 Survey Prompt'}
-          </div>
-          <div className="wl-prompt-scenario">{q.scenario}</div>
-          <pre className="wl-prompt-text">{q.prompt}</pre>
-          {q.bulletPoints && (
-            <ul className="wl-bullet-list">
-              {q.bulletPoints.map((b, i) => <li key={i}>{b}</li>)}
-            </ul>
-          )}
-          {q.optionA && (
-            <div className="wl-options-row">
-              <div className="wl-option-pill"><strong>A:</strong> {q.optionA}</div>
-              <div className="wl-option-pill"><strong>B:</strong> {q.optionB}</div>
-            </div>
-          )}
-          <div className="wl-prompt-meta">
-            <span>🗣️ {q.tone}</span>
-            <span>🎯 150–200 words</span>
-          </div>
-        </div>
-
-        {/* Scoring criteria */}
-        {q.criteria && (
-          <div className="wl-criteria">
-            <span className="wl-criteria-label">Scoring Criteria:</span>
-            {q.criteria.map(c => <span key={c} className="wl-criteria-tag" style={{ background: `${color}18`, color }}>{c}</span>)}
-          </div>
-        )}
-
-        {/* Editor */}
-        <div className="wl-editor">
-          <textarea
-            className="wl-textarea"
-            value={text}
-            onChange={e => setResponses(r => ({ ...r, [activeIdx]: e.target.value }))}
-            placeholder="Write your response here…"
-            rows={14}
-            style={{ borderColor: text ? color : undefined }}
-          />
-          <div className="wl-editor-footer">
-            <span className={`wl-word-count${wordCount >= 150 && wordCount <= 200 ? ' wl-wc--good' : wordCount > 200 ? ' wl-wc--over' : ''}`}>
-              {wordCount} words
-              {wordCount >= 150 && wordCount <= 200 && ' ✓'}
-              {wordCount > 200 && ' — over limit'}
-              {wordCount > 0 && wordCount < 150 && ` — ${150 - wordCount} more needed`}
-            </span>
-            <div className="wl-editor-actions">
-              <button
-                className="wl-ai-btn"
-                style={{ background: aiLoading ? '#aaa' : color }}
-                onClick={handleAIScore}
-                disabled={aiLoading || !text.trim()}
-              >
-                {aiLoading ? '⏳ Scoring…' : '🤖 Get AI Score'}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Feedback */}
-        <AnimatePresence>
-          {aiResult && (
-            <AIFeedbackPanel result={aiResult} color={color} onClose={() => setAiResult(null)} />
-          )}
-        </AnimatePresence>
-
-        {/* Navigation */}
-        <div className="wl-nav">
-          <button
-            className="wl-nav-btn"
-            onClick={() => switchQ(Math.max(0, activeIdx - 1))}
-            disabled={activeIdx === 0}
-          >
-            ← Previous
-          </button>
-          <span className="wl-nav-counter" style={{ color }}>{activeIdx + 1} / {sorted.length}</span>
-          <button
-            className="wl-nav-btn wl-nav-btn--next"
-            style={{ background: color, borderColor: color }}
-            onClick={() => switchQ(Math.min(sorted.length - 1, activeIdx + 1))}
-            disabled={activeIdx === sorted.length - 1}
-          >
-            Next →
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* ══════════════════════════════════════════════════════════════
-   LISTENING LAYOUT — Sidebar (L1-L4) + Transcript + MCQ Questions
-   Mirrors WritingLayout pattern — timer with overtime, instant feedback
-══════════════════════════════════════════════════════════════ */
-function ListeningLayout({ color, partId }) {
-  const PARTS_ORDER = ['L1', 'L2', 'L3', 'L4']
-  const parts = PARTS_ORDER.map(id => LISTENING_DATA[id]).filter(Boolean)
-  const initPartIdx = Math.max(0, PARTS_ORDER.indexOf(partId))
-
-  const [activePartIdx, setActivePartIdx] = useState(initPartIdx)
-  const [activeSetIdx, setActiveSetIdx]   = useState(0)
-  const [answers, setAnswers]             = useState({})
-  const [timeLeft, setTimeLeft]           = useState(null)
-  const [started, setStarted]             = useState(false)
-  const [overtime, setOvertime]           = useState(0)
-  const [showBanner, setShowBanner]       = useState(false)
-  const [showTranscript, setShowTranscript] = useState(true)
-  const timerRef = useRef(null)
-  const otRef    = useRef(null)
-
-  const part = parts[activePartIdx]
-  const set  = part.sets[activeSetIdx]
-  const qs   = set.questions
-  const total = qs.length
-
-  /* answer key: partIdx_setIdx_qIdx */
-  const aKey = (pi, si, qi) => `${pi}_${si}_${qi}`
-  const setDoneCount = (pi, si) => parts[pi].sets[si].questions.filter((_, qi) => answers[aKey(pi, si, qi)] !== undefined).length
-  const setCorrectCount = (pi, si) => parts[pi].sets[si].questions.filter((q, qi) => {
-    const a = answers[aKey(pi, si, qi)]
-    return a !== undefined && a === q.answer
-  }).length
-
-  const totalAnswered = parts.reduce((acc, p, pi) => acc + p.sets.reduce((a2, s, si) => a2 + setDoneCount(pi, si), 0), 0)
-  const totalQs = parts.reduce((acc, p) => acc + p.sets.reduce((a2, s) => a2 + s.questions.length, 0), 0)
-
-  /* switch part/set */
-  const switchTo = (pi, si) => {
-    setActivePartIdx(pi)
-    setActiveSetIdx(si)
-    setShowBanner(false)
+    setShowModel(false)
     if (timerRef.current) clearInterval(timerRef.current)
     if (otRef.current) clearInterval(otRef.current)
     setTimeLeft(null)
     setOvertime(0)
     setStarted(false)
+    setShowBanner(false)
   }
 
-  /* timer */
   const startTimer = () => {
-    const mins = part.timeLimitMinutes
+    const mins = q.section === 'W1' ? 27 : 26
     setTimeLeft(mins * 60)
     setStarted(true)
     setOvertime(0)
@@ -2033,18 +1805,478 @@ function ListeningLayout({ color, partId }) {
     return `${m}:${s.toString().padStart(2, '0')}`
   }
 
-  const timeCritical = timeLeft !== null && timeLeft <= 60 && timeLeft > 0
-  const timeAmber    = timeLeft !== null && timeLeft <= 300 && timeLeft > 60
+  const handleAIScore = async () => {
+    if (!text.trim() || aiLoading) return
+    setAiLoading(true)
+    setAiResult(null)
+    const result = await scoreWithAI(text, q.prompt, q.criteria, q.section)
+    setAiResult(result)
+    setAiLoading(false)
+  }
+
+  const timeCritical = timeLeft !== null && timeLeft <= 120 && timeLeft > 0
+  const timeAmber    = timeLeft !== null && timeLeft <= 300 && timeLeft > 120
   const timeUp       = timeLeft === 0
   const timerColor   = timeUp ? '#999' : timeCritical ? '#C8102E' : timeAmber ? '#C8972A' : color
 
-  /* answer handler */
+  const diffC = DIFF_COLOURS[q?.difficulty] || DIFF_COLOURS.medium
+
+  return (
+    <div className="wl-shell">
+      {/* ── SIDEBAR ── */}
+      <aside className="wl-sidebar">
+        <div className="wl-sidebar-header">
+          <div className="wl-sidebar-icon">{partIcon}</div>
+          <div className="wl-sidebar-header-text">
+            <div className="wl-sidebar-title" style={{ color }}>{partId}</div>
+            <div className="wl-sidebar-label-text">{partLabel}</div>
+          </div>
+        </div>
+
+        <div className="wl-sidebar-stats">
+          <div className="wl-sidebar-stat">
+            <span className="wl-sidebar-stat-val">{completedCount}</span>
+            <span className="wl-sidebar-stat-lbl">Done</span>
+          </div>
+          <div className="wl-sidebar-stat-divider" />
+          <div className="wl-sidebar-stat">
+            <span className="wl-sidebar-stat-val">{sorted.length}</span>
+            <span className="wl-sidebar-stat-lbl">Total</span>
+          </div>
+          <div className="wl-sidebar-stat-divider" />
+          <div className="wl-sidebar-stat">
+            <span className="wl-sidebar-stat-val">{q.section === 'W1' ? '27' : '26'}</span>
+            <span className="wl-sidebar-stat-lbl">Min</span>
+          </div>
+        </div>
+
+        <div className="wl-sidebar-progress-wrap">
+          <div className="wl-sidebar-progress-bar">
+            <div className="wl-sidebar-progress-fill" style={{ width: `${sorted.length > 0 ? (completedCount / sorted.length) * 100 : 0}%`, background: color }} />
+          </div>
+        </div>
+
+        <div className="wl-sidebar-list-label">Writing Tasks</div>
+        <div className="wl-topic-list">
+          {sorted.map((item, idx) => {
+            const isActive = idx === activeIdx
+            const hasResponse = !!(responses[idx] && responses[idx].trim())
+            const dc = DIFF_COLORS[item.difficulty] || DIFF_COLORS.easy
+            return (
+              <button
+                key={item.id}
+                className={`wl-topic-row${isActive ? ' wl-topic-row--active' : ''}${hasResponse ? ' wl-topic-row--done' : ''}`}
+                style={isActive ? { borderLeftColor: color } : {}}
+                onClick={() => switchQ(idx)}
+              >
+                <span className="wl-topic-num" style={isActive ? { background: color } : hasResponse ? { background: '#22c55e' } : {}}>{item.num}</span>
+                <div className="wl-topic-info">
+                  <span className="wl-topic-title">{item.title}</span>
+                  <span className="wl-topic-meta">
+                    <span className="wl-topic-diff-dot" style={{ background: dc }} />
+                    <span style={{ color: dc }}>{item.difficulty}</span>
+                  </span>
+                </div>
+                {hasResponse && <span className="wl-topic-check">{'\u2713'}</span>}
+              </button>
+            )
+          })}
+        </div>
+      </aside>
+
+      {/* ── MAIN CONTENT ── */}
+      <div className="wl-main">
+        {/* Top bar */}
+        <div className="wl-topbar">
+          <div className="wl-topbar-left">
+            <span className="wl-q-num-badge" style={{ background: color }}>Q{q.num}</span>
+            <div className="wl-topbar-title-group">
+              <span className="wl-q-title">{q.title}</span>
+              <span className="wl-topbar-set-tag">Task {activeIdx + 1} of {sorted.length}</span>
+            </div>
+            <span className="wl-q-diff" style={{ background: diffC.bg, color: diffC.text }}>
+              {q.difficulty?.charAt(0).toUpperCase() + q.difficulty?.slice(1)}
+            </span>
+          </div>
+          <div className="wl-topbar-right">
+            {/* Word count badge */}
+            {wordCount > 0 && (
+              <div className={`wl-wc-badge${wordCount >= 150 && wordCount <= 200 ? ' wl-wc-badge--good' : wordCount > 200 ? ' wl-wc-badge--over' : ''}`}>
+                {wordCount} words
+              </div>
+            )}
+            {started ? (
+              <div className={`wl-timer${timeCritical ? ' wl-timer--critical' : ''}${timeUp ? ' wl-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
+                <span className="wl-timer-icon">{'\u23F1'}</span>
+                {timeUp ? (
+                  <span className="wl-timer-digits">+{fmtTime(overtime)}</span>
+                ) : (
+                  <span className="wl-timer-digits">{fmtTime(timeLeft)}</span>
+                )}
+                {timeUp && <span className="wl-timer-up-label">overtime</span>}
+              </div>
+            ) : (
+              <button className="wl-start-btn" style={{ background: color }} onClick={startTimer}>
+                {'\u25B6'} Start Timer ({q.section === 'W1' ? '27' : '26'} min)
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Time nudges */}
+        {timeAmber && !timeUp && (
+          <div className="wl-nudge wl-nudge--amber">{'\u23F3'} 5 minutes remaining — wrap up your response!</div>
+        )}
+        {timeCritical && !timeUp && (
+          <div className="wl-nudge wl-nudge--red">{'\uD83D\uDD25'} Under 2 minutes left — finish your last sentence!</div>
+        )}
+        {showBanner && (
+          <div className="wl-banner">
+            <span>{'\u23F0'} Time is up! On the real exam you would stop here. But this is practice — take your time.</span>
+            <button className="wl-banner-close" onClick={() => setShowBanner(false)}>{'\u2715'}</button>
+          </div>
+        )}
+
+        {/* Prompt */}
+        <div className="wl-prompt-box">
+          <div className="wl-prompt-label" style={{ color }}>
+            {q.section === 'W1' ? '\u2709 Email Prompt' : '\uD83D\uDCCB Survey Prompt'}
+          </div>
+          <div className="wl-prompt-scenario">{q.scenario}</div>
+          <pre className="wl-prompt-text">{q.prompt}</pre>
+          {q.bulletPoints && (
+            <ul className="wl-bullet-list">
+              {q.bulletPoints.map((b, i) => <li key={i}>{b}</li>)}
+            </ul>
+          )}
+          {q.optionA && (
+            <div className="wl-options-row">
+              <div className="wl-option-pill"><strong>Option A:</strong> {q.optionA}</div>
+              <div className="wl-option-pill"><strong>Option B:</strong> {q.optionB}</div>
+            </div>
+          )}
+          <div className="wl-prompt-meta">
+            <span>{'\uD83D\uDDE3\uFE0F'} {q.tone}</span>
+            <span>{'\uD83C\uDFAF'} 150–200 words</span>
+          </div>
+        </div>
+
+        {/* Scoring criteria */}
+        {q.criteria && (
+          <div className="wl-criteria">
+            <span className="wl-criteria-label">Scoring Criteria:</span>
+            {q.criteria.map(c => <span key={c} className="wl-criteria-tag" style={{ background: `${color}18`, color }}>{c}</span>)}
+          </div>
+        )}
+
+        {/* Editor */}
+        <div className="wl-editor">
+          <textarea
+            className="wl-textarea"
+            value={text}
+            onChange={e => setResponses(r => ({ ...r, [activeIdx]: e.target.value }))}
+            placeholder="Write your response here…"
+            rows={14}
+            style={{ borderColor: text ? color : undefined }}
+          />
+          <div className="wl-editor-footer">
+            <span className={`wl-word-count${wordCount >= 150 && wordCount <= 200 ? ' wl-wc--good' : wordCount > 200 ? ' wl-wc--over' : ''}`}>
+              {wordCount} words
+              {wordCount >= 150 && wordCount <= 200 && ' \u2713'}
+              {wordCount > 200 && ' — over limit'}
+              {wordCount > 0 && wordCount < 150 && ` — ${150 - wordCount} more needed`}
+            </span>
+            <div className="wl-editor-actions">
+              {q.modelAnswer && (
+                <button className="wl-model-btn" style={{ borderColor: color, color }} onClick={() => setShowModel(!showModel)}>
+                  {showModel ? 'Hide' : '\uD83D\uDCD6 Model Answer'}
+                </button>
+              )}
+              <button
+                className="wl-ai-btn"
+                style={{ background: aiLoading ? '#aaa' : color }}
+                onClick={handleAIScore}
+                disabled={aiLoading || !text.trim()}
+              >
+                {aiLoading ? '\u23F3 Scoring…' : '\uD83E\uDD16 Get AI Score'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Model Answer */}
+        <AnimatePresence>
+          {showModel && q.modelAnswer && (
+            <motion.div
+              className="wl-model-box"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="wl-model-label">{'\uD83D\uDCD6'} Model Answer</div>
+              <pre className="wl-model-text">{q.modelAnswer}</pre>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* AI Feedback */}
+        <AnimatePresence>
+          {aiResult && (
+            <AIFeedbackPanel result={aiResult} color={color} onClose={() => setAiResult(null)} />
+          )}
+        </AnimatePresence>
+
+        {/* Navigation */}
+        <div className="wl-nav">
+          <button
+            className="wl-nav-btn"
+            onClick={() => switchQ(Math.max(0, activeIdx - 1))}
+            disabled={activeIdx === 0}
+          >
+            {'\u2190'} Previous
+          </button>
+          <span className="wl-nav-counter" style={{ color }}>{partId} · Task {activeIdx + 1} of {sorted.length}</span>
+          <button
+            className="wl-nav-btn wl-nav-btn--next"
+            style={{ background: color, borderColor: color }}
+            onClick={() => switchQ(Math.min(sorted.length - 1, activeIdx + 1))}
+            disabled={activeIdx === sorted.length - 1}
+          >
+            Next {'\u2192'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LISTENING LAYOUT — Simulation Mode
+   Audio playback → Transcript highlight → Questions → Live scoring
+   → Completion panel with CLB estimate, skill breakdown, motivation
+══════════════════════════════════════════════════════════════ */
+function ListeningLayout({ color, partId }) {
+  const part = LISTENING_DATA[partId]
+  if (!part) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>No data available for {partId}.</div>
+
+  const [activeSetIdx, setActiveSetIdx]     = useState(0)
+  const [answers, setAnswers]               = useState({})
+  const [timeLeft, setTimeLeft]             = useState(null)
+  const [started, setStarted]               = useState(false)
+  const [overtime, setOvertime]             = useState(0)
+  const [showBanner, setShowBanner]         = useState(false)
+  const [showTranscript, setShowTranscript] = useState(false)
+  const [showCompletion, setShowCompletion] = useState(false)
+
+  /* Audio state */
+  const [audioPhase, setAudioPhase]       = useState('idle') // idle | playing | done
+  const [currentLineIdx, setCurrentLineIdx] = useState(-1)
+  const [audioError, setAudioError]       = useState(false)
+  const audioRef           = useRef(null)
+  const lineIdxRef         = useRef(-1)
+  const timerRef           = useRef(null)
+  const otRef              = useRef(null)
+  const transcriptBodyRef  = useRef(null)
+  const transcriptLineRefs = useRef([])
+  const activeSetRef       = useRef(activeSetIdx)
+  const startTimerRef      = useRef(null)
+  activeSetRef.current     = activeSetIdx
+
+  const set   = part.sets[activeSetIdx]
+  const qs    = set.questions
+  const total = qs.length
+
+  /* Helpers — scoped to current set only */
+  const aKey       = (qi) => `${activeSetIdx}_${qi}`
+  const doneCount  = qs.filter((_, qi) => answers[aKey(qi)] !== undefined).length
+  const correctCnt = qs.filter((q, qi) => { const a = answers[aKey(qi)]; return a !== undefined && a === q.answer }).length
+  const isSetDone  = doneCount === total
+  const scorePct   = total > 0 ? Math.round((correctCnt / total) * 100) : 0
+
+  /* Per-set sidebar helpers */
+  const sidebarDone    = (si) => part.sets[si].questions.filter((_, qi) => answers[`${si}_${qi}`] !== undefined).length
+  const sidebarCorrect = (si) => part.sets[si].questions.filter((q, qi) => { const a = answers[`${si}_${qi}`]; return a !== undefined && a === q.answer }).length
+  const sidebarIsDone  = (si) => sidebarDone(si) === part.sets[si].questions.length
+  const completedSets  = part.sets.filter((_, si) => sidebarIsDone(si)).length
+
+  /* ── Audio path builder ── */
+  const getAudioPath = (setNum, lineIdx) => {
+    const sn = String(setNum).padStart(2, '0')
+    const ln = String(lineIdx).padStart(2, '0')
+    return `/audio/${partId}/set-${sn}/line-${ln}.mp3`
+  }
+
+  /* ── Play audio from a specific line ── */
+  const playFromLine = (idx) => {
+    const curSet = part.sets[activeSetRef.current]
+    if (!audioRef.current || !curSet || !curSet.transcript || idx >= curSet.transcript.length) {
+      setAudioPhase('done')
+      setCurrentLineIdx(-1)
+      lineIdxRef.current = -1
+      return
+    }
+    lineIdxRef.current = idx
+    setCurrentLineIdx(idx)
+    const audio = audioRef.current
+    audio.src = getAudioPath(curSet.setNumber, idx)
+    audio.play().catch(() => {
+      /* file may not exist — skip to next */
+      setTimeout(() => playFromLine(idx + 1), 250)
+    })
+  }
+
+  /* ── Audio event listeners ── */
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    const advance = () => {
+      const curSet = part.sets[activeSetRef.current]
+      const next = lineIdxRef.current + 1
+      if (curSet && curSet.transcript && next < curSet.transcript.length) {
+        playFromLine(next)
+      } else {
+        setAudioPhase('done')
+        setCurrentLineIdx(-1)
+        lineIdxRef.current = -1
+        /* Official test flow: timer starts only after audio finishes */
+        if (startTimerRef.current) startTimerRef.current()
+      }
+    }
+    const onEnded = () => advance()
+    const onError = () => { setAudioError(true); advance() }
+    audio.addEventListener('ended', onEnded)
+    audio.addEventListener('error', onError)
+    return () => { audio.removeEventListener('ended', onEnded); audio.removeEventListener('error', onError) }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* ── Auto-scroll transcript to active line ── */
+  useEffect(() => {
+    if (currentLineIdx >= 0 && transcriptLineRefs.current[currentLineIdx] && transcriptBodyRef.current) {
+      const el = transcriptLineRefs.current[currentLineIdx]
+      const container = transcriptBodyRef.current
+      const top = el.offsetTop - container.offsetTop - container.clientHeight / 2 + el.clientHeight / 2
+      container.scrollTo({ top, behavior: 'smooth' })
+    }
+  }, [currentLineIdx])
+
+  /* ── Start audio (timer starts after audio ends, like the real test) ── */
+  const startAudio = () => {
+    setAudioPhase('playing')
+    setAudioError(false)
+    playFromLine(0)
+  }
+
+  /* ── Timer ── */
+  const startTimer = () => {
+    const mins = part.timeLimitMinutes
+    setTimeLeft(mins * 60)
+    setStarted(true)
+    setOvertime(0)
+    setShowBanner(false)
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current) clearInterval(otRef.current)
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) {
+          clearInterval(timerRef.current)
+          setShowBanner(true)
+          otRef.current = setInterval(() => setOvertime(o => o + 1), 1000)
+          return 0
+        }
+        return t - 1
+      })
+    }, 1000)
+  }
+  startTimerRef.current = startTimer
+
+  const fmtTime = (secs) => {
+    if (secs === null) return '--:--'
+    const m = Math.floor(Math.abs(secs) / 60)
+    const s = Math.abs(secs) % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
+  /* ── Reset current set (reattempt) ── */
+  const reattemptSet = () => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute('src') }
+    setAnswers(a => {
+      const next = { ...a }
+      qs.forEach((_, qi) => { delete next[aKey(qi)] })
+      return next
+    })
+    setShowBanner(false)
+    setShowCompletion(false)
+    setAudioPhase('idle')
+    setCurrentLineIdx(-1)
+    lineIdxRef.current = -1
+    setShowTranscript(false)
+    setAudioError(false)
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current) clearInterval(otRef.current)
+    setTimeLeft(null)
+    setOvertime(0)
+    setStarted(false)
+  }
+
+  /* ── Switch set ── */
+  const switchSet = (si) => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute('src') }
+    setActiveSetIdx(si)
+    setShowBanner(false)
+    setShowCompletion(false)
+    setAudioPhase('idle')
+    setCurrentLineIdx(-1)
+    lineIdxRef.current = -1
+    setShowTranscript(false)
+    setAudioError(false)
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current) clearInterval(otRef.current)
+    setTimeLeft(null)
+    setOvertime(0)
+    setStarted(false)
+  }
+
+  /* ── Answer handler ── */
   const handleAnswer = (qi, optIdx) => {
-    const key = aKey(activePartIdx, activeSetIdx, qi)
+    const key = aKey(qi)
     if (answers[key] !== undefined) return
     setAnswers(a => ({ ...a, [key]: optIdx }))
   }
 
+  /* ── Stop timer & show completion when set is done ── */
+  useEffect(() => {
+    if (isSetDone && !showCompletion) {
+      if (timerRef.current) clearInterval(timerRef.current)
+      if (otRef.current) clearInterval(otRef.current)
+      const t = setTimeout(() => setShowCompletion(true), 500)
+      return () => clearTimeout(t)
+    }
+  }, [isSetDone]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* ── CLB estimate ── */
+  const getCLB = (pct) => {
+    if (pct >= 95) return { level: '10–12', label: 'Advanced' }
+    if (pct >= 85) return { level: '9', label: 'Proficient' }
+    if (pct >= 75) return { level: '8', label: 'Upper Intermediate' }
+    if (pct >= 65) return { level: '7', label: 'Intermediate' }
+    if (pct >= 55) return { level: '6', label: 'Lower Intermediate' }
+    if (pct >= 45) return { level: '5', label: 'Elementary' }
+    if (pct >= 30) return { level: '4', label: 'Beginner' }
+    return { level: '3', label: 'Developing' }
+  }
+
+  /* ── Motivation ── */
+  const getMotivation = (pct) => {
+    if (pct === 100)  return { emoji: '\uD83C\uDFC6', title: 'Perfect Score!', msg: 'Flawless — you nailed every question. You\'re test-ready for this part.' }
+    if (pct >= 85)    return { emoji: '\u2B50', title: 'Excellent!', msg: 'Outstanding performance. A few more sets at this level and you\'re golden.' }
+    if (pct >= 70)    return { emoji: '\uD83D\uDCAA', title: 'Strong Work!', msg: 'Solid result. Review the ones you missed — they tend to be the trickiest.' }
+    if (pct >= 50)    return { emoji: '\uD83D\uDCC8', title: 'Good Progress!', msg: 'You\'re building real skills. Focus on detail recall and inference to level up.' }
+    if (pct >= 30)    return { emoji: '\uD83D\uDD25', title: 'Keep Going!', msg: 'Every set makes you stronger. Re-read explanations and try again.' }
+    return { emoji: '\uD83D\uDCA1', title: 'Learning Mode!', msg: 'No worries — practice is how you improve. Listen again and study the transcript.' }
+  }
+
+  /* ── Constants ── */
   const LETTERS = ['A', 'B', 'C', 'D']
   const SKILL_LABELS = {
     main_idea: 'Main Idea', detail_recall: 'Detail Recall', decision_tracking: 'Decision Tracking',
@@ -2053,69 +2285,77 @@ function ListeningLayout({ color, partId }) {
     fact_extraction: 'Fact Extraction', context_inference: 'Context Inference', formal_language: 'Formal Language',
     speaker_attitude: 'Speaker Attitude', vocab_context: 'Vocabulary',
   }
-
-  const isSetFullyDone = (pi, si) => setDoneCount(pi, si) === parts[pi].sets[si].questions.length
   const DIFF_COLORS = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
+  const timeCritical = timeLeft !== null && timeLeft <= 60 && timeLeft > 0
+  const timeAmber    = timeLeft !== null && timeLeft <= 300 && timeLeft > 60
+  const timeUp       = timeLeft === 0
+  const timerColor   = timeUp ? '#999' : timeCritical ? '#C8102E' : timeAmber ? '#C8972A' : color
 
   return (
     <div className="ll-shell">
-      {/* ── SIDEBAR ── */}
+      {/* Hidden audio element */}
+      <audio ref={audioRef} preload="none" />
+
+      {/* ── SIDEBAR — only this part's sets ── */}
       <aside className="ll-sidebar">
         <div className="ll-sidebar-header">
-          <div className="ll-sidebar-title" style={{ color }}>Listening Practice</div>
-          <div className="ll-sidebar-progress">
-            <div className="ll-sidebar-progress-bar">
-              <div className="ll-sidebar-progress-fill" style={{ width: `${totalQs > 0 ? (totalAnswered / totalQs) * 100 : 0}%`, background: color }} />
-            </div>
-            <span className="ll-sidebar-progress-text">{totalAnswered}/{totalQs}</span>
+          <div className="ll-sidebar-icon">{part.icon}</div>
+          <div className="ll-sidebar-header-text">
+            <div className="ll-sidebar-title" style={{ color }}>{part.partId}</div>
+            <div className="ll-sidebar-label">{part.partLabel}</div>
           </div>
         </div>
+
+        <div className="ll-sidebar-stats">
+          <div className="ll-sidebar-stat">
+            <span className="ll-sidebar-stat-val">{completedSets}</span>
+            <span className="ll-sidebar-stat-lbl">Done</span>
+          </div>
+          <div className="ll-sidebar-stat-divider" />
+          <div className="ll-sidebar-stat">
+            <span className="ll-sidebar-stat-val">{part.sets.length}</span>
+            <span className="ll-sidebar-stat-lbl">Total</span>
+          </div>
+          <div className="ll-sidebar-stat-divider" />
+          <div className="ll-sidebar-stat">
+            <span className="ll-sidebar-stat-val">{part.questionCount}</span>
+            <span className="ll-sidebar-stat-lbl">Qs/set</span>
+          </div>
+        </div>
+
+        <div className="ll-sidebar-progress-wrap">
+          <div className="ll-sidebar-progress-bar">
+            <div className="ll-sidebar-progress-fill" style={{ width: `${part.sets.length > 0 ? (completedSets / part.sets.length) * 100 : 0}%`, background: color }} />
+          </div>
+        </div>
+
+        <div className="ll-sidebar-list-label">Practice Sets</div>
         <div className="ll-part-list">
-          {parts.map((p, pi) => {
-            const isActivePart = pi === activePartIdx
+          {part.sets.map((s, si) => {
+            const isActive = si === activeSetIdx
+            const done = sidebarDone(si)
+            const allDone = sidebarIsDone(si)
+            const correct = sidebarCorrect(si)
+            const dc = DIFF_COLORS[s.difficulty] || DIFF_COLORS.easy
             return (
-              <div key={p.partId} className="ll-part-group">
-                <button
-                  className={`ll-part-header${isActivePart ? ' ll-part-header--active' : ''}`}
-                  style={isActivePart ? { borderLeftColor: color } : {}}
-                  onClick={() => switchTo(pi, 0)}
-                >
-                  <span className={`ll-part-icon${isActivePart ? ' ll-part-icon--active' : ''}`} style={isActivePart ? { background: color } : {}}>
-                    {p.icon}
+              <button
+                key={si}
+                className={`ll-set-row${isActive ? ' ll-set-row--active' : ''}${allDone ? ' ll-set-row--done' : ''}`}
+                style={isActive ? { borderLeftColor: color } : {}}
+                onClick={() => switchSet(si)}
+              >
+                <span className="ll-set-num" style={isActive ? { background: color } : allDone ? { background: '#22c55e' } : {}}>{s.setNumber}</span>
+                <div className="ll-set-info">
+                  <span className="ll-set-title">{s.title}</span>
+                  <span className="ll-set-meta">
+                    <span className="ll-set-diff-dot" style={{ background: dc }} />
+                    <span style={{ color: dc }}>{s.difficulty}</span>
+                    {allDone && <span className="ll-set-score" style={{ color: correct === s.questions.length ? '#22c55e' : '#888' }}>{correct}/{s.questions.length}</span>}
+                    {!allDone && done > 0 && <span className="ll-set-score">{done}/{s.questions.length}</span>}
                   </span>
-                  <div className="ll-part-info">
-                    <span className="ll-part-name">{p.partId} — {p.partLabel}</span>
-                    <span className="ll-part-meta">{p.sets.length} sets · {p.questionCount} qs each</span>
-                  </div>
-                </button>
-                {isActivePart && (
-                  <div className="ll-set-list">
-                    {p.sets.map((s, si) => {
-                      const isActiveSet = si === activeSetIdx
-                      const done = setDoneCount(pi, si)
-                      const allDone = done === s.questions.length
-                      const dc = DIFF_COLORS[s.difficulty] || DIFF_COLORS.easy
-                      return (
-                        <button
-                          key={si}
-                          className={`ll-set-row${isActiveSet ? ' ll-set-row--active' : ''}${allDone ? ' ll-set-row--done' : ''}`}
-                          style={isActiveSet ? { background: `${color}08`, borderLeftColor: color } : {}}
-                          onClick={() => switchTo(pi, si)}
-                        >
-                          <span className="ll-set-num">{s.setNumber}</span>
-                          <div className="ll-set-info">
-                            <span className="ll-set-title">{s.title}</span>
-                            <span className="ll-set-meta">
-                              <span style={{ color: dc }}>{s.difficulty}</span> · {done}/{s.questions.length}
-                            </span>
-                          </div>
-                          {allDone && <span className="ll-set-check">{'\u2713'}</span>}
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
+                </div>
+                {allDone && <span className="ll-set-check">{'\u2713'}</span>}
+              </button>
             )
           })}
         </div>
@@ -2129,11 +2369,18 @@ function ListeningLayout({ color, partId }) {
             <span className="ll-part-badge" style={{ background: color }}>{part.partId}</span>
             <div className="ll-topbar-title-group">
               <span className="ll-topbar-title">{set.title}</span>
-              <span className="ll-topbar-set-tag">Set {set.setNumber}</span>
+              <span className="ll-topbar-set-tag">Set {set.setNumber} of {part.sets.length}</span>
               <span className="ll-topbar-diff" style={{ color: DIFF_COLORS[set.difficulty] || '#888' }}>{set.difficulty}</span>
             </div>
           </div>
           <div className="ll-topbar-right">
+            {/* Live score */}
+            {doneCount > 0 && (
+              <div className="ll-live-score" style={{ borderColor: color }}>
+                <span className="ll-live-score-num" style={{ color }}>{correctCnt}/{doneCount}</span>
+                <span className="ll-live-score-pct" style={{ color: scorePct >= 70 ? '#22c55e' : scorePct >= 50 ? '#C8972A' : '#C8102E' }}>{scorePct}%</span>
+              </div>
+            )}
             {started ? (
               <div className={`ll-timer${timeCritical ? ' ll-timer--critical' : ''}${timeUp ? ' ll-timer--up' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
                 <span className="ll-timer-icon">{'\u23F1'}</span>
@@ -2145,8 +2392,8 @@ function ListeningLayout({ color, partId }) {
                 {timeUp && <span className="ll-timer-up-label">overtime</span>}
               </div>
             ) : (
-              <button className="ll-start-btn" style={{ background: color }} onClick={startTimer}>
-                {'\u25B6'} Start Timer ({part.timeLimitMinutes} min)
+              <button className="ll-start-btn" style={{ background: color }} onClick={startAudio}>
+                {'\u25B6'} Listen & Start ({part.timeLimitMinutes} min)
               </button>
             )}
           </div>
@@ -2181,37 +2428,85 @@ function ListeningLayout({ color, partId }) {
           )}
         </div>
 
-        {/* Transcript */}
-        <div className="ll-transcript-box">
-          <div className="ll-transcript-header">
-            <span className="ll-transcript-label" style={{ color }}>{'\uD83C\uDFA7'} Transcript</span>
-            <button className="ll-transcript-toggle" onClick={() => setShowTranscript(!showTranscript)}>
-              {showTranscript ? 'Hide' : 'Show'}
-            </button>
+        {/* ── Audio Player Bar ── */}
+        {audioPhase === 'idle' && !started && (
+          <div className="ll-audio-cta" style={{ borderColor: `${color}44` }}>
+            <div className="ll-audio-cta-icon">{'\uD83C\uDFA7'}</div>
+            <div className="ll-audio-cta-text">
+              <strong>Press "Listen & Start" to begin the simulation</strong>
+              <span>Listen to the full audio first — questions appear after the audio ends, just like the real test.</span>
+            </div>
           </div>
-          {showTranscript && (
-            <>
-              <div className="ll-transcript-divider" />
-              <div className="ll-transcript-body">
-                {set.transcript.map((t, ti) => {
-                  const sp = set.speakers.find(s => s.id === t.speaker)
-                  return (
-                    <div key={ti} className="ll-transcript-line">
-                      <span className="ll-transcript-speaker" style={{ color }}>{sp ? sp.name : t.speaker}:</span>
-                      <span className="ll-transcript-text">{t.text}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            </>
-          )}
-        </div>
+        )}
 
-        {/* Questions */}
+        {audioPhase === 'playing' && (
+          <div className="ll-audio-bar ll-audio-bar--playing" style={{ borderColor: color, background: `${color}0a` }}>
+            <span className="ll-audio-pulse" style={{ background: color }} />
+            <span className="ll-audio-bar-text">{'\uD83D\uDD0A'} Playing line {currentLineIdx + 1} of {set.transcript.length}…</span>
+          </div>
+        )}
+
+        {audioPhase === 'done' && (
+          <div className="ll-audio-bar ll-audio-bar--done">
+            <span>{'\u2705'} Audio complete — your time has started. Answer the questions below.</span>
+            <button className="ll-audio-replay" style={{ color }} onClick={() => { setAudioPhase('playing'); setAudioError(false); playFromLine(0) }}>{'\uD83D\uDD01'} Replay</button>
+          </div>
+        )}
+
+        {audioError && (
+          <div className="ll-audio-bar ll-audio-bar--error">
+            {'\u26A0\uFE0F'} Some audio files could not be loaded. You can still practice using the transcript.
+          </div>
+        )}
+
+        {/* ── Transcript (hidden by default — user toggles) ── */}
+        {audioPhase !== 'idle' && set.transcript && (
+          <div className="ll-transcript-box">
+            <div className="ll-transcript-header">
+              <span className="ll-transcript-label" style={{ color }}>{'\uD83C\uDFA7'} Transcript</span>
+              <button className="ll-transcript-toggle" onClick={() => setShowTranscript(!showTranscript)}>
+                {showTranscript ? 'Hide' : 'Show'}
+              </button>
+            </div>
+            {showTranscript && (
+              <>
+                <div className="ll-transcript-divider" />
+                <div className="ll-transcript-body" ref={transcriptBodyRef}>
+                  {set.transcript.map((t, ti) => {
+                    const sp = set.speakers ? set.speakers.find(s => s.id === t.speaker) : null
+                    const isActive = ti === currentLineIdx
+                    return (
+                      <div
+                        key={ti}
+                        ref={el => transcriptLineRefs.current[ti] = el}
+                        className={`ll-transcript-line${isActive ? ' ll-transcript-line--active' : ''}`}
+                      >
+                        <span className="ll-transcript-speaker" style={{ color }}>{sp ? sp.name : t.speaker}:</span>
+                        <span className="ll-transcript-text">{t.text}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ── Questions (revealed only after audio finishes) ── */}
+        {audioPhase === 'playing' && (
+          <div className="ll-questions-locked" style={{ borderColor: `${color}33` }}>
+            <span className="ll-questions-locked-icon">{'🔒'}</span>
+            <span className="ll-questions-locked-text">Questions will appear after the audio finishes</span>
+          </div>
+        )}
+        {(audioPhase === 'done' || (audioPhase === 'idle' && doneCount > 0)) && (
         <div className="ll-questions">
-          <div className="ll-questions-label">Questions ({total})</div>
+          <div className="ll-questions-header">
+            <span className="ll-questions-label">Questions ({total})</span>
+            {doneCount > 0 && <span className="ll-questions-progress">{doneCount}/{total} answered</span>}
+          </div>
           {qs.map((q, qi) => {
-            const key = aKey(activePartIdx, activeSetIdx, qi)
+            const key = aKey(qi)
             const ans = answers[key]
             const answered = ans !== undefined
             const correct = answered && ans === q.answer
@@ -2237,44 +2532,123 @@ function ListeningLayout({ color, partId }) {
                     }
                     return (
                       <button key={oi} className={cls} onClick={() => handleAnswer(qi, oi)} disabled={answered}>
-                        <span className="ll-q-letter" style={!answered ? {} : {}}>{LETTERS[oi]}</span>
+                        <span className="ll-q-letter">{LETTERS[oi]}</span>
                         <span className="ll-q-opt-text">{opt}</span>
                       </button>
                     )
                   })}
                 </div>
-                {answered && (
-                  <div className={`ll-q-expl${correct ? ' ll-q-expl--ok' : ''}`}>
-                    {!correct && (
-                      <div className="ll-q-correct-ans">{'\u2713'} Correct answer: <strong>{q.options[q.answer]}</strong></div>
-                    )}
-                  </div>
+                {answered && !correct && (
+                  <div className="ll-q-correct-ans">{'\u2713'} Correct answer: <strong>{q.options[q.answer]}</strong></div>
                 )}
               </div>
             )
           })}
         </div>
 
-        {/* Score summary */}
-        {isSetFullyDone(activePartIdx, activeSetIdx) && (
+        )}
+
+        {/* ── Completion Panel ── */}
+        <AnimatePresence>
+          {showCompletion && (() => {
+            const clb = getCLB(scorePct)
+            const motiv = getMotivation(scorePct)
+            const skillBreakdown = Object.entries(
+              qs.reduce((acc, q, qi) => {
+                const skill = SKILL_LABELS[q.skill] || q.skill
+                if (!acc[skill]) acc[skill] = { total: 0, correct: 0 }
+                acc[skill].total++
+                if (answers[aKey(qi)] === q.answer) acc[skill].correct++
+                return acc
+              }, {})
+            )
+            return (
+              <motion.div
+                className="ll-completion"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="ll-completion-top" style={{ background: `${color}0c` }}>
+                  <span className="ll-completion-emoji">{motiv.emoji}</span>
+                  <h3 className="ll-completion-title">{motiv.title}</h3>
+                  <p className="ll-completion-msg">{motiv.msg}</p>
+                </div>
+
+                <div className="ll-completion-stats">
+                  <div className="ll-completion-stat">
+                    <span className="ll-completion-stat-val" style={{ color }}>{correctCnt}/{total}</span>
+                    <span className="ll-completion-stat-lbl">Correct</span>
+                  </div>
+                  <div className="ll-completion-stat">
+                    <span className="ll-completion-stat-val" style={{ color: scorePct >= 70 ? '#22c55e' : scorePct >= 50 ? '#C8972A' : '#C8102E' }}>{scorePct}%</span>
+                    <span className="ll-completion-stat-lbl">Accuracy</span>
+                  </div>
+                  <div className="ll-completion-stat">
+                    <span className="ll-completion-stat-val" style={{ color }}>CLB {clb.level}</span>
+                    <span className="ll-completion-stat-lbl">{clb.label}</span>
+                  </div>
+                  {started && (
+                    <div className="ll-completion-stat">
+                      <span className="ll-completion-stat-val" style={{ color }}>
+                        {timeUp ? `${part.timeLimitMinutes}m + ${fmtTime(overtime)}` : fmtTime(part.timeLimitMinutes * 60 - (timeLeft || 0))}
+                      </span>
+                      <span className="ll-completion-stat-lbl">Time Used</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Skill breakdown */}
+                <div className="ll-completion-skills">
+                  <div className="ll-completion-skills-hdr">Skill Breakdown</div>
+                  {skillBreakdown.map(([skill, data]) => {
+                    const pct = Math.round((data.correct / data.total) * 100)
+                    return (
+                      <div key={skill} className="ll-completion-skill-row">
+                        <span className="ll-completion-skill-name">{skill}</span>
+                        <div className="ll-completion-skill-bar">
+                          <div className="ll-completion-skill-fill" style={{ width: `${pct}%`, background: pct === 100 ? '#22c55e' : color }} />
+                        </div>
+                        <span className="ll-completion-skill-score">{data.correct}/{data.total}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className="ll-completion-actions">
+                  {activeSetIdx < part.sets.length - 1 && (
+                    <button className="ll-completion-next" style={{ background: color }} onClick={() => switchSet(activeSetIdx + 1)}>
+                      Next Set {'\u2192'} {part.sets[activeSetIdx + 1]?.title}
+                    </button>
+                  )}
+                  <button className="ll-completion-reattempt" onClick={reattemptSet}>
+                    {'\uD83D\uDD04'} Reattempt
+                  </button>
+                  <button className="ll-completion-dismiss" onClick={() => setShowCompletion(false)}>
+                    Review Answers
+                  </button>
+                </div>
+              </motion.div>
+            )
+          })()}
+        </AnimatePresence>
+
+        {/* Collapsed score bar if completion dismissed */}
+        {isSetDone && !showCompletion && (
           <div className="ll-score-summary" style={{ borderColor: color }}>
             <span className="ll-score-icon">{'\uD83C\uDFAF'}</span>
             <span className="ll-score-text">
-              You scored <strong style={{ color }}>{setCorrectCount(activePartIdx, activeSetIdx)}/{total}</strong> on {part.partId} — {set.title} (Set {set.setNumber})
+              You scored <strong style={{ color }}>{correctCnt}/{total}</strong> ({scorePct}%) — CLB {getCLB(scorePct).level}
             </span>
+            <button className="ll-score-reattempt-btn" onClick={reattemptSet}>{'\uD83D\uDD04'} Reattempt</button>
+            <button className="ll-score-details-btn" style={{ color }} onClick={() => setShowCompletion(true)}>View Details</button>
           </div>
         )}
 
         {/* Navigation */}
         <div className="ll-nav">
-          <button
-            className="ll-nav-btn"
-            onClick={() => {
-              if (activeSetIdx > 0) switchTo(activePartIdx, activeSetIdx - 1)
-              else if (activePartIdx > 0) switchTo(activePartIdx - 1, parts[activePartIdx - 1].sets.length - 1)
-            }}
-            disabled={activePartIdx === 0 && activeSetIdx === 0}
-          >
+          <button className="ll-nav-btn" onClick={() => switchSet(activeSetIdx - 1)} disabled={activeSetIdx === 0}>
             {'\u2190'} Previous Set
           </button>
           <span className="ll-nav-counter" style={{ color }}>
@@ -2283,11 +2657,8 @@ function ListeningLayout({ color, partId }) {
           <button
             className="ll-nav-btn ll-nav-btn--next"
             style={{ background: color, borderColor: color }}
-            onClick={() => {
-              if (activeSetIdx < part.sets.length - 1) switchTo(activePartIdx, activeSetIdx + 1)
-              else if (activePartIdx < parts.length - 1) switchTo(activePartIdx + 1, 0)
-            }}
-            disabled={activePartIdx === parts.length - 1 && activeSetIdx === part.sets.length - 1}
+            onClick={() => switchSet(activeSetIdx + 1)}
+            disabled={activeSetIdx === part.sets.length - 1}
           >
             Next Set {'\u2192'}
           </button>
@@ -4106,83 +4477,63 @@ export default function PracticeSetPage() {
 
   const activeSets = staticSets
 
-  // Calculate totals for header
-  const listeningTotalQs = isListening
-    ? Object.values(LISTENING_DATA).reduce((acc, p) => acc + p.sets.reduce((a2, s) => a2 + s.questions.length, 0), 0)
+  // Calculate totals for header — scoped to the active part
+  const activePartData = isListening ? LISTENING_DATA[partId] : isReading ? READING_DATA[partId] : null
+  const partTotalQs = activePartData
+    ? activePartData.sets.reduce((a, s) => a + s.questions.length, 0)
     : 0
-  const readingTotalQs = isReading
-    ? Object.values(READING_DATA).reduce((acc, p) => acc + p.sets.reduce((a2, s) => a2 + s.questions.length, 0), 0)
-    : 0
+  const partSetsCount = activePartData ? activePartData.sets.length : 0
 
   const pageTitle = `${partId} · ${part?.label || 'Practice'}`
-  const totalQs   = isWriting
-    ? writingQuestions.length
-    : isListening
-      ? listeningTotalQs
-      : isReading
-        ? readingTotalQs
-        : activeSets.reduce((s, x) => s + (x.questions?.length || 0), 0)
 
-  const scenarioText = isListening
-    ? `${Object.keys(LISTENING_DATA).length} Parts · ${listeningTotalQs} Questions`
-    : isReading
-      ? `${Object.keys(READING_DATA).length} Parts · ${readingTotalQs} Questions`
-      : isWriting
-        ? `${writingQuestions.length} Questions`
-        : `${activeSets.length} Practice Sets${totalQs > 0 ? ` · ${totalQs} Questions` : ''}`
+  const scenarioText = isListening || isReading
+    ? `${partSetsCount} sets · ${partTotalQs} questions · ${activePartData?.timeLimitMinutes || 8} min each`
+    : isWriting
+      ? `${writingQuestions.length} tasks · ${partId === 'W1' ? '27' : '26'} min each · 150–200 words`
+      : `${activeSets.length} Practice Sets`
 
   return (
-    <div className="ps-root">
+    <div className={`ps-root${isListening || isReading || isWriting ? ' ps-root--wide' : ''}`}>
       <SEO
         title="CELPIP Practice Set"
         description="Work through a timed CELPIP practice set with real exam-format questions. AI scoring and instant feedback after every answer."
         noindex={true}
       />
 
-      {/* Top bar: breadcrumb left, back button right */}
-      <div className="ps-topbar">
+      {/* Compact inline header */}
+      <div className={`ps-topbar${isListening || isReading || isWriting ? ' ps-topbar--wide' : ''}`}>
         <div className="ps-topbar-left">
-          <button className="ps-bc-link" onClick={() => navigate('/')}>Home</button>
+          <button className="ps-bc-link" onClick={() => navigate('/' + cfg.page)}>{cfg.icon} {cfg.label}</button>
           <span className="ps-bc-sep">›</span>
-          <button className="ps-bc-link" onClick={() => navigate('/' + cfg.page)}>{cfg.label}</button>
-          <span className="ps-bc-sep">›</span>
-          <span className="ps-bc-current">{pageTitle}</span>
+          <span className="ps-bc-current-bold" style={{ color: cfg.color }}>{partId} — {part?.label || 'Practice'}</span>
+          <span className="ps-bc-qs-tag">{scenarioText}</span>
         </div>
         <button className="ps-arrow-btn" onClick={() => navigate('/' + cfg.page)}>← Back to {cfg.label}</button>
       </div>
 
-      {/* Page title block */}
-      <div className="ps-title-block">
-        <div className="ps-title-meta">
-          <span className="ps-header-section">{cfg.icon} {cfg.label}</span>
-          <span className="ps-bc-sep">·</span>
-          <span className="ps-header-part" style={{ color: cfg.color }}>{pageTitle}</span>
-        </div>
-        <h1 className="ps-title">{part?.label || pageTitle}</h1>
-        <p className="ps-scenario">{scenarioText}</p>
-      </div>
-
       {/* ── LISTENING: Use ListeningLayout ── */}
       {isListening && (
-        <div className="ps-writing-wrap">
+        <div className="ps-layout-wrap ps-layout-wrap--wide">
           <ListeningLayout color={cfg.color} partId={partId} />
         </div>
       )}
 
       {/* ── READING: Use ReadingLayout ── */}
       {isReading && (
-        <div className="ps-writing-wrap">
+        <div className="ps-layout-wrap ps-layout-wrap--wide">
           <ReadingLayout color={cfg.color} partId={partId} />
         </div>
       )}
 
       {/* ── WRITING: Use WritingLayout ── */}
       {isWriting && writingQuestions.length > 0 && (
-        <div className="ps-writing-wrap">
+        <div className="ps-layout-wrap ps-layout-wrap--wide">
           <WritingLayout
             questions={writingQuestions}
             color={cfg.color}
-            partLabel={partId === 'W1' ? 'W1 — Email Tasks' : 'W2 — Survey Tasks'}
+            partId={partId}
+            partLabel={partId === 'W1' ? 'Email Writing' : 'Survey Response'}
+            partIcon={partId === 'W1' ? '✉️' : '📋'}
           />
         </div>
       )}
