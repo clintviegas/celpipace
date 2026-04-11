@@ -1987,11 +1987,6 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon }) {
               {wordCount > 0 && wordCount < 150 && ` — ${150 - wordCount} more needed`}
             </span>
             <div className="wl-editor-actions">
-              {q.modelAnswer && (
-                <button className="wl-model-btn" style={{ borderColor: color, color }} onClick={() => setShowModel(!showModel)}>
-                  {showModel ? 'Hide' : '\uD83D\uDCD6 Model Answer'}
-                </button>
-              )}
               <button
                 className="wl-ai-btn"
                 style={{ background: aiLoading ? '#aaa' : color }}
@@ -2003,22 +1998,6 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon }) {
             </div>
           </div>
         </div>
-
-        {/* Model Answer */}
-        <AnimatePresence>
-          {showModel && q.modelAnswer && (
-            <motion.div
-              className="wl-model-box"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="wl-model-label">{'\uD83D\uDCD6'} Model Answer</div>
-              <pre className="wl-model-text">{q.modelAnswer}</pre>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* AI Feedback */}
         <AnimatePresence>
@@ -3614,21 +3593,6 @@ function WritingPractice({ data, started, onStart, color }) {
           {wordCount > 0 && wordCount < 150 && ` — target ${150 - wordCount} more`}
         </div>
       </div>
-
-      <div className="ps-model-toggle">
-        <button className="ps-reveal-btn" onClick={() => setShowModel(v => !v)} style={{ borderColor: color, color }}>
-          {showModel ? '🙈 Hide Model Answer' : '📋 View Model Answer'}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {showModel && (
-          <motion.div className="ps-model-answer" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.25 }}>
-            <div className="ps-model-label">📝 Model Answer</div>
-            <pre className="ps-model-text">{data.modelAnswer}</pre>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
