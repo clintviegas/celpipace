@@ -127,10 +127,7 @@ export default function WritingPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(200,151,42,.2)', border: '1px solid rgba(200,151,42,.4)', color: '#e8c060' }}>
             ✍️ CELPIP Writing
           </div>
-          <h1 className="lp-hero-title">
-            CELPIP Writing<br />
-            <span style={{ color: COLOR }}>Practice by Task</span>
-          </h1>
+          <h1 className="lp-hero-title">CELPIP Writing</h1>
           <p className="lp-hero-subtitle">2 tasks · 53 minutes · 150–200 words each · CLB 4–12</p>
           <p className="lp-hero-desc">
             The CELPIP Writing test has two tasks that test your ability to communicate clearly in written English.

@@ -197,10 +197,7 @@ export default function SpeakingPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(200,16,46,.2)', border: '1px solid rgba(200,16,46,.4)', color: '#f07090' }}>
             🎙️ CELPIP Speaking
           </div>
-          <h1 className="lp-hero-title">
-            CELPIP Speaking<br />
-            <span style={{ color: COLOR }}>Practice by Task</span>
-          </h1>
+          <h1 className="lp-hero-title">CELPIP Speaking</h1>
           <p className="lp-hero-subtitle">8 tasks · 15–20 minutes · 30–90s per task · CLB 4–12</p>
           <p className="lp-hero-desc">
             The CELPIP Speaking test measures your ability to communicate clearly and naturally in spoken English

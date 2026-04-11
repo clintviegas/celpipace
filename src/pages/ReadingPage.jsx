@@ -153,10 +153,7 @@ export default function ReadingPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(45,138,86,.2)', border: '1px solid rgba(45,138,86,.4)', color: '#7dcfa0' }}>
             📖 CELPIP Reading
           </div>
-          <h1 className="lp-hero-title">
-            CELPIP Reading<br />
-            <span style={{ color: COLOR }}>Practice by Part</span>
-          </h1>
+          <h1 className="lp-hero-title">CELPIP Reading</h1>
           <p className="lp-hero-subtitle">4 parts · 38 questions · 55–60 minutes · CLB 4–12</p>
           <p className="lp-hero-desc">
             The CELPIP Reading test measures your ability to understand written English across four distinct formats —

@@ -193,10 +193,7 @@ export default function ListeningPage() {
       <section className="lp-hero">
         <div className="lp-hero-inner">
           <div className="lp-hero-badge">🎧 CELPIP Listening</div>
-          <h1 className="lp-hero-title">
-            CELPIP Listening<br />
-            <span className="lp-hero-accent">Practice by Part</span>
-          </h1>
+          <h1 className="lp-hero-title">CELPIP Listening</h1>
           <p className="lp-hero-subtitle">
             6 parts · 38 questions · 47–55 minutes · CLB 4–12
           </p>
