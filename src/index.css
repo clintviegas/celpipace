@@ -3976,7 +3976,7 @@ img { display: block; max-width: 100%; }
 /* Hero */
 .lp-hero {
   background: linear-gradient(135deg, #0F1F3D 0%, #1B3058 60%, #1a4070 100%);
-  padding: 52px 24px 44px;
+  padding: 44px 24px 36px;
   color: #fff;
   position: relative;
   overflow: hidden;
@@ -4007,23 +4007,23 @@ img { display: block; max-width: 100%; }
   padding: 5px 14px;
   font-size: 12px;
   font-weight: 600;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   letter-spacing: .04em;
 }
 .lp-hero-title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 800;
   line-height: 1.2;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   letter-spacing: -.02em;
   color: #fff;
 }
 .lp-hero-accent { color: #4A90D9; }
 .lp-hero-subtitle {
-  font-size: 13.5px;
-  color: rgba(255,255,255,.45);
+  font-size: 13px;
+  color: rgba(255,255,255,.4);
   font-weight: 500;
-  margin: 0 0 14px;
+  margin: 0 0 18px;
   letter-spacing: .02em;
 }
 .lp-hero-desc {

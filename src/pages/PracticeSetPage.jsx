@@ -2240,12 +2240,14 @@ function ListeningLayout({ color, partId, onComplete }) {
 
   /* ── CLB estimate ── */
   const getCLB = (pct) => {
-    if (pct >= 95) return { level: '10–12', label: 'Advanced' }
-    if (pct >= 85) return { level: '9', label: 'Proficient' }
-    if (pct >= 75) return { level: '8', label: 'Upper Intermediate' }
-    if (pct >= 65) return { level: '7', label: 'Intermediate' }
-    if (pct >= 55) return { level: '6', label: 'Lower Intermediate' }
-    if (pct >= 45) return { level: '5', label: 'Elementary' }
+    if (pct >= 95) return { level: '12', label: 'Advanced' }
+    if (pct >= 90) return { level: '11', label: 'Advanced' }
+    if (pct >= 85) return { level: '10', label: 'Advanced' }
+    if (pct >= 78) return { level: '9', label: 'Proficient' }
+    if (pct >= 70) return { level: '8', label: 'Upper Intermediate' }
+    if (pct >= 60) return { level: '7', label: 'Intermediate' }
+    if (pct >= 50) return { level: '6', label: 'Lower Intermediate' }
+    if (pct >= 40) return { level: '5', label: 'Elementary' }
     if (pct >= 30) return { level: '4', label: 'Beginner' }
     return { level: '3', label: 'Developing' }
   }

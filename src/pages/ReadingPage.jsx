@@ -155,11 +155,6 @@ export default function ReadingPage() {
           </div>
           <h1 className="lp-hero-title">CELPIP Reading</h1>
           <p className="lp-hero-subtitle">4 parts · 38 questions · 55–60 minutes · CLB 4–12</p>
-          <p className="lp-hero-desc">
-            The CELPIP Reading test measures your ability to understand written English across four distinct formats —
-            from practical correspondence and diagram-based tasks to dense informational passages and multi-perspective
-            viewpoints. All passages reflect real Canadian contexts and language.
-          </p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>4</strong><span>Parts</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>38</strong><span>Questions</span></div>

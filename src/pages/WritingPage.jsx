@@ -129,11 +129,6 @@ export default function WritingPage() {
           </div>
           <h1 className="lp-hero-title">CELPIP Writing</h1>
           <p className="lp-hero-subtitle">2 tasks · 53 minutes · 150–200 words each · CLB 4–12</p>
-          <p className="lp-hero-desc">
-            The CELPIP Writing test has two tasks that test your ability to communicate clearly in written English.
-            Task 1 asks you to write a purposeful email. Task 2 asks you to respond to survey-style opinion questions.
-            Both tasks are typed on a computer and scored on content, vocabulary, readability, and task fulfillment.
-          </p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>2</strong><span>Tasks</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>53 min</strong><span>Total Time</span></div>

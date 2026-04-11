@@ -199,11 +199,6 @@ export default function SpeakingPage() {
           </div>
           <h1 className="lp-hero-title">CELPIP Speaking</h1>
           <p className="lp-hero-subtitle">8 tasks · 15–20 minutes · 30–90s per task · CLB 4–12</p>
-          <p className="lp-hero-desc">
-            The CELPIP Speaking test measures your ability to communicate clearly and naturally in spoken English
-            across eight real-life task types. All responses are recorded on a computer — there is no live examiner.
-            Each task gives you preparation time followed by a timed speaking window.
-          </p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>8</strong><span>Tasks</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>15–20 min</strong><span>Duration</span></div>

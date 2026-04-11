@@ -41,6 +41,20 @@ function getGreeting() {
   return 'Good evening'
 }
 
+function getCLB(pct) {
+  if (pct == null) return null
+  if (pct >= 95) return 12
+  if (pct >= 90) return 11
+  if (pct >= 85) return 10
+  if (pct >= 78) return 9
+  if (pct >= 70) return 8
+  if (pct >= 60) return 7
+  if (pct >= 50) return 6
+  if (pct >= 40) return 5
+  if (pct >= 30) return 4
+  return 3
+}
+
 const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -131,7 +145,7 @@ const DashboardPage = () => {
         <div className="db-stat-tiles">
           {[
             { value: stats.totalCompleted, label: 'Sets Completed', sub: `of ${stats.totalSets}` },
-            { value: stats.avgScore !== null ? `${stats.avgScore}%` : '—', label: 'Avg Score', sub: stats.avgScore !== null && stats.avgScore >= 70 ? 'On track' : 'Keep practising' },
+            { value: stats.avgScore !== null ? `CLB ${getCLB(stats.avgScore)}` : '—', label: 'Avg CLB', sub: stats.avgScore !== null && getCLB(stats.avgScore) >= 7 ? 'On track for PR' : 'Keep practising' },
             { value: `${stats.totalPct}%`, label: 'Progress', sub: stats.totalPct >= 50 ? 'Halfway there' : 'Getting started' },
             { value: streak.current || 0, label: 'Day Streak', sub: `Best: ${streak.best}` },
           ].map((tile, i) => (
@@ -205,7 +219,7 @@ const DashboardPage = () => {
                       <span className="db-section-row-pct">{ss.pct}% complete</span>
                       {ss.avgScore !== null && (
                         <span className="db-section-row-score" style={{ color: s.color }}>
-                          Avg: {ss.avgScore}%
+                          CLB {getCLB(ss.avgScore)}
                         </span>
                       )}
                     </div>

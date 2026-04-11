@@ -197,12 +197,6 @@ export default function ListeningPage() {
           <p className="lp-hero-subtitle">
             6 parts · 38 questions · 47–55 minutes · CLB 4–12
           </p>
-          <p className="lp-hero-desc">
-            The CELPIP Listening test assesses your ability to understand spoken Canadian English
-            across six real-life formats — from two-person conversations and informational passages
-            to multi-speaker discussions and opposing viewpoints debates. Every question is multiple choice,
-            and each audio clip plays only once on the real test.
-          </p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong>6</strong><span>Parts</span></div>
             <div className="lp-hero-stat"><strong>38</strong><span>Questions</span></div>
