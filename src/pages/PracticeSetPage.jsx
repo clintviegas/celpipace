@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { LISTENING_DATA } from '../data/listeningData'
 import { READING_DATA } from '../data/readingData'
+import { useProgress } from '../hooks/useProgress'
 import SEO from '../components/SEO'
 
 /* ══════════════════════════════════════════════════════════════
@@ -1743,7 +1744,7 @@ function AIFeedbackPanel({ result, color, onClose }) {
    │ w/diff │                           │
    └────────┴───────────────────────────┘
 ══════════════════════════════════════════════════════════════ */
-function WritingLayout({ questions, color, partId, partLabel, partIcon }) {
+function WritingLayout({ questions, color, partId, partLabel, partIcon, onComplete }) {
   const [activeIdx, setActiveIdx] = useState(0)
   const [responses, setResponses] = useState({})   // { [idx]: text }
   const [timeLeft, setTimeLeft]   = useState(null)
@@ -1812,6 +1813,9 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon }) {
     const result = await scoreWithAI(text, q.prompt, q.criteria, q.section)
     setAiResult(result)
     setAiLoading(false)
+    if (result && result.overall && onComplete) {
+      onComplete('writing', q.section, q.num, result.overall, 12)
+    }
   }
 
   const timeCritical = timeLeft !== null && timeLeft <= 120 && timeLeft > 0
@@ -1993,7 +1997,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon }) {
                 onClick={handleAIScore}
                 disabled={aiLoading || !text.trim()}
               >
-                {aiLoading ? '\u23F3 Scoring…' : '\uD83E\uDD16 Get AI Score'}
+                {aiLoading ? '\u23F3 Scoring…' : 'Submit for Evaluation'}
               </button>
             </div>
           </div>
@@ -2035,7 +2039,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon }) {
    Audio playback → Transcript highlight → Questions → Live scoring
    → Completion panel with CLB estimate, skill breakdown, motivation
 ══════════════════════════════════════════════════════════════ */
-function ListeningLayout({ color, partId }) {
+function ListeningLayout({ color, partId, onComplete }) {
   const part = LISTENING_DATA[partId]
   if (!part) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>No data available for {partId}.</div>
 
@@ -2228,6 +2232,7 @@ function ListeningLayout({ color, partId }) {
     if (isSetDone && !showCompletion) {
       if (timerRef.current) clearInterval(timerRef.current)
       if (otRef.current) clearInterval(otRef.current)
+      if (onComplete) onComplete('listening', partId, set.setNumber, correctCnt, total)
       const t = setTimeout(() => setShowCompletion(true), 500)
       return () => clearTimeout(t)
     }
@@ -2651,7 +2656,7 @@ function ListeningLayout({ color, partId }) {
    READING LAYOUT — Sidebar (R1-R4) + Passage + Questions
    Question types: MCQ, Dropdown (fill blanks), Drag & Drop (matching)
 ══════════════════════════════════════════════════════════════ */
-function ReadingLayout({ color, partId }) {
+function ReadingLayout({ color, partId, onComplete }) {
   const PARTS_ORDER = ['R1', 'R2', 'R3', 'R4']
   const parts = PARTS_ORDER.map(id => READING_DATA[id]).filter(Boolean)
   const initIdx = Math.max(0, PARTS_ORDER.indexOf(partId))
@@ -2665,6 +2670,7 @@ function ReadingLayout({ color, partId }) {
   const [showBanner, setShowBanner] = useState(false)
   const timerRef = useRef(null)
   const otRef    = useRef(null)
+  const recordedRef = useRef({})
 
   const part = parts[activePartIdx]
   const set  = part.sets[activeSetIdx]
@@ -2941,6 +2947,19 @@ function ReadingLayout({ color, partId }) {
       return true
     })
   }
+
+  /* Record completion when active set is fully done */
+  useEffect(() => {
+    if (isSetFullyDone(activePartIdx, activeSetIdx)) {
+      const rKey = `${activePartIdx}_${activeSetIdx}`
+      if (!recordedRef.current[rKey] && onComplete) {
+        recordedRef.current[rKey] = true
+        const p = parts[activePartIdx]
+        const s = p.sets[activeSetIdx]
+        onComplete('reading', p.partId, s.setNumber, setCorrectCount(activePartIdx, activeSetIdx), s.questions.length)
+      }
+    }
+  }, [answers]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="rl-shell">
@@ -4169,12 +4188,13 @@ function SingleQuestionPanel({ q, qIndex, total, color, onPrev, onNext, answer, 
    │        │                          │  Prev / Next         │
    └────────┴──────────────────────────┴──────────────────────┘
 ══════════════════════════════════════════════════════════════ */
-function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet }) {
+function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet, onComplete }) {
   const [activeSet, setActiveSet] = useState(0)
   const [timeLeft,  setTimeLeft]  = useState(null)
   const [qIndex,    setQIndex]    = useState(0)
   const [answers,   setAnswers]   = useState({})   // { [setIdx_qIdx]: optIdx }
   const timerRef = useRef(null)
+  const recordedRef = useRef({})
 
   const set     = sets[activeSet]
   if (!set) return null
@@ -4225,6 +4245,14 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet 
   const answered = sortedQs.filter((_, i) => answers[ansKey(activeSet, i)] !== undefined).length
   const correct  = sortedQs.filter((sq, i) => answers[ansKey(activeSet, i)] === sq.answer).length
   const allDone  = answered === total && total > 0
+
+  /* Record completion when all questions answered */
+  useEffect(() => {
+    if (allDone && onComplete && !recordedRef.current[activeSet]) {
+      recordedRef.current[activeSet] = true
+      onComplete(section, partId, set.setNumber || activeSet + 1, correct, total)
+    }
+  }, [allDone, activeSet]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="pcp-shell">
@@ -4420,6 +4448,7 @@ export default function PracticeSetPage({ section: propSection }) {
   const location = useLocation()
   const { partId: urlPartId } = useParams()
   const part = location.state?.part || null
+  const { recordCompletion } = useProgress()
 
   // Per-set "started" flags (for speaking)
   const [startedSets, setStartedSets] = useState({})
@@ -4486,14 +4515,14 @@ export default function PracticeSetPage({ section: propSection }) {
       {/* ── LISTENING: Use ListeningLayout ── */}
       {isListening && (
         <div className="ps-layout-wrap ps-layout-wrap--wide">
-          <ListeningLayout color={cfg.color} partId={partId} />
+          <ListeningLayout color={cfg.color} partId={partId} onComplete={recordCompletion} />
         </div>
       )}
 
       {/* ── READING: Use ReadingLayout ── */}
       {isReading && (
         <div className="ps-layout-wrap ps-layout-wrap--wide">
-          <ReadingLayout color={cfg.color} partId={partId} />
+          <ReadingLayout color={cfg.color} partId={partId} onComplete={recordCompletion} />
         </div>
       )}
 
@@ -4506,6 +4535,7 @@ export default function PracticeSetPage({ section: propSection }) {
             partId={partId}
             partLabel={partId === 'W1' ? 'Email Writing' : 'Survey Response'}
             partIcon={partId === 'W1' ? '✉️' : '📋'}
+            onComplete={recordCompletion}
           />
         </div>
       )}
@@ -4519,6 +4549,7 @@ export default function PracticeSetPage({ section: propSection }) {
           section={section}
           startedSets={startedSets}
           onStartSet={i => setStartedSets(s => ({ ...s, [i]: true }))}
+          onComplete={recordCompletion}
         />
       )}
 

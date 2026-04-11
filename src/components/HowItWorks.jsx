@@ -1,69 +1,37 @@
 import { motion } from 'framer-motion'
 
 const steps = [
-  {
-    num: '01',
-    icon: '🎯',
-    title: 'Take a Free Diagnostic',
-    desc: 'Start with a free mock test across all four sections. Our AI scores your responses instantly and maps them to your CLB level.',
-  },
-  {
-    num: '02',
-    icon: '📚',
-    title: 'Follow Your Study Plan',
-    desc: 'Get a personalized week-by-week plan targeting your weakest sections. Improve faster by focusing on what matters most for your CRS score.',
-  },
-  {
-    num: '03',
-    icon: '🤖',
-    title: 'Practice with AI Feedback',
-    desc: 'Write emails, essays, and speaking responses — get instant AI-powered feedback with band-level scoring and specific tips to improve.',
-  },
-  {
-    num: '04',
-    icon: '📈',
-    title: 'Track Progress & Score Higher',
-    desc: 'Monitor your CLB growth, simulate full CELPIP exams, and walk into test day confident. Higher CLB = higher CRS = closer to your PR.',
-  },
+  { num: '01', title: 'Choose a Section', desc: 'Pick Listening, Reading, Writing, or Speaking to start practicing.' },
+  { num: '02', title: 'Complete Practice Sets', desc: 'Work through questions that match the real CELPIP format and timing.' },
+  { num: '03', title: 'Review Your Answers', desc: 'Read explanations for each question and compare against sample responses.' },
+  { num: '04', title: 'Track Your Progress', desc: 'Monitor your CLB growth across all four skills on your dashboard.' },
 ]
 
 export default function HowItWorks() {
   return (
-    <section className="how-section" id="how">
+    <section className="hp-how" id="how">
       <div className="section-inner">
-        <motion.div
-          className="section-label"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+        <motion.div className="section-label" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           How It Works
         </motion.div>
-        <motion.h2
-          className="section-title"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          From practice to <span className="highlight">PR approval</span><br />
-          in four focused steps
+        <motion.h2 className="section-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+          Start practicing in{' '}
+          <span className="highlight">four simple steps</span>
         </motion.h2>
 
-        <div className="steps-grid">
+        <div className="hp-steps">
           {steps.map((s, i) => (
             <motion.div
-              className="step-card"
+              className="hp-step"
               key={s.num}
-              initial={{ opacity: 0, y: 32 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
             >
-              <div className="step-num">{s.num}</div>
-              <div className="step-icon">{s.icon}</div>
-              <h3 className="step-title">{s.title}</h3>
-              <p className="step-desc">{s.desc}</p>
+              <div className="hp-step-num">{s.num}</div>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
             </motion.div>
           ))}
         </div>

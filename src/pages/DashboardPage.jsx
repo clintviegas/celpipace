@@ -44,7 +44,7 @@ function getGreeting() {
 const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { stats, streak, activity, getPartStats } = useProgress()
+  const { stats, streak, activity } = useProgress()
   const [motivIdx] = useState(() => Math.floor(Math.random() * MOTIVATIONAL.length))
 
   const firstName = user?.user_metadata?.full_name?.split(' ')[0]
@@ -130,10 +130,10 @@ const DashboardPage = () => {
         {/* ── Stat Tiles ── */}
         <div className="db-stat-tiles">
           {[
-            { value: stats.totalCompleted, label: 'Sets Done', icon: '✅' },
-            { value: stats.totalSets,      label: 'Available', icon: '📚' },
-            { value: stats.avgScore !== null ? `${stats.avgScore}%` : '—', label: 'Avg Score', icon: '📊' },
-            { value: streak.current || 0, label: 'Day Streak', icon: '🔥' },
+            { value: stats.totalCompleted, label: 'Sets Completed', sub: `of ${stats.totalSets}` },
+            { value: stats.avgScore !== null ? `${stats.avgScore}%` : '—', label: 'Avg Score', sub: stats.avgScore !== null && stats.avgScore >= 70 ? 'On track' : 'Keep practising' },
+            { value: `${stats.totalPct}%`, label: 'Progress', sub: stats.totalPct >= 50 ? 'Halfway there' : 'Getting started' },
+            { value: streak.current || 0, label: 'Day Streak', sub: `Best: ${streak.best}` },
           ].map((tile, i) => (
             <motion.div
               key={tile.label}
@@ -142,9 +142,9 @@ const DashboardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: i * 0.07 }}
             >
-              <span className="db-stat-tile-icon">{tile.icon}</span>
               <div className="db-stat-tile-value">{tile.value}</div>
               <div className="db-stat-tile-label">{tile.label}</div>
+              <div className="db-stat-tile-sub">{tile.sub}</div>
             </motion.div>
           ))}
         </div>
@@ -223,39 +223,6 @@ const DashboardPage = () => {
           </div>
         </section>
 
-        {/* ── Part Breakdown ── */}
-        <section className="db-section">
-          <h2 className="db-section-title">Part Breakdown</h2>
-          <div className="db-parts-grid">
-            {SECTIONS.map(s =>
-              s.parts.map(partId => {
-                const ps = getPartStats(s.key, partId)
-                return (
-                  <motion.div
-                    key={`${s.key}-${partId}`}
-                    className="db-part-chip"
-                    whileHover={{ y: -2 }}
-                    style={{ borderColor: ps.done > 0 ? s.color + '40' : '#e5e7eb' }}
-                  >
-                    <div className="db-part-chip-top">
-                      <span className="db-part-chip-id" style={{ color: s.color }}>{partId}</span>
-                      <span className="db-part-chip-count">{ps.done}/{ps.total}</span>
-                    </div>
-                    <div className="db-part-chip-bar">
-                      <div className="db-part-chip-fill" style={{ width: `${ps.pct}%`, background: s.color }} />
-                    </div>
-                    {ps.avgScore !== null && (
-                      <span className="db-part-chip-score" style={{ color: s.color }}>
-                        {ps.avgScore}% avg
-                      </span>
-                    )}
-                  </motion.div>
-                )
-              })
-            )}
-          </div>
-        </section>
-
         {/* ── Recent Activity ── */}
         <section className="db-section">
           <h2 className="db-section-title">Recent Activity</h2>
@@ -269,28 +236,29 @@ const DashboardPage = () => {
             </div>
           ) : (
             <div className="db-activity-feed">
-              {activity.slice(0, 15).map((a, i) => {
+              {activity.slice(0, 10).map((a, i) => {
                 const sec = SECTIONS.find(s => s.key === a.section)
+                const scoreColor = a.pct >= 70 ? '#2D8A56' : a.pct >= 50 ? '#C8972A' : '#C8102E'
                 return (
                   <motion.div
                     key={`${a.ts}-${i}`}
                     className="db-activity-item"
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, delay: i * 0.03 }}
                   >
-                    <div className="db-activity-icon" style={{ background: sec?.colorLight || '#f3f4f6' }}>
+                    <div className="db-activity-icon" style={{ background: sec?.colorLight || '#f3f4f6', color: sec?.color || '#6B7280' }}>
                       {sec?.icon || '📝'}
                     </div>
                     <div className="db-activity-body">
                       <span className="db-activity-title">
-                        {a.partId} Set {a.setNum}
+                        {sec?.label || 'Practice'} — {a.partId} Set {a.setNum}
                       </span>
-                      <span className="db-activity-score" style={{ color: a.pct >= 70 ? '#2D8A56' : a.pct >= 50 ? '#C8972A' : '#C8102E' }}>
-                        {a.score}/{a.total} ({a.pct}%)
-                      </span>
+                      <span className="db-activity-meta">{timeAgo(a.ts)}</span>
                     </div>
-                    <span className="db-activity-time">{timeAgo(a.ts)}</span>
+                    <div className="db-activity-score" style={{ color: scoreColor, background: scoreColor + '10' }}>
+                      {a.pct}%
+                    </div>
                   </motion.div>
                 )
               })}
@@ -298,36 +266,6 @@ const DashboardPage = () => {
           )}
         </section>
 
-        {/* ── Streak & Goals ── */}
-        <section className="db-section">
-          <h2 className="db-section-title">Your Stats</h2>
-          <div className="db-goals-grid">
-            <div className="db-goal-card">
-              <div className="db-goal-icon">🔥</div>
-              <div className="db-goal-value">{streak.current}</div>
-              <div className="db-goal-label">Current Streak</div>
-              <div className="db-goal-sub">Best: {streak.best} days</div>
-            </div>
-            <div className="db-goal-card">
-              <div className="db-goal-icon">✅</div>
-              <div className="db-goal-value">{stats.totalCompleted}</div>
-              <div className="db-goal-label">Sets Completed</div>
-              <div className="db-goal-sub">of {stats.totalSets} available</div>
-            </div>
-            <div className="db-goal-card">
-              <div className="db-goal-icon">📊</div>
-              <div className="db-goal-value">{stats.avgScore !== null ? `${stats.avgScore}%` : '—'}</div>
-              <div className="db-goal-label">Average Score</div>
-              <div className="db-goal-sub">{stats.avgScore !== null && stats.avgScore >= 70 ? 'On track!' : 'Keep practising'}</div>
-            </div>
-            <div className="db-goal-card">
-              <div className="db-goal-icon">🏆</div>
-              <div className="db-goal-value">{stats.totalPct}%</div>
-              <div className="db-goal-label">Overall Progress</div>
-              <div className="db-goal-sub">{stats.totalPct >= 50 ? 'Halfway there!' : 'Getting started'}</div>
-            </div>
-          </div>
-        </section>
 
       </div>
     </main>

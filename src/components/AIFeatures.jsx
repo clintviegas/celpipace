@@ -1,119 +1,66 @@
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
 
 const features = [
   {
     icon: '📋',
-    title: 'Practice That Mirrors the Real Test',
-    desc: 'Questions designed to match official CELPIP format, timing, and difficulty so you walk into test day confident.',
-    color: '#C8102E',
-    colorLight: '#FEF2F2',
+    title: 'Real Test Format',
+    desc: 'Questions match official CELPIP format, timing, and difficulty.',
   },
   {
     icon: '🤖',
-    title: 'AI Feedback That Helps You Improve',
-    desc: 'Detailed, personalized feedback on Writing and Speaking responses tied to CELPIP scoring criteria.',
-    color: '#7C3AED',
-    colorLight: '#F3EFFF',
+    title: 'AI Writing Feedback',
+    desc: 'Instant CLB-level scoring on Writing tasks with specific improvement areas.',
   },
   {
     icon: '📊',
-    title: 'Track Your Progress Over Time',
-    desc: 'See where you stand across all four skills with your personal dashboard and score history.',
-    color: '#2D8A56',
-    colorLight: '#F0FDF4',
+    title: 'Progress Tracking',
+    desc: 'Track your scores across all four skills and monitor your CLB growth.',
   },
   {
     icon: '💡',
     title: 'Detailed Explanations',
-    desc: 'Understand why each answer is right or wrong with clear explanations and high-scoring sample answers.',
-    color: '#C8972A',
-    colorLight: '#FFFBEB',
+    desc: 'Understand why each answer is correct with sample responses at every CLB level.',
   },
   {
     icon: '📚',
-    title: 'Structured Study Guides',
-    desc: 'Expert-designed courses covering strategies, vocabulary, scoring rubrics, and common mistakes.',
-    color: '#0F6B8A',
-    colorLight: '#E0F7FA',
+    title: 'Study Guides',
+    desc: 'Expert strategies, vocabulary lists, scoring rubrics, and common mistakes.',
   },
   {
     icon: '🍁',
-    title: 'Built for Canadian Life',
-    desc: 'All scenarios use authentic Canadian contexts — workplace, community, and everyday situations.',
-    color: '#B91C1C',
-    colorLight: '#FEF2F2',
+    title: 'Canadian Context',
+    desc: 'All scenarios use authentic Canadian workplace, community, and everyday settings.',
   },
 ]
 
 export default function AIFeatures() {
-  const navigate = useNavigate()
   return (
-    <section className="ai-features-section" id="why">
+    <section className="hp-why" id="why">
       <div className="section-inner">
-        <motion.div
-          className="section-label"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
+        <motion.div className="section-label" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           Why CELPIPiQ
         </motion.div>
-        <motion.h2
-          className="section-title"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          Six ways we help you<br />
-          <span className="highlight">score higher on CELPIP</span>
+        <motion.h2 className="section-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+          Everything you need to{' '}
+          <span className="highlight">score higher</span>
         </motion.h2>
-        <motion.p
-          className="section-sub"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          Structured practice, expert strategy, and AI-powered feedback — everything built around the real CELPIP format.
-        </motion.p>
 
-        <div className="ai-features-grid ai-features-grid-6">
+        <div className="hp-why-grid">
           {features.map((f, i) => (
             <motion.div
-              className="ai-feature-card"
+              className="hp-why-card"
               key={f.title}
-              initial={{ opacity: 0, y: 28 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.08 }}
-              whileHover={{ y: -6, boxShadow: '0 12px 32px rgba(0,0,0,0.10)' }}
+              transition={{ duration: 0.4, delay: i * 0.06 }}
             >
-              <div
-                className="ai-feature-icon-wrap"
-                style={{ background: f.colorLight, color: f.color }}
-              >
-                <span className="ai-feature-icon">{f.icon}</span>
-              </div>
-              <h3 className="ai-feature-title">{f.title}</h3>
-              <p className="ai-feature-desc">{f.desc}</p>
+              <div className="hp-why-icon">{f.icon}</div>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          className="ai-features-cta"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <button className="btn btn-primary btn-lg" onClick={() => navigate('/exam')}>
-            Start Practicing Free →
-          </button>
-          <p className="cta-note">14 practice questions included free. No credit card needed.</p>
-        </motion.div>
       </div>
     </section>
   )
