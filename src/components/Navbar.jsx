@@ -94,8 +94,7 @@ function DropItem({ item, color, closeAll, parentId }) {
       const match = item.label.match(/^([A-Z]\d+)/)
       if (match) {
         const partId = match[1]
-        const partLabel = item.label.replace(/^[A-Z]\d+\s*·\s*/, '')
-        navigate('/practice-set', { state: { part: { id: partId, section, label: partLabel } } })
+        navigate(`/${section}/${partId}`)
         closeAll()
         return
       }

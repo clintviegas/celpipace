@@ -179,7 +179,7 @@ function PartCard({ part, onStart }) {
 export default function ListeningPage() {
   const navigate = useNavigate()
   const handleStart = (part) => {
-    navigate('/practice-set', { state: { part: { ...part, section: 'listening' } } })
+    navigate(`/listening/${part.id}`)
   }
 
   return (

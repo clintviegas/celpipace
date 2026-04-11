@@ -96,9 +96,13 @@ export function AppInner() {
         <Route path="/calculator" element={<CRSCalculatorPage />} />
         <Route path="/exam" element={<ExamPage />} />
         <Route path="/listening" element={<ListeningPage />} />
+        <Route path="/listening/:partId" element={<PracticeSetPage section="listening" />} />
         <Route path="/reading" element={<ReadingPage />} />
+        <Route path="/reading/:partId" element={<PracticeSetPage section="reading" />} />
         <Route path="/writing" element={<WritingPage />} />
+        <Route path="/writing/:partId" element={<PracticeSetPage section="writing" />} />
         <Route path="/speaking" element={<SpeakingPage />} />
+        <Route path="/speaking/:partId" element={<PracticeSetPage section="speaking" />} />
         <Route path="/practice-set" element={<PracticeSetPage />} />
         <Route path="/pricing" element={<main style={{ paddingTop: '80px' }}><Pricing /></main>} />
         <Route path="/blog" element={<BlogPage />} />

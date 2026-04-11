@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { LISTENING_DATA } from '../data/listeningData'
 import { READING_DATA } from '../data/readingData'
 import SEO from '../components/SEO'
@@ -4451,21 +4451,29 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet 
 /* ══════════════════════════════════════════════════════════════
    MAIN PAGE
 ══════════════════════════════════════════════════════════════ */
-export default function PracticeSetPage() {
+export default function PracticeSetPage({ section: propSection }) {
   const navigate = useNavigate()
   const location = useLocation()
+  const { partId: urlPartId } = useParams()
   const part = location.state?.part || null
 
   // Per-set "started" flags (for speaking)
   const [startedSets, setStartedSets] = useState({})
 
-  const section = part?.section || 'listening'
-  const partId  = part?.id || 'L1'
+  const section = propSection || part?.section || 'listening'
+  const partId  = urlPartId || part?.id || 'L1'
   const cfg     = SECTION_CONFIG[section] || SECTION_CONFIG.listening
 
   const isListening = section === 'listening'
   const isReading   = section === 'reading'
   const isWriting   = section === 'writing'
+
+  // Derive label from data sources when not passed via state
+  const partLabel = part?.label
+    || (isListening && LISTENING_DATA[partId]?.partLabel)
+    || (isReading && READING_DATA[partId]?.partLabel)
+    || (partId === 'W1' ? 'Writing an Email' : partId === 'W2' ? 'Survey Questions' : null)
+    || 'Practice'
   const writingQuestions = isWriting ? (WRITING_SETS[partId] || WRITING_SETS.W1) : []
 
   // For speaking: build sets array
@@ -4484,7 +4492,7 @@ export default function PracticeSetPage() {
     : 0
   const partSetsCount = activePartData ? activePartData.sets.length : 0
 
-  const pageTitle = `${partId} · ${part?.label || 'Practice'}`
+  const pageTitle = `${partId} · ${partLabel}`
 
   const scenarioText = isListening || isReading
     ? `${partSetsCount} sets · ${partTotalQs} questions · ${activePartData?.timeLimitMinutes || 8} min each`
@@ -4505,7 +4513,7 @@ export default function PracticeSetPage() {
         <div className="ps-topbar-left">
           <button className="ps-bc-link" onClick={() => navigate('/' + cfg.page)}>{cfg.icon} {cfg.label}</button>
           <span className="ps-bc-sep">›</span>
-          <span className="ps-bc-current-bold" style={{ color: cfg.color }}>{partId} — {part?.label || 'Practice'}</span>
+          <span className="ps-bc-current-bold" style={{ color: cfg.color }}>{partId} — {partLabel}</span>
           <span className="ps-bc-qs-tag">{scenarioText}</span>
         </div>
         <button className="ps-arrow-btn" onClick={() => navigate('/' + cfg.page)}>← Back to {cfg.label}</button>

@@ -183,7 +183,7 @@ function PartCard({ part, onStart }) {
 
 export default function SpeakingPage() {
   const navigate = useNavigate()
-  const handleStart = (part) => { navigate('/practice-set', { state: { part: { ...part, section: 'speaking' } } }) }
+  const handleStart = (part) => { navigate(`/speaking/${part.id}`) }
 
   return (
     <div className="lp-root">

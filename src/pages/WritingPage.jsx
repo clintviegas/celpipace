@@ -113,7 +113,7 @@ function PartCard({ part, onStart }) {
 
 export default function WritingPage() {
   const navigate = useNavigate()
-  const handleStart = (part) => { navigate('/practice-set', { state: { part: { ...part, section: 'writing' } } }) }
+  const handleStart = (part) => { navigate(`/writing/${part.id}`) }
 
   return (
     <div className="lp-root">

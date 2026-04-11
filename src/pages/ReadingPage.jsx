@@ -139,7 +139,7 @@ function PartCard({ part, onStart }) {
 
 export default function ReadingPage() {
   const navigate = useNavigate()
-  const handleStart = (part) => { navigate('/practice-set', { state: { part: { ...part, section: 'reading' } } }) }
+  const handleStart = (part) => { navigate(`/reading/${part.id}`) }
 
   return (
     <div className="lp-root">
