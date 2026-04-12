@@ -1684,8 +1684,8 @@ function AIFeedbackPanel({ result, color, onClose }) {
     >
       <div className="wl-ai-header">
         <div className="wl-ai-title">
-          <span className="wl-ai-icon">🤖</span>
-          <span>AI Score & Feedback</span>
+          <span className="wl-ai-icon">{"\uD83D\uDCCB"}</span>
+          <span>CELPIP Score Report</span>
         </div>
         <button className="wl-ai-close" onClick={onClose}>✕</button>
       </div>
@@ -3780,8 +3780,8 @@ function SpeakingFeedbackPanel({ result, color, onClose }) {
     >
       <div className="sl-ai-header">
         <div className="sl-ai-title">
-          <span className="sl-ai-icon">{'\uD83E\uDD16'}</span>
-          <span>AI Speaking Score & Feedback</span>
+          <span className="sl-ai-icon">{'\uD83D\uDCCB'}</span>
+          <span>Speaking Score Report</span>
         </div>
         <button className="sl-ai-close" onClick={onClose}>{'\u2715'}</button>
       </div>
@@ -3965,6 +3965,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const [isListening, setIsListening] = useState(false)
   const [interimText, setInterimText] = useState('')
   const [micSupported, setMicSupported] = useState(true)
+  const [showFinishConfirm, setShowFinishConfirm] = useState(false)
   const timerRef = useRef(null)
   const recognitionRef = useRef(null)
   const finalTranscriptRef = useRef('')
@@ -4048,6 +4049,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setAiResult(null)
     setAiLoading(false)
     setInterimText('')
+    setShowFinishConfirm(false)
   }
 
   const startPrep = () => {
@@ -4061,8 +4063,20 @@ function SpeakingLayout({ color, partId, onComplete }) {
     if (timerRef.current) clearInterval(timerRef.current)
     setPhase('speak')
     setElapsed(0)
+    setShowFinishConfirm(false)
     timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000)
     startRecognition()
+  }
+
+  const finishSpeaking = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    stopRecognition()
+    setShowFinishConfirm(false)
+    setPhase('done')
+    if (!completedSets[activeIdx]) {
+      setCompleted(c => ({ ...c, [activeIdx]: true }))
+      if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1)
+    }
   }
 
   // Auto-transition from prep to speak
@@ -4099,6 +4113,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setAiResult(null)
     setAiLoading(false)
     setInterimText('')
+    setShowFinishConfirm(false)
   }
 
   const transcript = transcripts[activeIdx] || ''
@@ -4121,6 +4136,72 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const prepPct = Math.min((elapsed / prompt.prep_time_seconds) * 100, 100)
   const speakPct = Math.min((elapsed / prompt.speak_time_seconds) * 100, 100)
   const dc = diffColor[prompt.difficulty] || diffColor.intermediate
+
+  /* ── Per-prompt scoring tips & key phrases ── */
+  const getPromptTips = () => {
+    const t = prompt.prompt || ''
+    const type = prompt.task_type
+    const tips = { keyPhrases: [], structure: [], scoringTips: [] }
+
+    if (type === 'Giving Advice') {
+      tips.structure = ['Open with a clear recommendation', 'Give 2–3 specific reasons', 'Acknowledge the difficulty', 'Close with encouragement']
+      tips.scoringTips = ['Use hedging language: "I would suggest…", "You might consider…"', 'Show empathy before advising', 'Be specific — avoid vague advice']
+      if (t.includes('promot') || t.includes('reloc')) tips.keyPhrases = ['career growth', 'cost of living', 'work-life balance', 'long-term opportunity', 'support network']
+      else if (t.includes('debt') || t.includes('credit')) tips.keyPhrases = ['financial planning', 'budgeting', 'interest rates', 'repayment strategy', 'financial literacy']
+      else if (t.includes('university') || t.includes('college')) tips.keyPhrases = ['higher education', 'practical experience', 'career prospects', 'tuition costs', 'personal growth']
+      else if (t.includes('health') || t.includes('unhealthy')) tips.keyPhrases = ['well-being', 'lifestyle changes', 'mental health', 'gradual improvement', 'sustainable habits']
+      else if (t.includes('long-distance')) tips.keyPhrases = ['communication', 'commitment', 'trust', 'compromise', 'quality time']
+      else if (t.includes('elderly') || t.includes('parent') || t.includes('dementia')) tips.keyPhrases = ['caregiving', 'professional support', 'family responsibility', 'quality of life', 'compassion']
+      else if (t.includes('freelance') || t.includes('startup')) tips.keyPhrases = ['risk management', 'financial security', 'entrepreneurship', 'job stability', 'career pivot']
+      else tips.keyPhrases = ['practical solution', 'consider the consequences', 'weigh the options', 'long-term impact', 'personal priorities']
+    } else if (type === 'Personal Experience') {
+      tips.structure = ['Set the scene (when, where)', 'Describe what happened', 'Share how you felt', 'Explain what you learned']
+      tips.scoringTips = ['Use past tenses correctly and naturally', 'Include sensory details — what you saw, heard, felt', 'Show personal growth or insight']
+      if (t.includes('skill')) tips.keyPhrases = ['perseverance', 'practice', 'breakthrough moment', 'frustration', 'rewarding']
+      else if (t.includes('trip') || t.includes('travel')) tips.keyPhrases = ['destination', 'cultural experience', 'unexpected discovery', 'memorable', 'perspective']
+      else if (t.includes('proud') || t.includes('achievement')) tips.keyPhrases = ['accomplishment', 'dedication', 'milestone', 'recognition', 'self-confidence']
+      else if (t.includes('challenge') || t.includes('difficult')) tips.keyPhrases = ['obstacle', 'resilience', 'problem-solving', 'determination', 'outcome']
+      else if (t.includes('volunteer')) tips.keyPhrases = ['community', 'giving back', 'teamwork', 'impact', 'gratitude']
+      else tips.keyPhrases = ['turning point', 'memorable', 'lesson learned', 'personal growth', 'reflection']
+    } else if (type === 'Describing a Scene') {
+      tips.structure = ['Start with the overall setting', 'Describe people and their actions', 'Cover foreground to background', 'End with the mood or atmosphere']
+      tips.scoringTips = ['Use present continuous: "people are walking", "children are playing"', 'Describe spatial relationships: "in the foreground", "to the left"', 'Include sensory details beyond just visual']
+      tips.keyPhrases = ['in the background', 'it appears that', 'the atmosphere is', 'several people are', 'on the right side']
+    } else if (type === 'Making Predictions') {
+      tips.structure = ['Reference what you see in the scene', 'State your prediction clearly', 'Give reasons for your prediction', 'Consider alternative outcomes']
+      tips.scoringTips = ['Use future and modal language: "will likely", "might", "could possibly"', 'Base predictions on evidence from the image', 'Show reasoning, not just guessing']
+      tips.keyPhrases = ['I predict that', 'it seems likely', 'based on what I see', 'one possibility is', 'this could lead to']
+    } else if (type === 'Comparing & Persuading' || type === 'Comparing and Persuading') {
+      tips.structure = ['State your recommendation upfront', 'Compare using specific criteria', 'Acknowledge the other option briefly', 'End with a strong closing']
+      tips.scoringTips = ['Use comparative structures: "more practical than", "significantly better"', 'Give concrete criteria: cost, location, features', 'Be persuasive — commit to one choice']
+      if (t.includes('apartment')) tips.keyPhrases = ['location', 'commute time', 'amenities', 'neighbourhood safety', 'value for money']
+      else if (t.includes('job') || t.includes('career')) tips.keyPhrases = ['growth potential', 'compensation', 'work culture', 'benefits package', 'career trajectory']
+      else if (t.includes('vacation')) tips.keyPhrases = ['relaxation', 'budget-friendly', 'activities', 'accommodation', 'travel time']
+      else tips.keyPhrases = ['cost-effective', 'practical advantages', 'better suited', 'outweighs', 'ideal choice']
+    } else if (type === 'Difficult Situation') {
+      tips.structure = ['Acknowledge the problem calmly', 'Describe your first step', 'Explain follow-up actions', 'Describe the desired outcome']
+      tips.scoringTips = ['Stay diplomatic — never aggressive or passive', 'Use phrases like "My first step would be…"', 'Show awareness of relationships and consequences']
+      if (t.includes('neighbour') || t.includes('noise')) tips.keyPhrases = ['respectfully approach', 'compromise', 'mutual understanding', 'reasonable request', 'escalate if necessary']
+      else if (t.includes('coworker') || t.includes('colleague') || t.includes('boss')) tips.keyPhrases = ['professional approach', 'documentation', 'direct conversation', 'HR involvement', 'maintain relationships']
+      else if (t.includes('roommate')) tips.keyPhrases = ['house rules', 'fair compromise', 'open communication', 'shared responsibility', 'respect boundaries']
+      else tips.keyPhrases = ['address the issue', 'find common ground', 'propose a solution', 'follow through', 'resolve constructively']
+    } else if (type === 'Expressing Opinions') {
+      tips.structure = ['State your position in sentence one', 'Give 2–3 supporting reasons', 'Acknowledge the counterargument', 'Reinforce your stance']
+      tips.scoringTips = ['Use opinion language: "I firmly believe", "In my view"', 'Provide evidence or examples for each reason', 'Don\u2019t sit on the fence — commit to a position']
+      if (t.includes('social media')) tips.keyPhrases = ['digital literacy', 'mental health impact', 'misinformation', 'connectivity', 'screen time']
+      else if (t.includes('remote') || t.includes('work from home')) tips.keyPhrases = ['productivity', 'work-life balance', 'collaboration', 'flexibility', 'isolation']
+      else if (t.includes('environment') || t.includes('climate')) tips.keyPhrases = ['sustainability', 'carbon footprint', 'renewable energy', 'collective responsibility', 'future generations']
+      else tips.keyPhrases = ['evidence suggests', 'on the other hand', 'a compelling argument', 'societal impact', 'in conclusion']
+    } else if (type === 'Unusual Situation') {
+      tips.structure = ['Describe what would happen', 'Explain your immediate reaction', 'Outline your plan of action', 'Describe the expected outcome']
+      tips.scoringTips = ['Treat it like any structured response', 'Be creative but logical', 'Show personality — examiners score communication, not the plan']
+      tips.keyPhrases = ['first of all', 'in this scenario', 'I would approach it by', 'the outcome would be', 'ultimately']
+    }
+
+    return tips
+  }
+
+  const promptTips = getPromptTips()
 
   return (
     <div className="sl-shell">
@@ -4247,6 +4328,38 @@ function SpeakingLayout({ color, partId, onComplete }) {
           )}
         </div>
 
+        {/* Scoring tips & key phrases for this prompt */}
+        <div className="sl-prompt-tips">
+          <div className="sl-prompt-tips-header">
+            <span className="sl-prompt-tips-icon">{'\uD83C\uDFAF'}</span>
+            <span>How to Score Higher on This Prompt</span>
+          </div>
+          <div className="sl-prompt-tips-grid">
+            <div className="sl-prompt-tips-col">
+              <div className="sl-prompt-tips-col-label">{'\uD83D\uDCDD'} Response Structure</div>
+              <ol className="sl-prompt-tips-structure">
+                {promptTips.structure.map((s, i) => <li key={i}>{s}</li>)}
+              </ol>
+            </div>
+            <div className="sl-prompt-tips-col">
+              <div className="sl-prompt-tips-col-label">{'\u2B50'} Scoring Tips</div>
+              <ul className="sl-prompt-tips-scoring">
+                {promptTips.scoringTips.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+          </div>
+          {promptTips.keyPhrases.length > 0 && (
+            <div className="sl-prompt-keywords">
+              <span className="sl-prompt-keywords-label">{'\uD83D\uDD11'} Key Vocabulary to Include:</span>
+              <div className="sl-prompt-keyword-tags">
+                {promptTips.keyPhrases.map(k => (
+                  <span key={k} className="sl-prompt-keyword-tag" style={{ background: `${color}14`, color, borderColor: `${color}30` }}>{k}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Timer area */}
         {phase === 'idle' && (
           <div className="sl-gate">
@@ -4277,7 +4390,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
         {phase === 'speak' && (
           <div className="sl-phase-card sl-phase--speak" style={{ borderColor: color }}>
             <div className="sl-phase-header" style={{ color }}>
-              {'\uD83C\uDF99\uFE0F'} Speaking {isListening ? '\u2014 Recording' : '\u2014 Mic Off'}
+              {'\uD83C\uDF99\uFE0F'} Speaking {isListening ? '— Recording' : '— Mic Off'}
               {isListening && <span className="sl-mic-pulse" />}
             </div>
             <div className="sl-phase-countdown" style={{ color }}>{speakRemaining}s</div>
@@ -4285,7 +4398,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
               <div className="sl-phase-fill" style={{ width: `${100 - speakPct}%`, background: color }} />
             </div>
             {!micSupported && (
-              <p className="sl-mic-warning">{'\u26A0\uFE0F'} Your browser doesn't support microphone input. Use Chrome or Edge for the best experience.</p>
+              <p className="sl-mic-warning">{'\u26A0\uFE0F'} Your browser doesn{"'"}t support microphone input. Use Chrome or Edge for the best experience.</p>
             )}
             <div className="sl-live-transcript">
               <div className="sl-live-label">
@@ -4299,6 +4412,21 @@ function SpeakingLayout({ color, partId, onComplete }) {
               </div>
             </div>
             <p className="sl-phase-tip">Speak clearly and address every part of the prompt. Maintain a natural pace.</p>
+
+            {/* Finish Recording button + CELPIP-style confirm */}
+            {!showFinishConfirm ? (
+              <button className="sl-finish-btn" style={{ borderColor: color, color }} onClick={() => setShowFinishConfirm(true)}>
+                {'\u23F9'} Finish Recording
+              </button>
+            ) : (
+              <div className="sl-finish-confirm">
+                <p className="sl-finish-confirm-text">Are you sure you want to end your response? You will not be able to re-record.</p>
+                <div className="sl-finish-confirm-actions">
+                  <button className="sl-finish-confirm-yes" style={{ background: color }} onClick={finishSpeaking}>Yes, Submit Response</button>
+                  <button className="sl-finish-confirm-no" onClick={() => setShowFinishConfirm(false)}>Continue Speaking</button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -4306,8 +4434,8 @@ function SpeakingLayout({ color, partId, onComplete }) {
           <div className="sl-phase-card sl-phase--done">
             <div className="sl-phase-header">{'\u2705'} Time{'\u2019'}s Up</div>
             <p className="sl-phase-tip">
-              {transcript ? 'Your speech has been transcribed below. Review and edit if needed, then submit for AI evaluation.'
-                : 'Type what you said below to get your AI score and feedback.'}
+              {transcript ? 'Your speech has been transcribed below. Review and edit if needed, then submit for scoring.'
+                : 'Type what you said below to get your score and feedback.'}
             </p>
             <div className="sl-done-actions">
               <button className="sl-retry-btn" onClick={reset}>{'\u21A9'} Try Again</button>
@@ -4324,10 +4452,10 @@ function SpeakingLayout({ color, partId, onComplete }) {
             <div className="sl-transcript-label" style={{ color }}>{'\uD83C\uDF99\uFE0F'} Your Response Transcript</div>
             <p className="sl-transcript-hint">
               {transcript
-                ? 'Review and edit your auto-transcribed response below if needed, then submit for AI evaluation.'
+                ? 'Review and edit your auto-transcribed response below if needed, then submit for scoring.'
                 : micSupported
                   ? 'No speech was detected. You can type your response manually below.'
-                  : 'Type what you said during the speaking phase. The AI will evaluate your response based on CELPIP speaking criteria.'}
+                  : 'Type what you said during the speaking phase. Your response will be evaluated based on CELPIP speaking criteria.'}
             </p>
             <div className="sl-transcript-editor">
               <textarea

@@ -7,8 +7,8 @@ const features = [
     desc: 'Questions match official CELPIP format, timing, and difficulty.',
   },
   {
-    icon: '🤖',
-    title: 'AI Writing Feedback',
+    icon: '✍️',
+    title: 'Expert Writing Feedback',
     desc: 'Instant CLB-level scoring on Writing tasks with specific improvement areas.',
   },
   {
