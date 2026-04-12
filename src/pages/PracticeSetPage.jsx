@@ -3951,7 +3951,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
   // Extract all prompts for this task across all 15 sets
   const prompts = speakingQData.sets.map(set => {
     const task = set.tasks.find(t => t.task_number === taskNum)
-    return task ? { ...task, setId: set.set_id, difficulty: set.difficulty, topicName: getTopicName(task.prompt, task.task_type) } : null
+    return task ? { ...task, setId: set.set_id, difficulty: set.difficulty, topicName: task.topic || getTopicName(task.prompt, task.task_type) } : null
   }).filter(Boolean)
 
   const [activeIdx, setActiveIdx]   = useState(0)
@@ -4322,8 +4322,12 @@ function SpeakingLayout({ color, partId, onComplete }) {
           </div>
           <pre className="sl-prompt-text">{prompt.prompt}</pre>
           {prompt.image_url && (
-            <div className="sl-prompt-image-note">
-              <span className="sl-prompt-image-icon">{'\uD83D\uDDBC\uFE0F'}</span> This task includes an image reference (described in the prompt above)
+            <div className="sl-prompt-image-wrap">
+              <img
+                src={prompt.image_url}
+                alt={`${meta.label} — Set ${prompt.setId}`}
+                className="sl-prompt-image"
+              />
             </div>
           )}
         </div>

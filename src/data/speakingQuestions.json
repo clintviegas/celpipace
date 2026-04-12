@@ -21,18 +21,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A busy public park on a sunny Saturday afternoon. Talk about the people you see, what they are doing, and describe the surroundings in as much detail as possible.",
-          "image_url": "/images/s3_set1_park.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/1.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Public Park"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same park image, predict what will happen in the next few minutes. What might the people do next? Will anything change about the scene? Use details from the image to explain your predictions.",
-          "image_url": "/images/s3_set1_park.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/1.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Park — Predict"
         },
         {
           "task_number": 5,
@@ -87,18 +89,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. An outdoor farmers' market on a weekend morning. Talk about the vendors, the products being sold, the shoppers, and the general atmosphere. Include as many details as you can.",
-          "image_url": "/images/s3_set2_market.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/2.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Farmers Market"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same farmers' market image, predict what will happen next. Will the market get busier or quieter? What might certain people do? Will the weather change? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set2_market.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/2.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Market — Predict"
         },
         {
           "task_number": 5,
@@ -153,18 +157,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A classroom full of elementary school students during an art lesson. Talk about what the children are doing, the teacher's actions, the decorations on the walls, and any other details you notice.",
-          "image_url": "/images/s3_set3_classroom.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/3.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Art Classroom"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same classroom image, predict what will happen next. Will the lesson end soon? What might the students or teacher do next? Will any students need help? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set3_classroom.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/3.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Classroom — Predict"
         },
         {
           "task_number": 5,
@@ -219,18 +225,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A crowded beach on a hot summer day. Talk about the people, the water, any activities you see, and the overall feel of the scene. Include as many details as possible.",
-          "image_url": "/images/s3_set4_beach.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/4.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Beach Day"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same beach image, predict what will happen in the scene over the next hour. Will the beach get more or less crowded? What activities might start or end? Will the weather change? Use details from the image to explain.",
-          "image_url": "/images/s3_set4_beach.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/4.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Beach — Predict"
         },
         {
           "task_number": 5,
@@ -285,18 +293,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A family-style restaurant during the dinner rush. Talk about the diners, the servers, the food on the tables, and the decor of the restaurant. Provide as much detail as you can.",
-          "image_url": "/images/s3_set5_restaurant.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/5.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Family Restaurant"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same restaurant image, predict what will happen in the scene over the next 30 minutes. Will new guests arrive? Will some diners leave? Will the staff do anything differently? Use details from the image to explain.",
-          "image_url": "/images/s3_set5_restaurant.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/5.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Restaurant — Predict"
         },
         {
           "task_number": 5,
@@ -351,18 +361,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A busy train station during the morning rush hour. Talk about the commuters, the platforms, the trains, any signage you can see, and the general mood of the scene. Include as many details as possible.",
-          "image_url": "/images/s3_set6_train_station.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/6.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Train Station"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same train station image, predict what will happen in the next few minutes. Will a train arrive or depart? How will the crowd react? Will the platform get more or less crowded? Explain your predictions using details from the image.",
-          "image_url": "/images/s3_set6_train_station.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/6.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Station — Predict"
         },
         {
           "task_number": 5,
@@ -417,18 +429,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A large family gathering in the backyard of a house — it appears to be a barbecue or celebration. Talk about the people, the food, any activities taking place, and the setting around them.",
-          "image_url": "/images/s3_set7_family_gathering.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/7.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Family Gathering"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same family gathering image, predict what will happen next at this event. Will more guests arrive? What activities might begin or end? What might happen with the food? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set7_family_gathering.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/7.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Gathering — Predict"
         },
         {
           "task_number": 5,
@@ -483,18 +497,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A construction site in the middle of a city block. Describe the workers, the machinery, any buildings being built, safety signs, and the surrounding area. Provide as much detail as possible.",
-          "image_url": "/images/s3_set8_construction.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/8.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Construction Site"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same construction site image, predict what will happen in the next few hours. Will certain machines be used? Will more workers arrive? What stage of construction will be reached? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set8_construction.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/8.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Construction — Predict"
         },
         {
           "task_number": 5,
@@ -549,18 +565,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A public library on a weekday afternoon. Talk about the people studying, the bookshelves, any computer stations, reading areas, and the overall atmosphere. Include as many details as possible.",
-          "image_url": "/images/s3_set9_library.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/9.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Public Library"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same library image, predict what will happen in the next hour. Will more people come in or leave? What might certain individuals do next? Will the atmosphere change? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set9_library.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/9.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Library — Predict"
         },
         {
           "task_number": 5,
@@ -615,18 +633,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A community sports event at an outdoor field — people are playing soccer, and spectators are cheering from the sidelines. Talk about the players, the spectators, any equipment, and the surroundings in detail.",
-          "image_url": "/images/s3_set10_sports_event.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/10.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Sports Event"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same sports event image, predict what will happen next. Will a goal be scored? Will the game end soon? What will the spectators do? How might the weather affect the event? Use details from the image to explain your predictions.",
-          "image_url": "/images/s3_set10_sports_event.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/10.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Sports — Predict"
         },
         {
           "task_number": 5,
@@ -681,18 +701,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A busy international airport terminal. Passengers are checking in at counters, waiting at gates, and walking through corridors with luggage. Talk about the people, the signs, any shops or cafes, and the overall atmosphere.",
-          "image_url": "/images/s3_set11_airport.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/11.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Airport Terminal"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same airport terminal image, predict what will happen next. Will a flight be called for boarding? Will more passengers arrive? What will people in the waiting area do? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set11_airport.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/11.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Airport — Predict"
         },
         {
           "task_number": 5,
@@ -747,18 +769,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A hospital waiting room with patients, family members, and medical staff. Talk about the expressions on people's faces, the furniture, any signs or notices on the walls, and the overall mood of the scene. Provide as much detail as possible.",
-          "image_url": "/images/s3_set12_hospital.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/12.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Hospital Waiting"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same hospital waiting room image, predict what will happen next. Will a patient be called in? Will new people arrive? How might the mood change? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set12_hospital.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/12.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Hospital — Predict"
         },
         {
           "task_number": 5,
@@ -813,18 +837,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. An outdoor cultural festival with food stalls, live music, and art displays. Talk about the performers, the visitors, the types of food and crafts you see, the decorations, and the atmosphere. Provide as many details as you can.",
-          "image_url": "/images/s3_set13_festival.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/13.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Cultural Festival"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same festival image, predict what will happen as the day goes on. Will the crowd grow? What activities or performances might start? How will the atmosphere change as evening approaches? Use details from the image to explain.",
-          "image_url": "/images/s3_set13_festival.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/13.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Festival — Predict"
         },
         {
           "task_number": 5,
@@ -879,18 +905,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A children's playground in a suburban neighbourhood on a weekend afternoon. Talk about the children playing, the parents watching, the equipment, and the surroundings. Include colours, expressions, and activities in your description.",
-          "image_url": "/images/s3_set14_playground.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/14.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Playground"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same playground image, predict what will happen next. Will some families leave? Will new children arrive? Might any conflicts or accidents occur? How will the scene change in the next 30 minutes? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set14_playground.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/14.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Playground — Predict"
         },
         {
           "task_number": 5,
@@ -945,18 +973,20 @@
         {
           "task_number": 3,
           "task_type": "Describing a Scene",
-          "prompt": "Describe the image on the screen. A modern open-plan office during a typical workday. Talk about the employees, their workstations, any common areas, the lighting, and the overall design of the workspace. Include as many details as you can.",
-          "image_url": "/images/s3_set15_office.jpg",
+          "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
+          "image_url": "/images/S3/15.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Modern Office"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
-          "prompt": "Using the same office image, predict what will happen next. Will a meeting begin? Will some employees take a break? How might the work dynamics shift as the day progresses? Will anyone leave early? Use details from the image to support your predictions.",
-          "image_url": "/images/s3_set15_office.jpg",
+          "prompt": "In this picture, what do you think will most probably happen next?",
+          "image_url": "/images/S4/15.png",
           "prep_time_seconds": 30,
-          "speak_time_seconds": 60
+          "speak_time_seconds": 60,
+          "topic": "Office — Predict"
         },
         {
           "task_number": 5,
