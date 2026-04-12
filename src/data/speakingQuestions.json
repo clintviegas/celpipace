@@ -1,0 +1,994 @@
+{
+  "sets": [
+    {
+      "set_id": 1,
+      "difficulty": "easy",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend has been offered a promotion at work, but it requires relocating from Toronto to a smaller city in Northern Ontario. They enjoy city life and are worried about being far from friends and family, but the salary increase is significant. What advice would you give your friend?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when you learned a new skill that was difficult at first. What was the skill? Why did you want to learn it? What challenges did you face, and how did you eventually improve?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A busy public park on a sunny Saturday afternoon. Talk about the people you see, what they are doing, and describe the surroundings in as much detail as possible.",
+          "image_url": "/images/s3_set1_park.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same park image, predict what will happen in the next few minutes. What might the people do next? Will anything change about the scene? Use details from the image to explain your predictions.",
+          "image_url": "/images/s3_set1_park.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is deciding between two apartments. Apartment A is a large one-bedroom near downtown Vancouver with a monthly rent of $2,100 CAD, close to restaurants and transit but with street noise. Apartment B is a two-bedroom in the suburbs for $1,600 CAD, quiet and spacious but with a 45-minute commute. Choose one apartment and persuade your friend why it is the better choice.",
+          "image_url": "/images/s5_set1_apartments.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "Your next-door neighbour in your apartment building has been playing loud music late at night, and it is affecting your sleep. You need to address this situation. OPTION A: Speak directly to your neighbour about the noise. OPTION B: Report the issue to your building's property manager. Choose ONE option and explain what you would say and how you would handle the conversation.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Some people believe that social media has a negative impact on society, while others think it brings people together and helps share important information. What is your opinion? Do the benefits of social media outweigh the drawbacks? Explain your view with reasons and examples.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a living room where all the furniture — the couch, table, chairs, and lamps — is attached to the ceiling, as if gravity has been reversed. A cat is sitting on the floor looking up at everything. Describe everything in the scene as clearly as possible.",
+          "image_url": "/images/s8_set1_upsidedown_room.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 2,
+      "difficulty": "easy",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your coworker has been spending more than they earn and has accumulated credit card debt of about $8,000 CAD. They are stressed and unsure how to start paying it off. They are considering taking out a personal loan to consolidate the debt. What advice would you give them?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Talk about a memorable trip you took. Where did you go? Who were you with? What made this trip special or unforgettable? Describe the most memorable moment from the trip.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. An outdoor farmers' market on a weekend morning. Talk about the vendors, the products being sold, the shoppers, and the general atmosphere. Include as many details as you can.",
+          "image_url": "/images/s3_set2_market.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same farmers' market image, predict what will happen next. Will the market get busier or quieter? What might certain people do? Will the weather change? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set2_market.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your sibling is choosing between two used cars. Car A is a 2019 Honda Civic with 60,000 km, good on fuel, priced at $18,000 CAD, but it has no winter tires included. Car B is a 2018 Toyota RAV4 SUV with 85,000 km, priced at $22,000 CAD, with winter tires and all-wheel drive. Choose one car and persuade your sibling why it is the better purchase.",
+          "image_url": "/images/s5_set2_cars.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "You recently had a dishwasher installed in your rental apartment, and it has broken down after just two weeks. Water leaked onto the kitchen floor. You need to address this. OPTION A: Call the appliance company that sold it to you and demand a replacement or repair. OPTION B: Contact your landlord and explain the situation, asking them to handle the repair. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Many companies are now allowing employees to work from home permanently. Some people think remote work leads to better work-life balance, while others believe it hurts teamwork and career growth. What is your opinion on remote work? Should companies continue offering it? Explain your reasoning.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a large moose standing calmly inside a Tim Hortons coffee shop. Customers are seated at tables nearby, and the moose appears to be looking at the menu board above the counter. Describe everything you see as clearly as you can.",
+          "image_url": "/images/s8_set2_moose_timhortons.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 3,
+      "difficulty": "easy",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your younger cousin has just finished high school and is unsure whether to attend university or go to a college for a two-year diploma program. University would take four years and cost more, but may offer broader career options. College is shorter, more hands-on, and less expensive. What advice would you give your cousin?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a moment in your life that you are most proud of. What did you accomplish? Why was it meaningful to you? How did others react to your achievement?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A classroom full of elementary school students during an art lesson. Talk about what the children are doing, the teacher's actions, the decorations on the walls, and any other details you notice.",
+          "image_url": "/images/s3_set3_classroom.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same classroom image, predict what will happen next. Will the lesson end soon? What might the students or teacher do next? Will any students need help? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set3_classroom.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is choosing between two vacation packages. Package A is a five-day beach resort trip to Cuba, all-inclusive with meals, drinks, and entertainment, priced at $1,800 CAD per person. Package B is a seven-day backpacking trip through the Canadian Rockies, staying in hostels and cabins, with hiking and wildlife viewing included, for $1,200 CAD per person. Choose one package and persuade your friend why it is the better vacation.",
+          "image_url": "/images/s5_set3_vacations.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "You were assigned a group project at work, and you had a specific deadline to submit your part. Unfortunately, you forgot about it and missed the deadline by two days, which delayed the entire team. OPTION A: Speak directly to your team members and apologize, explaining what happened. OPTION B: Talk to your supervisor, take full responsibility, and propose a plan to catch up. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Some cities are investing heavily in public transit — such as subways, buses, and light rail — while others are expanding highways for cars. Which approach do you think is better for a growing Canadian city? Should the government prioritize public transit or road infrastructure? Explain your opinion with reasons.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a giant rubber duck — about the size of a house — floating in the middle of a residential street after a heavy rainstorm. Cars are parked on both sides, and a few people with umbrellas are standing on the sidewalk looking at it. Describe the scene in as much detail as possible.",
+          "image_url": "/images/s8_set3_giant_duck.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 4,
+      "difficulty": "easy",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend recently bought a new smartphone, but they are now considering returning it and getting a different brand because a coworker told them the other phone has a better camera. They have been happy with the phone so far. What advice would you give your friend about this decision?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when you helped someone who was in need. What was the situation? What did you do to help? How did the experience make you feel afterwards?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A crowded beach on a hot summer day. Talk about the people, the water, any activities you see, and the overall feel of the scene. Include as many details as possible.",
+          "image_url": "/images/s3_set4_beach.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same beach image, predict what will happen in the scene over the next hour. Will the beach get more or less crowded? What activities might start or end? Will the weather change? Use details from the image to explain.",
+          "image_url": "/images/s3_set4_beach.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend has received two job offers. Job A is a marketing coordinator position at a large corporation in downtown Calgary, paying $55,000 CAD per year with full benefits, but the work environment is described as high-pressure. Job B is a similar role at a small startup paying $48,000 CAD per year with flexible hours and a casual atmosphere, but fewer benefits. Choose one job and persuade your friend why it is the better choice.",
+          "image_url": "/images/s5_set4_jobs.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "A friend borrowed your portable speaker three weeks ago and has not returned it. You have asked casually once, and they said they would bring it back soon, but they have not. You need the speaker for an event this weekend. OPTION A: Call your friend and firmly but politely ask them to return it by Friday. OPTION B: Go to your friend's place in person to pick it up yourself. Choose ONE option and explain what you would say and do.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Many schools and universities are now offering most of their courses online. Some people believe online education is just as effective as in-person learning, while others disagree. What is your opinion? Is online learning a good replacement for traditional classroom education? Explain with examples.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows snow falling inside a grocery store. Shoppers are pushing carts through aisles that have a thin layer of snow on the floor. Some people are wearing winter jackets and toques, while others are in t-shirts looking confused. The produce section has icicles hanging from the shelves. Describe everything you see.",
+          "image_url": "/images/s8_set4_snow_grocery.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 5,
+      "difficulty": "easy",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend has been feeling tired and unhealthy lately. They work long hours at a desk job and rarely exercise. They are considering joining a gym but are worried they will not have time to go regularly. What advice would you give them about improving their health and fitness?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Talk about a personal achievement that took a lot of effort. What were you trying to accomplish? What obstacles did you face along the way? How did you feel when you finally succeeded?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A family-style restaurant during the dinner rush. Talk about the diners, the servers, the food on the tables, and the decor of the restaurant. Provide as much detail as you can.",
+          "image_url": "/images/s3_set5_restaurant.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same restaurant image, predict what will happen in the scene over the next 30 minutes. Will new guests arrive? Will some diners leave? Will the staff do anything differently? Use details from the image to explain.",
+          "image_url": "/images/s3_set5_restaurant.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend wants to join a gym and is comparing two options. Gym A is a large fitness chain with a pool, sauna, and group classes, costing $65 CAD per month with a one-year contract. Gym B is a smaller local gym within walking distance, with basic equipment and no pool, costing $35 CAD per month with no contract. Choose one gym and persuade your friend why it is the better option.",
+          "image_url": "/images/s5_set5_gyms.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "You received your phone bill this month and noticed an extra charge of $45 for a service you never signed up for. You have checked your account online and cannot find any explanation. OPTION A: Call the phone company's customer service line to dispute the charge. OPTION B: Visit your phone provider's retail store in person to resolve the issue. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Governments around the world are implementing policies to protect the environment, such as carbon taxes, banning single-use plastics, and promoting electric vehicles. Some people support these policies, while others believe they are too expensive and hurt businesses. What is your opinion? Should governments take stronger environmental action, or is it too costly? Explain your reasoning.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a person in a full business suit — dress shirt, tie, and blazer — riding a unicycle through a public park while holding a briefcase in one hand and a cup of coffee in the other. Dogs are barking at them, and joggers have stopped to stare. Describe the scene as clearly as possible.",
+          "image_url": "/images/s8_set5_unicycle_suit.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 6,
+      "difficulty": "intermediate",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your close friend has been in a long-distance relationship for over a year. Their partner lives in another province and they only see each other once every two months. Your friend is feeling lonely and is thinking about ending the relationship, even though they care deeply about the other person. What advice would you give them?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when you had to overcome a significant challenge. What was the challenge? What steps did you take to deal with it? What did you learn from the experience?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A busy train station during the morning rush hour. Talk about the commuters, the platforms, the trains, any signage you can see, and the general mood of the scene. Include as many details as possible.",
+          "image_url": "/images/s3_set6_train_station.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same train station image, predict what will happen in the next few minutes. Will a train arrive or depart? How will the crowd react? Will the platform get more or less crowded? Explain your predictions using details from the image.",
+          "image_url": "/images/s3_set6_train_station.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is comparing two phone plans. Plan A is from a major carrier — unlimited data, calls, and texts for $85 CAD per month on a two-year contract, and it includes a free phone. Plan B is from a smaller carrier — 15 GB of data, unlimited calls and texts for $45 CAD per month with no contract, but you must buy your own phone. Choose one plan and persuade your friend why it is the better deal.",
+          "image_url": "/images/s5_set6_phone_plans.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "A coworker at your office has been making rude and dismissive comments to you during team meetings. Other colleagues have noticed, and it is making you uncomfortable. OPTION A: Pull the coworker aside privately after the next meeting and address their behaviour directly. OPTION B: Speak to your manager or HR representative about the situation. Choose ONE option and explain what you would say and how you would handle it.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Artificial intelligence is being used more and more in workplaces — from automated customer service to AI-generated content. Some people believe AI will create new opportunities and improve efficiency, while others worry it will replace human workers and lead to job losses. What is your opinion on the use of AI in the workplace? Explain your view with examples.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows several pieces of furniture — a sofa, an armchair, and a coffee table — floating about one metre above the ground in the middle of a city sidewalk. Pedestrians are walking underneath and around the furniture as if it is normal. A man is sitting on the floating sofa reading a newspaper. Describe the scene in detail.",
+          "image_url": "/images/s8_set6_floating_furniture.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 7,
+      "difficulty": "intermediate",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend and their spouse are considering moving from Montreal to Edmonton for a better housing market. They currently rent a small apartment in Montreal for $1,800 CAD per month and could buy a house in Edmonton for a similar monthly mortgage payment. However, they would leave behind their social circle and their children would have to change schools. What advice would you give them?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Talk about a time when you had to make a difficult decision. What were the options? How did you decide? Looking back, do you think you made the right choice? Why or why not?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A large family gathering in the backyard of a house — it appears to be a barbecue or celebration. Talk about the people, the food, any activities taking place, and the setting around them.",
+          "image_url": "/images/s3_set7_family_gathering.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same family gathering image, predict what will happen next at this event. Will more guests arrive? What activities might begin or end? What might happen with the food? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set7_family_gathering.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend needs a new laptop for school and work. Laptop A is a MacBook Air priced at $1,500 CAD with excellent battery life, a sleek design, and a great screen, but limited storage of 256 GB. Laptop B is a Windows laptop priced at $1,100 CAD with 512 GB of storage, a slightly heavier build, and a touchscreen, but shorter battery life. Choose one laptop and persuade your friend why it is the better buy.",
+          "image_url": "/images/s5_set7_laptops.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "Your roommate has not been cleaning up common areas in your shared apartment. Dirty dishes are left in the sink for days, and the bathroom is often messy. You have hinted at it before, but nothing has changed. OPTION A: Sit down with your roommate and have a direct conversation about establishing a cleaning schedule. OPTION B: Write a polite but clear message in a shared group chat or note about household expectations. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Parents often disagree about how much screen time children should be allowed. Some believe kids should have strict limits on phone, tablet, and computer use, while others feel that technology is an important learning tool and access should not be restricted. What is your opinion on screen time for children? Explain your views with reasons and examples.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a group of dogs dressed in human business attire — suits, ties, and glasses — sitting around a boardroom table. One dog is standing at a whiteboard giving a presentation, and another dog appears to be taking notes. Describe everything you see as clearly as you can.",
+          "image_url": "/images/s8_set7_dogs_boardroom.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 8,
+      "difficulty": "intermediate",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your sister has two young children and is considering going back to school to complete a college diploma that she started years ago. She is worried about managing school, childcare, and the cost of tuition. Her partner is supportive but works full-time. What advice would you give her?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe an embarrassing moment that happened to you. Where were you? What happened? How did you react at the time, and how do you feel about it now looking back?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A construction site in the middle of a city block. Describe the workers, the machinery, any buildings being built, safety signs, and the surrounding area. Provide as much detail as possible.",
+          "image_url": "/images/s3_set8_construction.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same construction site image, predict what will happen in the next few hours. Will certain machines be used? Will more workers arrive? What stage of construction will be reached? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set8_construction.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is looking for a restaurant to host their birthday dinner and has narrowed it down to two options. Restaurant A is an upscale Italian restaurant downtown with great reviews, a set menu for $75 CAD per person, and a private dining room. Restaurant B is a casual Korean BBQ spot where you cook your own food at the table, for $40 CAD per person, with a fun and social atmosphere. Choose one and persuade your friend why it is the better choice for a birthday dinner.",
+          "image_url": "/images/s5_set8_restaurants.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "A good friend has been cancelling plans with you repeatedly at the last minute. This has happened five times in the past two months, and you are starting to feel frustrated and undervalued. OPTION A: Bring it up the next time you see them in person and explain how their cancellations make you feel. OPTION B: Send a thoughtful text message explaining that you value the friendship but need more reliability. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "The fashion industry is one of the largest polluters in the world. Fast fashion — cheap, trendy clothing that is quickly discarded — contributes to waste and poor working conditions. Some believe consumers should buy fewer, higher-quality items, while others say affordable clothing is a necessity. What is your opinion on fast fashion? Should people change their buying habits? Explain your view.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a tiny, detailed model city — about the size of a dining table — sitting in the middle of a real park. Miniature buildings, cars, roads, and streetlights are all perfectly crafted. Real-sized birds are perched on top of the model skyscrapers. A person is kneeling beside it, looking closely at the details. Describe the scene in full.",
+          "image_url": "/images/s8_set8_miniature_city.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 9,
+      "difficulty": "intermediate",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your coworker has been working overtime almost every day for the past three months and is feeling burnt out. They are afraid that if they say no to extra work, they will be seen as uncommitted and might miss out on a promotion. Their health and personal life are suffering. What advice would you give them about managing their work-life balance?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when you met someone who changed your perspective on something. Who was this person? What did they say or do that influenced your thinking? How has your view changed since then?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A public library on a weekday afternoon. Talk about the people studying, the bookshelves, any computer stations, reading areas, and the overall atmosphere. Include as many details as possible.",
+          "image_url": "/images/s3_set9_library.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same library image, predict what will happen in the next hour. Will more people come in or leave? What might certain individuals do next? Will the atmosphere change? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set9_library.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is choosing between two elementary schools for their child. School A is a public school with a French immersion program, a 10-minute drive from home, with larger class sizes of about 28 students. School B is a smaller private school with class sizes of 15, strong arts and music programs, but costs $8,000 CAD per year in tuition and is a 25-minute drive away. Choose one school and persuade your friend why it is the better choice.",
+          "image_url": "/images/s5_set9_schools.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "You assigned a task to a colleague on your team, and they did not complete it correctly, which caused the team to miss important client expectations. Your manager is asking for an explanation. OPTION A: Speak to your colleague first to understand what went wrong before reporting to your manager. OPTION B: Go directly to your manager and explain the situation honestly, including who was responsible. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Electric vehicles are becoming more popular, and some governments are planning to ban the sale of new gas-powered cars within the next decade. Some people support this shift for environmental reasons, while others worry about the high cost of EVs, the lack of charging stations, and the environmental impact of battery production. What is your opinion on the push for electric vehicles? Explain your view.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a person sleeping peacefully in a hammock that is strung between two lampposts in the middle of a busy downtown intersection. Cars are stopped at a red light around them, and cyclists are weaving past. A police officer is standing nearby scratching their head. Describe everything you see in detail.",
+          "image_url": "/images/s8_set9_hammock_intersection.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 10,
+      "difficulty": "intermediate",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend is a software developer who has been offered a position at a different company. The new role pays $15,000 CAD more per year, but the company is a startup and there is some risk it may not succeed. Their current job is stable with good benefits, but they feel bored and unchallenged. What advice would you give your friend?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when you experienced a different culture for the first time. This could be visiting another country, attending a cultural event, or trying food from a culture different from your own. What did you experience, and what impact did it have on you?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A community sports event at an outdoor field — people are playing soccer, and spectators are cheering from the sidelines. Talk about the players, the spectators, any equipment, and the surroundings in detail.",
+          "image_url": "/images/s3_set10_sports_event.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same sports event image, predict what will happen next. Will a goal be scored? Will the game end soon? What will the spectators do? How might the weather affect the event? Use details from the image to explain your predictions.",
+          "image_url": "/images/s3_set10_sports_event.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is trying to decide between two neighbourhoods in Ottawa to rent an apartment. Neighbourhood A is in the Byward Market area — walkable, close to shops and nightlife, but noisy and parking is expensive at $200 CAD per month. Neighbourhood B is in Kanata — quiet, residential, close to tech employers, with free parking, but requires a car to get around. Choose one neighbourhood and persuade your friend why it is the better place to live.",
+          "image_url": "/images/s5_set10_neighbourhoods.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "You recently moved into a new rental unit, and within the first week you discovered water damage and mould on the bathroom ceiling. The landlord did not disclose this before you signed the lease. OPTION A: Contact the landlord directly and request immediate repairs, referencing your tenant rights. OPTION B: Contact a tenant advocacy organization or the provincial landlord-tenant board for guidance before approaching the landlord. Choose ONE option and explain what you would say and do.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "The gig economy — where people work as independent contractors for platforms like Uber, DoorDash, and Fiverr — is growing rapidly. Some believe gig work offers freedom and flexibility, while others argue it exploits workers by denying them benefits and job security. What is your opinion on the gig economy? Is it a positive or negative trend? Explain with examples.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a canoe floating down the middle of a city street after a heavy flood. A man in a suit is paddling the canoe past submerged cars and stop signs. A seagull is perched on a traffic light that is half underwater but still flashing red. Describe the scene in full detail.",
+          "image_url": "/images/s8_set10_canoe_flood.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 11,
+      "difficulty": "intermediate",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend's elderly mother lives alone in a house in Winnipeg and has recently had some health issues. Your friend is considering asking their mother to move into a seniors' residence where she would have daily support and social activities. However, their mother is strongly against leaving her home. What advice would you give your friend about handling this situation?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Talk about a time when you volunteered or did something for your community without being paid. What did you do? Who did it help? What did you take away from the experience?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A busy international airport terminal. Passengers are checking in at counters, waiting at gates, and walking through corridors with luggage. Talk about the people, the signs, any shops or cafes, and the overall atmosphere.",
+          "image_url": "/images/s3_set11_airport.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same airport terminal image, predict what will happen next. Will a flight be called for boarding? Will more passengers arrive? What will people in the waiting area do? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set11_airport.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend needs home or tenant insurance and is comparing two policies. Policy A is from a major insurance company — $45 CAD per month, covers up to $50,000 in personal belongings, and includes liability protection and a $500 deductible. Policy B is from an online-only insurer — $28 CAD per month, covers up to $30,000 in personal belongings, with a $1,000 deductible and no in-person claims support. Choose one policy and persuade your friend why it is the better option.",
+          "image_url": "/images/s5_set11_insurance.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "A colleague on your team has been taking credit for ideas that you shared during brainstorming sessions. In two separate meetings, your manager praised this colleague for suggestions that originally came from you. OPTION A: Speak to your colleague privately and express how you feel about the situation. OPTION B: Bring it up during the next team meeting by casually reminding the team that you proposed those ideas. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Some people believe that a universal basic income — a regular payment from the government to every citizen regardless of employment — would reduce poverty and give people freedom. Others argue it would discourage people from working and be too expensive for taxpayers. What is your opinion on universal basic income? Should governments consider implementing it? Explain your reasoning.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a large clock mounted on a wall in a café, but instead of numbers, each hour marker is a different type of food — a croissant at 12, sushi at 3, a taco at 6, and a pizza slice at 9, with other foods filling the remaining positions. The clock hands are made of cutlery — a knife and a fork. Describe every detail you can see.",
+          "image_url": "/images/s8_set11_food_clock.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 12,
+      "difficulty": "advanced",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend is an experienced accountant who wants to leave their stable corporate job to start their own bookkeeping and tax preparation business. They have some savings but would need to take out a small business loan. Their spouse is concerned about the financial risk, especially since they are expecting their first child in six months. What advice would you give your friend about starting this business?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when you were put in a leadership role — either formally or informally. What was the situation? What decisions did you have to make? How did others respond to your leadership, and what did you learn about yourself?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A hospital waiting room with patients, family members, and medical staff. Talk about the expressions on people's faces, the furniture, any signs or notices on the walls, and the overall mood of the scene. Provide as much detail as possible.",
+          "image_url": "/images/s3_set12_hospital.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same hospital waiting room image, predict what will happen next. Will a patient be called in? Will new people arrive? How might the mood change? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set12_hospital.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is looking for a daycare for their toddler and has found two options. Centre A is a licensed daycare close to their workplace in downtown Toronto, operating 7 AM to 6 PM, costing $1,800 CAD per month, with structured educational programs and a certified early childhood educator on staff. Centre B is a home daycare run by a experienced caregiver in their neighbourhood, costing $1,100 CAD per month, with a smaller group of children and flexible drop-off times but no formal accreditation. Choose one and persuade your friend why it is the better option.",
+          "image_url": "/images/s5_set12_daycares.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "Your relative from abroad is visiting and has been staying at your home for three weeks. The original plan was a one-week visit. They show no sign of leaving and have not discussed an end date. Your household routine is being disrupted, and your partner is becoming frustrated. OPTION A: Have an honest, face-to-face conversation with your relative about when they plan to leave. OPTION B: Ask another family member to speak to your relative on your behalf to avoid direct confrontation. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Some countries require citizens to vote in elections by law, while others, like Canada, make voting optional. Those in favour of mandatory voting argue it strengthens democracy, while opponents say forcing people to vote undermines personal freedom. What is your opinion? Should voting be mandatory in Canada? Explain your reasoning with examples.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows the inside of a subway car where all the seats have been replaced with flower gardens. Roses, tulips, and sunflowers are growing from planters where the seats used to be. Passengers are standing and holding the overhead rails while bees fly between the flowers. A transit worker in uniform is watering one of the planters. Describe the scene in full detail.",
+          "image_url": "/images/s8_set12_subway_garden.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 13,
+      "difficulty": "advanced",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend recently discovered that a new employee at their company, who was hired for a similar role, is being paid $12,000 CAD more per year despite having less experience. Your friend is upset and is considering confronting their manager, but they are also worried about being seen as difficult and potentially jeopardizing their position. What advice would you give your friend about how to handle this pay disparity?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when you experienced failure or a major setback. What happened? How did you react initially? What steps did you take to recover, and how did the experience shape your approach to similar situations in the future?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. An outdoor cultural festival with food stalls, live music, and art displays. Talk about the performers, the visitors, the types of food and crafts you see, the decorations, and the atmosphere. Provide as many details as you can.",
+          "image_url": "/images/s3_set13_festival.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same festival image, predict what will happen as the day goes on. Will the crowd grow? What activities or performances might start? How will the atmosphere change as evening approaches? Use details from the image to explain.",
+          "image_url": "/images/s3_set13_festival.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is planning for retirement and is comparing two investment options. Option A is a Registered Retirement Savings Plan (RRSP) with a conservative portfolio — lower risk with an average return of 4–5% per year and a tax deduction on contributions. Option B is a Tax-Free Savings Account (TFSA) invested in a growth portfolio — potentially higher returns of 7–9% per year but with more risk and no tax deduction upfront, though withdrawals are tax-free. Choose one option and persuade your friend why it is the better choice for their retirement planning.",
+          "image_url": "/images/s5_set13_retirement.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "Your manager has been micromanaging your work — checking in multiple times a day, rewriting your emails before they are sent, and sitting in on calls that you previously handled independently. It is affecting your confidence and productivity. OPTION A: Schedule a private meeting with your manager to discuss your concerns and ask for more autonomy. OPTION B: Document specific examples and bring them to HR, requesting mediation. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Governments around the world spend billions on space exploration programs. Some people argue that space exploration leads to important scientific discoveries and technological advances, while others believe the money would be better spent solving problems on Earth, such as poverty, healthcare, and climate change. What is your opinion? Should governments continue to invest heavily in space exploration? Explain your view with reasons.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a kitchen where all the food has grown to an enormous size. A single strawberry is the size of a watermelon, sitting on the counter. A loaf of bread is as tall as the refrigerator, leaning against the wall. An egg carton holds eggs the size of basketballs. A person is standing on a step stool trying to slice the strawberry with a regular-sized knife. Describe the scene as clearly as you can.",
+          "image_url": "/images/s8_set13_giant_food.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 14,
+      "difficulty": "advanced",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend immigrated to Canada two years ago and holds a professional engineering degree from their home country. They have been working as a warehouse associate because their foreign credentials have not been recognized. They have the option to either take Canadian bridging courses to get their engineering licence, which would take two years and cost about $15,000, or to switch careers entirely and pursue a diploma in project management, which takes one year and costs $6,000. They are feeling discouraged. What advice would you give them?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Talk about a time when you had to adapt to a major change in your life — such as moving to a new country, starting a new job, or going through a significant life event. What was the change? How did you handle the transition? What helped you adjust?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A children's playground in a suburban neighbourhood on a weekend afternoon. Talk about the children playing, the parents watching, the equipment, and the surroundings. Include colours, expressions, and activities in your description.",
+          "image_url": "/images/s3_set14_playground.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same playground image, predict what will happen next. Will some families leave? Will new children arrive? Might any conflicts or accidents occur? How will the scene change in the next 30 minutes? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set14_playground.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is an independent freelancer and is deciding between two coworking spaces. Space A is a modern, centrally located coworking hub in downtown Halifax, with a dedicated desk, high-speed internet, meeting rooms, and free coffee, for $450 CAD per month. Space B is a community-run shared workspace in the North End, with a hot desk, basic amenities, networking events, and a collaborative atmosphere, for $175 CAD per month. Choose one and persuade your friend why it is the better workspace.",
+          "image_url": "/images/s5_set14_coworking.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "A close friend has been asking you to lend them money repeatedly — small amounts of $50 to $100 — and they have not paid back the last two loans, totalling $200 CAD. They have just asked to borrow another $150 for car repairs. You value the friendship but cannot afford to keep lending. OPTION A: Be honest with your friend and explain that you are unable to lend more money until the previous amounts are repaid. OPTION B: Suggest an alternative, such as helping them find a short-term personal loan or community resource, instead of lending your own money. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "Advances in genetic technology now allow scientists to modify genes to prevent certain diseases, enhance physical traits, or even select characteristics in embryos. Some people see this as a way to eliminate suffering, while others believe it raises serious ethical concerns about playing with nature. What is your opinion on genetic modification in humans? Where should the line be drawn? Explain your reasoning.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a desert landscape where it is raining fish. Small silver fish are falling from a cloudy sky like raindrops, landing on the sand dunes below. A group of camels is walking through the scene, unfazed by the fish landing around them. In the distance, a person is holding an open umbrella and catching fish in a bucket. Describe the scene in as much detail as possible.",
+          "image_url": "/images/s8_set14_raining_fish.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    },
+    {
+      "set_id": 15,
+      "difficulty": "advanced",
+      "tasks": [
+        {
+          "task_number": 1,
+          "task_type": "Giving Advice",
+          "prompt": "Your friend's aging parent has been diagnosed with early-stage dementia. They live alone in a house in rural British Columbia, and your friend lives three hours away in Vancouver. Your friend is torn between moving closer to care for their parent, hiring a full-time home care aide, or moving their parent into an assisted-living facility. Each option has significant emotional, financial, and practical implications. What advice would you give your friend?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 2,
+          "task_type": "Personal Experience",
+          "prompt": "Describe a time when an unexpected opportunity came your way. What was the opportunity? How did you learn about it? What did you decide to do, and how did it turn out? What would you do differently if you had the chance again?",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 3,
+          "task_type": "Describing a Scene",
+          "prompt": "Describe the image on the screen. A modern open-plan office during a typical workday. Talk about the employees, their workstations, any common areas, the lighting, and the overall design of the workspace. Include as many details as you can.",
+          "image_url": "/images/s3_set15_office.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 4,
+          "task_type": "Making Predictions",
+          "prompt": "Using the same office image, predict what will happen next. Will a meeting begin? Will some employees take a break? How might the work dynamics shift as the day progresses? Will anyone leave early? Use details from the image to support your predictions.",
+          "image_url": "/images/s3_set15_office.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 5,
+          "task_type": "Comparing and Persuading",
+          "prompt": "Your friend is thinking about adopting a pet and is torn between two options. Option A is adopting a two-year-old Labrador retriever from a rescue shelter — the dog is house-trained and good with children, but requires daily walks and has some separation anxiety. Option B is adopting a three-year-old cat from the same shelter — the cat is independent, low-maintenance, and litter-trained, but is shy around new people and has a minor skin condition requiring monthly medication costing $40 CAD. Choose one pet and persuade your friend why it is the better choice for their lifestyle.",
+          "image_url": "/images/s5_set15_pets.jpg",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 6,
+          "task_type": "Difficult Situation",
+          "prompt": "A colleague in your department has been sharing inaccurate information about a company policy with other team members. As a result, several people have misunderstood a new vacation policy and submitted incorrect leave requests. You are aware of the correct policy but do not want to embarrass your colleague. OPTION A: Speak to your colleague privately, share the correct information, and suggest they send a correction to the team. OPTION B: Send an email to the entire team with the correct policy details without singling out the colleague. Choose ONE option and explain what you would say.",
+          "prep_time_seconds": 60,
+          "speak_time_seconds": 60
+        },
+        {
+          "task_number": 7,
+          "task_type": "Expressing Opinions",
+          "prompt": "As more businesses and services move to digital-only or cashless models, some people argue this is more convenient and efficient, while others point out that it excludes elderly people, low-income individuals, and those without bank accounts. What is your opinion? Should Canada move toward becoming a cashless society, or should cash always be accepted? Explain your reasoning with specific examples.",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 90
+        },
+        {
+          "task_number": 8,
+          "task_type": "Unusual Situation",
+          "prompt": "Describe what you see in this unusual image to a friend who cannot see it. The image shows a landscape where the ground and the sky appear to have swapped. Grass and trees are growing upside-down from the sky, while clouds drift along the ground like fog. A person is standing on what looks like a cloud, holding a leash attached to a dog that is walking on the grass above their head. Birds are swimming through the clouds at ground level. Describe the scene as vividly and clearly as you can.",
+          "image_url": "/images/s8_set15_reversed_gravity.jpg",
+          "prep_time_seconds": 30,
+          "speak_time_seconds": 60
+        }
+      ]
+    }
+  ]
+}

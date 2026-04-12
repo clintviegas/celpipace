@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { LISTENING_DATA } from '../data/listeningData'
 import { READING_DATA } from '../data/readingData'
+import speakingQData from '../data/speakingQuestions.json'
 import { useProgress } from '../hooks/useProgress'
 import SEO from '../components/SEO'
 
@@ -3721,6 +3722,688 @@ function SpeakingPractice({ data, started, onStart, color }) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   SPEAKING LAYOUT — Sidebar + Prompt + Timer (15 sets per task)
+══════════════════════════════════════════════════════════════ */
+const SPEAKING_TASK_META = {
+  1: { label: 'Giving Advice',          icon: '\uD83E\uDD1D', tips: ['Open with a clear recommendation', 'Give 2\u20133 specific supporting reasons', 'Acknowledge the difficulty of the situation', 'Close with an encouraging summary'] },
+  2: { label: 'Personal Experience',    icon: '\uD83D\uDCC5', tips: ['Set the scene briefly (1\u20132 sentences)', 'Focus on what happened and what it meant to you', 'Use specific details \u2014 names, places, moments', 'End with what you learned or how it changed you'] },
+  3: { label: 'Describing a Scene',     icon: '\uD83D\uDDBC\uFE0F',  tips: ['Describe people, actions, and setting \u2014 not just objects', 'Use present continuous tense naturally', 'Cover foreground, middle ground, and background', 'End with the overall mood or atmosphere'] },
+  4: { label: 'Making Predictions',     icon: '\uD83D\uDD2D', tips: ['Use prediction language: "I think", "it\'s likely that", "they might"', 'Speculate on multiple possibilities', 'Base predictions on visible evidence or context', 'Explain why you believe your prediction is reasonable'] },
+  5: { label: 'Comparing & Persuading', icon: '\uD83D\uDD04', tips: ['State your recommendation clearly in sentence 1', 'Compare using specific language: "more practical", "significantly better"', 'Acknowledge the other option briefly, then dismiss it', 'End with a strong closing statement'] },
+  6: { label: 'Difficult Situation',    icon: '\u26A0\uFE0F',  tips: ['Stay calm and methodical \u2014 describe step by step', 'Use phrases like "My first step would be\u2026"', 'Show awareness of relationships and consequences', 'End with the desired outcome'] },
+  7: { label: 'Expressing Opinions',    icon: '\uD83D\uDCAC', tips: ['Give your position clearly in the first sentence', 'Develop 2\u20133 specific, concrete supporting reasons', 'Briefly acknowledge the counterargument and rebut it', 'Use advanced opinion language naturally'] },
+  8: { label: 'Unusual Situation',      icon: '\uD83C\uDF00', tips: ['Treat it like any structured response \u2014 don\'t panic', 'State what you would do, explain why', 'Describe the likely outcome', 'Show personality \u2014 examiners score communication, not the plan'] },
+}
+
+/* ── Speaking AI scoring ───────────────────────────────────── */
+async function scoreSpeakingWithAI(responseText, prompt, taskType) {
+  try {
+    const res = await fetch('/api/score-speaking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ responseText, prompt, taskType }),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.error || 'Scoring failed')
+    }
+    return await res.json()
+  } catch (err) {
+    console.error('Speaking AI scoring error:', err)
+    return {
+      overall: 0,
+      clbBand: '\u2013',
+      scores: { taskFulfillment: 0, coherence: 0, vocabulary: 0, listenability: 0 },
+      feedback: `Scoring unavailable: ${err.message}. Please try again.`,
+      suggestions: [],
+      error: true,
+    }
+  }
+}
+
+/* ── Speaking Feedback Panel ───────────────────────────────── */
+function SpeakingFeedbackPanel({ result, color, onClose }) {
+  if (!result) return null
+  const CRITERIA_LABELS = {
+    taskFulfillment: 'Task Fulfillment',
+    coherence: 'Coherence & Organization',
+    vocabulary: 'Vocabulary Range',
+    listenability: 'Listenability & Fluency',
+  }
+  const bandColor = result.overall >= 9 ? '#2D8A56' : result.overall >= 7 ? '#4A90D9' : result.overall >= 5 ? '#C8972A' : '#C8102E'
+  return (
+    <motion.div
+      className="sl-ai-panel"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="sl-ai-header">
+        <div className="sl-ai-title">
+          <span className="sl-ai-icon">{'\uD83E\uDD16'}</span>
+          <span>AI Speaking Score & Feedback</span>
+        </div>
+        <button className="sl-ai-close" onClick={onClose}>{'\u2715'}</button>
+      </div>
+      <div className="sl-ai-band" style={{ borderColor: bandColor }}>
+        <div className="sl-ai-band-score" style={{ color: bandColor }}>{result.overall}</div>
+        <div className="sl-ai-band-label">
+          <span>Estimated CLB Band</span>
+          <strong style={{ color: bandColor }}>CLB {result.clbBand}</strong>
+        </div>
+      </div>
+      <div className="sl-ai-scores">
+        {Object.entries(result.scores).map(([key, val]) => {
+          const pct = Math.min((val / 12) * 100, 100)
+          const barColor = val >= 9 ? '#2D8A56' : val >= 7 ? '#4A90D9' : val >= 5 ? '#C8972A' : '#C8102E'
+          return (
+            <div key={key} className="sl-ai-score-row">
+              <div className="sl-ai-score-label">
+                <span>{CRITERIA_LABELS[key] || key}</span>
+                <span className="sl-ai-score-val" style={{ color: barColor }}>{val}/12</span>
+              </div>
+              <div className="sl-ai-score-track">
+                <motion.div
+                  className="sl-ai-score-fill"
+                  style={{ background: barColor }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <div className="sl-ai-feedback">
+        <div className="sl-ai-feedback-label">{'\uD83D\uDCDD'} Feedback</div>
+        <p>{result.feedback}</p>
+      </div>
+      {result.suggestions && result.suggestions.length > 0 && (
+        <div className="sl-ai-suggestions">
+          <div className="sl-ai-suggestions-label">{'\uD83D\uDCA1'} Suggestions</div>
+          <ul>
+            {result.suggestions.map((s, i) => <li key={i}>{s}</li>)}
+          </ul>
+        </div>
+      )}
+    </motion.div>
+  )
+}
+
+function SpeakingLayout({ color, partId, onComplete }) {
+  const taskNum = parseInt(partId.replace('S', ''), 10)
+  const meta = SPEAKING_TASK_META[taskNum] || SPEAKING_TASK_META[1]
+
+  /* ── Extract a short topic name from the prompt text ── */
+  const getTopicName = (promptText, taskType) => {
+    const t = promptText || ''
+    // S3: "Describe the image... A busy public park on a sunny..."
+    if (taskType === 'Describing a Scene') {
+      const m = t.match(/\.\s*(?:An?\s+)?(.{10,50?}?)(?:\.|,|Talk)/)
+      return m ? m[1].trim().replace(/\s+/g, ' ') : 'Scene'
+    }
+    // S4: "Using the same X image..."
+    if (taskType === 'Making Predictions') {
+      const m = t.match(/same\s+(.+?)\s+image/)
+      return m ? m[1].charAt(0).toUpperCase() + m[1].slice(1) + ' — Predict' : 'Prediction'
+    }
+    // S8: "...The image shows X"
+    if (taskType === 'Unusual Situation') {
+      const m = t.match(/image shows\s+(.{10,50?}?)(?:\.|,|Describe)/)
+      return m ? m[1].trim() : 'Unusual Scene'
+    }
+    // S1: advice about topic — extract core subject
+    if (taskType === 'Giving Advice') {
+      if (t.includes('promotion')) return 'Job Promotion'
+      if (t.includes('credit card') || t.includes('debt')) return 'Managing Debt'
+      if (t.includes('university') || t.includes('college')) return 'University vs Work'
+      if (t.includes('smartphone') || t.includes('phone')) return 'Smartphone Return'
+      if (t.includes('unhealthy') || t.includes('health')) return 'Health & Wellness'
+      if (t.includes('long-distance')) return 'Long-Distance Relationship'
+      if (t.includes('moving') || t.includes('Moving') || t.includes('Edmonton')) return 'Relocating Cities'
+      if (t.includes('school') && t.includes('children')) return 'Back to School'
+      if (t.includes('overtime')) return 'Overwork & Burnout'
+      if (t.includes('software') || t.includes('startup')) return 'Startup vs Stability'
+      if (t.includes('elderly') || t.includes('mother')) return 'Elderly Parent Care'
+      if (t.includes('accountant') || t.includes('freelance')) return 'Freelancing Career'
+      if (t.includes('salary') && t.includes('new employee')) return 'Pay Gap at Work'
+      if (t.includes('engineer') || t.includes('credential')) return 'Foreign Credentials'
+      if (t.includes('dementia')) return 'Parent with Dementia'
+    }
+    // S2: personal experience
+    if (taskType === 'Personal Experience') {
+      if (t.includes('new skill')) return 'Learning a Skill'
+      if (t.includes('trip')) return 'Memorable Trip'
+      if (t.includes('proud')) return 'Proudest Moment'
+      if (t.includes('helped someone')) return 'Helping Others'
+      if (t.includes('achievement')) return 'Personal Achievement'
+      if (t.includes('challenge')) return 'Overcoming Challenge'
+      if (t.includes('difficult decision')) return 'Tough Decision'
+      if (t.includes('embarrassing')) return 'Embarrassing Moment'
+      if (t.includes('perspective')) return 'Changed Perspective'
+      if (t.includes('culture')) return 'Cultural Experience'
+      if (t.includes('volunteer')) return 'Volunteering'
+      if (t.includes('leadership')) return 'Leadership Role'
+      if (t.includes('failure') || t.includes('setback')) return 'Failure & Recovery'
+      if (t.includes('adapt') || t.includes('change')) return 'Adapting to Change'
+      if (t.includes('unexpected opportunity')) return 'Unexpected Opportunity'
+    }
+    // S5: comparing two options
+    if (taskType === 'Comparing and Persuading') {
+      if (t.includes('apartments') || t.includes('Apartment')) return 'City vs Suburb Apt'
+      if (t.includes('cars') || t.includes('Car')) return 'Choosing a Car'
+      if (t.includes('vacation')) return 'Vacation Packages'
+      if (t.includes('job offers') || t.includes('Job')) return 'Comparing Jobs'
+      if (t.includes('gym') || t.includes('Gym')) return 'Gym Memberships'
+      if (t.includes('phone plans') || t.includes('Plan')) return 'Phone Plans'
+      if (t.includes('laptop') || t.includes('Laptop')) return 'Laptop Choice'
+      if (t.includes('restaurant')) return 'Birthday Restaurant'
+      if (t.includes('school') && t.includes('child')) return 'Choosing a School'
+      if (t.includes('neighbourhood')) return 'Neighbourhood Choice'
+      if (t.includes('insurance')) return 'Insurance Policies'
+      if (t.includes('daycare')) return 'Daycare Options'
+      if (t.includes('retirement') || t.includes('investment')) return 'Investment Plans'
+      if (t.includes('coworking')) return 'Coworking Spaces'
+      if (t.includes('pet') || t.includes('adopting')) return 'Adopting a Pet'
+    }
+    // S6: difficult situation
+    if (taskType === 'Difficult Situation') {
+      if (t.includes('loud music') || t.includes('noise')) return 'Noisy Neighbour'
+      if (t.includes('dishwasher')) return 'Broken Appliance'
+      if (t.includes('group project') || t.includes('deadline')) return 'Missed Deadline'
+      if (t.includes('speaker') && t.includes('borrow')) return 'Unreturned Item'
+      if (t.includes('phone bill') || t.includes('charge')) return 'Billing Error'
+      if (t.includes('rude') || t.includes('dismissive')) return 'Rude Coworker'
+      if (t.includes('roommate') || t.includes('cleaning')) return 'Messy Roommate'
+      if (t.includes('cancelling plans')) return 'Friend Cancels Plans'
+      if (t.includes('task') && t.includes('colleague')) return 'Incomplete Task'
+      if (t.includes('rental') && t.includes('leak')) return 'Apartment Issues'
+      if (t.includes('credit') && t.includes('ideas')) return 'Idea Theft at Work'
+      if (t.includes('relative') && t.includes('visiting')) return 'Overstaying Relative'
+      if (t.includes('micromanaging')) return 'Micromanaging Boss'
+      if (t.includes('lend') && t.includes('money')) return 'Lending Money'
+      if (t.includes('inaccurate information')) return 'Misinformation at Work'
+    }
+    // S7: opinions
+    if (taskType === 'Expressing Opinions') {
+      if (t.includes('social media')) return 'Social Media Impact'
+      if (t.includes('work from home') || t.includes('remote')) return 'Remote Work'
+      if (t.includes('public transit')) return 'Public Transit'
+      if (t.includes('online') && t.includes('courses')) return 'Online Education'
+      if (t.includes('environment') || t.includes('climate')) return 'Environment Policy'
+      if (t.includes('artificial intelligence') || t.includes('AI')) return 'AI in Workplace'
+      if (t.includes('screen time') || t.includes('children')) return 'Kids & Screen Time'
+      if (t.includes('fashion') || t.includes('Fast fashion')) return 'Fast Fashion'
+      if (t.includes('electric vehicles') || t.includes('EV')) return 'Electric Vehicles'
+      if (t.includes('gig economy')) return 'Gig Economy'
+      if (t.includes('universal basic income')) return 'Basic Income'
+      if (t.includes('vote') || t.includes('voting')) return 'Mandatory Voting'
+      if (t.includes('space exploration')) return 'Space Exploration'
+      if (t.includes('genetic') || t.includes('genes')) return 'Genetic Technology'
+      if (t.includes('cashless') || t.includes('digital')) return 'Cashless Society'
+    }
+    // Fallback: first sentence, truncated
+    const first = t.split(/[.!?]/)[0] || ''
+    return first.length > 30 ? first.substring(0, 28) + '\u2026' : first || 'Prompt'
+  }
+
+  // Extract all prompts for this task across all 15 sets
+  const prompts = speakingQData.sets.map(set => {
+    const task = set.tasks.find(t => t.task_number === taskNum)
+    return task ? { ...task, setId: set.set_id, difficulty: set.difficulty, topicName: getTopicName(task.prompt, task.task_type) } : null
+  }).filter(Boolean)
+
+  const [activeIdx, setActiveIdx]   = useState(0)
+  const [phase, setPhase]           = useState('idle')  // idle | prep | speak | done
+  const [elapsed, setElapsed]       = useState(0)
+  const [showTips, setShowTips]     = useState(false)
+  const [completedSets, setCompleted] = useState({})
+  const [transcripts, setTranscripts] = useState({})   // { [idx]: text }
+  const [aiResult, setAiResult]     = useState(null)
+  const [aiLoading, setAiLoading]   = useState(false)
+  const [isListening, setIsListening] = useState(false)
+  const [interimText, setInterimText] = useState('')
+  const [micSupported, setMicSupported] = useState(true)
+  const timerRef = useRef(null)
+  const recognitionRef = useRef(null)
+  const finalTranscriptRef = useRef('')
+
+  /* ── Web Speech API setup ── */
+  const SpeechRecognition = typeof window !== 'undefined'
+    ? window.SpeechRecognition || window.webkitSpeechRecognition
+    : null
+
+  useEffect(() => {
+    if (!SpeechRecognition) setMicSupported(false)
+  }, [])
+
+  const startRecognition = () => {
+    if (!SpeechRecognition) return
+    try {
+      const recog = new SpeechRecognition()
+      recog.continuous = true
+      recog.interimResults = true
+      recog.lang = 'en-US'
+      finalTranscriptRef.current = transcripts[activeIdx] || ''
+
+      recog.onresult = (event) => {
+        let interim = ''
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const t = event.results[i][0].transcript
+          if (event.results[i].isFinal) {
+            finalTranscriptRef.current += (finalTranscriptRef.current ? ' ' : '') + t.trim()
+            setTranscripts(r => ({ ...r, [activeIdx]: finalTranscriptRef.current }))
+          } else {
+            interim += t
+          }
+        }
+        setInterimText(interim)
+      }
+
+      recog.onerror = (e) => {
+        if (e.error !== 'aborted') console.warn('Speech recognition error:', e.error)
+      }
+
+      recog.onend = () => {
+        // Auto-restart if still in speak phase (browser sometimes stops early)
+        if (recognitionRef.current === recog) {
+          try { recog.start() } catch (_) { /* already stopped */ }
+        }
+      }
+
+      recog.start()
+      recognitionRef.current = recog
+      setIsListening(true)
+    } catch (err) {
+      console.warn('Mic start failed:', err)
+      setMicSupported(false)
+    }
+  }
+
+  const stopRecognition = () => {
+    if (recognitionRef.current) {
+      const recog = recognitionRef.current
+      recognitionRef.current = null
+      try { recog.stop() } catch (_) {}
+    }
+    setIsListening(false)
+    setInterimText('')
+  }
+
+  const prompt = prompts[activeIdx]
+  if (!prompt) return null
+
+  const totalSets = prompts.length
+  const completedCount = Object.keys(completedSets).length
+  const diffColor = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
+
+  const switchSet = (idx) => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    stopRecognition()
+    setActiveIdx(idx)
+    setPhase('idle')
+    setElapsed(0)
+    setShowTips(false)
+    setAiResult(null)
+    setAiLoading(false)
+    setInterimText('')
+  }
+
+  const startPrep = () => {
+    setPhase('prep')
+    setElapsed(0)
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000)
+  }
+
+  const startSpeak = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    setPhase('speak')
+    setElapsed(0)
+    timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000)
+    startRecognition()
+  }
+
+  // Auto-transition from prep to speak
+  useEffect(() => {
+    if (phase === 'prep' && elapsed >= prompt.prep_time_seconds) {
+      startSpeak()
+    }
+  }, [phase, elapsed, prompt.prep_time_seconds])
+
+  // Auto-transition from speak to done
+  useEffect(() => {
+    if (phase === 'speak' && elapsed >= prompt.speak_time_seconds) {
+      if (timerRef.current) clearInterval(timerRef.current)
+      stopRecognition()
+      setPhase('done')
+      if (!completedSets[activeIdx]) {
+        setCompleted(c => ({ ...c, [activeIdx]: true }))
+        if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1)
+      }
+    }
+  }, [phase, elapsed, prompt.speak_time_seconds])
+
+  // Cleanup timer and recognition on unmount
+  useEffect(() => () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    stopRecognition()
+  }, [])
+
+  const reset = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    stopRecognition()
+    setPhase('idle')
+    setElapsed(0)
+    setAiResult(null)
+    setAiLoading(false)
+    setInterimText('')
+  }
+
+  const transcript = transcripts[activeIdx] || ''
+  const wordCount = transcript.trim() ? transcript.trim().split(/\s+/).length : 0
+
+  const handleAIScore = async () => {
+    if (!transcript.trim() || aiLoading) return
+    setAiLoading(true)
+    setAiResult(null)
+    const result = await scoreSpeakingWithAI(transcript, prompt.prompt, meta.label)
+    setAiResult(result)
+    setAiLoading(false)
+    if (result && result.overall && onComplete) {
+      onComplete('speaking', partId, prompt.setId, result.overall, 12)
+    }
+  }
+
+  const prepRemaining = Math.max(0, prompt.prep_time_seconds - elapsed)
+  const speakRemaining = Math.max(0, prompt.speak_time_seconds - elapsed)
+  const prepPct = Math.min((elapsed / prompt.prep_time_seconds) * 100, 100)
+  const speakPct = Math.min((elapsed / prompt.speak_time_seconds) * 100, 100)
+  const dc = diffColor[prompt.difficulty] || diffColor.intermediate
+
+  return (
+    <div className="sl-shell">
+      {/* ── SIDEBAR ── */}
+      <aside className="sl-sidebar">
+        <div className="sl-sidebar-header">
+          <div className="sl-sidebar-icon">{meta.icon}</div>
+          <div className="sl-sidebar-header-text">
+            <div className="sl-sidebar-title" style={{ color }}>{partId}</div>
+            <div className="sl-sidebar-label-text">{meta.label}</div>
+          </div>
+        </div>
+
+        <div className="sl-sidebar-stats">
+          <div className="sl-sidebar-stat">
+            <span className="sl-sidebar-stat-val">{completedCount}</span>
+            <span className="sl-sidebar-stat-lbl">Done</span>
+          </div>
+          <div className="sl-sidebar-stat-divider" />
+          <div className="sl-sidebar-stat">
+            <span className="sl-sidebar-stat-val">{totalSets}</span>
+            <span className="sl-sidebar-stat-lbl">Sets</span>
+          </div>
+          <div className="sl-sidebar-stat-divider" />
+          <div className="sl-sidebar-stat">
+            <span className="sl-sidebar-stat-val">{prompt.prep_time_seconds}s</span>
+            <span className="sl-sidebar-stat-lbl">Prep</span>
+          </div>
+          <div className="sl-sidebar-stat-divider" />
+          <div className="sl-sidebar-stat">
+            <span className="sl-sidebar-stat-val">{prompt.speak_time_seconds}s</span>
+            <span className="sl-sidebar-stat-lbl">Speak</span>
+          </div>
+        </div>
+
+        <div className="sl-sidebar-progress-wrap">
+          <div className="sl-sidebar-progress-bar">
+            <div className="sl-sidebar-progress-fill" style={{ width: `${totalSets > 0 ? (completedCount / totalSets) * 100 : 0}%`, background: color }} />
+          </div>
+        </div>
+
+        <div className="sl-sidebar-list-label">Practice Sets</div>
+        <div className="sl-topic-list">
+          {prompts.map((p, idx) => {
+            const isActive = idx === activeIdx
+            const isDone = !!completedSets[idx]
+            const dcc = diffColor[p.difficulty] || diffColor.intermediate
+            return (
+              <button
+                key={p.setId}
+                className={`sl-topic-row${isActive ? ' sl-topic-row--active' : ''}${isDone ? ' sl-topic-row--done' : ''}`}
+                style={isActive ? { borderLeftColor: color } : {}}
+                onClick={() => switchSet(idx)}
+              >
+                <span className="sl-topic-num" style={isActive ? { background: color } : isDone ? { background: '#22c55e' } : {}}>
+                  {p.setId}
+                </span>
+                <div className="sl-topic-info">
+                  <span className="sl-topic-title">{p.topicName}</span>
+                  <span className="sl-topic-meta">
+                    <span className="sl-topic-diff-dot" style={{ background: dcc }} />
+                    <span style={{ color: dcc }}>{p.difficulty}</span>
+                  </span>
+                </div>
+                {isDone && <span className="sl-topic-check">{'\u2713'}</span>}
+              </button>
+            )
+          })}
+        </div>
+      </aside>
+
+      {/* ── MAIN CONTENT ── */}
+      <div className="sl-main">
+        {/* Top bar */}
+        <div className="sl-topbar">
+          <div className="sl-topbar-left">
+            <span className="sl-set-badge" style={{ background: color }}>Set {prompt.setId}</span>
+            <div className="sl-topbar-title-group">
+              <span className="sl-topbar-title">{meta.label}</span>
+              <span className="sl-topbar-set-tag">Set {activeIdx + 1} of {totalSets}</span>
+            </div>
+            <span className="sl-diff-badge" style={{ background: `${dc}18`, color: dc }}>
+              {prompt.difficulty.charAt(0).toUpperCase() + prompt.difficulty.slice(1)}
+            </span>
+          </div>
+          <div className="sl-topbar-right">
+            {phase === 'idle' && (
+              <button className="sl-start-btn" style={{ background: color }} onClick={startPrep}>
+                {'\u25B6'} Start ({prompt.prep_time_seconds}s prep + {prompt.speak_time_seconds}s speak)
+              </button>
+            )}
+            {phase === 'prep' && (
+              <div className="sl-timer sl-timer--prep">
+                <span className="sl-timer-icon">{'\u23F3'}</span>
+                <span className="sl-timer-digits">{prepRemaining}s</span>
+                <span className="sl-timer-label-text">Prep</span>
+              </div>
+            )}
+            {phase === 'speak' && (
+              <div className="sl-timer sl-timer--speak" style={{ color, borderColor: color }}>
+                <span className="sl-timer-icon">{'\uD83C\uDF99\uFE0F'}</span>
+                <span className="sl-timer-digits">{speakRemaining}s</span>
+                <span className="sl-timer-label-text">Speaking</span>
+              </div>
+            )}
+            {phase === 'done' && (
+              <div className="sl-timer sl-timer--done">
+                <span>{'\u2705'} Done</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Prompt box */}
+        <div className="sl-prompt-box">
+          <div className="sl-prompt-label" style={{ color }}>
+            {meta.icon} {meta.label} Prompt
+          </div>
+          <pre className="sl-prompt-text">{prompt.prompt}</pre>
+          {prompt.image_url && (
+            <div className="sl-prompt-image-note">
+              <span className="sl-prompt-image-icon">{'\uD83D\uDDBC\uFE0F'}</span> This task includes an image reference (described in the prompt above)
+            </div>
+          )}
+        </div>
+
+        {/* Timer area */}
+        {phase === 'idle' && (
+          <div className="sl-gate">
+            <div className="sl-gate-icon">{'\uD83C\uDF99\uFE0F'}</div>
+            <p className="sl-gate-text">Press <strong>Start</strong> to begin your preparation time. The speaking timer will follow automatically.</p>
+            <div className="sl-gate-info">
+              <span>{'\u23F3'} {prompt.prep_time_seconds}s preparation</span>
+              <span>{'\uD83C\uDF99\uFE0F'} {prompt.speak_time_seconds}s speaking</span>
+            </div>
+            <button className="sl-gate-btn" style={{ background: color }} onClick={startPrep}>
+              {'\u25B6'} Begin Practice
+            </button>
+          </div>
+        )}
+
+        {phase === 'prep' && (
+          <div className="sl-phase-card sl-phase--prep">
+            <div className="sl-phase-header">{'\u23F3'} Preparation Time</div>
+            <div className="sl-phase-countdown">{prepRemaining}s</div>
+            <div className="sl-phase-bar">
+              <div className="sl-phase-fill" style={{ width: `${prepPct}%`, background: '#C8972A' }} />
+            </div>
+            <p className="sl-phase-tip">Use this time to plan your opening sentence and 2–3 key points. Do not start speaking yet.</p>
+            <button className="sl-skip-btn" onClick={startSpeak}>Skip to Speaking {'\u203A'}</button>
+          </div>
+        )}
+
+        {phase === 'speak' && (
+          <div className="sl-phase-card sl-phase--speak" style={{ borderColor: color }}>
+            <div className="sl-phase-header" style={{ color }}>
+              {'\uD83C\uDF99\uFE0F'} Speaking {isListening ? '\u2014 Recording' : '\u2014 Mic Off'}
+              {isListening && <span className="sl-mic-pulse" />}
+            </div>
+            <div className="sl-phase-countdown" style={{ color }}>{speakRemaining}s</div>
+            <div className="sl-phase-bar">
+              <div className="sl-phase-fill" style={{ width: `${100 - speakPct}%`, background: color }} />
+            </div>
+            {!micSupported && (
+              <p className="sl-mic-warning">{'\u26A0\uFE0F'} Your browser doesn't support microphone input. Use Chrome or Edge for the best experience.</p>
+            )}
+            <div className="sl-live-transcript">
+              <div className="sl-live-label">
+                {isListening && <span className="sl-rec-dot" />}
+                Live Transcript
+              </div>
+              <div className="sl-live-text">
+                {transcript && <span>{transcript}</span>}
+                {interimText && <span className="sl-live-interim">{interimText}</span>}
+                {!transcript && !interimText && <span className="sl-live-placeholder">Start speaking… your words will appear here in real-time</span>}
+              </div>
+            </div>
+            <p className="sl-phase-tip">Speak clearly and address every part of the prompt. Maintain a natural pace.</p>
+          </div>
+        )}
+
+        {phase === 'done' && (
+          <div className="sl-phase-card sl-phase--done">
+            <div className="sl-phase-header">{'\u2705'} Time{'\u2019'}s Up</div>
+            <p className="sl-phase-tip">
+              {transcript ? 'Your speech has been transcribed below. Review and edit if needed, then submit for AI evaluation.'
+                : 'Type what you said below to get your AI score and feedback.'}
+            </p>
+            <div className="sl-done-actions">
+              <button className="sl-retry-btn" onClick={reset}>{'\u21A9'} Try Again</button>
+              {activeIdx < totalSets - 1 && (
+                <button className="sl-next-btn" style={{ background: color }} onClick={() => switchSet(activeIdx + 1)}>Next Set {'\u2192'}</button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Transcript + AI scoring (visible after speaking ends) */}
+        {phase === 'done' && (
+          <div className="sl-transcript-section">
+            <div className="sl-transcript-label" style={{ color }}>{'\uD83C\uDF99\uFE0F'} Your Response Transcript</div>
+            <p className="sl-transcript-hint">
+              {transcript
+                ? 'Review and edit your auto-transcribed response below if needed, then submit for AI evaluation.'
+                : micSupported
+                  ? 'No speech was detected. You can type your response manually below.'
+                  : 'Type what you said during the speaking phase. The AI will evaluate your response based on CELPIP speaking criteria.'}
+            </p>
+            <div className="sl-transcript-editor">
+              <textarea
+                className="sl-textarea"
+                value={transcript}
+                onChange={e => setTranscripts(r => ({ ...r, [activeIdx]: e.target.value }))}
+                placeholder="Type what you said here..."
+                rows={8}
+                style={{ borderColor: transcript ? color : undefined }}
+              />
+              <div className="sl-transcript-footer">
+                <span className={`sl-word-count${wordCount >= 40 ? ' sl-wc--good' : ''}`}>
+                  {wordCount} words
+                  {wordCount > 0 && wordCount < 40 && ' \u2014 add more detail'}
+                  {wordCount >= 40 && ' \u2713'}
+                </span>
+                <button
+                  className="sl-score-btn"
+                  style={{ background: aiLoading ? '#aaa' : color }}
+                  onClick={handleAIScore}
+                  disabled={aiLoading || !transcript.trim()}
+                >
+                  {aiLoading ? '\u23F3 Scoring\u2026' : 'Submit for Evaluation'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* AI Feedback Panel */}
+        <AnimatePresence>
+          {aiResult && (
+            <SpeakingFeedbackPanel result={aiResult} color={color} onClose={() => setAiResult(null)} />
+          )}
+        </AnimatePresence>
+
+        {/* Tips section */}
+        <div className="sl-tips-toggle">
+          <button className="sl-tips-btn" onClick={() => setShowTips(v => !v)} style={{ borderColor: color, color }}>
+            {showTips ? '\uD83D\uDE48 Hide Tips' : '\uD83D\uDCA1 Speaking Tips'}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {showTips && (
+            <motion.div className="sl-tips-panel" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.25 }}>
+              <div className="sl-tips-label">{'\uD83C\uDFAF'} What Examiners Look For in {meta.label}</div>
+              <ul className="sl-tips-list">
+                {meta.tips.map(t => <li key={t}>{t}</li>)}
+              </ul>
+              <div className="sl-tips-criteria">
+                <span className="sl-criteria-label">Scoring Criteria:</span>
+                {['Coherence', 'Vocabulary Range', 'Listenability', 'Task Fulfillment'].map(c => (
+                  <span key={c} className="sl-criteria-tag" style={{ background: `${color}18`, color }}>{c}</span>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Navigation */}
+        <div className="sl-nav">
+          <button className="sl-nav-btn" onClick={() => switchSet(Math.max(0, activeIdx - 1))} disabled={activeIdx === 0}>
+            {'\u2190'} Previous Set
+          </button>
+          <span className="sl-nav-counter" style={{ color }}>{partId} · Set {activeIdx + 1} of {totalSets}</span>
+          <button className="sl-nav-btn sl-nav-btn--next" style={{ background: color, borderColor: color }} onClick={() => switchSet(Math.min(totalSets - 1, activeIdx + 1))} disabled={activeIdx === totalSets - 1}>
+            Next Set {'\u2192'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
    DIAGRAM BLOCK — renders HTML table for R2 "Apply a Diagram"
 ══════════════════════════════════════════════════════════════ */
 function DiagramBlock({ html }) {
@@ -4452,9 +5135,6 @@ export default function PracticeSetPage({ section: propSection }) {
   const part = location.state?.part || null
   const { recordCompletion } = useProgress()
 
-  // Per-set "started" flags (for speaking)
-  const [startedSets, setStartedSets] = useState({})
-
   const section = propSection || part?.section || 'listening'
   const partId  = urlPartId || part?.id || 'L1'
   const cfg     = SECTION_CONFIG[section] || SECTION_CONFIG.listening
@@ -4462,23 +5142,18 @@ export default function PracticeSetPage({ section: propSection }) {
   const isListening = section === 'listening'
   const isReading   = section === 'reading'
   const isWriting   = section === 'writing'
+  const isSpeaking  = section === 'speaking'
 
   // Derive label from data sources when not passed via state
+  const speakingTaskNum = isSpeaking ? parseInt(partId.replace('S', ''), 10) : 0
+  const speakingMeta = isSpeaking ? (SPEAKING_TASK_META[speakingTaskNum] || SPEAKING_TASK_META[1]) : null
   const partLabel = part?.label
     || (isListening && LISTENING_DATA[partId]?.partLabel)
     || (isReading && READING_DATA[partId]?.partLabel)
     || (partId === 'W1' ? 'Writing an Email' : partId === 'W2' ? 'Survey Questions' : null)
+    || (isSpeaking && speakingMeta ? speakingMeta.label : null)
     || 'Practice'
   const writingQuestions = isWriting ? (WRITING_SETS[partId] || WRITING_SETS.W1) : []
-
-  // For speaking: build sets array
-  const staticSets = (() => {
-    if (isListening || isReading || isWriting) return []
-    if (section === 'speaking') return Object.values(SPEAKING_SETS).filter(Boolean)
-    return [getSet(part)].filter(Boolean)
-  })()
-
-  const activeSets = staticSets
 
   // Calculate totals for header — scoped to the active part
   const activePartData = isListening ? LISTENING_DATA[partId] : isReading ? READING_DATA[partId] : null
@@ -4487,16 +5162,20 @@ export default function PracticeSetPage({ section: propSection }) {
     : 0
   const partSetsCount = activePartData ? activePartData.sets.length : 0
 
+  const speakingSetCount = isSpeaking ? speakingQData.sets.length : 0
+
   const pageTitle = `${partId} · ${partLabel}`
 
   const scenarioText = isListening || isReading
     ? `${partSetsCount} sets · ${partTotalQs} questions · ${activePartData?.timeLimitMinutes || 8} min each`
     : isWriting
       ? `${writingQuestions.length} tasks · ${partId === 'W1' ? '27' : '26'} min each · 150–200 words`
-      : `${activeSets.length} Practice Sets`
+      : isSpeaking
+        ? `${speakingSetCount} sets · prep + speak timers · CLB 4–12`
+        : 'Practice'
 
   return (
-    <div className={`ps-root${isListening || isReading || isWriting ? ' ps-root--wide' : ''}`}>
+    <div className={`ps-root${isListening || isReading || isWriting || isSpeaking ? ' ps-root--wide' : ''}`}>
       <SEO
         title="CELPIP Practice Set"
         description="Work through a timed CELPIP practice set with real exam-format questions. AI scoring and instant feedback after every answer."
@@ -4504,7 +5183,7 @@ export default function PracticeSetPage({ section: propSection }) {
       />
 
       {/* Compact inline header */}
-      <div className={`ps-topbar${isListening || isReading || isWriting ? ' ps-topbar--wide' : ''}`}>
+      <div className={`ps-topbar${isListening || isReading || isWriting || isSpeaking ? ' ps-topbar--wide' : ''}`}>
         <div className="ps-topbar-left">
           <button className="ps-bc-link" onClick={() => navigate('/' + cfg.page)}>{cfg.icon} {cfg.label}</button>
           <span className="ps-bc-sep">›</span>
@@ -4542,17 +5221,11 @@ export default function PracticeSetPage({ section: propSection }) {
         </div>
       )}
 
-      {/* ── OTHER SECTIONS (Speaking): Use PracticeLayout ── */}
-      {!isListening && !isReading && !isWriting && activeSets.length > 0 && (
-        <PracticeLayout
-          sets={activeSets}
-          color={cfg.color}
-          partId={partId}
-          section={section}
-          startedSets={startedSets}
-          onStartSet={i => setStartedSets(s => ({ ...s, [i]: true }))}
-          onComplete={recordCompletion}
-        />
+      {/* ── SPEAKING: Use SpeakingLayout ── */}
+      {isSpeaking && (
+        <div className="ps-layout-wrap ps-layout-wrap--wide">
+          <SpeakingLayout color={cfg.color} partId={partId} onComplete={recordCompletion} />
+        </div>
       )}
 
     </div>
