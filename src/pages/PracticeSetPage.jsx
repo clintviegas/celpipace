@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { LISTENING_DATA } from '../data/listeningData'
 import { READING_DATA } from '../data/readingData'
+import { asset } from '../data/constants'
 import speakingQData from '../data/speakingQuestions.json'
 import { useProgress } from '../hooks/useProgress'
 import SEO from '../components/SEO'
+import ScoreTips, { getListeningTips, getWritingTips } from '../components/ScoreTips'
 
 /* ══════════════════════════════════════════════════════════════
    SECTION CONFIG — colours & icons per section
@@ -41,15 +43,15 @@ const LISTENING_SETS = {
         text: 'What does the staff member suggest as the FIRST step to finding the book?',
         options: ['A) Check whether another branch has a copy.', 'B) Search the catalogue again on her computer.', 'C) Look in the returns cart near the front desk.', 'D) Place a hold and wait for it to be re-shelved.'],
         answer: 2, explanation: 'The staff member mentions the returns cart first — books often sit there after being returned but before being re-shelved.' },
-      { id: 3, difficulty: 'medium', questionType: 'inference',
+      { id: 3, difficulty: 'intermediate', questionType: 'inference',
         text: 'What can be inferred about the customer from this conversation?',
         options: ['A) He visits the library for the first time.', 'B) He already checked the shelf before speaking to the staff member.', 'C) He is not interested in placing a hold on the book.', 'D) He plans to visit a different branch instead.'],
         answer: 1, explanation: 'He says he checked the shelf where the system shows the book — implying he already looked before approaching staff.' },
-      { id: 4, difficulty: 'medium', questionType: 'mcq',
+      { id: 4, difficulty: 'intermediate', questionType: 'mcq',
         text: 'What does the customer decide to do at the end of the conversation?',
         options: ['A) Return the next day when staff can confirm the book is available.', 'B) Place a hold so he is notified when the book becomes available.', 'C) Borrow a different book on the same subject.', 'D) Ask the manager to investigate where the book has gone.'],
         answer: 1, explanation: 'After the returns cart does not have the book, the customer agrees to place a hold.' },
-      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+      { id: 5, difficulty: 'advanced',   questionType: 'vocab_context',
         text: 'The staff member says the book may be "in transit." In this context, "in transit" most likely means:',
         options: ['A) Being transported to a different city library.', 'B) Checked out by another customer and not yet returned.', 'C) In the process of being moved between shelves or branches within the system.', 'D) Lost and flagged for replacement by the acquisitions team.'],
         answer: 2, explanation: '"In transit" in library systems means the item is moving between locations or processing stages — not yet on the shelf but not checked out either.' },
@@ -69,15 +71,15 @@ const LISTENING_SETS = {
         text: 'Who first brings up the idea of going to the mountains?',
         options: ['A) Mark, because he wants to hike.', 'B) Sarah, because she has been wanting to hike.', 'C) Both — they have discussed it before.', 'D) Neither — a friend suggested it to them.'],
         answer: 1, explanation: 'Sarah is the one who proposes the mountains for a hike.' },
-      { id: 3, difficulty: 'medium', questionType: 'mcq',
+      { id: 3, difficulty: 'intermediate', questionType: 'mcq',
         text: 'What is Mark\'s main concern about the plan?',
         options: ['A) He does not enjoy hiking.', 'B) The weather forecast predicts possible rain on Saturday.', 'C) His car needs repairs and cannot make the trip.', 'D) He already has other plans for Saturday.'],
         answer: 1, explanation: 'Mark checked the weather and is worried it might rain on Saturday, which is his key hesitation.' },
-      { id: 4, difficulty: 'medium', questionType: 'inference',
+      { id: 4, difficulty: 'intermediate', questionType: 'inference',
         text: 'What does Mark\'s suggestion to "shift the hike to Sunday" tell us about his attitude?',
         options: ['A) He does not want to go at all and is stalling.', 'B) He is open to the trip but wants to avoid the bad weather.', 'C) He prefers shorter trips and wants to return home by Saturday evening.', 'D) He is worried Sarah will change her mind if they wait.'],
         answer: 1, explanation: 'Proposing Sunday shows he still wants to go — he is adapting to the weather concern, not rejecting the idea.' },
-      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+      { id: 5, difficulty: 'advanced',   questionType: 'vocab_context',
         text: 'Mark says the Sunday forecast "looks much clearer." In context, "clearer" refers to:',
         options: ['A) Better road visibility for the drive.', 'B) A more settled and dry weather outlook.', 'C) A clearer hiking trail with fewer other visitors.', 'D) A more certain plan with less room for doubt.'],
         answer: 1, explanation: '"Clearer" here is a weather term — it means less cloud cover, lower chance of rain, and more settled conditions.' },
@@ -97,15 +99,15 @@ const LISTENING_SETS = {
         text: 'Why is the swimming pool temporarily closed?',
         options: ['A) It is being expanded to add more lanes.', 'B) It failed a recent health inspection.', 'C) Scheduled safety checks and filter upgrades are underway.', 'D) Staff are attending a two-week training program.'],
         answer: 2, explanation: 'The director says the closure is for scheduled maintenance: safety checks and filter upgrades.' },
-      { id: 3, difficulty: 'medium', questionType: 'mcq',
+      { id: 3, difficulty: 'intermediate', questionType: 'mcq',
         text: 'Which new program is being introduced specifically for seniors?',
         options: ['A) A Wednesday morning yoga class.', 'B) A low-impact aquatic fitness session.', 'C) An outdoor walking club on Monday mornings.', 'D) A chair yoga class in Room 2.'],
         answer: 1, explanation: 'The director introduces a new aquatic fitness program designed for seniors as part of the season updates.' },
-      { id: 4, difficulty: 'medium', questionType: 'inference',
+      { id: 4, difficulty: 'intermediate', questionType: 'inference',
         text: 'What can be inferred from the director\'s mention of "advance registration" for all programs?',
         options: ['A) The centre expects low attendance and wants to confirm numbers.', 'B) Some programs have been oversubscribed in the past.', 'C) Walk-in participation is no longer permitted at the centre.', 'D) Registration must be completed at the front desk in person.'],
         answer: 1, explanation: 'Requiring advance registration usually signals that demand exists and space is limited — a common response to past overcrowding.' },
-      { id: 5, difficulty: 'hard',   questionType: 'mcq',
+      { id: 5, difficulty: 'advanced',   questionType: 'mcq',
         text: 'How can residents register for the new programs?',
         options: ['A) By calling the front desk during business hours.', 'B) By completing a paper form at reception.', 'C) Through the community centre website or mobile app.', 'D) By emailing the program coordinator directly.'],
         answer: 2, explanation: 'The director says registration is available through the website and the updated mobile app.' },
@@ -125,11 +127,11 @@ const LISTENING_SETS = {
         text: 'When is the transit project expected to be completed?',
         options: ['A) By the end of next year.', 'B) Within 18 months of construction beginning.', 'C) In approximately three years.', 'D) Within five years, depending on additional funding.'],
         answer: 2, explanation: 'The transit authority spokesperson states a three-year timeline from the start of construction.' },
-      { id: 3, difficulty: 'medium', questionType: 'inference',
+      { id: 3, difficulty: 'intermediate', questionType: 'inference',
         text: 'The reporter says the project has been "years in the making." What does this suggest?',
         options: ['A) Construction has already been underway for several years.', 'B) The project was proposed and debated for a long time before approval.', 'C) The city has been building similar projects over many years.', 'D) The project is unusually large compared to other transit plans.'],
         answer: 1, explanation: '"Years in the making" implies a long planning and approval process — not that construction started years ago.' },
-      { id: 4, difficulty: 'hard',   questionType: 'vocab_context',
+      { id: 4, difficulty: 'advanced',   questionType: 'vocab_context',
         text: 'The report describes the extension as serving "underserved communities." In context, "underserved" most likely means:',
         options: ['A) Communities that pay lower property taxes.', 'B) Areas where transit options are currently limited or inadequate.', 'C) Neighbourhoods where fewer residents use public transit.', 'D) Districts that have requested transit improvements but been denied.'],
         answer: 1, explanation: '"Underserved" in urban planning refers to areas lacking adequate public services — here, areas with limited or no subway access.' },
@@ -149,15 +151,15 @@ const LISTENING_SETS = {
         text: 'What concern does the employee raise about remote work?',
         options: ['A) The internet connection at home is unreliable.', 'B) Remote work makes it harder to separate work time from personal time.', 'C) Team collaboration suffers when people are not in the same office.', 'D) Remote workers are passed over for promotion.'],
         answer: 1, explanation: 'The employee mentions that working from home has blurred boundaries between personal and work life.' },
-      { id: 3, difficulty: 'medium', questionType: 'speaker_id',
+      { id: 3, difficulty: 'intermediate', questionType: 'speaker_id',
         text: 'Which point do the manager and the consultant BOTH make independently?',
         options: ['A) All employees should have the option to work from home full time.', 'B) In-person meetings should be held at least once a month.', 'C) Clear communication guidelines are essential for remote teams to succeed.', 'D) The policy should be reviewed and updated after six months.'],
         answer: 2, explanation: 'Both the manager and consultant independently stress that clear communication protocols are what make remote work effective.' },
-      { id: 4, difficulty: 'medium', questionType: 'inference',
+      { id: 4, difficulty: 'intermediate', questionType: 'inference',
         text: 'What can be inferred about the consultant\'s overall position on remote work?',
         options: ['A) He is strongly opposed and believes it should be reversed.', 'B) He is cautiously supportive but emphasises that structure is critical.', 'C) He is neutral and does not express a clear opinion.', 'D) He supports remote work only for managers, not junior staff.'],
         answer: 1, explanation: 'The consultant agrees remote work can work but consistently emphasises communication guidelines — a conditional, structured endorsement.' },
-      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+      { id: 5, difficulty: 'advanced',   questionType: 'vocab_context',
         text: 'The manager says the policy was driven by "exit survey data." In context, "exit surveys" most likely refers to:',
         options: ['A) Surveys given to clients when they leave the company\'s services.', 'B) Surveys completed by employees when they resign from the company.', 'C) A government survey of businesses exiting the market.', 'D) Surveys of employees when they physically leave the office each day.'],
         answer: 1, explanation: 'Exit surveys (or exit interviews) are conducted with departing employees to understand why they are leaving — a common HR tool.' },
@@ -177,15 +179,15 @@ const LISTENING_SETS = {
         text: 'What is Speaker B\'s main concern about banning single-use plastics?',
         options: ['A) Reusable bags are unhygienic in food service settings.', 'B) The ban would place an unfair financial burden on low-income consumers.', 'C) Plastic alternatives are more expensive to manufacture.', 'D) The government does not have authority to regulate packaging.'],
         answer: 1, explanation: 'Speaker B argues that low-income households rely on cheap single-use products and a ban disproportionately affects them.' },
-      { id: 3, difficulty: 'medium', questionType: 'inference',
+      { id: 3, difficulty: 'intermediate', questionType: 'inference',
         text: 'When Speaker B says a ban is a "blunt instrument," what does this suggest about his view?',
         options: ['A) He believes bans are ineffective because they are difficult to enforce.', 'B) He thinks the ban is too broad and does not target the actual problem precisely.', 'C) He feels the ban would hurt businesses more than consumers.', 'D) He is suggesting that physical force may be required to implement it.'],
         answer: 1, explanation: 'A "blunt instrument" is a policy metaphor meaning a solution that lacks precision — it affects too many things indiscriminately rather than targeting the actual problem.' },
-      { id: 4, difficulty: 'medium', questionType: 'speaker_id',
+      { id: 4, difficulty: 'intermediate', questionType: 'speaker_id',
         text: 'What do BOTH speakers agree on?',
         options: ['A) An outright ban is the most effective solution to the plastic problem.', 'B) Consumer education alone is insufficient to solve the plastic crisis.', 'C) Businesses should voluntarily reduce plastic packaging without regulation.', 'D) The issue requires more scientific research before any action is taken.'],
         answer: 1, explanation: 'Both acknowledge that relying on consumers alone — without structural change — is not enough to address the problem, even though they disagree on the solution.' },
-      { id: 5, difficulty: 'hard',   questionType: 'vocab_context',
+      { id: 5, difficulty: 'advanced',   questionType: 'vocab_context',
         text: 'Speaker A says the recycling label has become "more symbol than system." This phrase means:',
         options: ['A) The recycling logo is too small to be seen on most packaging.', 'B) The recycling process works well but is poorly communicated to consumers.', 'C) The recycling label suggests action but the actual system is not functioning effectively.', 'D) Companies use recycling symbols as a marketing tool with no legal obligation.'],
         answer: 2, explanation: 'The phrase means the label has become performative — it gives the impression of environmental responsibility without the actual result of recycling occurring.' },
@@ -282,35 +284,35 @@ membership@fitnesselite.ca | 604-555-0199`,
         text: 'What documents can Sarah use to verify her student status?',
         options: ['A) Only a valid student ID card.', 'B) Only a letter from her university registrar.', 'C) Either a student ID or a dated letter from the registrar\'s office.', 'D) A bank statement or proof of address.'],
         answer: 2, explanation: 'Marcus states: "We accept a valid student ID or a dated letter from your registrar\'s office as proof of enrolment."' },
-      { id: 4, difficulty: 'medium', questionType: 'inference',
+      { id: 4, difficulty: 'intermediate', questionType: 'inference',
         text: 'Sarah is "flexible with her schedule and can train early mornings or evenings." Based on the yoga schedule provided, when could Sarah attend?',
         options: ['A) Only on Monday, Wednesday, or Friday mornings.', 'B) Only on Tuesday or Thursday evenings.', 'C) Either Monday/Wednesday/Friday mornings or Tuesday/Thursday evenings.', 'D) Any time during the week since yoga is offered daily.'],
         answer: 2, explanation: 'The email specifies yoga runs "Monday, Wednesday, and Friday mornings at 9:00 AM, and also Tuesday and Thursday evenings at 6:30 PM." Sarah can fit either schedule.' },
-      { id: 5, difficulty: 'medium', questionType: 'detail',
+      { id: 5, difficulty: 'intermediate', questionType: 'detail',
         text: 'According to the reply, what is the total cost for Sarah to begin her membership immediately?',
         options: ['A) CA$199', 'B) CA$229', 'C) CA$349', 'D) CA$379'],
         answer: 1, explanation: 'The student membership is CA$199, plus a one-time CA$30 registration fee, totalling CA$229. However, the question asks for the membership cost itself, which is CA$199. (Or CA$229 total — context matters; answer key: CA$199 for just membership, but if asking total cost to start, CA$229.)' },
-      { id: 6, difficulty: 'hard',   questionType: 'vocab_context',
+      { id: 6, difficulty: 'advanced',   questionType: 'vocab_context',
         text: 'Marcus says the fitness centre is "delighted that you are interested." In this context, why would the centre use this word choice?',
         options: ['A) To express concern that Sarah may be unhappy.', 'B) To show genuine enthusiasm and make the customer feel welcomed.', 'C) To indicate that most students do not join.', 'D) To suggest Sarah should hurry before the offer expires.'],
         answer: 1, explanation: '"Delighted" conveys warmth and genuine pleasure at her interest — it is a tone-of-voice strategy to make her feel valued as a potential member.' },
-      { id: 7, difficulty: 'medium', questionType: 'inference',
+      { id: 7, difficulty: 'intermediate', questionType: 'inference',
         text: 'What does Marcus mean when he says, "If you have any further questions or would like to visit our facility before committing, please let us know"?',
         options: ['A) He is suggesting Sarah should not join without visiting first.', 'B) He is inviting Sarah to experience the facility to help her make an informed decision.', 'C) He is discouraging her from joining online.', 'D) He is implying the facility may not meet her expectations.'],
         answer: 1, explanation: 'The offer to visit "before committing" is a customer-friendly gesture allowing Sarah to see the facility in person and feel confident in her decision.' },
-      { id: 8, difficulty: 'medium', questionType: 'detail',
+      { id: 8, difficulty: 'intermediate', questionType: 'detail',
         text: 'Which of the following is NOT mentioned as included in Sarah\'s membership?',
         options: ['A) Unlimited yoga classes.', 'B) Access to the swimming pool.', 'C) Strength training.', 'D) Sauna and massage therapy services.'],
         answer: 3, explanation: 'Marcus lists yoga, strength training, cycling, swimming, and personal training consultations as included. Sauna and massage are never mentioned.' },
-      { id: 9, difficulty: 'hard',   questionType: 'inference',
+      { id: 9, difficulty: 'advanced',   questionType: 'inference',
         text: 'Why might Fitness Elite offer new members "a free fitness assessment and one complimentary personal training session"?',
         options: ['A) To increase their revenue by charging for additional sessions.', 'B) To help new members start safely and feel supported in their fitness journey.', 'C) To demonstrate that their facilities are overcrowded with trainers.', 'D) To replace the need for a gym orientation.'],
         answer: 1, explanation: 'These complimentary services help new members get started on the right foot — personalised guidance builds confidence and increases retention.' },
-      { id: 10, difficulty: 'hard', questionType: 'tone_purpose',
+      { id: 10, difficulty: 'advanced', questionType: 'tone_purpose',
         text: 'What is Marcus\'s overall tone in his response to Sarah?',
         options: ['A) Dismissive and unhelpful.', 'B) Professional yet overly formal and cold.', 'C) Warm, helpful, and customer-focused.', 'D) Skeptical and cautious.'],
         answer: 2, explanation: 'Words like "delighted," thorough answers to all her questions, additional offerings, and an invitation to visit all signal a warm, customer-focused tone.' },
-      { id: 11, difficulty: 'hard', questionType: 'detail',
+      { id: 11, difficulty: 'advanced', questionType: 'detail',
         text: 'Based on the email exchange, what can we infer Sarah is expected to do NEXT?',
         options: ['A) Pay the CA$199 membership fee immediately online.', 'B) Provide her student ID or a letter from her registrar\'s office and then visit the facility to complete the registration process.', 'C) Contact Marcus to schedule a specific personal training session.', 'D) Attend a mandatory orientation class before using the facilities.'],
         answer: 1, explanation: 'Sarah would need to verify her student status (with the documents Marcus listed) and then visit the facility to complete the membership agreement and pay the fees.' },
@@ -346,11 +348,11 @@ SCHEDULE — Week of April 7–11:
         text: 'Why is the aquatic fitness class replaced on Thursday, April 10?',
         options: ['A) The instructor is unavailable that day.', 'B) The pool is closed for maintenance.', 'C) Enrolment was too low to justify the class.', 'D) A special event is taking place in the pool area.'],
         answer: 1, explanation: 'The notice explicitly states the pool will be closed for maintenance on April 10, which is why the aquatic class is replaced.' },
-      { id: 4, difficulty: 'medium', questionType: 'fill_blank',
+      { id: 4, difficulty: 'intermediate', questionType: 'fill_blank',
         text: 'According to the passage, all classes require advance ___ which can be completed ___ or at the front desk.',
         options: ['A) registration … online', 'B) payment … in person', 'C) confirmation … by phone', 'D) booking … by email'],
         answer: 0, explanation: 'The passage states: "All classes require advance registration, which can be completed online or at the front desk."' },
-      { id: 5, difficulty: 'hard',   questionType: 'inference',
+      { id: 5, difficulty: 'advanced',   questionType: 'inference',
         text: 'A resident signs up for the Thursday 2 PM class on April 10 and arrives expecting a pool workout. What is most likely to happen?',
         options: ['A) He will find the pool class running as normal.', 'B) He will find a Chair Yoga session in Room 2 instead.', 'C) He will be told all Thursday classes are cancelled.', 'D) He will be redirected to Tuesday\'s aquatic fitness class.'],
         answer: 1, explanation: 'The schedule replaces the Thursday aquatic session with Chair Yoga in Room 2 for that specific week due to pool maintenance.' },
@@ -383,28 +385,28 @@ SCHEDULE — Week of April 7–11:
         text: 'According to paragraph B, why is inconsistent digital literacy instruction a problem?',
         options: ['A) It increases the cost of education per student.', 'B) It creates gaps where students may learn some skills but miss critical others.', 'C) Teachers are not willing to integrate digital literacy.', 'D) Technology companies refuse to provide resources to schools.'],
         answer: 1, explanation: 'The passage notes that by integrating digital literacy into existing subjects rather than as standalone instruction, students get spotty coverage — a spreadsheet user might not learn password safety.' },
-      { id: 4, difficulty: 'medium', questionType: 'vocab_context',
+      { id: 4, difficulty: 'intermediate', questionType: 'vocab_context',
         text: 'In paragraph C, the word "spotty" means most nearly the same as:',
         options: ['A) Visible', 'B) Irregular or incomplete', 'C) Contaminated', 'D) Covered with patterns'],
         targetWord: 'spotty',
         answer: 1, explanation: '"Spotty" in this context means coverage that is scattered and incomplete — "inconsistent and uneven across different locations" — not "contaminated".' },
-      { id: 5, difficulty: 'medium', questionType: 'inference',
+      { id: 5, difficulty: 'intermediate', questionType: 'inference',
         text: 'Why does the author mention that teachers "grew up in analog environments"?',
         options: ['A) To suggest that older teachers should retire immediately.', 'B) To imply that teachers are resistant to change.', 'C) To explain why teachers may lack the instinctive understanding of digital literacy that younger people have.', 'D) To criticize teachers for not investing in their own education.'],
         answer: 2, explanation: 'The author is explaining that because teachers learned in pre-digital eras, they may not intuitively understand digital culture — hence their need for formal training in digital pedagogy.' },
-      { id: 6, difficulty: 'medium', questionType: 'detail',
+      { id: 6, difficulty: 'intermediate', questionType: 'detail',
         text: 'Which TWO provinces are mentioned as having taken concrete action on digital literacy curriculum?',
         options: ['A) Ontario and Quebec', 'B) British Columbia and Ontario', 'C) British Columbia and Alberta', 'D) Alberta and Saskatchewan'],
         answer: 1, explanation: 'Paragraph D specifically names BC (introduced dedicated Digital Literacy in 2023) and Ontario (incorporated media literacy across grade levels). The other provinces are not mentioned.' },
-      { id: 7, difficulty: 'hard',   questionType: 'inference',
+      { id: 7, difficulty: 'advanced',   questionType: 'inference',
         text: 'What does the author mean by saying digital competence in post-secondary and the workforce is "assumed rather than taught"?',
         options: ['A) Nobody needs to learn digital skills in university or at work.', 'B) Universities and employers expect students and employees to already possess digital skills, rather than providing training.', 'C) Teachers in universities are better at teaching digital skills than high school teachers.', 'D) Digital skills are less important in university than in K–12 education.'],
         answer: 1, explanation: '"Assumed" means taken for granted as already present. The author is saying universities and employers expect digital literacy as a prerequisite, not something they will teach.' },
-      { id: 8, difficulty: 'hard',   questionType: 'tone_purpose',
+      { id: 8, difficulty: 'advanced',   questionType: 'tone_purpose',
         text: 'What is the author\'s tone regarding Canada\'s current state of digital literacy education?',
         options: ['A) Enthusiastically optimistic about recent progress.', 'B) Dismissive of efforts by teachers and school boards.', 'C) Concerned about gaps but hopeful about emerging solutions.', 'D) Angry and accusatory toward provincial governments.'],
         answer: 2, explanation: 'The author identifies serious problems (gaps, inconsistency, teacher training issues) but also notes provincial progress (BC, Ontario). The tone is urgent but not hostile — concerned and solution-oriented.' },
-      { id: 9, difficulty: 'hard',   questionType: 'inference',
+      { id: 9, difficulty: 'advanced',   questionType: 'inference',
         text: 'The author\'s statement in paragraph E that "investment in teacher training, curriculum development, and consistent standards is not optional" most likely means:',
         options: ['A) Schools can choose to invest in these areas or not, depending on budget.', 'B) Investment should be voluntary and left to individual teachers.', 'C) These investments are essential and necessary if schools want to serve their students well.', 'D) The government should restrict schools from spending on digital literacy.'],
         answer: 2, explanation: '"Not optional" means essential, non-negotiable, mandatory — the author is arguing this investment is a moral and practical necessity, not a nice-to-have.' },
@@ -451,28 +453,28 @@ Regulation will slow innovation and hand competitive advantage to wealthy school
         text: 'What does James Chen suggest as an example of a subject where students have always had access to copyable information?',
         options: ['A) Mathematics textbooks', 'B) Wikipedia', 'C) Scientific journals', 'D) Government policy documents'],
         answer: 1, explanation: 'Chen states: "For decades, students could copy from Wikipedia, and good teachers adapted by requiring process documentation, in-class writing, and other methods."' },
-      { id: 5, difficulty: 'medium', questionType: 'vocab_context',
+      { id: 5, difficulty: 'intermediate', questionType: 'vocab_context',
         text: 'In her opening paragraph, Dr. Liu uses the word "scrutiny" to mean:',
         options: ['A) Marketing or promotion', 'B) Close and careful examination', 'C) Restriction or limitation', 'D) Investment or funding'],
         targetWord: 'scrutiny',
         answer: 1, explanation: '"We regulate pharmaceuticals, aviation, and automobiles because the stakes are high. Education deserves the same level of scrutiny" — here, scrutiny means careful, rigorous oversight and evaluation.' },
-      { id: 6, difficulty: 'medium', questionType: 'mcq',
+      { id: 6, difficulty: 'intermediate', questionType: 'mcq',
         text: 'On the issue of bias in AI systems, how do Dr. Liu and James Chen DIFFER?',
         options: ['A) Dr. Liu acknowledges bias exists; Chen denies it', 'B) Dr. Liu wants regulation to address bias; Chen suggests teaching students to critically evaluate AI output', 'C) Chen believes bias is solved through transparency; Dr. Liu does not', 'D) Chen supports all AI use; Dr. Liu opposes all AI use'],
         answer: 1, explanation: 'Dr. Liu: regulate systems and audit for bias standards. Chen: teach students to interrogate assumptions and compare against diverse sources. Both acknowledge bias, but differ on the solution.' },
-      { id: 7, difficulty: 'medium', questionType: 'inference',
+      { id: 7, difficulty: 'intermediate', questionType: 'inference',
         text: 'Why does James Chen compare AI regulation to "banning electricity in schools because power companies collect billing data"?',
         options: ['A) To suggest that all technology should be banned', 'B) To argue that data privacy is not important', 'C) To show that the problem (data harvesting) is separate from the solution (education)',  'D) To prove that electricity is more important than AI'],
         answer: 2, explanation: 'Chen is drawing an analogy: just as we don\'t ban electricity because of data privacy concerns (the issue is data regulation, not electricity), we shouldn\'t ban AI in schools. The real problem is data protection law, not AI restriction.' },
-      { id: 8, difficulty: 'hard',   questionType: 'tone_purpose',
+      { id: 8, difficulty: 'advanced',   questionType: 'tone_purpose',
         text: 'What is the tone of Dr. Liu\'s statement: "Struggle is uncomfortable, but it\'s where learning lives"?',
         options: ['A) Pessimistic and defeatist', 'B) Reflective and philosophical', 'C) Angry and accusatory', 'D) Sarcastic and dismissive'],
         answer: 1, explanation: 'The statement is thoughtful and poetic — Dr. Liu is offering a philosophical insight about the nature of learning, acknowledging difficulty but affirming its value. The tone is measured and wise, not emotional.' },
-      { id: 9, difficulty: 'hard',   questionType: 'inference',
+      { id: 9, difficulty: 'advanced',   questionType: 'inference',
         text: 'Which of the following is an implied criticism in James Chen\'s argument?',
         options: ['A) AI systems are not accurate enough for education', 'B) Dr. Liu\'s regulatory approach could create inequity by disadvantaging poorer schools', 'C) Teachers are unwilling to adapt their teaching methods', 'D) Technology companies should have more power in schools'],
         answer: 1, explanation: 'Chen states: "Regulation will slow innovation and hand competitive advantage to wealthy schools that can navigate bureaucracy. Poorer schools will be locked out." This is an implied critique of Dr. Liu\'s regulatory approach.' },
-      { id: 10, difficulty: 'hard',   questionType: 'inference',
+      { id: 10, difficulty: 'advanced',   questionType: 'inference',
         text: 'If Dr. Liu\'s recommendations were implemented, what kind of schools would be BEST POSITIONED to comply?',
         options: ['A) Rural schools with limited budgets', 'B) Well-funded schools with compliance and IT resources', 'C) Schools with the least AI usage', 'D) All schools equally, regardless of size or funding'],
         answer: 1, explanation: 'Regulations require infrastructure, auditing, documentation, and expertise. Well-funded schools can hire consultants and implement compliance systems more easily than underfunded schools — consistent with why Chen views regulation as problematic for equity.' },
@@ -1824,7 +1826,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
   const timeUp       = timeLeft === 0
   const timerColor   = timeUp ? '#999' : timeCritical ? '#C8102E' : timeAmber ? '#C8972A' : color
 
-  const diffC = DIFF_COLOURS[q?.difficulty] || DIFF_COLOURS.medium
+  const diffC = DIFF_COLOURS[q?.difficulty] || DIFF_COLOURS.intermediate
 
   return (
     <div className="wl-shell">
@@ -1850,8 +1852,8 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
           </div>
           <div className="wl-sidebar-stat-divider" />
           <div className="wl-sidebar-stat">
-            <span className="wl-sidebar-stat-val">{q.section === 'W1' ? '27' : '26'}</span>
-            <span className="wl-sidebar-stat-lbl">Min</span>
+            <span className="wl-sidebar-stat-val">{(() => { const scored = sorted.filter((_, i) => responses[i]?.trim()); return scored.length > 0 ? `${scored.length}` : '—' })()}</span>
+            <span className="wl-sidebar-stat-lbl">Avg Score</span>
           </div>
         </div>
 
@@ -1879,7 +1881,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
                   <span className="wl-topic-title">{item.title}</span>
                   <span className="wl-topic-meta">
                     <span className="wl-topic-diff-dot" style={{ background: dc }} />
-                    <span style={{ color: dc }}>{item.difficulty}</span>
+                    <span style={{ color: dc, textTransform: 'capitalize' }}>{item.difficulty}</span>
                   </span>
                 </div>
                 {hasResponse && <span className="wl-topic-check">{'\u2713'}</span>}
@@ -2011,6 +2013,9 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
           )}
         </AnimatePresence>
 
+        {/* Score tips */}
+        <ScoreTips tips={getWritingTips(partId)} color={color} />
+
         {/* Navigation */}
         <div className="wl-nav">
           <button
@@ -2088,7 +2093,7 @@ function ListeningLayout({ color, partId, onComplete }) {
   const getAudioPath = (setNum, lineIdx) => {
     const sn = String(setNum).padStart(2, '0')
     const ln = String(lineIdx).padStart(2, '0')
-    return `/audio/${partId}/set-${sn}/line-${ln}.mp3`
+    return asset(`/audio/${partId}/set-${sn}/line-${ln}.mp3`)
   }
 
   /* ── Play audio from a specific line ── */
@@ -2305,8 +2310,8 @@ function ListeningLayout({ color, partId, onComplete }) {
           </div>
           <div className="ll-sidebar-stat-divider" />
           <div className="ll-sidebar-stat">
-            <span className="ll-sidebar-stat-val">{part.questionCount}</span>
-            <span className="ll-sidebar-stat-lbl">Qs/set</span>
+            <span className="ll-sidebar-stat-val">{(() => { const scores = part.sets.map((s, si) => { const t = s.questions.length; const c = s.questions.filter((q, qi) => answers[`${si}_${qi}`] === q.answer).length; return sidebarIsDone(si) ? Math.round((c / t) * 100) : null }).filter(v => v !== null); return scores.length > 0 ? `${Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)}%` : '—' })()}</span>
+            <span className="ll-sidebar-stat-lbl">Avg Score</span>
           </div>
         </div>
 
@@ -2336,7 +2341,7 @@ function ListeningLayout({ color, partId, onComplete }) {
                   <span className="ll-set-title">{s.title}</span>
                   <span className="ll-set-meta">
                     <span className="ll-set-diff-dot" style={{ background: dc }} />
-                    <span style={{ color: dc }}>{s.difficulty}</span>
+                    <span style={{ color: dc, textTransform: 'capitalize' }}>{s.difficulty}</span>
                     {allDone && <span className="ll-set-score" style={{ color: correct === s.questions.length ? '#22c55e' : '#888' }}>{correct}/{s.questions.length}</span>}
                     {!allDone && done > 0 && <span className="ll-set-score">{done}/{s.questions.length}</span>}
                   </span>
@@ -2357,7 +2362,7 @@ function ListeningLayout({ color, partId, onComplete }) {
             <div className="ll-topbar-title-group">
               <span className="ll-topbar-title">{set.title}</span>
               <span className="ll-topbar-set-tag">Set {set.setNumber} of {part.sets.length}</span>
-              <span className="ll-topbar-diff" style={{ color: DIFF_COLORS[set.difficulty] || '#888' }}>{set.difficulty}</span>
+              <span className="ll-topbar-diff" style={{ color: DIFF_COLORS[set.difficulty] || '#888', textTransform: 'capitalize' }}>{set.difficulty}</span>
             </div>
           </div>
           <div className="ll-topbar-right">
@@ -2534,6 +2539,9 @@ function ListeningLayout({ color, partId, onComplete }) {
         </div>
 
         )}
+
+        {/* Score tips */}
+        <ScoreTips tips={getListeningTips(partId)} color={color} />
 
         {/* ── Completion Panel ── */}
         <AnimatePresence>
@@ -3013,7 +3021,7 @@ function ReadingLayout({ color, partId, onComplete }) {
                           <div className="ll-set-info">
                             <span className="ll-set-title">{s.title}</span>
                             <span className="ll-set-meta">
-                              <span style={{ color: dc }}>{s.difficulty}</span> · {done}/{s.questions.length}
+                              <span style={{ color: dc, textTransform: 'capitalize' }}>{s.difficulty}</span> · {done}/{s.questions.length}
                             </span>
                           </div>
                           {allDone && <span className="ll-set-check">{'\u2713'}</span>}
@@ -3274,10 +3282,8 @@ What would you do? In your response:
 ══════════════════════════════════════════════════════════════ */
 const DIFF_COLOURS = {
   'easy':               { bg: '#F0FDF4', text: '#2D8A56' },
-  'medium':             { bg: '#EEF7FF', text: '#4A90D9' },
   'intermediate':       { bg: '#EEF7FF', text: '#4A90D9' },
   'upper-intermediate': { bg: '#FFF8EC', text: '#C8972A' },
-  'hard':               { bg: '#FFF8EC', text: '#C8972A' },
   'advanced':           { bg: '#FEF2F2', text: '#D91B1B' },
 }
 
@@ -3293,10 +3299,10 @@ const QTYPE_LABELS = {
   gist:            'Main Idea',
 }
 
-/* Sort questions: easy → medium → hard.
+/* Sort questions: easy → intermediate → advanced.
    Within the same difficulty level the original order is preserved. */
 function sortByDifficulty(questions) {
-  const rank = { easy: 0, medium: 1, intermediate: 1, hard: 2, 'upper-intermediate': 2, advanced: 3 }
+  const rank = { easy: 0, intermediate: 1, 'upper-intermediate': 2, advanced: 3 }
   return [...questions].sort((a, b) => (rank[a.difficulty] ?? 1) - (rank[b.difficulty] ?? 1))
 }
 
@@ -3736,12 +3742,12 @@ const SPEAKING_TASK_META = {
 }
 
 /* ── Speaking AI scoring ───────────────────────────────────── */
-async function scoreSpeakingWithAI(responseText, prompt, taskType) {
+async function scoreSpeakingWithAI(responseText, prompt, taskType, topic) {
   try {
     const res = await fetch('/api/score-speaking', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ responseText, prompt, taskType }),
+      body: JSON.stringify({ responseText, prompt, taskType, topic }),
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
@@ -3831,9 +3837,58 @@ function SpeakingFeedbackPanel({ result, color, onClose }) {
   )
 }
 
+/* ── Structured layout for S5 Comparing & Persuading prompts ── */
+function ComparingPrompt({ text, color }) {
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]
+  const intro = sentences[0]?.trim() || ''
+  const closing = sentences[sentences.length - 1]?.trim() || ''
+
+  // Find sentences containing "Word A is/has" or "Word B is/has"
+  const optionA = sentences.find(s => /\b\w+\s+A\s+(?:is|has)\b/i.test(s)) || ''
+  const optionB = sentences.find(s => /\b\w+\s+B\s+(?:is|has)\b/i.test(s)) || ''
+
+  const parseBullets = (sentence) => {
+    // Remove the "Label A/B is/has " prefix, then split on ", " except inside numbers
+    const body = sentence.replace(/^[^.]*?\b\w+\s+[AB]\s+(?:is|has)\s+/i, '').replace(/\.$/, '').trim()
+    // Split on ", " only when not inside a number AND not a short word (avoids splitting "drinks, and entertainment")
+    return body.split(/,\s+(?![0-9])(?!and\b)(?!\w+$)/).map(b => b.trim()).filter(Boolean)
+  }
+
+  const labelA = (optionA.match(/(\b\w+\s+A)\s+(?:is|has)\b/i) || [])[1]?.trim() || 'Option A'
+  const labelB = (optionB.match(/(\b\w+\s+B)\s+(?:is|has)\b/i) || [])[1]?.trim() || 'Option B'
+  const bulletsA = parseBullets(optionA)
+  const bulletsB = parseBullets(optionB)
+
+  return (
+    <div className="cp-layout">
+      <p className="cp-intro">{intro}</p>
+      <div className="cp-options">
+        <div className="cp-option" style={{ borderColor: color }}>
+          <div className="cp-option-header" style={{ background: `${color}18`, color }}>
+            {labelA}
+          </div>
+          <ul className="cp-bullets">
+            {bulletsA.map((b, i) => <li key={i}>{b}</li>)}
+          </ul>
+        </div>
+        <div className="cp-option" style={{ borderColor: color }}>
+          <div className="cp-option-header" style={{ background: `${color}18`, color }}>
+            {labelB}
+          </div>
+          <ul className="cp-bullets">
+            {bulletsB.map((b, i) => <li key={i}>{b}</li>)}
+          </ul>
+        </div>
+      </div>
+      <p className="cp-closing">{closing}</p>
+    </div>
+  )
+}
+
 function SpeakingLayout({ color, partId, onComplete }) {
   const taskNum = parseInt(partId.replace('S', ''), 10)
   const meta = SPEAKING_TASK_META[taskNum] || SPEAKING_TASK_META[1]
+  const { getPartStats } = useProgress()
 
   /* ── Extract a short topic name from the prompt text ── */
   const getTopicName = (promptText, taskType) => {
@@ -4123,7 +4178,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
     if (!transcript.trim() || aiLoading) return
     setAiLoading(true)
     setAiResult(null)
-    const result = await scoreSpeakingWithAI(transcript, prompt.prompt, meta.label)
+    const result = await scoreSpeakingWithAI(transcript, prompt.prompt, meta.label, prompt.topic || prompt.topicName)
     setAiResult(result)
     setAiLoading(false)
     if (result && result.overall && onComplete) {
@@ -4146,56 +4201,429 @@ function SpeakingLayout({ color, partId, onComplete }) {
     if (type === 'Giving Advice') {
       tips.structure = ['Open with a clear recommendation', 'Give 2–3 specific reasons', 'Acknowledge the difficulty', 'Close with encouragement']
       tips.scoringTips = ['Use hedging language: "I would suggest…", "You might consider…"', 'Show empathy before advising', 'Be specific — avoid vague advice']
-      if (t.includes('promot') || t.includes('reloc')) tips.keyPhrases = ['career growth', 'cost of living', 'work-life balance', 'long-term opportunity', 'support network']
-      else if (t.includes('debt') || t.includes('credit')) tips.keyPhrases = ['financial planning', 'budgeting', 'interest rates', 'repayment strategy', 'financial literacy']
-      else if (t.includes('university') || t.includes('college')) tips.keyPhrases = ['higher education', 'practical experience', 'career prospects', 'tuition costs', 'personal growth']
-      else if (t.includes('health') || t.includes('unhealthy')) tips.keyPhrases = ['well-being', 'lifestyle changes', 'mental health', 'gradual improvement', 'sustainable habits']
-      else if (t.includes('long-distance')) tips.keyPhrases = ['communication', 'commitment', 'trust', 'compromise', 'quality time']
-      else if (t.includes('elderly') || t.includes('parent') || t.includes('dementia')) tips.keyPhrases = ['caregiving', 'professional support', 'family responsibility', 'quality of life', 'compassion']
-      else if (t.includes('freelance') || t.includes('startup')) tips.keyPhrases = ['risk management', 'financial security', 'entrepreneurship', 'job stability', 'career pivot']
-      else tips.keyPhrases = ['practical solution', 'consider the consequences', 'weigh the options', 'long-term impact', 'personal priorities']
+      if (t.includes('promot') || t.includes('reloc')) {
+        tips.scoringTips = ['Show empathy: "I understand this is a big change"', 'Weigh both sides then commit to one recommendation', 'Mention specific benefits of the new city vs. current life']
+        tips.keyPhrases = ['career advancement', 'cost of living', 'support network', 'long-term opportunity', 'quality of life']
+      } else if (t.includes('debt') || t.includes('credit')) {
+        tips.scoringTips = ['Acknowledge the emotional stress before giving advice', 'Offer a step-by-step plan, not just "save money"', 'Show financial literacy with specific strategies']
+        tips.keyPhrases = ['repayment plan', 'consolidate the debt', 'cut unnecessary expenses', 'interest accumulation', 'financial discipline']
+      } else if (t.includes('university') || t.includes('college') || t.includes('high school')) {
+        tips.scoringTips = ['Compare education paths using concrete criteria', 'Consider both short-term and long-term outcomes', 'Reference earning potential and career readiness']
+        tips.keyPhrases = ['career prospects', 'tuition investment', 'hands-on experience', 'academic foundation', 'return on education']
+      } else if (t.includes('smartphone') || t.includes('phone') && !t.includes('phone plan')) {
+        tips.scoringTips = ['Focus on practical criteria: features, cost, warranty', 'Advise on decision-making process, not just the product', 'Show understanding of buyer\u2019s remorse']
+        tips.keyPhrases = ['return policy', 'compare specifications', 'buyer\u2019s remorse', 'value for money', 'long-term satisfaction']
+      } else if (t.includes('health') || t.includes('unhealthy') || t.includes('exercise')) {
+        tips.scoringTips = ['Suggest specific, actionable health changes', 'Emphasise gradual improvement over drastic changes', 'Show care: "your health should be a priority"']
+        tips.keyPhrases = ['sustainable habits', 'incremental changes', 'work-life balance', 'physical and mental well-being', 'consistency over intensity']
+      } else if (t.includes('long-distance')) {
+        tips.scoringTips = ['Acknowledge the emotional complexity before advising', 'Suggest concrete strategies for maintaining the relationship', 'Discuss realistic timelines and expectations']
+        tips.keyPhrases = ['communication is essential', 'set a timeline for reunification', 'trust and commitment', 'make regular visits', 'long-term compatibility']
+      } else if (t.includes('housing market') || t.includes('moving from')) {
+        tips.scoringTips = ['Compare cities using specific data: housing costs, job market', 'Consider family impact: schools, community, proximity to relatives', 'Advise with conviction — don\u2019t waffle']
+        tips.keyPhrases = ['housing affordability', 'job market stability', 'raising a family', 'cost-benefit analysis', 'uprooting the family']
+      } else if (t.includes('back to school') || t.includes('diploma')) {
+        tips.scoringTips = ['Address the practical challenges: childcare, finances, time', 'Highlight the long-term payoff of completing education', 'Show understanding of her competing responsibilities']
+        tips.keyPhrases = ['career advancement', 'juggling responsibilities', 'long-term investment', 'childcare arrangements', 'personal fulfilment']
+      } else if (t.includes('overtime') || t.includes('burnt out')) {
+        tips.scoringTips = ['Validate the burnout before prescribing solutions', 'Suggest boundary-setting strategies with the employer', 'Discuss the health consequences of chronic overwork']
+        tips.keyPhrases = ['set clear boundaries', 'mental health priority', 'speak to management', 'sustainable workload', 'risk of burnout']
+      } else if (t.includes('software developer') || t.includes('different company')) {
+        tips.scoringTips = ['Compare using multiple criteria: salary, growth, culture', 'Discuss the risk-reward of switching vs. staying', 'Mention negotiation as a potential middle ground']
+        tips.keyPhrases = ['career growth trajectory', 'compensation package', 'company culture', 'negotiate a counteroffer', 'professional development']
+      } else if (t.includes('elderly') || t.includes('mother lives alone')) {
+        tips.scoringTips = ['Balance independence with safety concerns', 'Suggest a phased approach: check-ins to assisted living', 'Show compassion while being practical']
+        tips.keyPhrases = ['safety and well-being', 'home care services', 'assisted living options', 'family responsibility', 'maintain her dignity and independence']
+      } else if (t.includes('freelance') || t.includes('startup') || t.includes('bookkeeping')) {
+        tips.scoringTips = ['Acknowledge the appeal while addressing the financial risk', 'Suggest a transition plan rather than an abrupt leap', 'Discuss having a financial safety net']
+        tips.keyPhrases = ['financial runway', 'client acquisition', 'calculated risk', 'entrepreneurial spirit', 'safety net before leaping']
+      } else if (t.includes('pay') && t.includes('less') || t.includes('paid $1')) {
+        tips.scoringTips = ['Acknowledge the injustice but advise a strategic approach', 'Suggest research and documentation before confrontation', 'Frame it as advocating for fair compensation, not complaining']
+        tips.keyPhrases = ['pay equity', 'market rate research', 'professional negotiation', 'document your contributions', 'approach HR diplomatically']
+      } else if (t.includes('engineering degree') || t.includes('immigrated')) {
+        tips.scoringTips = ['Show understanding of immigration credential challenges', 'Suggest specific bridging steps: accreditation, networking', 'Emphasise long-term career goals over short-term frustration']
+        tips.keyPhrases = ['credential recognition', 'bridging program', 'professional networking', 'Canadian work experience', 'perseverance pays off']
+      } else if (t.includes('dementia') || t.includes('aging parent')) {
+        tips.scoringTips = ['Show deep empathy for this sensitive situation', 'Recommend professional assessment and support services', 'Address both care quality and family well-being']
+        tips.keyPhrases = ['memory care facility', 'professional assessment', 'caregiver support', 'safety modifications', 'preserve quality of life']
+      } else {
+        tips.keyPhrases = ['practical solution', 'consider the consequences', 'weigh the options', 'long-term impact', 'personal priorities']
+      }
     } else if (type === 'Personal Experience') {
       tips.structure = ['Set the scene (when, where)', 'Describe what happened', 'Share how you felt', 'Explain what you learned']
-      tips.scoringTips = ['Use past tenses correctly and naturally', 'Include sensory details — what you saw, heard, felt', 'Show personal growth or insight']
-      if (t.includes('skill')) tips.keyPhrases = ['perseverance', 'practice', 'breakthrough moment', 'frustration', 'rewarding']
-      else if (t.includes('trip') || t.includes('travel')) tips.keyPhrases = ['destination', 'cultural experience', 'unexpected discovery', 'memorable', 'perspective']
-      else if (t.includes('proud') || t.includes('achievement')) tips.keyPhrases = ['accomplishment', 'dedication', 'milestone', 'recognition', 'self-confidence']
-      else if (t.includes('challenge') || t.includes('difficult')) tips.keyPhrases = ['obstacle', 'resilience', 'problem-solving', 'determination', 'outcome']
-      else if (t.includes('volunteer')) tips.keyPhrases = ['community', 'giving back', 'teamwork', 'impact', 'gratitude']
-      else tips.keyPhrases = ['turning point', 'memorable', 'lesson learned', 'personal growth', 'reflection']
+      if (t.includes('skill') && t.includes('difficult')) {
+        tips.scoringTips = ['Describe the struggle first, then the breakthrough — this creates narrative arc', 'Use past progressive: "I was struggling to…"', 'End with what you gained from the experience']
+        tips.keyPhrases = ['initially I found it overwhelming', 'through persistent practice', 'a breakthrough moment came when', 'the frustration paid off', 'I developed a deeper appreciation for']
+      } else if (t.includes('trip') || t.includes('travel')) {
+        tips.scoringTips = ['Paint the setting with sensory detail: sights, sounds, smells', 'Focus on one stand-out moment rather than a full itinerary', 'Share how the trip changed your perspective']
+        tips.keyPhrases = ['the most striking thing was', 'I was captivated by', 'the cultural atmosphere was', 'it completely changed my perspective on', 'an experience I will never forget']
+      } else if (t.includes('proud')) {
+        tips.scoringTips = ['Build up the effort before revealing the achievement', 'Use emotion words: "overwhelmed with pride", "deeply gratifying"', 'Connect the achievement to your personal values']
+        tips.keyPhrases = ['years of dedication led to', 'a deeply rewarding milestone', 'I felt an overwhelming sense of', 'this accomplishment meant', 'it reinforced my belief in']
+      } else if (t.includes('helped someone')) {
+        tips.scoringTips = ['Describe the person\u2019s situation to create empathy', 'Show your motivation for helping — not just the action', 'Reflect on what helping taught you about yourself']
+        tips.keyPhrases = ['I could see they were struggling', 'I felt compelled to step in', 'the gratitude on their face', 'it reinforced the importance of', 'a profound sense of fulfilment']
+      } else if (t.includes('effort') || t.includes('personal achievement')) {
+        tips.scoringTips = ['Detail the specific obstacles you faced', 'Show the process — not just the result', 'End with what the effort taught you about persistence']
+        tips.keyPhrases = ['countless hours of preparation', 'there were moments I wanted to give up', 'the turning point came when', 'the sacrifice was worthwhile', 'I proved to myself that']
+      } else if (t.includes('challenge') || t.includes('overcome')) {
+        tips.scoringTips = ['Describe the emotional weight of the challenge, not just logistics', 'Show a clear before-and-after transformation', 'Use reflective language: "looking back, I realise…"']
+        tips.keyPhrases = ['a significant turning point', 'I had to dig deep', 'the experience taught me resilience', 'I emerged stronger from', 'in hindsight, it shaped who I am']
+      } else if (t.includes('difficult decision')) {
+        tips.scoringTips = ['Present both options clearly before revealing your choice', 'Describe the internal conflict to show depth', 'Reflect on whether you would decide differently now']
+        tips.keyPhrases = ['I was torn between', 'after careful deliberation', 'the deciding factor was', 'I weighed the pros and cons', 'looking back, I stand by my decision']
+      } else if (t.includes('embarrassing')) {
+        tips.scoringTips = ['Set up the audience\u2019s expectation before the embarrassing moment', 'Use self-deprecating humour — examiners appreciate personality', 'Show how you recovered and what you learned']
+        tips.keyPhrases = ['I felt my face turn red', 'I wanted the ground to swallow me', 'in the moment it was mortifying', 'looking back, I can laugh about it', 'it taught me not to take myself too seriously']
+      } else if (t.includes('perspective') || t.includes('changed')) {
+        tips.scoringTips = ['Clearly state your belief BEFORE and AFTER the experience', 'Describe the specific moment that shifted your thinking', 'Show intellectual growth and open-mindedness']
+        tips.keyPhrases = ['I had always assumed that', 'this encounter completely shifted my view', 'I began to see things differently', 'it challenged my preconceptions', 'a profound eye-opening experience']
+      } else if (t.includes('culture') || t.includes('different culture')) {
+        tips.scoringTips = ['Describe specific cultural differences with genuine curiosity', 'Show respect and appreciation, not just surprise', 'Reflect on how it broadened your worldview']
+        tips.keyPhrases = ['immersed in a completely different culture', 'what struck me most was', 'I gained a deeper appreciation for', 'cultural exchange', 'it broadened my understanding of']
+      } else if (t.includes('volunteer') || t.includes('community')) {
+        tips.scoringTips = ['Describe who you helped and the impact you saw', 'Share your emotional response to the experience', 'Connect it to broader values: civic duty, empathy']
+        tips.keyPhrases = ['giving back to the community', 'the impact was tangible', 'I felt a sense of purpose', 'it opened my eyes to', 'a deeply humbling experience']
+      } else if (t.includes('leadership')) {
+        tips.scoringTips = ['Describe the situation that thrust you into a leadership role', 'Detail specific decisions you made and their outcomes', 'Reflect on what kind of leader you discovered you are']
+        tips.keyPhrases = ['I had to step up and take charge', 'the team was relying on me', 'I delegated responsibilities', 'making difficult calls under pressure', 'it shaped my leadership style']
+      } else if (t.includes('failure') || t.includes('setback')) {
+        tips.scoringTips = ['Describe the failure honestly without excessive self-pity', 'Focus more on the recovery than the fall', 'Show genuine learning — not a clich\u00E9 "it made me stronger"']
+        tips.keyPhrases = ['I fell short of my expectations', 'the disappointment was immense', 'I had to reassess my approach', 'failure taught me more than success', 'I channelled that setback into motivation']
+      } else if (t.includes('adapt') || t.includes('major change')) {
+        tips.scoringTips = ['Describe the before-and-after contrast in your daily life', 'Show the emotional stages: shock, adjustment, acceptance', 'Demonstrate resilience and growth through specific examples']
+        tips.keyPhrases = ['the transition was overwhelming at first', 'I gradually found my footing', 'stepping outside my comfort zone', 'adapting to an entirely new environment', 'the experience made me more resilient']
+      } else if (t.includes('unexpected opportunity')) {
+        tips.scoringTips = ['Describe the surprise element — how the opportunity appeared', 'Detail your decision-making process: leap of faith vs. hesitation', 'Show the outcome and what you learned about seizing chances']
+        tips.keyPhrases = ['it came completely out of the blue', 'I had to decide quickly whether to', 'I took a leap of faith', 'it turned out to be a pivotal moment', 'I learned to embrace the unexpected']
+      } else {
+        tips.scoringTips = ['Use past tenses correctly and naturally', 'Include sensory details — what you saw, heard, felt', 'Show personal growth or insight']
+        tips.keyPhrases = ['turning point', 'memorable', 'lesson learned', 'personal growth', 'reflection']
+      }
     } else if (type === 'Describing a Scene') {
+      const topic = (prompt.topic || prompt.topicName || '').toLowerCase()
       tips.structure = ['Start with the overall setting', 'Describe people and their actions', 'Cover foreground to background', 'End with the mood or atmosphere']
-      tips.scoringTips = ['Use present continuous: "people are walking", "children are playing"', 'Describe spatial relationships: "in the foreground", "to the left"', 'Include sensory details beyond just visual']
-      tips.keyPhrases = ['in the background', 'it appears that', 'the atmosphere is', 'several people are', 'on the right side']
+      if (topic.includes('park')) {
+        tips.scoringTips = ['Describe outdoor activities: "families are picnicking", "joggers are running along the path"', 'Mention natural elements: trees, grass, benches, fountains', 'Convey the relaxed, recreational atmosphere']
+        tips.keyPhrases = ['in the foreground', 'along the pathway', 'the atmosphere feels relaxed', 'a group of people are', 'under the shade of']
+      } else if (topic.includes('market') || topic.includes('farmer')) {
+        tips.scoringTips = ['Describe vendor-customer interactions: "a vendor is handing change to a customer"', 'Mention produce, stalls, and signage in detail', 'Include sensory details: colours of fruits, busy crowd noise']
+        tips.keyPhrases = ['on display', 'a vendor is offering', 'fresh produce', 'browsing through', 'the market is bustling with']
+      } else if (topic.includes('classroom') || topic.includes('art')) {
+        tips.scoringTips = ['Describe learning activities: "students are painting on easels", "the teacher is demonstrating"', 'Mention classroom supplies: brushes, canvases, palettes', 'Convey concentration and creativity in the room']
+        tips.keyPhrases = ['at their desks', 'the instructor is guiding', 'working on a project', 'creative atmosphere', 'on the far side of the room']
+      } else if (topic.includes('beach')) {
+        tips.scoringTips = ['Describe water and sand activities: "children are building sandcastles", "swimmers are wading in"', 'Mention weather, waves, and sky conditions', 'Use beach-specific spatial cues: shoreline, waterline, dunes']
+        tips.keyPhrases = ['along the shoreline', 'the waves are gently', 'sunbathers are relaxing', 'in the distance', 'the sky appears']
+      } else if (topic.includes('restaurant')) {
+        tips.scoringTips = ['Describe dining interactions: "a server is taking an order", "a family is sharing a meal"', 'Mention interior details: tables, menus, décor, lighting', 'Convey the ambient mood: casual, cosy, or formal']
+        tips.keyPhrases = ['seated at a table', 'it appears they are enjoying', 'the waiter is approaching', 'in the centre of the room', 'the dining area looks']
+      } else if (topic.includes('train') || topic.includes('station')) {
+        tips.scoringTips = ['Describe commuter activity: "passengers are waiting on the platform", "a train is arriving"', 'Mention infrastructure: platforms, ticket machines, signs', 'Convey the sense of movement and urgency']
+        tips.keyPhrases = ['on the platform', 'commuters are rushing', 'the departure board shows', 'carrying luggage', 'the station appears busy']
+      } else if (topic.includes('gathering') || topic.includes('family')) {
+        tips.scoringTips = ['Describe social interactions: "people are chatting in groups", "someone is raising a toast"', 'Mention food, decorations, and group dynamics', 'Convey the warm, celebratory atmosphere']
+        tips.keyPhrases = ['gathered around', 'a warm and festive mood', 'sharing food and conversation', 'in the centre of the group', 'it seems like a celebration']
+      } else if (topic.includes('construction')) {
+        tips.scoringTips = ['Describe work activities: "workers are operating machinery", "a crane is lifting materials"', 'Mention equipment, safety gear, and building stages', 'Convey the active, industrial environment']
+        tips.keyPhrases = ['wearing safety helmets', 'the structure is being built', 'heavy machinery is operating', 'on the construction site', 'in the process of']
+      } else if (topic.includes('library')) {
+        tips.scoringTips = ['Describe quiet activities: "people are reading at desks", "a librarian is shelving books"', 'Mention bookshelves, study areas, computers', 'Convey the quiet, studious atmosphere']
+        tips.keyPhrases = ['among the bookshelves', 'the atmosphere is quiet and focused', 'seated at a reading table', 'browsing through the shelves', 'in the study area']
+      } else if (topic.includes('sport')) {
+        tips.scoringTips = ['Describe athletic actions: "players are competing", "the crowd is cheering enthusiastically"', 'Mention the field, scoreboard, uniforms, spectators', 'Convey the energetic, competitive environment']
+        tips.keyPhrases = ['on the playing field', 'spectators are cheering', 'the team is', 'an exciting atmosphere', 'near the sideline']
+      } else if (topic.includes('airport')) {
+        tips.scoringTips = ['Describe traveller activities: "passengers are checking in at the counter", "a family is waiting at the gate"', 'Mention luggage, departure screens, security areas', 'Convey the busy, anticipatory atmosphere']
+        tips.keyPhrases = ['at the check-in counter', 'pulling their suitcases', 'the terminal is crowded', 'near the boarding gate', 'an announcement is being made']
+      } else if (topic.includes('hospital')) {
+        tips.scoringTips = ['Describe patient and staff actions: "a nurse is attending to a patient", "people are sitting in the waiting area"', 'Mention reception desks, chairs, medical staff, signage', 'Convey the subdued, clinical environment']
+        tips.keyPhrases = ['in the waiting room', 'a medical professional is', 'patients are seated', 'the receptionist is handling', 'the atmosphere feels calm but tense']
+      } else if (topic.includes('festival') || topic.includes('cultural')) {
+        tips.scoringTips = ['Describe cultural activities: "performers are dancing on stage", "vendors are selling crafts"', 'Mention decorations, costumes, music, food stalls', 'Convey the vibrant, celebratory energy']
+        tips.keyPhrases = ['colourful decorations', 'the crowd is gathered around', 'traditional costumes', 'a lively atmosphere', 'on the main stage']
+      } else if (topic.includes('playground')) {
+        tips.scoringTips = ['Describe children at play: "kids are climbing the jungle gym", "a child is going down the slide"', 'Mention playground equipment, parents supervising, open space', 'Convey the playful, energetic mood']
+        tips.keyPhrases = ['on the swings', 'children are laughing and playing', 'a parent is watching from', 'near the climbing frame', 'the playground is busy with']
+      } else if (topic.includes('office')) {
+        tips.scoringTips = ['Describe work activities: "employees are typing at their desks", "a team is having a meeting"', 'Mention desks, screens, whiteboards, coffee area', 'Convey the professional, focused environment']
+        tips.keyPhrases = ['at their workstations', 'a meeting is taking place', 'the open-plan office', 'colleagues are discussing', 'in the conference area']
+      } else {
+        tips.scoringTips = ['Use present continuous: "people are walking", "children are playing"', 'Describe spatial relationships: "in the foreground", "to the left"', 'Include sensory details beyond just visual']
+        tips.keyPhrases = ['in the background', 'it appears that', 'the atmosphere is', 'several people are', 'on the right side']
+      }
     } else if (type === 'Making Predictions') {
+      const topic = (prompt.topic || prompt.topicName || '').toLowerCase()
       tips.structure = ['Reference what you see in the scene', 'State your prediction clearly', 'Give reasons for your prediction', 'Consider alternative outcomes']
-      tips.scoringTips = ['Use future and modal language: "will likely", "might", "could possibly"', 'Base predictions on evidence from the image', 'Show reasoning, not just guessing']
-      tips.keyPhrases = ['I predict that', 'it seems likely', 'based on what I see', 'one possibility is', 'this could lead to']
+      if (topic.includes('park')) {
+        tips.scoringTips = ['Predict weather or activity changes: "the clouds suggest it may rain soon"', 'Consider what people might do next based on body language', 'Use evidence: "since the children look tired, they will likely leave soon"']
+        tips.keyPhrases = ['they will probably', 'judging by the sky', 'it looks like they are about to', 'most likely', 'this suggests that']
+      } else if (topic.includes('market') || topic.includes('farmer')) {
+        tips.scoringTips = ['Predict buying behaviour or crowd changes: "the market will get busier as noon approaches"', 'Reference vendor actions or product displays as evidence', 'Consider end-of-day scenarios: packing up, discounts']
+        tips.keyPhrases = ['the vendor will likely', 'as more customers arrive', 'based on the crowd', 'it seems they are about to', 'this could result in']
+      } else if (topic.includes('classroom') || topic.includes('art')) {
+        tips.scoringTips = ['Predict next instructional steps: "the teacher will probably review the work"', 'Reference student progress as evidence', 'Consider class ending: cleanup, presentations, feedback']
+        tips.keyPhrases = ['the students will likely', 'once they finish', 'the teacher might', 'it appears that the lesson is', 'the next step could be']
+      } else if (topic.includes('beach')) {
+        tips.scoringTips = ['Predict weather or tide changes affecting activities', 'Reference body language: packing up, heading to water', 'Consider time-of-day shifts: sunset, crowds leaving']
+        tips.keyPhrases = ['the tide will probably', 'since the sun is setting', 'the family looks ready to', 'it is likely that', 'as the day progresses']
+      } else if (topic.includes('restaurant')) {
+        tips.scoringTips = ['Predict service progression: ordering, food arriving, paying the bill', 'Reference visual cues: empty plates, menus out, server approaching', 'Consider the dining stage: beginning, middle, or end of meal']
+        tips.keyPhrases = ['the server will most likely', 'since they have finished eating', 'it appears they are about to order', 'the next course will', 'judging by the empty plates']
+      } else if (topic.includes('train') || topic.includes('station')) {
+        tips.scoringTips = ['Predict boarding or departure: "the train is about to leave"', 'Reference platform activity and departure boards', 'Consider delays, crowd surges, or gate changes']
+        tips.keyPhrases = ['the passengers will likely', 'the train is about to', 'as the doors open', 'based on the schedule', 'the next train could']
+      } else if (topic.includes('gathering') || topic.includes('family')) {
+        tips.scoringTips = ['Predict social activities: speeches, cake cutting, games', 'Reference body language and group positioning', 'Consider the event timeline: arrival, main event, departure']
+        tips.keyPhrases = ['the host will probably', 'everyone seems ready for', 'the celebration might continue with', 'based on the setup', 'it looks like they will']
+      } else if (topic.includes('construction')) {
+        tips.scoringTips = ['Predict next construction phases: pouring concrete, raising walls', 'Reference current progress and equipment positioning', 'Consider safety scenarios or shift changes']
+        tips.keyPhrases = ['the workers will likely', 'the next phase involves', 'based on the progress', 'the crane will probably', 'once this stage is complete']
+      } else if (topic.includes('library')) {
+        tips.scoringTips = ['Predict closing time routines, events, or study group activities', 'Reference visual cues: packed bags, clock on wall, returning books', 'Consider transitions: breaks, group discussions, leaving']
+        tips.keyPhrases = ['the students will probably', 'as closing time approaches', 'judging by the time', 'it seems like they are about to', 'the librarian might']
+      } else if (topic.includes('sport')) {
+        tips.scoringTips = ['Predict game outcomes: scoring, timeout, halftime', 'Reference scoreboard, player positions, crowd energy', 'Consider post-game activities: celebrations, interviews']
+        tips.keyPhrases = ['the team is likely to', 'based on the score', 'the crowd will probably', 'the referee might', 'the match could end with']
+      } else if (topic.includes('airport')) {
+        tips.scoringTips = ['Predict boarding, delays, or security queue changes', 'Reference flight boards, gate assignments, passenger behaviour', 'Consider scenarios: boarding call, last-minute gate change']
+        tips.keyPhrases = ['the flight will likely', 'passengers are about to board', 'based on the departure board', 'it seems the gate is', 'the announcement will probably']
+      } else if (topic.includes('hospital')) {
+        tips.scoringTips = ['Predict patient flow: being called in, receiving results, discharge', 'Reference waiting room dynamics and staff movements', 'Consider medical scenarios: consultations, treatments']
+        tips.keyPhrases = ['the patient will likely', 'the doctor might', 'based on the waiting time', 'it appears that the nurse is about to', 'the next step will be']
+      } else if (topic.includes('festival') || topic.includes('cultural')) {
+        tips.scoringTips = ['Predict event progression: next performance, fireworks, closing ceremony', 'Reference stage setup, crowd movement, time of day', 'Consider weather impact on outdoor activities']
+        tips.keyPhrases = ['the next performance will', 'the crowd might move to', 'as the evening progresses', 'the festival could end with', 'based on the schedule']
+      } else if (topic.includes('playground')) {
+        tips.scoringTips = ['Predict children moving to new equipment or parents calling them', 'Reference energy levels, time of day, weather cues', 'Consider scenarios: injury, snack break, going home']
+        tips.keyPhrases = ['the children will probably', 'as it gets later', 'the parents might call them', 'it looks like they are about to', 'the playground will likely']
+      } else if (topic.includes('office')) {
+        tips.scoringTips = ['Predict meeting outcomes, break times, or end-of-day routines', 'Reference body language: standing up, closing laptops', 'Consider workflow transitions: moving to next task, collaboration']
+        tips.keyPhrases = ['the meeting will likely', 'the employees are about to', 'based on the time', 'it appears the team will', 'the manager might']
+      } else {
+        tips.scoringTips = ['Use future and modal language: "will likely", "might", "could possibly"', 'Base predictions on evidence from the image', 'Show reasoning, not just guessing']
+        tips.keyPhrases = ['I predict that', 'it seems likely', 'based on what I see', 'one possibility is', 'this could lead to']
+      }
     } else if (type === 'Comparing & Persuading' || type === 'Comparing and Persuading') {
       tips.structure = ['State your recommendation upfront', 'Compare using specific criteria', 'Acknowledge the other option briefly', 'End with a strong closing']
-      tips.scoringTips = ['Use comparative structures: "more practical than", "significantly better"', 'Give concrete criteria: cost, location, features', 'Be persuasive — commit to one choice']
-      if (t.includes('apartment')) tips.keyPhrases = ['location', 'commute time', 'amenities', 'neighbourhood safety', 'value for money']
-      else if (t.includes('job') || t.includes('career')) tips.keyPhrases = ['growth potential', 'compensation', 'work culture', 'benefits package', 'career trajectory']
-      else if (t.includes('vacation')) tips.keyPhrases = ['relaxation', 'budget-friendly', 'activities', 'accommodation', 'travel time']
-      else tips.keyPhrases = ['cost-effective', 'practical advantages', 'better suited', 'outweighs', 'ideal choice']
+      if (t.includes('apartment')) {
+        tips.scoringTips = ['Compare using location, rent, commute, and lifestyle', 'Pick one and commit — wishy-washy answers score lower', 'Use superlatives: "the far better option", "significantly more convenient"']
+        tips.keyPhrases = ['in terms of affordability', 'the commute alone makes it impractical', 'proximity to transit and amenities', 'space versus convenience', 'the better long-term living arrangement']
+      } else if (t.includes('car') || t.includes('Civic') || t.includes('RAV4')) {
+        tips.scoringTips = ['Compare on practicality: fuel, safety, winter readiness', 'Mention resale value and total cost of ownership', 'Commit to one choice with a strong final recommendation']
+        tips.keyPhrases = ['fuel efficiency', 'all-wheel drive is essential for winter', 'total cost of ownership', 'reliability and resale value', 'the more practical purchase']
+      } else if (t.includes('vacation') || t.includes('resort') || t.includes('backpacking')) {
+        tips.scoringTips = ['Compare on value: what\u2019s included vs. the experience', 'Consider your friend\u2019s personality and travel style', 'Use persuasive closers: "you\u2019ll regret not choosing…"']
+        tips.keyPhrases = ['all-inclusive convenience', 'once-in-a-lifetime experience', 'value for money', 'the memories you\u2019ll make', 'adventure versus relaxation']
+      } else if (t.includes('job offer') || t.includes('Job A') || t.includes('Job B')) {
+        tips.scoringTips = ['Compare on salary, culture, growth, and work-life balance', 'Address the trade-off: money vs. lifestyle', 'Show awareness of long-term career implications']
+        tips.keyPhrases = ['career growth trajectory', 'compensation and benefits', 'work environment and culture', 'job satisfaction outweighs', 'the better long-term career move']
+      } else if (t.includes('gym') || t.includes('fitness')) {
+        tips.scoringTips = ['Compare cost vs. facilities and commitment', 'Consider proximity and consistency of use', 'Frame your choice around sustainable fitness habits']
+        tips.keyPhrases = ['no long-term commitment required', 'variety of classes and amenities', 'convenience of walking distance', 'consistency is key for fitness', 'the smarter investment in health']
+      } else if (t.includes('phone plan') || t.includes('carrier')) {
+        tips.scoringTips = ['Break down the total cost over the contract period', 'Compare on data needs, flexibility, and hidden costs', 'Commit strongly: "the savings are undeniable"']
+        tips.keyPhrases = ['total cost over the contract', 'flexibility of no commitment', 'unlimited versus sufficient data', 'hidden costs and fees', 'the better deal overall']
+      } else if (t.includes('laptop') || t.includes('MacBook') || t.includes('Windows')) {
+        tips.scoringTips = ['Compare on performance, battery, software compatibility', 'Consider use case: school vs. work requirements', 'Be specific about technical advantages']
+        tips.keyPhrases = ['battery life is crucial for students', 'processing power for multitasking', 'software compatibility', 'build quality and durability', 'the better investment for productivity']
+      } else if (t.includes('restaurant') || t.includes('birthday dinner')) {
+        tips.scoringTips = ['Compare on ambience, menu, price point, and group size', 'Consider the occasion — birthday requires atmosphere', 'Use sensory persuasion: "imagine celebrating in…"']
+        tips.keyPhrases = ['the ideal atmosphere for a celebration', 'menu variety and dietary options', 'value for a group dinner', 'memorable dining experience', 'the perfect venue for the occasion']
+      } else if (t.includes('school') || t.includes('elementary')) {
+        tips.scoringTips = ['Compare on curriculum, class size, extracurriculars, and distance', 'Consider the child\u2019s holistic development', 'Frame your choice around educational outcomes']
+        tips.keyPhrases = ['academic excellence', 'extracurricular opportunities', 'smaller class sizes mean more attention', 'bilingual education advantage', 'the better learning environment']
+      } else if (t.includes('neighbourhood') || t.includes('Byward') || t.includes('Kanata')) {
+        tips.scoringTips = ['Compare on lifestyle: nightlife and walkability vs. family-friendly suburbs', 'Consider rent, safety, and daily commute', 'Match the recommendation to your friend\u2019s life stage']
+        tips.keyPhrases = ['walkability and access to amenities', 'quiet residential neighbourhood', 'nightlife versus family-friendly', 'commute time versus lifestyle', 'the ideal fit for their current needs']
+      } else if (t.includes('insurance') || t.includes('policy')) {
+        tips.scoringTips = ['Compare on coverage, deductible, and peace of mind', 'Explain the trade-off: lower premium vs. better coverage', 'Use concrete scenarios: "if something happens…"']
+        tips.keyPhrases = ['comprehensive coverage', 'lower deductible means less out-of-pocket', 'peace of mind is worth the premium', 'policy limitations', 'the better protection for your home']
+      } else if (t.includes('daycare') || t.includes('toddler')) {
+        tips.scoringTips = ['Compare on safety, staff ratio, curriculum, and cost', 'Prioritise the child\u2019s development and well-being', 'Show understanding of parental concerns about quality']
+        tips.keyPhrases = ['staff-to-child ratio', 'structured learning curriculum', 'safe and nurturing environment', 'peace of mind for working parents', 'the better choice for early development']
+      } else if (t.includes('retirement') || t.includes('RRSP') || t.includes('investment')) {
+        tips.scoringTips = ['Compare on risk level, tax benefits, and time horizon', 'Explain compound growth vs. real estate appreciation', 'Show financial reasoning appropriate for retirement planning']
+        tips.keyPhrases = ['tax-deferred growth', 'diversified portfolio', 'long-term wealth building', 'risk tolerance and time horizon', 'the smarter retirement strategy']
+      } else if (t.includes('coworking') || t.includes('freelancer')) {
+        tips.scoringTips = ['Compare on location, networking value, amenities, and cost', 'Consider which space best supports productivity', 'Match the choice to their work style']
+        tips.keyPhrases = ['networking opportunities', 'distraction-free environment', 'flexible membership terms', 'professional atmosphere', 'the better workspace for productivity']
+      } else if (t.includes('pet') || t.includes('Labrador') || t.includes('cat')) {
+        tips.scoringTips = ['Compare on lifestyle fit: space, time, cost of care', 'Consider the emotional benefits of each pet', 'Be persuasive about practicality for their situation']
+        tips.keyPhrases = ['companionship and emotional support', 'space and exercise requirements', 'lower maintenance lifestyle', 'adopting is a rewarding experience', 'the better match for their daily routine']
+      } else {
+        tips.scoringTips = ['Use comparative structures: "more practical than", "significantly better"', 'Give concrete criteria: cost, location, features', 'Be persuasive — commit to one choice']
+        tips.keyPhrases = ['cost-effective', 'practical advantages', 'better suited', 'outweighs', 'ideal choice']
+      }
     } else if (type === 'Difficult Situation') {
       tips.structure = ['Acknowledge the problem calmly', 'Describe your first step', 'Explain follow-up actions', 'Describe the desired outcome']
-      tips.scoringTips = ['Stay diplomatic — never aggressive or passive', 'Use phrases like "My first step would be…"', 'Show awareness of relationships and consequences']
-      if (t.includes('neighbour') || t.includes('noise')) tips.keyPhrases = ['respectfully approach', 'compromise', 'mutual understanding', 'reasonable request', 'escalate if necessary']
-      else if (t.includes('coworker') || t.includes('colleague') || t.includes('boss')) tips.keyPhrases = ['professional approach', 'documentation', 'direct conversation', 'HR involvement', 'maintain relationships']
-      else if (t.includes('roommate')) tips.keyPhrases = ['house rules', 'fair compromise', 'open communication', 'shared responsibility', 'respect boundaries']
-      else tips.keyPhrases = ['address the issue', 'find common ground', 'propose a solution', 'follow through', 'resolve constructively']
+      if (t.includes('loud music') || t.includes('neighbour') && t.includes('noise')) {
+        tips.scoringTips = ['Start with a calm, polite approach — never confrontational', 'Suggest a compromise before mentioning escalation', 'Show awareness of tenant rights and building rules']
+        tips.keyPhrases = ['approach them politely and respectfully', 'propose a reasonable compromise', 'if the issue persists I would contact', 'maintaining a good neighbourly relationship', 'a respectful conversation can resolve this']
+      } else if (t.includes('dishwasher') || t.includes('water leak')) {
+        tips.scoringTips = ['Describe immediate damage control first', 'Know your rights: landlord responsibility for appliance repairs', 'Document everything — photos, written communication']
+        tips.keyPhrases = ['document the damage immediately', 'contact the landlord in writing', 'request urgent repair or replacement', 'my rights as a tenant', 'follow up with a written record']
+      } else if (t.includes('group project') || t.includes('forgot') || t.includes('deadline')) {
+        tips.scoringTips = ['Take accountability immediately — don\u2019t make excuses', 'Propose a concrete recovery plan', 'Show awareness of how it affects the team']
+        tips.keyPhrases = ['take full responsibility for the oversight', 'offer to complete it as soon as possible', 'communicate transparently with the team', 'prevent this from happening again', 'rebuild trust through action']
+      } else if (t.includes('speaker') || t.includes('borrowed')) {
+        tips.scoringTips = ['Be direct but not aggressive — frame it as a friendly reminder', 'Set a specific deadline for return', 'Consider what happens if they\u2019ve damaged it']
+        tips.keyPhrases = ['send a polite but clear message', 'set a specific date for return', 'valued personal belongings', 'maintain the friendship while being firm', 'a direct conversation is necessary']
+      } else if (t.includes('phone bill') || t.includes('extra charge')) {
+        tips.scoringTips = ['Show a systematic approach: review bill, call provider, escalate', 'Reference consumer protection rights', 'Stay calm but be assertive']
+        tips.keyPhrases = ['review the bill in detail', 'contact customer service immediately', 'request a full refund for the unauthorized charge', 'escalate to a supervisor if needed', 'file a complaint with consumer protection']
+      } else if (t.includes('rude') || t.includes('dismissive') && t.includes('coworker')) {
+        tips.scoringTips = ['Address the behaviour privately first, not in public', 'Document specific incidents with dates', 'Show professionalism — don\u2019t retaliate']
+        tips.keyPhrases = ['address the issue privately and calmly', 'document each incident in detail', 'express how their behaviour affects me', 'involve HR only if direct discussion fails', 'maintain professionalism throughout']
+      } else if (t.includes('roommate') || t.includes('cleaning')) {
+        tips.scoringTips = ['Propose a structured solution: chore schedule, house rules', 'Be specific about the problem without personal attacks', 'Frame it as "us solving this together"']
+        tips.keyPhrases = ['propose a chore rotation schedule', 'have an honest conversation about expectations', 'shared living requires mutual respect', 'put house rules in writing', 'find a fair compromise that works for both']
+      } else if (t.includes('cancelling plans') || t.includes('last minute')) {
+        tips.scoringTips = ['Express concern rather than anger — "I\u2019m worried about our friendship"', 'Use "I" statements: "I feel disappointed when…"', 'Propose a solution rather than just venting']
+        tips.keyPhrases = ['express my feelings honestly using I-statements', 'the pattern is affecting our friendship', 'suggest scheduling something firm', 'I value our friendship and want to address this', 'understand if something deeper is going on']
+      } else if (t.includes('task') && t.includes('colleague') && t.includes('miss')) {
+        tips.scoringTips = ['Separate the person from the problem', 'Focus on process improvement, not blame', 'Show leadership: take responsibility for the team\u2019s output']
+        tips.keyPhrases = ['discuss what went wrong without assigning blame', 'implement a check-in system going forward', 'take shared responsibility for the outcome', 'create a clearer handoff process', 'turn this setback into a learning opportunity']
+      } else if (t.includes('mould') || t.includes('water damage')) {
+        tips.scoringTips = ['Treat it as a health and safety issue — this gives you leverage', 'Know your rights: landlords must provide habitable conditions', 'Document and communicate in writing']
+        tips.keyPhrases = ['this is a health and safety concern', 'document the damage with photographs', 'notify the landlord in writing immediately', 'request a professional inspection', 'know my rights as a tenant']
+      } else if (t.includes('taking credit') || t.includes('brainstorming')) {
+        tips.scoringTips = ['Present your ideas more visibly: follow up meetings with emails', 'Address the colleague privately before escalating', 'Focus on protecting your contributions going forward']
+        tips.keyPhrases = ['follow up every meeting with a written summary', 'speak to the colleague privately about attribution', 'present my ideas directly in future meetings', 'create a paper trail of contributions', 'raise the issue with my manager if it continues']
+      } else if (t.includes('relative') || t.includes('visiting') || t.includes('overstayed')) {
+        tips.scoringTips = ['Be compassionate but set a firm boundary', 'Frame it positively: "I\u2019ve loved having you, but…"', 'Offer help with next steps: finding accommodation']
+        tips.keyPhrases = ['set a kind but firm departure date', 'offer to help them find accommodation', 'explain that I need to restore my routine', 'family bonds are important but boundaries are too', 'have an honest and loving conversation']
+      } else if (t.includes('micromanag') || t.includes('manager')) {
+        tips.scoringTips = ['Approach with curiosity, not hostility: "I\u2019d like to understand…"', 'Propose a trust-building mechanism: regular check-ins', 'Show you understand their perspective too']
+        tips.keyPhrases = ['request a one-on-one meeting to discuss expectations', 'propose regular check-ins to build trust', 'demonstrate my competence through results', 'express the impact on my productivity respectfully', 'find a working style that satisfies both of us']
+      } else if (t.includes('lend') && t.includes('money') || t.includes('paid back') || t.includes('$50 to $100')) {
+        tips.scoringTips = ['Be direct about the outstanding amounts', 'Set a clear boundary for future lending', 'Protect the friendship while being honest about finances']
+        tips.keyPhrases = ['have a direct conversation about the outstanding amount', 'set a clear boundary going forward', 'suggest a repayment plan', 'money issues can damage friendships', 'be honest about my financial limits']
+      } else if (t.includes('inaccurate information') || t.includes('company policy')) {
+        tips.scoringTips = ['Correct the information diplomatically, without embarrassing them', 'Offer to share the correct policy documentation', 'Suggest the team receive an official update from management']
+        tips.keyPhrases = ['bring it to their attention privately', 'share the official policy documentation', 'suggest a team-wide policy refresher', 'prevent further confusion among colleagues', 'approach it as a helpful correction, not a confrontation']
+      } else {
+        tips.scoringTips = ['Stay diplomatic — never aggressive or passive', 'Use phrases like "My first step would be\u2026"', 'Show awareness of relationships and consequences']
+        tips.keyPhrases = ['address the issue', 'find common ground', 'propose a solution', 'follow through', 'resolve constructively']
+      }
     } else if (type === 'Expressing Opinions') {
       tips.structure = ['State your position in sentence one', 'Give 2–3 supporting reasons', 'Acknowledge the counterargument', 'Reinforce your stance']
-      tips.scoringTips = ['Use opinion language: "I firmly believe", "In my view"', 'Provide evidence or examples for each reason', 'Don\u2019t sit on the fence — commit to a position']
-      if (t.includes('social media')) tips.keyPhrases = ['digital literacy', 'mental health impact', 'misinformation', 'connectivity', 'screen time']
-      else if (t.includes('remote') || t.includes('work from home')) tips.keyPhrases = ['productivity', 'work-life balance', 'collaboration', 'flexibility', 'isolation']
-      else if (t.includes('environment') || t.includes('climate')) tips.keyPhrases = ['sustainability', 'carbon footprint', 'renewable energy', 'collective responsibility', 'future generations']
-      else tips.keyPhrases = ['evidence suggests', 'on the other hand', 'a compelling argument', 'societal impact', 'in conclusion']
+      if (t.includes('social media')) {
+        tips.scoringTips = ['Take a clear stance — don\u2019t just list pros and cons equally', 'Use specific examples: cyberbullying, activism, fake news', 'Acknowledge the opposite view in one sentence then dismiss it']
+        tips.keyPhrases = ['the evidence overwhelmingly suggests', 'the mental health consequences are well-documented', 'while connectivity is a benefit', 'the spread of misinformation outweighs', 'we must approach social media critically']
+      } else if (t.includes('remote work') || t.includes('work from home')) {
+        tips.scoringTips = ['Support your view with pandemic-era evidence', 'Address the collaboration vs. flexibility debate', 'Consider different industries and job types']
+        tips.keyPhrases = ['the pandemic demonstrated that', 'flexibility leads to higher job satisfaction', 'collaboration can be achieved virtually', 'work-life balance is a measurable benefit', 'the traditional office model is no longer necessary']
+      } else if (t.includes('public transit') || t.includes('highways')) {
+        tips.scoringTips = ['Frame your argument around sustainability and congestion', 'Use comparative data: cities with good transit vs. car-dependent ones', 'Consider equity: not everyone can afford a car']
+        tips.keyPhrases = ['reducing carbon emissions', 'a more equitable transportation system', 'congestion only worsens with more highways', 'public transit reduces urban sprawl', 'investing in infrastructure for the future']
+      } else if (t.includes('online education') || t.includes('online') && t.includes('courses')) {
+        tips.scoringTips = ['Compare outcomes: engagement, retention, practical skills', 'Acknowledge access benefits while questioning quality', 'Use specific examples of what works online and what doesn\u2019t']
+        tips.keyPhrases = ['accessibility to learners worldwide', 'the lack of hands-on experience', 'self-discipline is required for success', 'hybrid models offer the best of both', 'the quality of interaction cannot be replicated online']
+      } else if (t.includes('environment') || t.includes('carbon tax') || t.includes('plastic')) {
+        tips.scoringTips = ['Use data or scientific consensus references', 'Balance economic concerns with environmental urgency', 'Frame it as intergenerational responsibility']
+        tips.keyPhrases = ['the scientific consensus is clear', 'we owe it to future generations', 'the economic cost of inaction far exceeds', 'individual action combined with policy change', 'sustainability must be a collective priority']
+      } else if (t.includes('artificial intelligence') || t.includes('AI')) {
+        tips.scoringTips = ['Distinguish between AI as a tool vs. AI replacing humans', 'Use specific workplace examples: customer service, content creation', 'Address both efficiency gains and ethical concerns']
+        tips.keyPhrases = ['AI should augment rather than replace', 'the ethical implications cannot be ignored', 'automation increases efficiency but reduces jobs', 'proper regulation is essential', 'we must adapt our skills to work alongside AI']
+      } else if (t.includes('screen time') || t.includes('children')) {
+        tips.scoringTips = ['Cite developmental research to strengthen your position', 'Distinguish between passive consumption and educational screen time', 'Propose a balanced approach with specific time limits']
+        tips.keyPhrases = ['excessive screen time impacts development', 'educational content can be beneficial in moderation', 'outdoor play is irreplaceable', 'parents should set firm but reasonable limits', 'the key lies in quality, not just quantity']
+      } else if (t.includes('fast fashion') || t.includes('fashion industry')) {
+        tips.scoringTips = ['Connect fast fashion to both environmental and human costs', 'Suggest alternatives: second-hand, sustainable brands', 'Show awareness of the economic argument for cheap clothing']
+        tips.keyPhrases = ['the environmental toll is staggering', 'exploitative labour practices', 'sustainable alternatives exist and are growing', 'consumer awareness is key to change', 'quality over quantity as a mindset shift']
+      } else if (t.includes('electric vehicle') || t.includes('gas-powered')) {
+        tips.scoringTips = ['Address range anxiety and infrastructure challenges honestly', 'Compare total ownership costs, not just sticker price', 'Frame it as an inevitable transition, not a debate']
+        tips.keyPhrases = ['the transition to electric is inevitable', 'battery technology is improving rapidly', 'charging infrastructure needs investment', 'the long-term savings are significant', 'reducing dependence on fossil fuels']
+      } else if (t.includes('gig economy') || t.includes('Uber') || t.includes('DoorDash')) {
+        tips.scoringTips = ['Discuss flexibility vs. lack of job security and benefits', 'Reference specific gig platforms for concrete examples', 'Address whether regulations can balance both sides']
+        tips.keyPhrases = ['flexibility comes at the cost of stability', 'workers deserve basic protections and benefits', 'the gig economy fills a genuine market need', 'regulation must catch up with innovation', 'it works for some but exploits others']
+      } else if (t.includes('universal basic income') || t.includes('UBI')) {
+        tips.scoringTips = ['Address funding concerns directly — don\u2019t dodge them', 'Reference pilot programs and their outcomes', 'Discuss the philosophical shift: dignity vs. dependency']
+        tips.keyPhrases = ['pilot programs have shown promising results', 'it provides a safety net for the most vulnerable', 'the concern about work incentives is overstated', 'funded through restructured taxation', 'a dignified baseline for every citizen']
+      } else if (t.includes('mandatory voting') || t.includes('voting') && t.includes('optional')) {
+        tips.scoringTips = ['Compare democratic participation rates across systems', 'Address the freedom argument: right to vote vs. obligation', 'Use specific country examples: Australia vs. Canada']
+        tips.keyPhrases = ['democratic participation is a civic duty', 'compulsory voting increases representation', 'freedom includes the right not to vote', 'informed voting matters more than forced voting', 'higher turnout leads to more representative outcomes']
+      } else if (t.includes('space exploration')) {
+        tips.scoringTips = ['Balance the "money could be spent here" argument with innovation benefits', 'Reference specific spinoff technologies from space research', 'Consider it as an investment in humanity\u2019s future']
+        tips.keyPhrases = ['spinoff technologies benefit everyday life', 'securing humanity\u2019s long-term survival', 'the cost is minimal compared to defence budgets', 'inspiring scientific innovation', 'we cannot put a price on expanding human knowledge']
+      } else if (t.includes('genetic') || t.includes('genes')) {
+        tips.scoringTips = ['Distinguish clearly between medical gene therapy and enhancement', 'Address the ethical slippery slope with specific examples', 'Show nuance: support disease prevention, question cosmetic changes']
+        tips.keyPhrases = ['eliminating genetic diseases is a moral imperative', 'the line between therapy and enhancement is blurry', 'designer babies raise profound ethical questions', 'access inequality could worsen social divides', 'regulation must guide scientific capability']
+      } else if (t.includes('cashless') || t.includes('digital-only')) {
+        tips.scoringTips = ['Address the exclusion of elderly, unbanked, and rural populations', 'Discuss privacy and surveillance implications', 'Weigh convenience against the risks of a fully digital economy']
+        tips.keyPhrases = ['not everyone has access to digital banking', 'privacy concerns in a cashless society', 'vulnerable populations risk being excluded', 'convenience should not come at the cost of inclusion', 'a balanced approach allows both cash and digital']
+      } else {
+        tips.scoringTips = ['Use opinion language: "I firmly believe", "In my view"', 'Provide evidence or examples for each reason', 'Don\u2019t sit on the fence — commit to a position']
+        tips.keyPhrases = ['evidence suggests', 'on the other hand', 'a compelling argument', 'societal impact', 'in conclusion']
+      }
     } else if (type === 'Unusual Situation') {
-      tips.structure = ['Describe what would happen', 'Explain your immediate reaction', 'Outline your plan of action', 'Describe the expected outcome']
-      tips.scoringTips = ['Treat it like any structured response', 'Be creative but logical', 'Show personality — examiners score communication, not the plan']
-      tips.keyPhrases = ['first of all', 'in this scenario', 'I would approach it by', 'the outcome would be', 'ultimately']
+      const topic = (prompt.topic || prompt.topicName || '').toLowerCase()
+      if (topic.includes('upside-down') || topic.includes('reversed room')) {
+        tips.structure = ['Set the scene: a living room with reversed gravity', 'Describe the furniture on the ceiling in detail', 'Mention the cat on the floor looking up', 'Express what makes this bizarre and how someone might react']
+        tips.scoringTips = ['Use spatial contrast: "attached to the ceiling while the floor remains bare"', 'Show disbelief with descriptive language: "as though gravity has flipped entirely"', 'Describe each piece of furniture individually for maximum detail']
+        tips.keyPhrases = ['suspended from the ceiling', 'gravity appears to be reversed', 'the cat is gazing upward in confusion', 'every piece of furniture is inverted', 'an utterly surreal domestic scene']
+      } else if (topic.includes('moose') || topic.includes('tim hortons')) {
+        tips.structure = ['Open with the shocking element — a moose inside a coffee shop', 'Describe the moose\u2019s behaviour and position', 'Note customer reactions and the atmosphere', 'Conclude with the humour or absurdity of the situation']
+        tips.scoringTips = ['Contrast the absurd with the mundane: "customers are calmly sipping coffee"', 'Describe the moose\u2019s body language: posture, gaze, positioning', 'Use Canadian cultural references to strengthen the response']
+        tips.keyPhrases = ['standing calmly at the counter', 'appears to be studying the menu', 'the customers seem unfazed', 'a distinctly Canadian scene', 'towering above the seated patrons']
+      } else if (topic.includes('rubber duck') || topic.includes('giant duck')) {
+        tips.structure = ['Establish the setting: a residential street after a rainstorm', 'Describe the massive rubber duck in vivid detail', 'Mention bystanders and their reactions', 'Convey the scale contrast between the duck and surroundings']
+        tips.scoringTips = ['Emphasise scale: "approximately the size of a two-storey house"', 'Describe weather aftermath: puddles, wet pavement, grey skies', 'Capture bystander reactions to show atmosphere']
+        tips.keyPhrases = ['an enormous rubber duck', 'towering over the parked vehicles', 'onlookers are standing in disbelief', 'dwarfing everything on the street', 'the aftermath of a heavy downpour']
+      } else if (topic.includes('snow') || topic.includes('grocery')) {
+        tips.structure = ['Open with the impossible — snow falling inside a store', 'Describe the shoppers and their mixed reactions', 'Mention the produce section with icicles', 'Convey the clash of indoor and winter elements']
+        tips.scoringTips = ['Contrast clothing: "some wearing winter jackets while others are in t-shirts"', 'Use sensory details: cold air, white powder, slippery floors', 'Describe the produce section icicles as a key visual detail']
+        tips.keyPhrases = ['snowflakes drifting through the aisles', 'a thin layer of frost on the floor', 'icicles hanging from the produce shelves', 'a bewildering mix of winter and everyday shopping', 'shoppers looking visibly confused']
+      } else if (topic.includes('unicycle') || topic.includes('businessman')) {
+        tips.structure = ['Describe the person\u2019s appearance in full business attire', 'Detail the unicycle, briefcase, and coffee balancing act', 'Mention other people\u2019s reactions — joggers, dog walkers', 'Comment on the contrast between formal dress and the park setting']
+        tips.scoringTips = ['Use juxtaposition: "dressed for a boardroom meeting yet riding through a park"', 'Describe the physical challenge: balance, coordination, multitasking', 'Capture bystander reactions for depth']
+        tips.keyPhrases = ['impeccably dressed in a suit and tie', 'balancing a briefcase and coffee simultaneously', 'joggers have paused to stare', 'dogs are barking at the spectacle', 'an extraordinary display of multitasking']
+      } else if (topic.includes('floating furniture')) {
+        tips.structure = ['Set the scene: furniture hovering above a city sidewalk', 'Describe each floating item and the man reading a newspaper', 'Note pedestrians walking underneath nonchalantly', 'Express the surreal normalcy of the scene']
+        tips.scoringTips = ['Quantify the height: "approximately one metre off the ground"', 'Contrast the bizarre with the ordinary: "as though this is perfectly routine"', 'Describe the man\u2019s calm demeanour on the floating sofa']
+        tips.keyPhrases = ['levitating above the pavement', 'pedestrians are strolling underneath without concern', 'casually reading a newspaper mid-air', 'defying the laws of physics', 'an atmosphere of impossible normalcy']
+      } else if (topic.includes('dogs') || topic.includes('boardroom')) {
+        tips.structure = ['Open with the setting — a corporate boardroom', 'Describe the dogs\u2019 attire: suits, ties, glasses', 'Detail the presentation happening at the whiteboard', 'Note the dog taking notes — selling the absurdity']
+        tips.scoringTips = ['Use corporate vocabulary applied to animals: "presenting quarterly results"', 'Describe body language: attentive posture, focused gazes', 'Layer humour through deadpan observation']
+        tips.keyPhrases = ['dressed in formal business attire', 'delivering a presentation at the whiteboard', 'diligently taking notes', 'a professional yet completely absurd meeting', 'the atmosphere resembles a corporate conference']
+      } else if (topic.includes('miniature city')) {
+        tips.structure = ['Describe the model city sitting in a real park', 'Detail the scale: buildings, cars, streetlights, roads', 'Mention the real-sized birds perched on model skyscrapers', 'Note the person kneeling to examine it']
+        tips.scoringTips = ['Play with scale contrast: "birds perched atop buildings no taller than a hand"', 'Use precise vocabulary: "meticulously crafted", "intricate detail"', 'Describe the person\u2019s fascination to add a human element']
+        tips.keyPhrases = ['a meticulously crafted miniature city', 'real-sized birds perched on tiny skyscrapers', 'perfectly scaled roads and streetlights', 'kneeling down to examine the fine details', 'a striking contrast between miniature and real']
+      } else if (topic.includes('hammock') || topic.includes('intersection')) {
+        tips.structure = ['Establish the unlikely location — a busy intersection', 'Describe the person sleeping peacefully in the hammock', 'Note traffic, cyclists, and the confused police officer', 'Convey the contrast between chaos and calm']
+        tips.scoringTips = ['Highlight the irony: "sleeping soundly amid rush-hour traffic"', 'Describe surrounding movement: stopped cars, weaving cyclists', 'Use the police officer\u2019s reaction to inject humour']
+        tips.keyPhrases = ['strung between two lampposts', 'sleeping peacefully despite the commotion', 'cars stopped at a red light around them', 'cyclists weaving carefully past', 'a police officer scratching their head in bewilderment']
+      } else if (topic.includes('canoe') || topic.includes('flood')) {
+        tips.structure = ['Describe the flooded streets and submerged landmarks', 'Focus on the man in a suit paddling through traffic', 'Mention the seagull on the half-submerged traffic light', 'Convey the blend of disaster and composed resilience']
+        tips.scoringTips = ['Layer details: suit + canoe + flood = three absurdities stacked', 'Describe the water level using landmarks: "stop signs half-submerged"', 'Use the seagull as a vivid finishing detail']
+        tips.keyPhrases = ['paddling through a flooded downtown street', 'submerged vehicles lining both sides', 'a seagull perched on a traffic light still flashing red', 'navigating the urban waterway in full business attire', 'an eerily calm approach to a natural disaster']
+      } else if (topic.includes('food clock')) {
+        tips.structure = ['Describe the clock\u2019s location in a caf\u00E9', 'Detail each food item at the hour markers', 'Mention the cutlery hands — knife and fork', 'Comment on the creative concept and caf\u00E9 atmosphere']
+        tips.scoringTips = ['Be specific with positions: "a croissant at 12 o\u2019clock, sushi at 3"', 'Name each food to demonstrate vocabulary range', 'Describe the clock hands creatively: "telling time with a knife and fork"']
+        tips.keyPhrases = ['a croissant marking the twelve position', 'the clock hands are fashioned from cutlery', 'each hour represented by a different cuisine', 'a whimsical and appetising timepiece', 'sushi at three, a taco at six, pizza at nine']
+      } else if (topic.includes('subway') || topic.includes('garden')) {
+        tips.structure = ['Describe the subway car transformed into a garden', 'Detail the flower varieties: roses, tulips, sunflowers', 'Mention passengers standing and bees flying between blooms', 'Note the transit worker watering the plants']
+        tips.scoringTips = ['Contrast urban transit with nature: "planters growing where seats once were"', 'Name specific flowers to boost vocabulary marks', 'Use sensory language: buzzing bees, colourful petals, earthy scent']
+        tips.keyPhrases = ['flower gardens growing where seats used to be', 'roses, tulips, and sunflowers in full bloom', 'bees buzzing between the blossoms', 'passengers gripping overhead rails amid the greenery', 'a uniformed transit worker tending the planters']
+      } else if (topic.includes('giant') && topic.includes('kitchen')) {
+        tips.structure = ['Set the scene: an ordinary kitchen with oversized food', 'Describe each giant item with scale comparisons', 'Detail the person on a step stool trying to slice the strawberry', 'Convey the humour and impossibility of cooking with these']
+        tips.scoringTips = ['Use size comparisons: "a strawberry the size of a watermelon"', 'Describe the person\u2019s struggle to add human perspective', 'Detail multiple items systematically for thorough coverage']
+        tips.keyPhrases = ['a single strawberry the size of a watermelon', 'a loaf of bread towering as tall as the refrigerator', 'eggs the size of basketballs', 'struggling to slice with a regular-sized knife', 'everything in the kitchen has grown to an enormous scale']
+      } else if (topic.includes('raining fish')) {
+        tips.structure = ['Describe the desert landscape and cloudy sky', 'Detail the fish falling like rain from above', 'Mention the unfazed camels walking through', 'Note the person with an umbrella catching fish in a bucket']
+        tips.scoringTips = ['Use weather vocabulary repurposed: "a downpour of silver fish"', 'Contrast animal reactions: camels unfazed vs. the bizarre scene', 'Describe the person\u2019s resourcefulness with the umbrella and bucket']
+        tips.keyPhrases = ['silver fish falling from the clouds like raindrops', 'camels walking through the scene completely unfazed', 'catching fish in a bucket with an open umbrella', 'a surreal desert downpour', 'landing on the sand dunes with a gentle thud']
+      } else if (topic.includes('reversed gravity') || topic.includes('gravity')) {
+        tips.structure = ['Describe the inverted landscape — ground and sky swapped', 'Detail the upside-down trees and grass growing from above', 'Mention the person on a cloud and dog on grass overhead', 'Note the birds swimming through ground-level clouds']
+        tips.scoringTips = ['Use directional language creatively: "above becomes below"', 'Describe multiple layers of inversion for maximum detail', 'Capture the dreamlike quality: "as though the world has been flipped"']
+        tips.keyPhrases = ['the ground and sky have completely swapped', 'trees growing downward from the sky', 'clouds drifting along at ground level like fog', 'standing on a cloud while the dog walks on overhead grass', 'birds swimming through clouds at their feet']
+      } else {
+        tips.structure = ['Describe the unusual scene in vivid detail', 'Explain what makes it bizarre or unexpected', 'Mention people\u2019s reactions to add depth', 'Comment on the atmosphere or mood of the image']
+        tips.scoringTips = ['Use rich descriptive language to paint the scene', 'Show contrast between normal and abnormal elements', 'Include sensory details beyond just visual']
+        tips.keyPhrases = ['what immediately stands out is', 'the most unusual aspect is', 'in stark contrast to', 'the atmosphere feels surreal', 'upon closer inspection']
+      }
     }
 
     return tips
@@ -4235,6 +4663,11 @@ function SpeakingLayout({ color, partId, onComplete }) {
             <span className="sl-sidebar-stat-val">{prompt.speak_time_seconds}s</span>
             <span className="sl-sidebar-stat-lbl">Speak</span>
           </div>
+          <div className="sl-sidebar-stat-divider" />
+          <div className="sl-sidebar-stat">
+            <span className="sl-sidebar-stat-val" style={{ color }}>{getPartStats('speaking', partId).avgScore != null ? getPartStats('speaking', partId).avgScore + '%' : '—'}</span>
+            <span className="sl-sidebar-stat-lbl">Avg Score</span>
+          </div>
         </div>
 
         <div className="sl-sidebar-progress-wrap">
@@ -4263,7 +4696,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
                   <span className="sl-topic-title">{p.topicName}</span>
                   <span className="sl-topic-meta">
                     <span className="sl-topic-diff-dot" style={{ background: dcc }} />
-                    <span style={{ color: dcc }}>{p.difficulty}</span>
+                    <span style={{ color: dcc, textTransform: 'capitalize' }}>{p.difficulty}</span>
                   </span>
                 </div>
                 {isDone && <span className="sl-topic-check">{'\u2713'}</span>}
@@ -4320,49 +4753,38 @@ function SpeakingLayout({ color, partId, onComplete }) {
           <div className="sl-prompt-label" style={{ color }}>
             {meta.icon} {meta.label} Prompt
           </div>
-          <pre className="sl-prompt-text">{prompt.prompt}</pre>
+          {prompt.task_type === 'Comparing and Persuading' || prompt.task_type === 'Comparing & Persuading'
+            ? <ComparingPrompt text={prompt.prompt} color={color} />
+            : <pre className="sl-prompt-text">{prompt.prompt}</pre>
+          }
           {prompt.image_url && (
             <div className="sl-prompt-image-wrap">
               <img
-                src={prompt.image_url}
+                src={asset(prompt.image_url)}
                 alt={`${meta.label} — Set ${prompt.setId}`}
                 className="sl-prompt-image"
               />
+              {phase === 'prep' && (
+                <div className="sl-img-timer sl-img-timer--prep">
+                  <span className="sl-img-timer-icon">{"\u23F3"}</span>
+                  <span className="sl-img-timer-digits">{prepRemaining}s</span>
+                  <span className="sl-img-timer-label">Prep</span>
+                </div>
+              )}
+              {phase === 'speak' && (
+                <div className="sl-img-timer sl-img-timer--speak" style={{ borderColor: color, color }}>
+                  <span className="sl-img-timer-icon">{"\uD83C\uDF99\uFE0F"}</span>
+                  <span className="sl-img-timer-digits">{speakRemaining}s</span>
+                  <span className="sl-img-timer-label">Speaking</span>
+                  {isListening && <span className="sl-img-timer-pulse" />}
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Scoring tips & key phrases for this prompt */}
-        <div className="sl-prompt-tips">
-          <div className="sl-prompt-tips-header">
-            <span className="sl-prompt-tips-icon">{'\uD83C\uDFAF'}</span>
-            <span>How to Score Higher on This Prompt</span>
-          </div>
-          <div className="sl-prompt-tips-grid">
-            <div className="sl-prompt-tips-col">
-              <div className="sl-prompt-tips-col-label">{'\uD83D\uDCDD'} Response Structure</div>
-              <ol className="sl-prompt-tips-structure">
-                {promptTips.structure.map((s, i) => <li key={i}>{s}</li>)}
-              </ol>
-            </div>
-            <div className="sl-prompt-tips-col">
-              <div className="sl-prompt-tips-col-label">{'\u2B50'} Scoring Tips</div>
-              <ul className="sl-prompt-tips-scoring">
-                {promptTips.scoringTips.map((s, i) => <li key={i}>{s}</li>)}
-              </ul>
-            </div>
-          </div>
-          {promptTips.keyPhrases.length > 0 && (
-            <div className="sl-prompt-keywords">
-              <span className="sl-prompt-keywords-label">{'\uD83D\uDD11'} Key Vocabulary to Include:</span>
-              <div className="sl-prompt-keyword-tags">
-                {promptTips.keyPhrases.map(k => (
-                  <span key={k} className="sl-prompt-keyword-tag" style={{ background: `${color}14`, color, borderColor: `${color}30` }}>{k}</span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Scoring tips & key phrases — auto-collapse during active phases */}
+        <ScoreTips tips={promptTips} color={color} collapsed={phase === 'prep' || phase === 'speak'} />
 
         {/* Timer area */}
         {phase === 'idle' && (
@@ -4626,7 +5048,7 @@ function QuestionPanel({ questions, color }) {
   const pct = Math.round(((qIndex + 1) / total) * 100)
 
   // Difficulty badge colour
-  const diffC = DIFF_COLOURS[q.difficulty] || DIFF_COLOURS['medium']
+  const diffC = DIFF_COLOURS[q.difficulty] || DIFF_COLOURS['intermediate']
 
   return (
     <div className="ps-qpanel">
@@ -4829,8 +5251,8 @@ function SingleQuestionPanel({ q, qIndex, total, color, onPrev, onNext, answer, 
           <span
             className="pcp-q-diff-tag"
             style={{
-              background: (DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.medium).bg,
-              color:      (DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.medium).text,
+              background: (DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.intermediate).bg,
+              color:      (DIFF_COLOURS[q.difficulty] || DIFF_COLOURS.intermediate).text,
             }}
           >
             {q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1)}
@@ -5091,7 +5513,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
         {/* Centre: set tab strip */}
         <div className="pcp-tabs">
           {sets.map((s, i) => {
-            const diff = DIFF_COLOURS[s.difficulty] || DIFF_COLOURS.medium
+            const diff = DIFF_COLOURS[s.difficulty] || DIFF_COLOURS.intermediate
             return (
               <button
                 key={i}

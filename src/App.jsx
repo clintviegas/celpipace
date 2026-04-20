@@ -26,12 +26,14 @@ import CRSCalculatorPage from './pages/CRSCalculatorPage'
 import ExamPage from './pages/ExamPage'
 import ListeningPage from './pages/ListeningPage'
 import ReadingPage from './pages/ReadingPage'
+import ReadingPracticePage from './pages/ReadingPracticePage'
 import WritingPage from './pages/WritingPage'
 import SpeakingPage from './pages/SpeakingPage'
 import PracticeSetPage from './pages/PracticeSetPage'
 import DashboardPage from './pages/DashboardPage'
 import BlogPage from './pages/BlogPage'
 import WritingPracticePage from './pages/WritingPracticePage'
+import MockTestPage from './pages/MockTestPage'
 import SEO from './components/SEO'
 import './App.css'
 
@@ -95,10 +97,11 @@ export function AppInner() {
         <Route path="/scores" element={<ScoresPage />} />
         <Route path="/calculator" element={<CRSCalculatorPage />} />
         <Route path="/exam" element={<ExamPage />} />
+        <Route path="/mock-test/:examId" element={<MockTestPage />} />
         <Route path="/listening" element={<ListeningPage />} />
         <Route path="/listening/:partId" element={<PracticeSetPage section="listening" />} />
         <Route path="/reading" element={<ReadingPage />} />
-        <Route path="/reading/:partId" element={<PracticeSetPage section="reading" />} />
+        <Route path="/reading/:partId" element={<ReadingPracticePage />} />
         <Route path="/writing" element={<WritingPage />} />
         <Route path="/writing/:partId" element={<PracticeSetPage section="writing" />} />
         <Route path="/speaking" element={<SpeakingPage />} />

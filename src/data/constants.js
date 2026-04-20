@@ -1,3 +1,10 @@
+// ─── CDN base URL for audio/images ────────────────────────────────
+// Empty in dev (serves from /public), R2 URL in production
+export const CDN_URL = import.meta.env.VITE_CDN_URL || ''
+
+/** Prefix a static asset path with the CDN URL */
+export const asset = (path) => `${CDN_URL}${path}`
+
 // ─── Section metadata ─────────────────────────────────────────────
 export const SECTIONS = [
   { id: 'listening', label: 'Listening', icon: '🎧', color: '#4A90D9', questions: 8, freeQuestions: 3, duration: '47–55 min', celpipParts: 6 },

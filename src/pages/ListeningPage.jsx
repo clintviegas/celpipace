@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import SEO from '../components/SEO'
 
+const COLOR = '#4A90D9'
+const COLOR_LIGHT = '#EEF4FF'
+
 /* ── Listening Parts Data ─────────────────────────────────────── */
 const PARTS = [
   {
@@ -141,34 +144,28 @@ function FAQItem({ q, a }) {
 /* ── Part Card ────────────────────────────────────────────────── */
 function PartCard({ part, onStart }) {
   return (
-    <motion.div
-      className="lp-part-card"
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.18 }}
-    >
+    <motion.div className="lp-part-card" whileHover={{ y: -4 }} transition={{ duration: 0.18 }}>
       <div className="lp-part-card-header">
-        <span className="lp-part-num">{part.num}</span>
+        <span className="lp-part-num" style={{ background: COLOR_LIGHT, color: COLOR }}>{part.num}</span>
         <span className="lp-part-icon">{part.icon}</span>
+        <span className={`lp-part-diff lp-diff-${part.difficulty.toLowerCase().replace(' ', '-')}`}>{part.difficulty}</span>
       </div>
       <h3 className="lp-part-name">{part.label}</h3>
       <p className="lp-part-desc">{part.description}</p>
-
       <div className="lp-part-skills">
         {part.skills.map(s => (
-          <span key={s} className="lp-part-skill-tag">{s}</span>
+          <span key={s} className="lp-part-skill-tag" style={{ background: COLOR_LIGHT, color: COLOR }}>{s}</span>
         ))}
       </div>
-
       <div className="lp-part-meta">
+        <span className="lp-part-meta-item">❓ {part.questions} questions</span>
         <span className="lp-part-meta-item">⏱ {part.duration}</span>
       </div>
-
-      <div className="lp-part-tip">
+      <div className="lp-part-tip" style={{ borderLeftColor: COLOR, background: '#f0f6ff' }}>
         <span className="lp-part-tip-icon">💡</span>
         <span>{part.tip}</span>
       </div>
-
-      <button className="lp-part-cta" onClick={() => onStart(part)}>
+      <button className="lp-part-cta" style={{ background: COLOR }} onClick={() => onStart(part)}>
         Practice {part.num} →
       </button>
     </motion.div>
@@ -190,18 +187,18 @@ export default function ListeningPage() {
         canonical="/listening"
       />
       {/* ── Hero ── */}
-      <section className="lp-hero">
+      <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #0f2040 60%, #162d5a 100%)' }}>
         <div className="lp-hero-inner">
-          <div className="lp-hero-badge">🎧 CELPIP Listening</div>
-          <h1 className="lp-hero-title">CELPIP Listening</h1>
-          <p className="lp-hero-subtitle">
-            6 parts · 38 questions · 47–55 minutes · CLB 4–12
-          </p>
+          <div className="lp-hero-badge" style={{ background: 'rgba(74,144,217,.2)', border: '1px solid rgba(74,144,217,.4)', color: '#7db8f0' }}>
+            🎧 CELPIP Listening
+          </div>
+          <h1 className="lp-hero-title">Hear Canada like a local.</h1>
+          <p className="lp-hero-subtitle">Six parts of real-world Canadian English — phone calls, news, debates and more.<br/>38 questions · 47–55 minutes · CLB 4–12</p>
           <div className="lp-hero-stats">
-            <div className="lp-hero-stat"><strong>6</strong><span>Parts</span></div>
-            <div className="lp-hero-stat"><strong>38</strong><span>Questions</span></div>
-            <div className="lp-hero-stat"><strong>47–55 min</strong><span>Duration</span></div>
-            <div className="lp-hero-stat"><strong>CLB 4–12</strong><span>Score Range</span></div>
+            <div className="lp-hero-stat"><strong style={{ color: COLOR }}>6</strong><span>Parts</span></div>
+            <div className="lp-hero-stat"><strong style={{ color: COLOR }}>38</strong><span>Questions</span></div>
+            <div className="lp-hero-stat"><strong style={{ color: COLOR }}>47–55 min</strong><span>Duration</span></div>
+            <div className="lp-hero-stat"><strong style={{ color: COLOR }}>CLB 4–12</strong><span>Score Range</span></div>
           </div>
         </div>
       </section>
@@ -210,7 +207,7 @@ export default function ListeningPage() {
 
         {/* ── Parts Grid ── */}
         <section className="lp-section">
-          <div className="lp-section-label">Practice by Part</div>
+          <div className="lp-section-label" style={{ color: COLOR }}>Practice by Part</div>
           <h2 className="lp-section-title">Choose a Part to Practice</h2>
           <p className="lp-section-sub">
             Each part tests a different listening skill. Drill the parts where you lose the most points.
@@ -223,7 +220,7 @@ export default function ListeningPage() {
         </section>
 
         {/* ── What's Included ── */}
-        <section className="lp-section lp-info-band">
+        <section className="lp-section lp-info-band" style={{ background: 'linear-gradient(135deg, #f0f6ff 0%, #f7f9fc 100%)', borderColor: '#c0d8f4' }}>
           <div className="lp-info-grid">
             <div className="lp-info-block">
               <div className="lp-info-icon">📋</div>
@@ -269,7 +266,7 @@ export default function ListeningPage() {
 
         {/* ── FAQ ── */}
         <section className="lp-section">
-          <div className="lp-section-label">FAQ</div>
+          <div className="lp-section-label" style={{ color: COLOR }}>FAQ</div>
           <h2 className="lp-section-title">Common Questions</h2>
           <div className="lp-faq-list">
             {FAQ.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}

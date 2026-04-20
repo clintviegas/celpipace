@@ -1,0 +1,1628 @@
+{
+  "part": "R2",
+  "title": "Reading to Apply a Diagram",
+  "total_questions": 8,
+  "time_limit_minutes": 13,
+  "sets": [
+    {
+      "set_number": 1,
+      "difficulty": "easy",
+      "title": "Community Centre Summer Programs",
+      "diagram": {
+        "type": "schedule_table",
+        "image_prompt": "A clean, colorful community centre summer program schedule poster titled 'Maplewood Community Centre — Summer Programs'. Display as a 4-column table with columns: Program, Day & Time, Age Group, Cost. Rows: (1) Beginner Swim — Mon/Wed 10:00-11:00 AM — Ages 6-9 — $80; (2) Youth Pottery — Tue/Thu 4:00-5:30 PM — Ages 10-14 — $120; (3) Senior Yoga — Mon/Wed/Fri 9:00-10:00 AM — Ages 60+ — $60; (4) Family Hiking Club — Saturdays 8:00 AM-12:00 PM — All Ages — $40 per family; (5) Teen Coding Bootcamp — Mon-Fri 1:00-3:00 PM — Ages 13-17 — $200; (6) Toddler Music — Friday 10:30-11:15 AM — Ages 2-4 — $50. Include a footer note: 'Registration closes June 15. Members get 20% off. Drop-in fee: $10 per session where space allows.' Use a friendly summer palette with simple icons next to each program.",
+        "text_description": "Maplewood Community Centre — Summer Programs:\n1. Beginner Swim | Mon & Wed 10:00-11:00 AM | Ages 6-9 | $80\n2. Youth Pottery | Tue & Thu 4:00-5:30 PM | Ages 10-14 | $120\n3. Senior Yoga | Mon/Wed/Fri 9:00-10:00 AM | Ages 60+ | $60\n4. Family Hiking Club | Saturdays 8:00 AM-12:00 PM | All Ages | $40 per family\n5. Teen Coding Bootcamp | Mon-Fri 1:00-3:00 PM | Ages 13-17 | $200\n6. Toddler Music | Fridays 10:30-11:15 AM | Ages 2-4 | $50\nNote: Registration closes June 15. Members get 20% off. Drop-in fee: $10 per session where space allows."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "data_extraction",
+          "question_text": "The Wong family has two children, ages 7 and 11. They want one program both kids can attend together. Which is best?",
+          "options": {
+            "A": "Beginner Swim",
+            "B": "Youth Pottery",
+            "C": "Family Hiking Club",
+            "D": "Teen Coding Bootcamp"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 2,
+          "skill": "cross_reference",
+          "question_text": "Marcus is 14 and only free in the afternoons after 3:30 PM. Which program suits him?",
+          "options": {
+            "A": "Youth Pottery",
+            "B": "Teen Coding Bootcamp",
+            "C": "Senior Yoga",
+            "D": "Beginner Swim"
+          },
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 3,
+          "skill": "data_extraction",
+          "question_text": "Mrs. Lee is 68 and wants a program that meets at least three times a week. Which program meets her needs?",
+          "options": {
+            "A": "Family Hiking Club",
+            "B": "Toddler Music",
+            "C": "Senior Yoga",
+            "D": "Beginner Swim"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 4,
+          "skill": "applied_comprehension",
+          "question_text": "A parent registers their 3-year-old for Toddler Music as a non-member. How much will they pay?",
+          "options": {
+            "A": "$40",
+            "B": "$50",
+            "C": "$60",
+            "D": "$10"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "applied_comprehension",
+          "question_text": "Liam, age 16, wants the most intensive program available for his age group. Which should he pick?",
+          "options": {
+            "A": "Youth Pottery",
+            "B": "Teen Coding Bootcamp",
+            "C": "Family Hiking Club",
+            "D": "Beginner Swim"
+          },
+          "correct_answer": "B"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below from a parent to a friend about the programs. Complete the email by choosing the best option for each blank.",
+        "response_text": "Hi Sarah,\n\nThanks for sending me that Maplewood Community Centre flyer! I've been looking for summer activities for the kids and this is exactly what I [BLANK_6]. Emma is 8, so I'm going to sign her up for Beginner Swim — the Monday and Wednesday morning slot works perfectly with my schedule. Jake is 13, and he's been begging me to learn coding, so the Teen Coding Bootcamp is [BLANK_7] for him, even though it's the most expensive one on the list.\n\nI also noticed members get 20% off, so I'm thinking of getting a [BLANK_8] before I register everyone. It should pay for itself pretty quickly. Want to sign your kids up too? We could carpool!\n\nTalk soon,\nMegan",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "needed",
+              "B": "avoided",
+              "C": "forgot",
+              "D": "refused"
+            },
+            "correct_answer": "A"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "unsuitable",
+              "B": "perfect",
+              "C": "boring",
+              "D": "optional"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "refund",
+              "B": "discount",
+              "C": "membership",
+              "D": "schedule"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 2,
+      "difficulty": "intermediate",
+      "title": "Public Library Floor Plan",
+      "diagram": {
+        "type": "floor_plan",
+        "image_prompt": "A clean, labeled floor plan of a two-storey public library titled 'Riverside Public Library — Floor Guide'. Ground Floor: Entrance (south), Information Desk (centre), Children's Section (west wing), Computer Lab with 12 stations (east wing, near washrooms), Quiet Study Room A (north-east corner, reservable, max 4 people), Café (south-east corner, open 8 AM–4 PM). Upper Floor: Adult Fiction (west), Non-Fiction & Reference (east), Meeting Room B (north-west corner, holds 30 people, requires booking), Rooftop Reading Terrace (south side, open May–September, weather permitting). Include a note: 'Free Wi-Fi throughout. Printing: $0.10/page B&W, $0.25/page colour. Library hours: Mon–Sat 9 AM–8 PM, Sun 12–5 PM.' Use soft green and tan colours with clear room labels and arrows.",
+        "text_description": "Riverside Public Library — Floor Guide:\nGround Floor: Entrance (south), Information Desk (centre), Children's Section (west wing), Computer Lab — 12 stations (east wing, near washrooms), Quiet Study Room A (north-east corner, reservable, max 4 people), Café (south-east corner, open 8 AM–4 PM).\nUpper Floor: Adult Fiction (west), Non-Fiction & Reference (east), Meeting Room B (north-west corner, holds 30, requires booking), Rooftop Reading Terrace (south side, open May–September, weather permitting).\nNote: Free Wi-Fi throughout. Printing: $0.10/page B&W, $0.25/page colour. Library hours: Mon–Sat 9 AM–8 PM, Sun 12–5 PM."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "data_extraction",
+          "question_text": "A parent with a 5-year-old wants to find picture books. Where should they go?",
+          "options": {
+            "A": "Adult Fiction on the upper floor",
+            "B": "Children's Section on the ground floor",
+            "C": "Non-Fiction & Reference",
+            "D": "The Café"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "cross_reference",
+          "question_text": "Carlos needs to print a 20-page colour document. How much will it cost?",
+          "options": {
+            "A": "$2.00",
+            "B": "$3.00",
+            "C": "$5.00",
+            "D": "$0.25"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "applied_comprehension",
+          "question_text": "A book club of 12 people wants to reserve a room. Which room should they book?",
+          "options": {
+            "A": "Quiet Study Room A",
+            "B": "Meeting Room B",
+            "C": "The Computer Lab",
+            "D": "The Café"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "When is the Rooftop Reading Terrace open?",
+          "options": {
+            "A": "Year-round",
+            "B": "January to April",
+            "C": "May to September",
+            "D": "Only on weekends"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 5,
+          "skill": "cross_reference",
+          "question_text": "Jenny arrives at 7:30 PM on a Sunday. Can she enter the library?",
+          "options": {
+            "A": "Yes, it is open until 8 PM on Sundays",
+            "B": "No, it closes at 5 PM on Sundays",
+            "C": "Yes, but only the Café is open",
+            "D": "No, it is closed all day on Sundays"
+          },
+          "correct_answer": "B"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below about the library. Complete the email by choosing the best option for each blank.",
+        "response_text": "Hey Priya,\n\nI finally checked out the Riverside Public Library and it is way better than I [BLANK_6]! The ground floor has a really nice café where I grabbed a coffee, though it closes at 4 PM so you need to go [BLANK_7] in the day. I found a great spot on the Rooftop Reading Terrace too — perfect for studying when the weather is nice, but it is only open in the [BLANK_8] months.\n\nWe should totally go together next Saturday!\n\nJessica",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "expected",
+              "B": "avoided",
+              "C": "forgot",
+              "D": "hated"
+            },
+            "correct_answer": "A"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "later",
+              "B": "earlier",
+              "C": "faster",
+              "D": "louder"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "winter",
+              "B": "rainy",
+              "C": "summer",
+              "D": "coldest"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 3,
+      "difficulty": "advanced",
+      "title": "Fitness Centre Class Schedule",
+      "diagram": {
+        "type": "schedule_table",
+        "image_prompt": "A modern fitness centre weekly class schedule poster titled 'Peak Performance Fitness — Weekly Group Classes'. Display as a 5-column table: Class, Day(s), Time, Level, Instructor. Rows: (1) Power Yoga — Mon/Wed/Fri — 6:30–7:30 AM — All Levels — Anya S.; (2) Spin Cycle — Tue/Thu — 12:00–12:45 PM — Intermediate — Marcus T.; (3) Kickboxing — Mon/Wed — 5:30–6:30 PM — Advanced — Raj P.; (4) Aqua Fit — Tue/Thu/Sat — 9:00–9:45 AM — Beginner — Colleen D.; (5) Pilates Mat — Wed/Fri — 7:00–8:00 PM — Intermediate — Anya S.; (6) Senior Stretch — Mon/Wed/Fri — 10:00–10:30 AM — Beginner — Colleen D.; (7) HIIT Express — Sat — 8:00–8:30 AM — Advanced — Marcus T. Footer: 'Drop-in: $15/class. Monthly unlimited pass: $89. Pool access required for Aqua Fit ($5 surcharge per session for non-members). All classes are limited to 20 participants — first come, first served.' Use a bold sporty design with dark navy and neon green accents.",
+        "text_description": "Peak Performance Fitness — Weekly Group Classes:\n1. Power Yoga | Mon/Wed/Fri 6:30–7:30 AM | All Levels | Anya S.\n2. Spin Cycle | Tue/Thu 12:00–12:45 PM | Intermediate | Marcus T.\n3. Kickboxing | Mon/Wed 5:30–6:30 PM | Advanced | Raj P.\n4. Aqua Fit | Tue/Thu/Sat 9:00–9:45 AM | Beginner | Colleen D.\n5. Pilates Mat | Wed/Fri 7:00–8:00 PM | Intermediate | Anya S.\n6. Senior Stretch | Mon/Wed/Fri 10:00–10:30 AM | Beginner | Colleen D.\n7. HIIT Express | Sat 8:00–8:30 AM | Advanced | Marcus T.\nNote: Drop-in: $15/class. Monthly unlimited pass: $89. Pool access required for Aqua Fit ($5 surcharge per session for non-members). All classes limited to 20 participants — first come, first served."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Linda is 70 years old and wants a gentle morning class at least three times a week. Which class is best?",
+          "options": {
+            "A": "Power Yoga",
+            "B": "Aqua Fit",
+            "C": "Senior Stretch",
+            "D": "HIIT Express"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 2,
+          "skill": "data_extraction",
+          "question_text": "How much would a non-member pay to drop in to Aqua Fit?",
+          "options": {
+            "A": "$5",
+            "B": "$15",
+            "C": "$20",
+            "D": "$89"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "Sam works 9 to 5 on weekdays and is an experienced athlete. Which class can he attend?",
+          "options": {
+            "A": "Spin Cycle",
+            "B": "Senior Stretch",
+            "C": "HIIT Express on Saturday",
+            "D": "Aqua Fit"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 4,
+          "skill": "applied_comprehension",
+          "question_text": "Who teaches the most classes per week?",
+          "options": {
+            "A": "Raj P.",
+            "B": "Marcus T.",
+            "C": "Colleen D.",
+            "D": "Anya S."
+          },
+          "correct_answer": "D"
+        },
+        {
+          "question_number": 5,
+          "skill": "applied_comprehension",
+          "question_text": "Maria buys a monthly unlimited pass and attends 10 classes. Compared to drop-in pricing, how much does she save?",
+          "options": {
+            "A": "$11",
+            "B": "$41",
+            "C": "$61",
+            "D": "$89"
+          },
+          "correct_answer": "C"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the message below about the fitness centre. Complete it by choosing the best option for each blank.",
+        "response_text": "Hey Jake,\n\nI signed up for Peak Performance and I am loving it. I have been going to Power Yoga three mornings a week — it is great for [BLANK_6] before work. I was thinking of trying Kickboxing too, but it is at the Advanced level and I am not sure I am [BLANK_7] for that yet.\n\nYou should come try HIIT Express on Saturday — it is only 30 minutes but super [BLANK_8]. Let me know!\n\nCheers,\nDan",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "sleeping",
+              "B": "flexibility",
+              "C": "cooking",
+              "D": "driving"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "bored",
+              "B": "late",
+              "C": "ready",
+              "D": "registered"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "relaxing",
+              "B": "expensive",
+              "C": "intense",
+              "D": "crowded"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 4,
+      "difficulty": "intermediate",
+      "title": "Community Centre Event Poster",
+      "diagram": {
+        "type": "event_poster",
+        "image_prompt": "A bright, festive community event poster titled 'Sunnydale Multicultural Fair — Saturday, June 8'. Layout: Event from 11 AM to 5 PM at Sunnydale Community Park, 45 Lakeview Drive. Activities section: Live music stage (12 PM–4 PM, featuring local bands), International Food Court (20+ vendors, cash and debit accepted), Kids' Zone (face painting, bouncy castle, petting zoo — free for children under 10), Craft Market (handmade goods from local artisans), Cultural Dance Performances (1 PM, 2:30 PM, 4 PM on main stage). Admission: Free entry. Parking: Free lot at Sunnydale Arena; overflow parking at St. Mark's Church ($5 donation suggested). Rain plan: Event moves indoors to Sunnydale Community Centre gymnasium. Contact: info@sunnydalefair.ca. Use a colourful multicultural theme with food, music, and flags imagery.",
+        "text_description": "Sunnydale Multicultural Fair — Saturday, June 8\nTime: 11 AM–5 PM\nLocation: Sunnydale Community Park, 45 Lakeview Drive\nActivities:\n- Live Music Stage: 12 PM–4 PM (local bands)\n- International Food Court: 20+ vendors (cash and debit accepted)\n- Kids' Zone: face painting, bouncy castle, petting zoo — free for children under 10\n- Craft Market: handmade goods from local artisans\n- Cultural Dance Performances: 1 PM, 2:30 PM, 4 PM on main stage\nAdmission: Free\nParking: Free lot at Sunnydale Arena; overflow at St. Mark's Church ($5 donation suggested)\nRain plan: moves indoors to Sunnydale Community Centre gymnasium\nContact: info@sunnydalefair.ca"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "data_extraction",
+          "question_text": "A family arrives at 2:00 PM with a 7-year-old. What free activity is available for the child?",
+          "options": {
+            "A": "The Craft Market",
+            "B": "The Kids' Zone",
+            "C": "Live music only",
+            "D": "Parking at the Arena"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "data_extraction",
+          "question_text": "How many cultural dance performances are scheduled?",
+          "options": {
+            "A": "One",
+            "B": "Two",
+            "C": "Three",
+            "D": "Four"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "applied_comprehension",
+          "question_text": "What happens if it rains on June 8?",
+          "options": {
+            "A": "The fair is cancelled",
+            "B": "The fair moves to the community centre gymnasium",
+            "C": "Only the food court stays open",
+            "D": "The fair is postponed to the next weekend"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "cross_reference",
+          "question_text": "David wants to buy lunch at the food court but only has a credit card. Can he pay?",
+          "options": {
+            "A": "Yes, all payment types are accepted",
+            "B": "No, only cash and debit are accepted",
+            "C": "Yes, but only at certain vendors",
+            "D": "No, the food court is cash only"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "data_extraction",
+          "question_text": "Where is overflow parking located?",
+          "options": {
+            "A": "Sunnydale Community Park",
+            "B": "Sunnydale Arena",
+            "C": "St. Mark's Church",
+            "D": "45 Lakeview Drive"
+          },
+          "correct_answer": "C"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the text message below about the fair. Complete it by choosing the best option for each blank.",
+        "response_text": "Hey Aisha! Are you free on June 8? There is a multicultural fair at Sunnydale Park and it looks really [BLANK_6]. Food from 20+ vendors, live music, and a kids' zone — all for free! The only thing is parking might fill up fast, so we should arrive [BLANK_7] to get a spot at the arena. Let me know if you want to [BLANK_8]!\n\n— Sonia",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "boring",
+              "B": "expensive",
+              "C": "fun",
+              "D": "private"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "late",
+              "B": "early",
+              "C": "slowly",
+              "D": "alone"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "cancel",
+              "B": "complain",
+              "C": "compete",
+              "D": "come"
+            },
+            "correct_answer": "D"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 5,
+      "difficulty": "easy",
+      "title": "College Continuing Education Course Catalogue",
+      "diagram": {
+        "type": "course_catalogue",
+        "image_prompt": "A clean course catalogue page titled 'Westlake College — Fall Continuing Education Courses'. Display as a table with columns: Course, Schedule, Duration, Tuition, Prerequisites. Rows: (1) Introduction to Bookkeeping — Tue 6:30–9:00 PM — 10 weeks — $395 — None; (2) Workplace Communication — Mon 6:00–8:30 PM — 8 weeks — $310 — CLB 6 or higher; (3) Web Design Fundamentals — Thu 6:00–9:00 PM — 12 weeks — $450 — Basic computer skills; (4) Small Business Start-Up — Sat 9:00 AM–12:00 PM — 6 weeks — $275 — None; (5) Advanced Excel for the Workplace — Wed 7:00–9:00 PM — 8 weeks — $320 — Intro to Excel or equivalent; (6) Food Handler Certification — Sat 9:00 AM–4:00 PM — 1 day — $85 — None. Footer: 'Registration opens August 15. Early bird discount: 10% off if registered by September 1. Textbooks not included. Seniors (65+) receive an additional 15% off tuition.' Professional academic design in blue and white.",
+        "text_description": "Westlake College — Fall Continuing Education Courses:\n1. Introduction to Bookkeeping | Tue 6:30–9:00 PM | 10 weeks | $395 | No prerequisites\n2. Workplace Communication | Mon 6:00–8:30 PM | 8 weeks | $310 | CLB 6 or higher\n3. Web Design Fundamentals | Thu 6:00–9:00 PM | 12 weeks | $450 | Basic computer skills\n4. Small Business Start-Up | Sat 9:00 AM–12:00 PM | 6 weeks | $275 | None\n5. Advanced Excel for the Workplace | Wed 7:00–9:00 PM | 8 weeks | $320 | Intro to Excel or equivalent\n6. Food Handler Certification | Sat 9:00 AM–4:00 PM | 1 day | $85 | None\nNote: Registration opens August 15. Early bird discount: 10% off if registered by September 1. Textbooks not included. Seniors (65+) receive additional 15% off tuition."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Rosa is a newcomer with CLB 5 English. She wants to take Workplace Communication. Can she enroll?",
+          "options": {
+            "A": "Yes, there are no prerequisites",
+            "B": "No, the course requires CLB 6 or higher",
+            "C": "Yes, but she must take a test first",
+            "D": "No, the course is full"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "Ahmed, age 68, registers for Introduction to Bookkeeping on August 20. How much will he pay?",
+          "options": {
+            "A": "$395.00",
+            "B": "$355.50",
+            "C": "$335.75",
+            "D": "$302.18"
+          },
+          "correct_answer": "D"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "Kevin works Monday to Friday and has no computer experience. Which course is his best option?",
+          "options": {
+            "A": "Web Design Fundamentals",
+            "B": "Advanced Excel",
+            "C": "Small Business Start-Up",
+            "D": "Workplace Communication"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "Which course has the shortest duration?",
+          "options": {
+            "A": "Small Business Start-Up",
+            "B": "Food Handler Certification",
+            "C": "Workplace Communication",
+            "D": "Advanced Excel"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "applied_comprehension",
+          "question_text": "Tania wants to take both Web Design Fundamentals and Advanced Excel. Is there a scheduling conflict?",
+          "options": {
+            "A": "Yes, they are on the same evening",
+            "B": "No, one is on Thursday and the other is on Wednesday",
+            "C": "Yes, they overlap by one hour",
+            "D": "No, but they have the same prerequisites"
+          },
+          "correct_answer": "B"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below about the courses. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Mom,\n\nI just looked at the Westlake College catalogue and found a bookkeeping course that starts in the [BLANK_6]. It runs on Tuesday evenings for 10 weeks, which works perfectly with my schedule. The tuition is $395 but if I register before September 1, I get an early bird [BLANK_7] of 10% off.\n\nI was also thinking about the Small Business Start-Up course since I have been wanting to open my own bakery. It is only six weeks and has no [BLANK_8] so I could take it right away.\n\nLove,\nMeena",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "summer",
+              "B": "fall",
+              "C": "spring",
+              "D": "winter"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "penalty",
+              "B": "increase",
+              "C": "discount",
+              "D": "refund"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "classrooms",
+              "B": "instructors",
+              "C": "prerequisites",
+              "D": "textbooks"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 6,
+      "difficulty": "advanced",
+      "title": "City Transit System Map",
+      "diagram": {
+        "type": "transit_map",
+        "image_prompt": "A transit system map titled 'Metro City Transit Authority — Route Map & Fare Guide'. Lines: Blue Line (Airport → Downtown Central → University → Riverside, runs 5 AM–12 AM, every 10 min peak / 20 min off-peak), Red Line (Northgate → City Hall → Downtown Central → Southport, runs 6 AM–11 PM, every 12 min peak / 25 min off-peak), Green Line (Eastview → Hospital District → Downtown Central, runs 5:30 AM–10:30 PM, every 15 min all day). Transfer station: Downtown Central (all lines). Fare zones: Zone 1 (core) $3.25 single, Zone 2 $4.50 single, Cross-zone $5.75. Day pass: $11.00. Monthly pass: $98 (all zones). Seniors/students: 35% discount on all fares. Children under 5: free. Note: 'Bikes allowed on all lines outside peak hours (7–9 AM, 4–6:30 PM). Accessibility: all stations wheelchair accessible. Lost & found: Downtown Central station office.' Use a classic transit map style with coloured lines and station dots.",
+        "text_description": "Metro City Transit Authority — Route Map & Fare Guide:\nBlue Line: Airport → Downtown Central → University → Riverside | 5 AM–12 AM | Every 10 min peak / 20 min off-peak\nRed Line: Northgate → City Hall → Downtown Central → Southport | 6 AM–11 PM | Every 12 min peak / 25 min off-peak\nGreen Line: Eastview → Hospital District → Downtown Central | 5:30 AM–10:30 PM | Every 15 min all day\nTransfer station: Downtown Central (all lines connect)\nFares: Zone 1 $3.25 | Zone 2 $4.50 | Cross-zone $5.75 | Day pass $11.00 | Monthly pass $98 (all zones)\nSeniors/Students: 35% discount on all fares. Children under 5: free.\nBikes: allowed on all lines outside peak hours (7–9 AM, 4–6:30 PM).\nAll stations wheelchair accessible. Lost & found at Downtown Central station office."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Karim lives at Eastview and works at the University. Which lines must he take?",
+          "options": {
+            "A": "Green Line only",
+            "B": "Green Line to Downtown Central, then Blue Line",
+            "C": "Red Line to Downtown Central, then Blue Line",
+            "D": "Blue Line only"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "A senior citizen taking a cross-zone trip pays how much?",
+          "options": {
+            "A": "$5.75",
+            "B": "$4.50",
+            "C": "$3.74",
+            "D": "$3.25"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "Julia wants to bring her bicycle from Riverside to Downtown Central at 8:15 AM on a Tuesday. Can she?",
+          "options": {
+            "A": "Yes, bikes are always allowed",
+            "B": "No, bikes are not allowed during peak hours",
+            "C": "Yes, but she must pay extra",
+            "D": "No, bikes are only allowed on the Green Line"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "Which transit line operates the latest at night?",
+          "options": {
+            "A": "Red Line",
+            "B": "Green Line",
+            "C": "Blue Line",
+            "D": "They all close at the same time"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 5,
+          "skill": "applied_comprehension",
+          "question_text": "Chen makes two cross-zone round trips per day, five days a week. Would a monthly pass save him money?",
+          "options": {
+            "A": "No, individual tickets would be cheaper",
+            "B": "Yes, he would save over $132 per month",
+            "C": "They cost exactly the same",
+            "D": "The monthly pass does not cover cross-zone travel"
+          },
+          "correct_answer": "B"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below about transit. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Tariq,\n\nI figured out the transit system! To get to the hospital from my place in Northgate, I take the Red Line to Downtown Central and [BLANK_6] to the Green Line. The whole trip takes about 35 minutes, which is faster than driving during rush hour.\n\nI also discovered that I qualify for the student [BLANK_7] — 35% off every fare. A monthly pass is only about $64 for me, which is a real [BLANK_8] compared to paying for gas and parking.\n\nLet me know if you need directions from your place!\n\nSam",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "walk",
+              "B": "transfer",
+              "C": "return",
+              "D": "cancel"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "penalty",
+              "B": "surcharge",
+              "C": "discount",
+              "D": "upgrade"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "waste",
+              "B": "bargain",
+              "C": "risk",
+              "D": "problem"
+            },
+            "correct_answer": "B"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 7,
+      "difficulty": "easy",
+      "title": "Hospital Visitor Information Guide",
+      "diagram": {
+        "type": "information_guide",
+        "image_prompt": "A hospital visitor information sheet titled 'Clearview Regional Hospital — Visitor Guide'. Sections: Visiting Hours — General Wards: 10 AM–12 PM and 4 PM–8 PM daily; ICU: 11 AM–12 PM and 6 PM–7 PM (max 2 visitors at a time); Maternity: 9 AM–9 PM (partners may stay overnight); Pediatrics: 8 AM–8 PM (one parent may stay overnight). Parking — Main lot: $4/hr, max $16/day; Visitor validated parking at Information Desk: first 2 hours free. Cafeteria — Ground floor, open 7 AM–7 PM; Tim Hortons kiosk in main lobby open 6 AM–10 PM. Gift Shop — Main lobby, 9 AM–5 PM weekdays only. Important Rules — No flowers in ICU; scent-free environment; hand sanitizer required before entering patient rooms; masks required during flu season (Nov–Mar). Shuttle bus from Clearview GO Station every 30 minutes, 6 AM–10 PM. Use a clean medical blue and white design.",
+        "text_description": "Clearview Regional Hospital — Visitor Guide:\nVisiting Hours:\n- General Wards: 10 AM–12 PM and 4 PM–8 PM daily\n- ICU: 11 AM–12 PM and 6 PM–7 PM (max 2 visitors at a time)\n- Maternity: 9 AM–9 PM (partners may stay overnight)\n- Pediatrics: 8 AM–8 PM (one parent may stay overnight)\nParking: Main lot $4/hr, max $16/day. Validated parking at Info Desk: first 2 hours free.\nCafeteria: Ground floor, 7 AM–7 PM. Tim Hortons kiosk: main lobby, 6 AM–10 PM.\nGift Shop: Main lobby, 9 AM–5 PM weekdays only.\nRules: No flowers in ICU. Scent-free environment. Hand sanitizer before entering patient rooms. Masks required Nov–Mar (flu season).\nShuttle from Clearview GO Station every 30 min, 6 AM–10 PM."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Amir wants to visit his grandmother in the ICU at 5:00 PM. Can he?",
+          "options": {
+            "A": "Yes, ICU visiting hours include 5:00 PM",
+            "B": "No, ICU afternoon visiting is 6 PM–7 PM only",
+            "C": "Yes, but only if he is her only visitor",
+            "D": "No, ICU does not allow visitors in the afternoon"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "Rita parked for 3 hours but got her ticket validated at the Information Desk. How much does she owe?",
+          "options": {
+            "A": "$4",
+            "B": "$8",
+            "C": "$12",
+            "D": "Nothing — her first 2 hours are free, plus $4 for the third"
+          },
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "Tom wants to buy flowers for his wife who just had a baby. Where can he buy them and can he bring them to her room?",
+          "options": {
+            "A": "Gift Shop, and yes — flowers are only banned in ICU",
+            "B": "Gift Shop, but flowers are banned everywhere",
+            "C": "Tim Hortons kiosk sells flowers",
+            "D": "The Cafeteria has a flower stand"
+          },
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "During which months are masks required for visitors?",
+          "options": {
+            "A": "June to August",
+            "B": "September to December",
+            "C": "November to March",
+            "D": "All year round"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 5,
+          "skill": "cross_reference",
+          "question_text": "Sophie arrives at Clearview GO Station at 9:45 PM. Can she take the shuttle to the hospital?",
+          "options": {
+            "A": "Yes, the shuttle runs until 10 PM",
+            "B": "No, the shuttle ends at 9 PM",
+            "C": "Yes, but only on weekdays",
+            "D": "No, the shuttle runs only in the morning"
+          },
+          "correct_answer": "A"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the text message below about visiting the hospital. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Lisa,\n\nJust a heads up — visiting hours for Dad's ward are split into two [BLANK_6]: morning and late afternoon. I went at 4:30 PM yesterday and the cafeteria was still open so I grabbed a coffee. If you go on a Saturday though, the gift shop will be [BLANK_7] — it is only open on weekdays.\n\nAlso, remember to use hand sanitizer before you go into his room. It is hospital [BLANK_8].\n\nSee you there,\nMike",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "meals",
+              "B": "windows",
+              "C": "prices",
+              "D": "buildings"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "packed",
+              "B": "free",
+              "C": "closed",
+              "D": "moved"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "gossip",
+              "B": "policy",
+              "C": "fiction",
+              "D": "furniture"
+            },
+            "correct_answer": "B"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 8,
+      "difficulty": "advanced",
+      "title": "Apartment Building Amenities Notice",
+      "diagram": {
+        "type": "information_notice",
+        "image_prompt": "A clean apartment building amenities notice titled 'Lakeside Towers — Resident Amenities & Hours'. List format: Fitness Room — 2nd floor, open 24/7, key fob required; Rooftop Lounge — 15th floor, 8 AM–10 PM, bookable for events ($50 deposit); Swimming Pool — Basement level, 6 AM–9 PM (no lifeguard on duty), children under 12 must be with adult; Party Room — Ground floor, 10 AM–11 PM, bookable for private events ($75 deposit, refunded if cleaned); Laundry Room — Each floor, 7 AM–10 PM, $2.00 wash / $1.75 dry; Package Pickup — Concierge desk, Mon–Fri 8 AM–6 PM, Sat 9 AM–1 PM; Guest Parking — 3 visitor spots per floor (register plate at concierge, max 48 hours). Note: 'Quiet hours: 10 PM–8 AM. Smoking prohibited in all indoor areas. Service requests: submit via resident portal or call 905-555-0199.' Modern minimalist design with apartment building icons.",
+        "text_description": "Lakeside Towers — Resident Amenities & Hours:\n- Fitness Room: 2nd floor, 24/7, key fob required\n- Rooftop Lounge: 15th floor, 8 AM–10 PM, bookable ($50 deposit)\n- Swimming Pool: Basement, 6 AM–9 PM, no lifeguard, children under 12 with adult\n- Party Room: Ground floor, 10 AM–11 PM, bookable ($75 deposit, refunded if cleaned)\n- Laundry Room: Each floor, 7 AM–10 PM, $2.00 wash / $1.75 dry\n- Package Pickup: Concierge, Mon–Fri 8 AM–6 PM, Sat 9 AM–1 PM\n- Guest Parking: 3 visitor spots/floor, register at concierge, max 48 hours\nQuiet hours: 10 PM–8 AM. No smoking indoors. Service requests via portal or 905-555-0199."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "data_extraction",
+          "question_text": "At what time does the swimming pool close?",
+          "options": {
+            "A": "8 PM",
+            "B": "9 PM",
+            "C": "10 PM",
+            "D": "11 PM"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "Sara wants to throw a birthday party in the Party Room. How much deposit must she pay?",
+          "options": {
+            "A": "$25",
+            "B": "$50",
+            "C": "$75",
+            "D": "$100"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "A resident wants to pick up a package on Saturday afternoon at 2 PM. Can they?",
+          "options": {
+            "A": "Yes, the concierge is open until 6 PM on Saturdays",
+            "B": "No, Saturday pickup ends at 1 PM",
+            "C": "Yes, but only for registered residents",
+            "D": "No, package pickup is weekdays only"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "How long can a guest park in visitor parking?",
+          "options": {
+            "A": "12 hours",
+            "B": "24 hours",
+            "C": "48 hours",
+            "D": "One week"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 5,
+          "skill": "applied_comprehension",
+          "question_text": "A parent with an 11-year-old wants to use the pool at 7 AM. What rule applies?",
+          "options": {
+            "A": "The child cannot use the pool at all",
+            "B": "The child must be accompanied by the adult",
+            "C": "The pool is closed at 7 AM",
+            "D": "A lifeguard must be present"
+          },
+          "correct_answer": "B"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the message below from a new resident. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Chen,\n\nI just moved into Lakeside Towers and the amenities are great! The fitness room is open [BLANK_6] so I can work out late at night after my shifts. The pool closes at 9 though, so I have to plan ahead for that.\n\nI need to do laundry this weekend — it is $2.00 to wash and $1.75 to [BLANK_7], which is pretty reasonable. Oh, and if you visit, make sure to register your car at the concierge or you might get [BLANK_8].\n\nSee you soon!\nOmar",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "rarely",
+              "B": "never",
+              "C": "24/7",
+              "D": "monthly"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "fold",
+              "B": "dry",
+              "C": "press",
+              "D": "soak"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "promoted",
+              "B": "rewarded",
+              "C": "towed",
+              "D": "hired"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 9,
+      "difficulty": "intermediate",
+      "title": "Municipal Rec Centre Pool Schedule",
+      "diagram": {
+        "type": "schedule_table",
+        "image_prompt": "A pool schedule poster titled 'Bridgewater Aquatic Centre — Weekly Pool Schedule'. Display as a grid with days across the top (Mon–Sun) and time slots down the side. Lanes Pool (25m): Lane Swim 6–8 AM Mon–Fri, Aqua Fitness 9–10 AM Mon/Wed/Fri, Public Swim 12–2 PM daily, Swim Lessons 3:30–5 PM Mon–Thu, Lane Swim 5:30–7:30 PM Mon–Fri, Family Swim 10 AM–12 PM Sat/Sun, Public Swim 1–4 PM Sat/Sun. Leisure Pool (warm water): Tot Splash 10–11 AM Tue/Thu (ages 0–4 with parent), Arthritis Aquatics 11 AM–12 PM Mon/Wed/Fri, Open Play 12–3 PM daily, Adult Leisure Swim 7–8:30 PM Mon–Thu. Fees: Drop-in $6 adult, $3.50 child/senior. 10-visit pass: $48 adult, $28 child/senior. Monthly unlimited: $65. Note: 'Swim caps required in Lane Pool. Children under 7 must have adult within arm's reach. Shower before entering any pool.' Modern aquatic centre design with wave patterns in blue.",
+        "text_description": "Bridgewater Aquatic Centre — Weekly Pool Schedule:\nLanes Pool (25m):\n- Lane Swim: 6–8 AM Mon–Fri\n- Aqua Fitness: 9–10 AM Mon/Wed/Fri\n- Public Swim: 12–2 PM daily\n- Swim Lessons: 3:30–5 PM Mon–Thu\n- Lane Swim: 5:30–7:30 PM Mon–Fri\n- Family Swim: 10 AM–12 PM Sat/Sun\n- Public Swim: 1–4 PM Sat/Sun\nLeisure Pool (warm water):\n- Tot Splash: 10–11 AM Tue/Thu (ages 0–4 with parent)\n- Arthritis Aquatics: 11 AM–12 PM Mon/Wed/Fri\n- Open Play: 12–3 PM daily\n- Adult Leisure Swim: 7–8:30 PM Mon–Thu\nFees: Drop-in $6 adult, $3.50 child/senior. 10-visit pass $48 adult / $28 child/senior. Monthly unlimited $65.\nSwim caps required in Lane Pool. Children under 7: adult within arm's reach. Shower before entering any pool."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Mrs. Chow, age 72, has arthritis and prefers warm water. When can she swim?",
+          "options": {
+            "A": "Lane Swim at 6 AM",
+            "B": "Arthritis Aquatics at 11 AM Mon/Wed/Fri in the Leisure Pool",
+            "C": "Public Swim at 12 PM",
+            "D": "Family Swim on Saturday morning"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "A parent wants to bring their 3-year-old to Tot Splash on a Wednesday. Can they?",
+          "options": {
+            "A": "Yes, Tot Splash is available every weekday",
+            "B": "No, Tot Splash is only on Tuesdays and Thursdays",
+            "C": "Yes, but they need a swim cap",
+            "D": "No, children must be at least 4 years old"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 3,
+          "skill": "applied_comprehension",
+          "question_text": "Derek swims laps 4 times a week. Would a 10-visit pass or monthly unlimited be cheaper?",
+          "options": {
+            "A": "10-visit pass",
+            "B": "Monthly unlimited",
+            "C": "They cost the same per visit",
+            "D": "Drop-in each time"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "cross_reference",
+          "question_text": "Liam wants to do lane swimming on a Saturday morning. Is this available?",
+          "options": {
+            "A": "Yes, lane swim runs every morning",
+            "B": "No, Saturday mornings are Family Swim only",
+            "C": "Yes, from 6–8 AM",
+            "D": "No, the pool is closed on Saturdays"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "data_extraction",
+          "question_text": "What equipment is required in the Lanes Pool?",
+          "options": {
+            "A": "Goggles",
+            "B": "Flippers",
+            "C": "Swim cap",
+            "D": "Life jacket"
+          },
+          "correct_answer": "C"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below about the pool. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Nora,\n\nI went to Bridgewater Aquatic Centre for the first time yesterday. I did lane swim in the morning and it was great — very [BLANK_6] since most people go in the evening. Just a reminder, you need a swim cap for the Lanes Pool, which I found out the hard way!\n\nI bought a 10-visit pass for $48 because it is cheaper than paying the [BLANK_7] fee each time. You should get one too — we could go together on weekday [BLANK_8] after work.\n\nLet me know!\nHanna",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "crowded",
+              "B": "quiet",
+              "C": "expensive",
+              "D": "cold"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "membership",
+              "B": "parking",
+              "C": "drop-in",
+              "D": "lesson"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "mornings",
+              "B": "nights",
+              "C": "weekends",
+              "D": "evenings"
+            },
+            "correct_answer": "D"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 10,
+      "difficulty": "advanced",
+      "title": "Regional Transit Commuter Rail Map",
+      "diagram": {
+        "type": "transit_map",
+        "image_prompt": "A detailed commuter rail map titled 'Lakeshore Regional Transit — Commuter Rail Network'. Three lines: Lakeshore West (Oakville → Clarkson → Port Credit → Long Branch → Union Station, travel time 48 min end-to-end), Lakeshore East (Union Station → Danforth → Scarborough → Pickering → Oshawa, travel time 55 min), Midtown Crosslink (Pearson Airport → Weston → Bloor-Yonge → Danforth, travel time 32 min). Transfers: Union Station (Lakeshore West ↔ East), Danforth (Lakeshore East ↔ Midtown Crosslink). Service frequency: Peak (6:30–9:30 AM, 3:30–7 PM) every 15 min all lines; Off-peak every 30 min; Weekend every 30 min, no Midtown Crosslink on Sundays. Fares: Single trip $5.90 base + $1.40/zone crossed (max 4 zones). Day pass $14.50. Weekly pass $52. Monthly pass $172. Students/Seniors 40% off. Presto card users: 8% discount on single fares. Free transfers within 2 hours of tap. Bikes: front car only, max 2 per train. Design like a professional transit authority map.",
+        "text_description": "Lakeshore Regional Transit — Commuter Rail Network:\nLakeshore West: Oakville → Clarkson → Port Credit → Long Branch → Union Station (48 min)\nLakeshore East: Union Station → Danforth → Scarborough → Pickering → Oshawa (55 min)\nMidtown Crosslink: Pearson Airport → Weston → Bloor-Yonge → Danforth (32 min)\nTransfers: Union Station (West ↔ East), Danforth (East ↔ Midtown)\nPeak (6:30–9:30 AM, 3:30–7 PM): every 15 min. Off-peak/Weekend: every 30 min. No Midtown Crosslink on Sundays.\nFares: $5.90 base + $1.40/zone (max 4 zones). Day pass $14.50. Weekly $52. Monthly $172.\nStudents/Seniors: 40% off. Presto: 8% off single fares. Free transfers within 2 hours.\nBikes: front car only, max 2 per train."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Nina flies into Pearson Airport on a Sunday and needs to reach Scarborough. What is her best route?",
+          "options": {
+            "A": "Midtown Crosslink to Danforth, then Lakeshore East to Scarborough",
+            "B": "She cannot reach Scarborough by train on Sunday because the Midtown Crosslink does not run",
+            "C": "Lakeshore West to Union Station, then Lakeshore East to Scarborough",
+            "D": "Midtown Crosslink directly to Scarborough"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "A student travelling 3 zones on a single trip with a Presto card pays approximately how much?",
+          "options": {
+            "A": "$6.42",
+            "B": "$5.94",
+            "C": "$5.09",
+            "D": "$3.54"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "Jamal commutes from Oakville to Danforth every weekday. What is his route?",
+          "options": {
+            "A": "Lakeshore West to Union Station, then Lakeshore East to Danforth",
+            "B": "Midtown Crosslink direct",
+            "C": "Lakeshore East only",
+            "D": "Lakeshore West to Long Branch, then walk"
+          },
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 4,
+          "skill": "applied_comprehension",
+          "question_text": "A commuter takes 22 round trips per month across 2 zones. Is a monthly pass worth it?",
+          "options": {
+            "A": "No, individual trips would be cheaper",
+            "B": "Yes, individual trips would cost about $190.52 vs. $172 for a pass",
+            "C": "They cost about the same",
+            "D": "The monthly pass does not cover 2-zone travel"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "data_extraction",
+          "question_text": "How many bicycles are allowed per train?",
+          "options": {
+            "A": "Unlimited, in any car",
+            "B": "4, in the last car",
+            "C": "2, in the front car only",
+            "D": "None — bikes are not allowed"
+          },
+          "correct_answer": "C"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below about commuting. Complete it by choosing the best option for each blank.",
+        "response_text": "Hey Omar,\n\nI finally mapped out my commute! From Pickering, I take the Lakeshore East line to Union Station — it is about 40 minutes. During [BLANK_6] hours, trains come every 15 minutes, so I never wait long.\n\nI signed up for a Presto card since it gives you an 8% [BLANK_7] on single fares. But honestly, since I travel every day, the monthly pass at $172 probably makes more sense. I will do the math this week and decide.\n\nOne annoyance — I wanted to bring my bike but it has to go in the [BLANK_8] car and there is a limit of two bikes per train. I might just leave it at the station.\n\nTalk soon,\nAlex",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "quiet",
+              "B": "peak",
+              "C": "overnight",
+              "D": "holiday"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "surcharge",
+              "B": "penalty",
+              "C": "discount",
+              "D": "transfer"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "last",
+              "B": "middle",
+              "C": "front",
+              "D": "rear"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 11,
+      "difficulty": "easy",
+      "title": "Workplace Safety Training Poster",
+      "diagram": {
+        "type": "information_poster",
+        "image_prompt": "A workplace safety training requirements poster titled 'Safeway Distribution Centre — Mandatory Training Requirements'. Table format with columns: Training Module, Who Must Complete, Frequency, Duration, Where. Rows: (1) WHMIS 2015 — All employees — Annually — 2 hours — Online portal; (2) Forklift Certification — Warehouse staff only — Every 3 years — 8 hours (1-day course) — On-site with certified trainer; (3) Fire Safety & Evacuation — All employees — Annually — 1 hour — Lunch-and-learn (various dates); (4) First Aid & CPR — Team leads and supervisors — Every 2 years — 16 hours (2-day course) — St. John Ambulance off-site; (5) Ergonomics & Lifting — Warehouse and shipping staff — Once (at hire) + refresher annually — 45 minutes — On-site demonstration; (6) Workplace Violence Prevention — All employees — Every 2 years — 90 minutes — Online portal. Footer: 'Training records maintained by HR. Failure to complete mandatory training by deadline may result in temporary reassignment. Employees are paid for all training time. Questions? Contact safety@safeway-dc.ca.' Use a serious industrial safety design with yellow/black accents and safety icons.",
+        "text_description": "Safeway Distribution Centre — Mandatory Training Requirements:\n1. WHMIS 2015 | All employees | Annually | 2 hours | Online portal\n2. Forklift Certification | Warehouse staff only | Every 3 years | 8 hours (1 day) | On-site with trainer\n3. Fire Safety & Evacuation | All employees | Annually | 1 hour | Lunch-and-learn\n4. First Aid & CPR | Team leads and supervisors | Every 2 years | 16 hours (2 days) | Off-site (St. John Ambulance)\n5. Ergonomics & Lifting | Warehouse and shipping staff | At hire + annual refresher | 45 min | On-site\n6. Workplace Violence Prevention | All employees | Every 2 years | 90 min | Online portal\nNote: Training records maintained by HR. Missed deadlines may result in temporary reassignment. All training time is paid. Contact: safety@safeway-dc.ca."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Maria is a new warehouse employee. Which trainings must she complete during her first week?",
+          "options": {
+            "A": "Only WHMIS",
+            "B": "WHMIS, Fire Safety, Forklift Certification, Ergonomics & Lifting, and Workplace Violence Prevention",
+            "C": "First Aid & CPR and Forklift only",
+            "D": "None — training is optional for new hires"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "data_extraction",
+          "question_text": "How long is the Forklift Certification course?",
+          "options": {
+            "A": "2 hours",
+            "B": "4 hours",
+            "C": "8 hours",
+            "D": "16 hours"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "Jason is an office administrator, not a warehouse worker. Which trainings must he complete?",
+          "options": {
+            "A": "All six modules",
+            "B": "WHMIS, Fire Safety, and Workplace Violence Prevention only",
+            "C": "Forklift and Ergonomics only",
+            "D": "None — only warehouse staff need training"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "applied_comprehension",
+          "question_text": "A team lead last completed First Aid & CPR in March 2023. When must they recertify?",
+          "options": {
+            "A": "March 2024",
+            "B": "March 2025",
+            "C": "March 2026",
+            "D": "Never — it is a one-time course"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "data_extraction",
+          "question_text": "What happens if an employee misses a training deadline?",
+          "options": {
+            "A": "They receive a pay increase",
+            "B": "They may be temporarily reassigned",
+            "C": "They are immediately terminated",
+            "D": "Nothing — there are no consequences"
+          },
+          "correct_answer": "B"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below about training. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Team,\n\nThis is a reminder that WHMIS renewal training is due by the end of this month. The course takes about two hours and can be completed through the online [BLANK_6] at your convenience. Please make sure to finish it before March 31 to avoid being [BLANK_7] to other duties.\n\nAlso, any warehouse staff who have not yet done their annual Ergonomics refresher should speak to their supervisor to [BLANK_8] a session. Thanks for staying on top of this!\n\n— HR Department",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "store",
+              "B": "portal",
+              "C": "cafeteria",
+              "D": "warehouse"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "promoted",
+              "B": "reassigned",
+              "C": "rewarded",
+              "D": "transferred"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "cancel",
+              "B": "avoid",
+              "C": "schedule",
+              "D": "refuse"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 12,
+      "difficulty": "intermediate",
+      "title": "Farmers' Market Vendor Map",
+      "diagram": {
+        "type": "event_poster",
+        "image_prompt": "A colourful farmers' market map titled 'Hillcrest Farmers Market — Every Saturday, 8 AM–1 PM, May through October'. Map layout showing vendor areas: Row A (North) — Fresh produce: organic vegetables (A1), seasonal fruit (A2), herbs & microgreens (A3); Row B (Centre) — Artisan goods: fresh bread & pastries (B1), local honey & preserves (B2), handmade soaps (B3); Row C (South) — Prepared food: wood-fired pizza (C1), smoothie bar (C2), BBQ truck (C3); Community Corner (East) — live music 10 AM–12 PM, face painting for kids, community info booth. Parking at Hillcrest Arena lot (free). Payment: most vendors accept cash and e-transfer; some accept debit (look for card symbol). Dogs welcome on leash. No outside alcohol. Info: hillcrestmarket@email.ca. Cheerful farm-style design with illustrations of produce and bread.",
+        "text_description": "Hillcrest Farmers Market — Every Saturday, 8 AM–1 PM, May through October:\nRow A (North) — Fresh Produce: A1 Organic Vegetables, A2 Seasonal Fruit, A3 Herbs & Microgreens\nRow B (Centre) — Artisan Goods: B1 Fresh Bread & Pastries, B2 Local Honey & Preserves, B3 Handmade Soaps\nRow C (South) — Prepared Food: C1 Wood-Fired Pizza, C2 Smoothie Bar, C3 BBQ Truck\nCommunity Corner (East): Live music 10 AM–12 PM, face painting for kids, community info booth.\nParking: Hillcrest Arena lot (free). Payment: most vendors take cash and e-transfer; some accept debit (look for card symbol). Dogs welcome on leash. No outside alcohol.\nContact: hillcrestmarket@email.ca"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "data_extraction",
+          "question_text": "Where would you go to buy freshly baked bread?",
+          "options": {
+            "A": "Stall A1",
+            "B": "Stall B1",
+            "C": "Stall C1",
+            "D": "Community Corner"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "data_extraction",
+          "question_text": "When does the live music start?",
+          "options": {
+            "A": "8 AM",
+            "B": "9 AM",
+            "C": "10 AM",
+            "D": "12 PM"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "skill": "applied_comprehension",
+          "question_text": "Tanya only has a credit card. Will she be able to buy from all vendors?",
+          "options": {
+            "A": "Yes, all vendors accept credit cards",
+            "B": "No, vendors accept cash, e-transfer, and some accept debit only",
+            "C": "Yes, but she must pay a surcharge",
+            "D": "No, the market is cash only"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "During which months does the market operate?",
+          "options": {
+            "A": "Year-round",
+            "B": "January to June",
+            "C": "May to October",
+            "D": "June to December"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 5,
+          "skill": "applied_comprehension",
+          "question_text": "Can a family bring their dog to the market?",
+          "options": {
+            "A": "No, pets are not allowed",
+            "B": "Yes, but the dog must be on a leash",
+            "C": "Only service animals are permitted",
+            "D": "Yes, dogs can roam freely"
+          },
+          "correct_answer": "B"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the message below about the market. Complete it by choosing the best option for each blank.",
+        "response_text": "Hey Jade,\n\nI went to the Hillcrest Farmers Market last Saturday and it was so much fun! The [BLANK_6] is free at the arena lot, which is nice. I grabbed some organic vegetables and amazing honey from one of the artisan [BLANK_7]. The wood-fired pizza was delicious too.\n\nThe market runs every Saturday until [BLANK_8], so we have plenty of time to go together. Want to check it out next weekend?\n\n— Nina",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "food",
+              "B": "music",
+              "C": "parking",
+              "D": "entrance"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "vendors",
+              "B": "trucks",
+              "C": "gardens",
+              "D": "offices"
+            },
+            "correct_answer": "A"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "December",
+              "B": "August",
+              "C": "October",
+              "D": "March"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 13,
+      "difficulty": "advanced",
+      "title": "University Campus Services Map",
+      "diagram": {
+        "type": "floor_plan",
+        "image_prompt": "A detailed university campus services map titled 'Laurier University — Student Services Directory'. Buildings and locations: Main Building (M) — Registrar (M-101, Mon–Fri 9 AM–4:30 PM), Financial Aid (M-102, Mon–Fri 10 AM–3 PM, by appointment Tue/Thu after 3 PM), Academic Advising (M-200, drop-in Mon/Wed 1–4 PM, appointments other days). Library (L) — open Mon–Thu 8 AM–11 PM, Fri 8 AM–8 PM, Sat/Sun 10 AM–6 PM; 24-hour study hall during exam period (Apr 5–25). Health Centre (H) — walk-in clinic Mon–Fri 9 AM–12 PM, appointments 1–4 PM; mental health counsellor available Wed/Fri by referral. Athletics Complex (A) — gym Mon–Fri 6 AM–10 PM, Sat/Sun 8 AM–6 PM; pool Mon/Wed/Fri 11:30 AM–1:30 PM and 6–8 PM. Career Centre (C) — resume reviews (drop-in Tue/Thu 10 AM–2 PM), mock interviews (by appointment), job board updated weekly. International Student Office (I) — visa & immigration support Mon–Fri 10 AM–4 PM, conversation circle Fri 3–4:30 PM. Note: 'All students must present valid student ID. Campus shuttle runs every 20 min between Main Building and Athletics Complex, 7:30 AM–9 PM.' Formal university map style in burgundy and white.",
+        "text_description": "Laurier University — Student Services Directory:\nMain Building (M): Registrar M-101 Mon–Fri 9 AM–4:30 PM | Financial Aid M-102 Mon–Fri 10 AM–3 PM (appointments Tue/Thu after 3 PM) | Academic Advising M-200 drop-in Mon/Wed 1–4 PM, appointments other days\nLibrary (L): Mon–Thu 8 AM–11 PM, Fri 8 AM–8 PM, Sat/Sun 10 AM–6 PM; 24-hour study hall during exams (Apr 5–25)\nHealth Centre (H): Walk-in Mon–Fri 9 AM–12 PM, appointments 1–4 PM; mental health counsellor Wed/Fri by referral\nAthletics Complex (A): Gym Mon–Fri 6 AM–10 PM, Sat/Sun 8 AM–6 PM; Pool Mon/Wed/Fri 11:30 AM–1:30 PM and 6–8 PM\nCareer Centre (C): Resume reviews drop-in Tue/Thu 10 AM–2 PM; mock interviews by appointment; job board updated weekly\nInternational Student Office (I): Visa support Mon–Fri 10 AM–4 PM; conversation circle Fri 3–4:30 PM\nNote: Valid student ID required. Campus shuttle every 20 min between Main Building and Athletics, 7:30 AM–9 PM."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Ana is an international student who needs help with a study permit renewal on a Friday at 11 AM. Can she walk in to the International Student Office?",
+          "options": {
+            "A": "No, the office is closed on Fridays",
+            "B": "Yes, the office is open Mon–Fri 10 AM–4 PM",
+            "C": "Only by appointment on Fridays",
+            "D": "Yes, but only during the conversation circle"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "Jason wants Financial Aid advice at 3:30 PM on a Monday. Can he be seen?",
+          "options": {
+            "A": "Yes, Financial Aid is open until 4:30 PM",
+            "B": "No, regular hours end at 3 PM and after-hours appointments are only on Tue/Thu",
+            "C": "Yes, but only by phone",
+            "D": "No, Financial Aid is closed on Mondays"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "A student wants to swim on a Tuesday evening. Is the pool open?",
+          "options": {
+            "A": "Yes, the pool is open every evening",
+            "B": "No, the pool is only open Mon/Wed/Fri",
+            "C": "Yes, from 6–8 PM",
+            "D": "No, the gym closes before pool hours on Tuesdays"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "When is the library open 24 hours?",
+          "options": {
+            "A": "Every weekend",
+            "B": "All of January",
+            "C": "During the exam period, April 5–25",
+            "D": "Every Friday night"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 5,
+          "skill": "applied_comprehension",
+          "question_text": "Priya needs both a resume review and academic advising on the same day without an appointment. Which day works?",
+          "options": {
+            "A": "Monday — advising drop-in but no resume review",
+            "B": "Tuesday — resume review drop-in but no advising drop-in",
+            "C": "Wednesday — advising drop-in but no resume review",
+            "D": "There is no single day when both are available as drop-in"
+          },
+          "correct_answer": "D"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below from a student. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Mom,\n\nCampus has so many services — I wish I had explored them earlier! I went to the Career Centre on Tuesday for a resume [BLANK_6] and the advisor gave me great tips. I am also planning to see the mental health counsellor, but I need a [BLANK_7] first, and she is only available on Wednesdays and Fridays.\n\nExams start April 5 and the library stays open [BLANK_8] during that period, so I will basically be living there. Do not worry though — I am eating properly and using the gym almost every day.\n\nLove,\nMia",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "payment",
+              "B": "rejection",
+              "C": "review",
+              "D": "complaint"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "referral",
+              "B": "diploma",
+              "C": "prescription",
+              "D": "transfer"
+            },
+            "correct_answer": "A"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "briefly",
+              "B": "rarely",
+              "C": "24 hours",
+              "D": "on weekends only"
+            },
+            "correct_answer": "C"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 14,
+      "difficulty": "easy",
+      "title": "Provincial Park Trail Map",
+      "diagram": {
+        "type": "trail_map",
+        "image_prompt": "A provincial park trail map titled 'Silver Lake Provincial Park — Trail Guide'. Trails shown with coloured lines: Lakeshore Loop (blue, 3.2 km, easy, flat terrain, wheelchair accessible, estimated 45 min); Pine Ridge Trail (green, 5.8 km, moderate, some hills, estimated 1.5 hr); Summit Trail (red, 9.1 km, difficult, steep elevation gain 340m, estimated 3–4 hr, not recommended in wet conditions); Wetland Boardwalk (yellow, 1.5 km, easy, birding platform at midpoint, estimated 25 min). Facilities: Visitor Centre (open May–Oct 9 AM–5 PM daily, Nov–Apr weekends only 10 AM–3 PM), washrooms at trailheads and Visitor Centre, picnic area near Lakeshore Loop, canoe/kayak rental at beach ($20/hr, May–Sept). Day-use fee: $15/vehicle. Annual pass: $120. Dogs on leash on Lakeshore Loop and Wetland Boardwalk only. No dogs on Pine Ridge or Summit Trail (wildlife protection zone). No camping. Emergency contact posted at all trailheads. Nature-themed design with illustrations of trees, lake, and wildlife.",
+        "text_description": "Silver Lake Provincial Park — Trail Guide:\nLakeshore Loop: 3.2 km | Easy | Flat, wheelchair accessible | ~45 min\nPine Ridge Trail: 5.8 km | Moderate | Some hills | ~1.5 hr\nSummit Trail: 9.1 km | Difficult | Steep, 340m elevation gain | ~3–4 hr | Not recommended in wet conditions\nWetland Boardwalk: 1.5 km | Easy | Birding platform at midpoint | ~25 min\nFacilities: Visitor Centre May–Oct daily 9 AM–5 PM, Nov–Apr weekends 10 AM–3 PM. Washrooms at trailheads and Visitor Centre. Picnic area near Lakeshore Loop. Canoe/kayak rental at beach $20/hr May–Sept.\nDay-use: $15/vehicle. Annual pass $120. Dogs on leash — Lakeshore Loop and Wetland Boardwalk only. No dogs on Pine Ridge or Summit (wildlife zone). No camping. Emergency contact at all trailheads."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Grandma uses a wheelchair and wants to enjoy a nature walk. Which trail is suitable?",
+          "options": {
+            "A": "Pine Ridge Trail",
+            "B": "Summit Trail",
+            "C": "Lakeshore Loop",
+            "D": "Wetland Boardwalk"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 2,
+          "skill": "cross_reference",
+          "question_text": "Mark wants to hike the Summit Trail with his dog. Is this allowed?",
+          "options": {
+            "A": "Yes, dogs are welcome on all trails",
+            "B": "No, dogs are not allowed on Summit Trail",
+            "C": "Yes, but the dog must be on a leash",
+            "D": "Only service dogs are allowed"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 3,
+          "skill": "applied_comprehension",
+          "question_text": "A family visits the park every other weekend from May to October. Would an annual pass save them money?",
+          "options": {
+            "A": "No, they would spend less paying the daily rate",
+            "B": "Yes, 13 visits at $15 each equals $195, much more than $120",
+            "C": "They cost exactly the same",
+            "D": "The annual pass is not valid on weekends"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "data_extraction",
+          "question_text": "When is the Visitor Centre open during winter months?",
+          "options": {
+            "A": "Daily 9 AM–5 PM",
+            "B": "Weekends only 10 AM–3 PM",
+            "C": "It is closed all winter",
+            "D": "Weekdays only 10 AM–2 PM"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "cross_reference",
+          "question_text": "It rained heavily all morning. Which trail should visitors avoid?",
+          "options": {
+            "A": "Lakeshore Loop",
+            "B": "Wetland Boardwalk",
+            "C": "Summit Trail",
+            "D": "All trails close in rain"
+          },
+          "correct_answer": "C"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the review posted by a visitor. Complete it by choosing the best option for each blank.",
+        "response_text": "We visited Silver Lake Provincial Park last Saturday and had an amazing time. We did the Lakeshore Loop first — it is perfect for [BLANK_6] of all ages since it is completely flat. After lunch at the picnic area, my husband did the Summit Trail while I took the kids to the Wetland Boardwalk, which has a great birding [BLANK_7] in the middle.\n\nThe only downside is that we could not bring our dog on the longer trails because of the wildlife [BLANK_8] rules. We understand why, but it was a bit disappointing.\n\nHighly recommend this park!",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "athletes",
+              "B": "experts",
+              "C": "families",
+              "D": "dogs"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "cage",
+              "B": "platform",
+              "C": "restaurant",
+              "D": "highway"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "protection",
+              "B": "feeding",
+              "C": "hunting",
+              "D": "trading"
+            },
+            "correct_answer": "A"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 15,
+      "difficulty": "intermediate",
+      "title": "Municipal Waste & Recycling Collection Schedule",
+      "diagram": {
+        "type": "schedule_table",
+        "image_prompt": "A detailed municipal waste collection guide titled 'City of Maplewood — 2024 Waste & Recycling Collection Calendar'. Three-column layout: Stream, Collection Day, What Goes In. Rows: Green Bin (organics) — collected every week year-round (Zone A: Monday, Zone B: Tuesday) — food scraps, soiled paper, yard waste (max 4 bags yard waste per collection, must use paper bags or open-top bin); Blue Box (recycling) — collected every two weeks (Zone A: alternating Mondays starting Jan 8, Zone B: alternating Tuesdays starting Jan 9) — paper, cardboard, clean plastics #1–#5, glass bottles, metal cans (NO plastic bags, Styrofoam, or electronics); Garbage — collected every two weeks (opposite week from Blue Box) — max 3 bags/containers, each under 20 kg; Bulky Items — by appointment only, call 905-555-0300 or book online, $25 per pickup, max 5 items (mattresses, furniture, appliances — no hazardous materials); Hazardous Waste — depot drop-off only at 200 Industrial Rd, Sat 8 AM–4 PM (paint, batteries, chemicals, motor oil, electronics). Holiday schedule: No collection on statutory holidays — shifts to next business day. Missed collection? Report by 8 PM same day at maplewood.ca/waste or 905-555-0300. Use a clean municipal design with green/blue/grey icons for each stream.",
+        "text_description": "City of Maplewood — 2024 Waste & Recycling Collection Calendar:\nGreen Bin (organics): Weekly year-round. Zone A Monday, Zone B Tuesday. Food scraps, soiled paper, yard waste (max 4 bags, paper bags or open bin).\nBlue Box (recycling): Every 2 weeks. Zone A alternating Mondays (from Jan 8), Zone B alternating Tuesdays (from Jan 9). Paper, cardboard, clean plastics #1–#5, glass, metal cans. NO plastic bags, Styrofoam, electronics.\nGarbage: Every 2 weeks (opposite week from Blue Box). Max 3 bags/containers, each under 20 kg.\nBulky Items: By appointment — 905-555-0300 or online. $25/pickup, max 5 items. Mattresses, furniture, appliances. No hazardous materials.\nHazardous Waste: Depot only at 200 Industrial Rd, Sat 8 AM–4 PM. Paint, batteries, chemicals, motor oil, electronics.\nHoliday: No collection on stat holidays — shifts to next business day.\nMissed collection? Report by 8 PM same day at maplewood.ca/waste or 905-555-0300."
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "cross_reference",
+          "question_text": "Jana in Zone A had her Blue Box collected on January 8. When is her next Blue Box collection?",
+          "options": {
+            "A": "January 15",
+            "B": "January 22",
+            "C": "February 5",
+            "D": "January 9"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "applied_comprehension",
+          "question_text": "Tom wants to dispose of an old air conditioner and three cans of paint. How should he handle this?",
+          "options": {
+            "A": "Put both out with regular garbage",
+            "B": "Book a bulky item pickup for the AC; take paint to the hazardous waste depot",
+            "C": "Put both in the Blue Box",
+            "D": "Take both to the hazardous waste depot"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 3,
+          "skill": "cross_reference",
+          "question_text": "A Zone B resident puts out 5 bags of yard waste on a Tuesday. What is the problem?",
+          "options": {
+            "A": "Yard waste is only collected in spring",
+            "B": "The maximum is 4 bags per collection",
+            "C": "Yard waste must go in the Blue Box",
+            "D": "Zone B does not have Green Bin collection"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "skill": "applied_comprehension",
+          "question_text": "Monday is a statutory holiday. When will Zone A's Green Bin be collected?",
+          "options": {
+            "A": "It will not be collected that week",
+            "B": "The previous Friday",
+            "C": "Tuesday — the next business day",
+            "D": "The following Monday"
+          },
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 5,
+          "skill": "cross_reference",
+          "question_text": "Sarah puts a Styrofoam container and old batteries in her Blue Box. Which items will be accepted?",
+          "options": {
+            "A": "Both",
+            "B": "The Styrofoam only",
+            "C": "The batteries only",
+            "D": "Neither — Styrofoam and electronics/batteries are excluded from Blue Box"
+          },
+          "correct_answer": "D"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the email below about waste collection. Complete it by choosing the best option for each blank.",
+        "response_text": "Hi Karen,\n\nWe just moved to Maplewood and the waste system here is more [BLANK_6] than our old city. Green Bin is weekly, which is nice, but recycling and garbage each come only every two weeks on [BLANK_7] weeks. I had to check the calendar carefully to figure out which week is which.\n\nI also learned that you cannot put old electronics in the Blue Box — you have to take them to the hazardous waste [BLANK_8] on Industrial Road. It is only open on Saturdays though, so I need to plan for that.\n\nHope you are settling in!\nAmy",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "simple",
+              "B": "detailed",
+              "C": "random",
+              "D": "outdated"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "identical",
+              "B": "daily",
+              "C": "alternating",
+              "D": "holiday"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "factory",
+              "B": "depot",
+              "C": "office",
+              "D": "landfill"
+            },
+            "correct_answer": "B"
+          }
+        ]
+      }
+    }
+  ]
+}

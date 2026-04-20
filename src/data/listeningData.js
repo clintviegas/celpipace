@@ -96,7 +96,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 2,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Booking a Dental Appointment',
         context: 'You will hear a conversation between a patient and a dental clinic receptionist about scheduling an appointment.',
         speakers: [
@@ -181,7 +181,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 3,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Choosing a Restaurant for Dinner',
         context: 'You will hear a conversation between two friends trying to decide where to eat dinner.',
         speakers: [
@@ -264,7 +264,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 4,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Lost Luggage at the Airport',
         context: 'You will hear a conversation between a traveller and an airline customer service agent about a missing suitcase.',
         speakers: [
@@ -434,7 +434,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 6,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Fixing a Wi-Fi Connection',
         context: 'You will hear a conversation between a tenant and their building\'s maintenance manager about a broken internet connection.',
         speakers: [
@@ -518,7 +518,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 7,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Resolving a Scheduling Conflict at Work',
         context: 'You will hear a conversation between two colleagues who discover they are both scheduled to use the same meeting room.',
         speakers: [
@@ -604,7 +604,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 8,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Negotiating a Lease Renewal',
         context: 'You will hear a conversation between a tenant and a property manager about renewing an apartment lease.',
         speakers: [
@@ -774,7 +774,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 10,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Handling a Noise Complaint',
         context: 'You will hear a conversation between a condo resident and the building\'s property manager about ongoing noise from a neighbouring unit.',
         speakers: [
@@ -859,7 +859,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 11,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Returning an Online Order',
         context: 'You will hear a conversation between a customer and an online retailer\'s customer service agent about returning an item that arrived in the wrong size.',
         speakers: [
@@ -1028,7 +1028,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 13,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Disputing a Gym Membership Charge',
         context: 'You will hear a conversation between a gym member and a front desk manager about an unexpected charge on their account.',
         speakers: [
@@ -1114,7 +1114,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 14,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Dealing with a Car Repair Estimate',
         context: 'You will hear a conversation between a car owner and an auto mechanic about the cost of repairs after a routine inspection.',
         speakers: [
@@ -1199,7 +1199,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 15,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Multi-Step Insurance Claim Dispute',
         context: 'You will hear a conversation between a homeowner and an insurance claims adjuster about a denied water damage claim with several complications.',
         speakers: [
@@ -1375,7 +1375,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 17,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Mediating a Budget Dispute Between Departments',
         context: 'You will hear a conversation between a finance director and two department heads who both want funding from a limited pool.',
         speakers: [
@@ -1459,7 +1459,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 18,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Navigating a Contractor Dispute Over Renovation Quality',
         context: 'You will hear a conversation between a homeowner and a general contractor about issues found after a kitchen renovation.',
         speakers: [
@@ -1633,7 +1633,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 20,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Resolving a University Course Registration Error',
         context: 'You will hear a conversation between a university student and a registrar\'s office advisor about being enrolled in the wrong courses after a system migration.',
         speakers: [
@@ -1790,7 +1790,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 2,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Talking About a New Pet',
         context: 'You will hear a conversation between two neighbours chatting about a newly adopted pet.',
         speakers: [
@@ -1849,7 +1849,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 3,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Chatting About a Recipe',
         context: 'You will hear a phone conversation between two friends discussing a recipe one of them tried.',
         speakers: [
@@ -1908,7 +1908,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 4,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Discussing a New Coffee Shop',
         context: 'You will hear two coworkers chatting about a new coffee shop that opened near their office.',
         speakers: [
@@ -2026,7 +2026,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 6,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Weekend Garage Sale Plans',
         context: 'You will hear two neighbours discussing plans for a joint garage sale.',
         speakers: [
@@ -2084,7 +2084,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 7,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Discussing a Friend\'s Career Change',
         context: 'You will hear two friends talking about one of them leaving a stable job to start their own business.',
         speakers: [
@@ -2145,7 +2145,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 8,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Debating Vacation Plans',
         context: 'You will hear a couple trying to agree on where to go for their annual vacation.',
         speakers: [
@@ -2265,7 +2265,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 10,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Catching Up After a Long Time',
         context: 'You will hear two old university friends running into each other and catching up on life changes.',
         speakers: [
@@ -2326,7 +2326,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 11,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Discussing a Home Renovation',
         context: 'You will hear a homeowner talking to a friend about an ongoing kitchen renovation that isn\'t going as planned.',
         speakers: [
@@ -2447,7 +2447,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 13,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Planning a Community Garden Plot',
         context: 'You will hear two neighbours discussing whether to share a community garden plot together.',
         speakers: [
@@ -2506,7 +2506,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 14,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Returning From Parental Leave',
         context: 'You will hear two coworkers chatting about one of them returning to work after maternity leave.',
         speakers: [
@@ -2566,7 +2566,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 15,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Navigating a Sensitive Conversation About Money',
         context: 'You will hear two close friends navigating an awkward situation where one owes the other money.',
         speakers: [
@@ -2690,7 +2690,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 17,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Subtle Disagreement Disguised as Agreement',
         context: 'You will hear two coworkers discussing a new company policy about returning to the office. They seem to agree on the surface but have very different underlying views.',
         speakers: [
@@ -2751,7 +2751,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 18,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Navigating a Disagreement About Elderly Care',
         context: 'You will hear two siblings discussing what to do about their aging father who is struggling to live alone.',
         speakers: [
@@ -2878,7 +2878,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 20,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'An Honest Conversation About Burnout',
         context: 'You will hear two colleagues having lunch where one reveals they are considering a drastic career change due to burnout.',
         speakers: [
@@ -3024,7 +3024,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 2,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Gym Orientation for New Members',
         context: 'You will hear a gym staff member giving an orientation to new members.',
         speakers: [
@@ -3100,7 +3100,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 3,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Community Garden Sign-Up Instructions',
         context: 'You will hear a community coordinator explaining how to sign up for a community garden plot.',
         speakers: [
@@ -3176,7 +3176,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 4,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Apartment Building Fire Safety Briefing',
         context: 'You will hear a building manager delivering a fire safety briefing to residents.',
         speakers: [
@@ -3328,7 +3328,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 6,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'New Employee Parking and Transit Information',
         context: 'You will hear an office administrator explaining parking and transit options to new employees during orientation.',
         speakers: [
@@ -3403,7 +3403,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 7,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Company Remote Work Policy Update',
         context: 'You will hear a human resources director explaining a new updated remote work policy to all employees.',
         speakers: [
@@ -3479,7 +3479,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 8,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Museum Exhibit Tour Introduction',
         context: 'You will hear a museum guide introducing a special exhibit on Canadian Arctic exploration.',
         speakers: [
@@ -3631,7 +3631,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 10,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'New Transit Route Changes',
         context: 'You will hear a public transit spokesperson explaining upcoming route changes and service updates.',
         speakers: [
@@ -3707,7 +3707,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 11,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Volunteer Orientation at a Food Bank',
         context: 'You will hear a volunteer coordinator at a food bank explaining roles and procedures to new volunteers.',
         speakers: [
@@ -3935,7 +3935,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 14,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'City Construction Project Timeline',
         context: 'You will hear a city planner explaining a multi-phase road and infrastructure project to community members.',
         speakers: [
@@ -4012,7 +4012,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 15,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Emergency Preparedness Workshop',
         context: 'You will hear a municipal emergency coordinator giving a detailed household preparedness workshop.',
         speakers: [
@@ -4166,7 +4166,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 17,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Workplace Health and Safety Refresher',
         context: 'You will hear a workplace safety officer delivering a mandatory health and safety refresher training for warehouse employees.',
         speakers: [
@@ -4243,7 +4243,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 18,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Immigration Settlement Services Orientation',
         context: 'You will hear a settlement worker explaining available services and resources for newcomers to Canada.',
         speakers: [
@@ -4396,7 +4396,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 20,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Provincial Grant Application Process',
         context: 'You will hear a government program officer explaining the application process for a small business innovation grant.',
         speakers: [
@@ -4532,7 +4532,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 2,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'School Fundraiser Breaks Record',
         context: 'You will hear a news report about a local school\'s annual fundraiser achieving record results.',
         speakers: [
@@ -4581,7 +4581,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 3,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'New Community Bus Route Launched',
         context: 'You will hear a news report about a new local bus route connecting two neighbourhoods.',
         speakers: [
@@ -4630,7 +4630,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 4,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Fire Damages Downtown Restaurant',
         context: 'You will hear a news report about a fire at a well-known local restaurant.',
         speakers: [
@@ -4728,7 +4728,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 6,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'New Pedestrian Bridge Opens',
         context: 'You will hear a news report about a new pedestrian and cycling bridge in a city.',
         speakers: [
@@ -4777,7 +4777,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 7,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'City Council Housing Debate',
         context: 'You will hear a news report about a city council debate over a proposed affordable housing development.',
         speakers: [
@@ -4826,7 +4826,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 8,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'New Environmental Regulation Announced',
         context: 'You will hear a news report about a new provincial regulation on single-use plastics.',
         speakers: [
@@ -4924,7 +4924,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 10,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'University Research Breakthrough',
         context: 'You will hear a news report about a significant medical research discovery at a Canadian university.',
         speakers: [
@@ -4973,7 +4973,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 11,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Provincial Highway Expansion Plan',
         context: 'You will hear a news report about a major highway expansion project.',
         speakers: [
@@ -5120,7 +5120,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 14,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Hospital Emergency Room Overcrowding Crisis',
         context: 'You will hear a news report about a crisis in Ontario hospital emergency departments.',
         speakers: [
@@ -5169,7 +5169,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 15,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Indigenous Water Advisory Lifted After Decades',
         context: 'You will hear a news report about a long-term boil water advisory finally being lifted on a First Nations reserve.',
         speakers: [
@@ -5267,7 +5267,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 17,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Healthcare Funding Dispute Between Province and Municipalities',
         context: 'You will hear a news report about a dispute over who should fund paramedic services in Ontario.',
         speakers: [
@@ -5316,7 +5316,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 18,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Climate Change and Great Lakes Water Levels',
         context: 'You will hear a news report about the impact of climate change on Great Lakes water levels and communities.',
         speakers: [
@@ -5414,7 +5414,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 20,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'National Defence Spending Review',
         context: 'You will hear a news report about a parliamentary review of Canada\'s military spending amid global security changes.',
         speakers: [
@@ -5546,7 +5546,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 2,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Choosing a Venue for a Charity Event',
         context: 'You will hear three committee members discussing venue options for an annual charity gala.',
         speakers: [
@@ -5615,7 +5615,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 3,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Deciding on a Group Gift',
         context: 'You will hear three coworkers discussing what to buy as a group gift for a colleague who is retiring.',
         speakers: [
@@ -5685,7 +5685,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 4,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Organizing a Neighbourhood Clean-Up',
         context: 'You will hear three neighbours organizing a community clean-up day.',
         speakers: [
@@ -5824,7 +5824,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 6,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Planning a Housewarming Party',
         context: 'You will hear three roommates planning a housewarming party for their new apartment.',
         speakers: [
@@ -5896,7 +5896,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 7,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Debating a Remote Work Policy',
         context: 'You will hear three managers discussing whether to allow permanent remote work for their teams.',
         speakers: [
@@ -5964,7 +5964,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 8,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Discussing Budget Allocation for a Community Project',
         context: 'You will hear three community board members debating how to spend a surplus in the neighbourhood improvement fund.',
         speakers: [
@@ -6104,7 +6104,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 10,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Discussing a School Dress Code Change',
         context: 'You will hear three parent council members debating a proposed change to the school dress code.',
         speakers: [
@@ -6173,7 +6173,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 11,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Debating a Company Sustainability Initiative',
         context: 'You will hear three managers discussing whether the company should invest in a carbon-neutral office initiative.',
         speakers: [
@@ -6376,7 +6376,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 14,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Ethics of Genetic Testing in Schools',
         context: 'You will hear three panelists debating whether schools should offer optional genetic testing to identify learning disabilities early.',
         speakers: [
@@ -6442,7 +6442,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 15,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Three-Way Debate on Urban Development',
         context: 'You will hear three panelists debating whether a historic neighbourhood should be rezoned for high-rise development.',
         speakers: [
@@ -6585,7 +6585,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 17,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Ethical Dilemma: Reporting a Colleague\'s Mistake',
         context: 'You will hear three nurses discussing whether to report a colleague who made a medication error that didn\'t harm the patient but violated protocol.',
         speakers: [
@@ -6657,7 +6657,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 18,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Immigration Policy Panel Discussion',
         context: 'You will hear three panelists discussing whether Canada should increase or reduce immigration levels.',
         speakers: [
@@ -6795,7 +6795,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 20,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Debating Mandatory Community Service for High School Students',
         context: 'You will hear three education stakeholders debating whether community service hours should remain a graduation requirement.',
         speakers: [
@@ -6939,7 +6939,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 2,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'Cooking at Home vs Eating Out',
         context: 'You will hear two speakers debating whether cooking at home or eating out is better.',
         speakers: [
@@ -7004,7 +7004,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 3,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Morning Exercise vs Evening Exercise',
         context: 'You will hear two speakers debating whether morning or evening is the best time to exercise.',
         speakers: [
@@ -7069,7 +7069,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 4,
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         title: 'City Living vs Suburban Living',
         context: 'You will hear two speakers debating the advantages of living in the city versus the suburbs.',
         speakers: [
@@ -7199,7 +7199,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 6,
-        difficulty: 'easy',
+        difficulty: 'advanced',
         title: 'Social Media: Connection or Distraction?',
         context: 'You will hear two speakers debating whether social media is primarily beneficial or harmful.',
         speakers: [
@@ -7263,7 +7263,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 7,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Standardized Testing: Fair Assessment or Flawed System?',
         context: 'You will hear two speakers debating whether standardized testing is a fair way to evaluate students.',
         speakers: [
@@ -7329,7 +7329,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 8,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'Public vs Private Healthcare',
         context: 'You will hear two speakers debating whether Canada should allow more private healthcare options.',
         speakers: [
@@ -7461,7 +7461,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 10,
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         title: 'University Education vs Trade Schools',
         context: 'You will hear two speakers debating whether young people should pursue university degrees or skilled trades.',
         speakers: [
@@ -7526,7 +7526,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 11,
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         title: 'Should Pets Be Allowed in Apartments?',
         context: 'You will hear two speakers debating whether apartment buildings should allow pets.',
         speakers: [
@@ -7722,7 +7722,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 14,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Immigration Policy: Open Borders vs Controlled Entry',
         context: 'You will hear two speakers debating immigration policy, where both partially agree on hidden points.',
         speakers: [
@@ -7788,7 +7788,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 15,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Climate Policy: Economic Growth vs Environmental Protection',
         context: 'You will hear two speakers debating climate policy where economic and environmental arguments overlap in unexpected ways.',
         speakers: [
@@ -7921,7 +7921,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 17,
-        difficulty: 'advanced',
+        difficulty: 'easy',
         title: 'Renewable Energy Investment vs Grid Reliability',
         context: 'You will hear two energy policy experts debating Canada\'s energy transition.',
         speakers: [
@@ -7987,7 +7987,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 18,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Screen Time Limits for Teens',
         context: 'You will hear two speakers debating whether parents should strictly limit screen time for teenagers.',
         speakers: [
@@ -8121,7 +8121,7 @@ export const LISTENING_DATA = {
       },
       {
         setNumber: 20,
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         title: 'Local Businesses vs Chain Stores',
         context: 'You will hear two speakers debating whether cities should do more to protect local businesses from chain store competition.',
         speakers: [

@@ -197,8 +197,8 @@ export default function SpeakingPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(200,16,46,.2)', border: '1px solid rgba(200,16,46,.4)', color: '#f07090' }}>
             🎙️ CELPIP Speaking
           </div>
-          <h1 className="lp-hero-title">CELPIP Speaking</h1>
-          <p className="lp-hero-subtitle">8 tasks · 15–20 minutes · 30–90s per task · CLB 4–12</p>
+          <h1 className="lp-hero-title">Speak with confidence, not a script.</h1>
+          <p className="lp-hero-subtitle">Eight tasks, real-time prep countdowns and AI feedback on fluency, range and clarity.<br/>8 tasks · 15–20 minutes · 30–90s per task · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>8</strong><span>Tasks</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>15–20 min</strong><span>Duration</span></div>

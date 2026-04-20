@@ -65,7 +65,7 @@ Property Manager, Greystone Apartments
 
       // ── Set 2 ── Bank Fraud Alert ────────────────────────────────────
       {
-        setNumber: 2, difficulty: 'easy',
+        setNumber: 2, difficulty: 'intermediate',
         title: 'Bank — Fraud Alert & Account Security',
         passage: `From: Security Team <security@northernbank.ca>
 To: Account Holder
@@ -108,7 +108,7 @@ Northern Bank Fraud Prevention Team
 
       // ── Set 3 ── Job Offer Letter ────────────────────────────────────
       {
-        setNumber: 3, difficulty: 'easy',
+        setNumber: 3, difficulty: 'advanced',
         title: 'HR Department — Job Offer Letter',
         passage: `From: Linda Okafor <l.okafor@horizoncorp.ca>
 To: Marcus Reyes <marcusreyes@email.com>
@@ -156,7 +156,7 @@ Horizon Corporation | (604) 555-0187 | l.okafor@horizoncorp.ca`,
 
       // ── Set 4 ── Library Overdue Notice ──────────────────────────────
       {
-        setNumber: 4, difficulty: 'easy',
+        setNumber: 4, difficulty: 'intermediate',
         title: 'Public Library — Overdue Items & Fine Notice',
         passage: `From: Vancouver Public Library <accounts@vpl.ca>
 To: Priya Sharma <priya.sharma@email.com>
@@ -247,7 +247,7 @@ Maple Leaf Dental Team
 
       // ── Set 6 ── City Road Construction Notice ───────────────────────
       {
-        setNumber: 6, difficulty: 'easy',
+        setNumber: 6, difficulty: 'advanced',
         title: 'City of Burlington — Road Construction Detour',
         passage: `From: City of Burlington Public Works <publicworks@burlington.ca>
 To: All Residents — Brant Street Corridor
@@ -295,7 +295,7 @@ Burlington Public Works Department`,
 
       // ── Set 7 ── Insurance Renewal ───────────────────────────────────
       {
-        setNumber: 7, difficulty: 'intermediate',
+        setNumber: 7, difficulty: 'easy',
         title: 'Insurance Company — Policy Renewal Notice',
         passage: `From: Dominion Insurance Group <renewals@dominioninsurance.ca>
 To: Helen Fontaine <h.fontaine@email.com>
@@ -348,7 +348,7 @@ Dominion Insurance Group
 
       // ── Set 8 ── Landlord Lease Renewal ─────────────────────────────
       {
-        setNumber: 8, difficulty: 'intermediate',
+        setNumber: 8, difficulty: 'advanced',
         title: 'Landlord — Lease Renewal & Rent Increase Notice',
         passage: `From: Teresa Morin <t.morin@silvermapleproperties.ca>
 To: Aidan Clarke <aidanclarke@email.com>
@@ -438,7 +438,7 @@ Westfield School District Administration`,
 
       // ── Set 10 ── Online Order Delay ─────────────────────────────────
       {
-        setNumber: 10, difficulty: 'intermediate',
+        setNumber: 10, difficulty: 'advanced',
         title: 'Online Retailer — Order Delay & Shipping Update',
         passage: `From: NorthShop Canada <orders@northshop.ca>
 To: Fatima Al-Hassan <fatima.alhassan@email.com>
@@ -485,7 +485,7 @@ NorthShop Canada Customer Care`,
 
       // ── Set 11 ── Noise Bylaw Response ───────────────────────────────
       {
-        setNumber: 11, difficulty: 'intermediate',
+        setNumber: 11, difficulty: 'easy',
         title: 'Municipal Bylaw Office — Noise Complaint Response',
         passage: `From: City of Hamilton Bylaw Services <bylaw@hamilton.ca>
 To: Residence at 44 Maple Crescent
@@ -575,7 +575,7 @@ Chief People Officer, Clearpath Consulting`,
 
       // ── Set 13 ── Doctor Referral ─────────────────────────────────────
       {
-        setNumber: 13, difficulty: 'intermediate',
+        setNumber: 13, difficulty: 'advanced',
         title: "Doctor's Office — Test Results & Specialist Referral",
         passage: `From: Dr. Ana Pereira <dr.pereira@northtownfamilyhealth.ca>
 To: Thomas Bergstrom <t.bergstrom@email.com>
@@ -623,7 +623,7 @@ North Town Family Health Centre`,
 
       // ── Set 14 ── Condo Pet Policy ────────────────────────────────────
       {
-        setNumber: 14, difficulty: 'advanced',
+        setNumber: 14, difficulty: 'easy',
         title: 'Condo Board — Pet Policy Amendment Notice',
         passage: `From: Thornwood Place Condominium Corporation <board@thornwoodplace.ca>
 To: All Unit Owners and Residents
@@ -672,7 +672,7 @@ Thornwood Place Board of Directors`,
 
       // ── Set 15 ── University Tuition Increase ─────────────────────────
       {
-        setNumber: 15, difficulty: 'advanced',
+        setNumber: 15, difficulty: 'intermediate',
         title: 'University Registrar — Tuition Fee Increase',
         passage: `From: Office of the Registrar — Maple Ridge University <registrar@mru.ca>
 To: All Registered Students
@@ -763,7 +763,7 @@ Property Manager, Urban Edge Property Management`,
 
       // ── Set 17 ── Property Tax Reassessment ──────────────────────────
       {
-        setNumber: 17, difficulty: 'advanced',
+        setNumber: 17, difficulty: 'easy',
         title: 'Municipal Assessment — Property Tax Reassessment',
         passage: `From: Municipal Property Assessment Corporation (MPAC)
 To: Property Owner — 12 Ridgewood Lane, Brampton, ON
@@ -809,7 +809,7 @@ MPAC — 1-866-296-6722 | mpac.ca`,
 
       // ── Set 18 ── Travel Insurance Claim ─────────────────────────────
       {
-        setNumber: 18, difficulty: 'advanced',
+        setNumber: 18, difficulty: 'intermediate',
         title: 'Travel Insurance — Claim Approval & Reimbursement',
         passage: `From: Voyager Travel Insurance <claims@voyagerinsurance.ca>
 To: Christine Osei <c.osei@email.com>
@@ -904,7 +904,7 @@ Joint Health and Safety Committee — Granite Logistics Inc.`,
 
       // ── Set 20 ── Community Center Cancellation ───────────────────────
       {
-        setNumber: 20, difficulty: 'advanced',
+        setNumber: 20, difficulty: 'intermediate',
         title: 'Community Centre — Program Cancellation & Alternatives',
         passage: `From: Westside Community Centre <programs@westsidecc.ca>
 To: Registered Participants — Spring 2026 Programs

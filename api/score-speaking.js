@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'OpenAI API key not configured' });
   }
 
-  const { responseText, prompt, taskType } = req.body;
+  const { responseText, prompt, taskType, topic } = req.body;
 
   if (!responseText || !prompt) {
     return res.status(400).json({ error: 'Missing responseText or prompt' });
@@ -41,7 +41,7 @@ SCORING CRITERIA (score each 3–12):
    - Is the pacing appropriate — not too short or too verbose?
    - Are filler words, self-corrections, or incomplete thoughts present?
 
-SPEAKING TASK TYPE: ${taskType}
+SPEAKING TASK TYPE: ${taskType}${topic ? `\nSCENE/TOPIC: ${topic}\nFor "Describing a Scene" tasks, the student must describe what is happening in a ${topic} scene. Score Task Fulfillment based on how well they cover the specific elements of this scene (people, actions, spatial details, atmosphere). For "Making Predictions" tasks, score based on how well the student predicts what will happen next in this specific ${topic} scene with logical reasoning.` : ''}
 
 SCORING GUIDELINES:
 - 10–12: Advanced — near-native fluency, sophisticated vocabulary, fully addresses all parts of the prompt
@@ -78,7 +78,7 @@ Respond with ONLY valid JSON in this exact format:
   const userMessage = `SPEAKING PROMPT:
 ${prompt}
 
-TASK TYPE: ${taskType}
+TASK TYPE: ${taskType}${topic ? `\nSCENE TOPIC: ${topic}` : ''}
 
 STUDENT'S SPOKEN RESPONSE TRANSCRIPT (${wordCount} words):
 ${responseText}

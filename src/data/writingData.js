@@ -52,7 +52,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         timeLimitMinutes: 27,
         scenarioContext: 'Your manager\'s name is Ms. Jennifer Watts. You have worked at the company for three years.',
         promptText: 'You work full-time during the week. Your current work schedule is Monday to Friday, 9 AM to 5 PM. You need to request a schedule change from your manager.',
@@ -68,7 +68,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A school board is surveying parents and community members on the following topic: Some educators argue that technology — tablets, laptops, and apps — should be used extensively in classrooms from an early age because it prepares children for the modern world. Others believe that excessive screen time in schools is harmful and that traditional hands-on learning is more effective for young children. What is your opinion? Should schools use technology extensively in early childhood education? Support your position with specific reasons and examples.',
@@ -103,7 +103,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'easy',
+        difficulty: 'advanced',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A community organization is asking residents for their views: Some people believe governments should strictly limit social media access for children under 16 to protect their mental health. Others argue that restricting social media takes away young people\'s freedom and that parents — not governments — should decide. What is your view? Should governments set age restrictions on social media? Explain your position with specific reasons.',
@@ -122,7 +122,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         timeLimitMinutes: 27,
         scenarioContext: 'Your colleague\'s name is Alex. You work in the same department.',
         promptText: 'You missed an important project deadline at work because of a personal emergency. Your colleague had to cover for you. Write an email to your colleague.',
@@ -138,7 +138,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A housing authority is gathering opinions on urban development: Some people prefer living in high-rise apartments in the city centre because they are close to work, transit, and amenities. Others prefer suburban houses because they offer more space, privacy, and a quieter environment. Which type of housing do you think is better for families? Explain your position with specific reasons and examples.',
@@ -157,7 +157,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         timeLimitMinutes: 27,
         scenarioContext: 'The professor\'s name is Dr. Rebecca Stone. The job is at a national research institute.',
         promptText: 'You are a recent graduate and you want to ask one of your university professors to write a reference letter for a competitive job application. Write an email to your professor.',
@@ -208,7 +208,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A city council is asking residents for input on a local issue: Your city is deciding whether to ban single-use plastic bags in all retail stores. Some people support the ban because it reduces pollution and encourages sustainable habits. Others oppose it because it increases costs and inconvenience for shoppers and businesses. Do you support or oppose the ban on single-use plastic bags? Give specific reasons.',
@@ -227,7 +227,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         timeLimitMinutes: 27,
         scenarioContext: 'The condo board president is Ms. Sandra Lee. You represent 12 households.',
         promptText: 'You are the representative of a group of condo residents. Your building\'s outdoor common area has been neglected and needs improvements. Write an email to the condo board.',
@@ -243,7 +243,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A municipal government is surveying residents on community spending: Your city has extra funding available and needs to decide whether to spend it on expanding the community recreation centre (adding a gym, pool, and daycare) or on improving roads and sidewalks in the neighbourhood. Which do you think is a better use of the funds? Support your opinion with specific reasons.',
@@ -262,7 +262,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         timeLimitMinutes: 27,
         scenarioContext: 'The airline is called NorthStar Air. Your booking reference is NSA-28471.',
         promptText: 'Your flight was recently cancelled by an airline and your checked luggage was lost. You have been waiting five days with no response from the airline. Write a formal complaint email.',
@@ -332,7 +332,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         timeLimitMinutes: 27,
         scenarioContext: 'The hiring manager\'s name is Mr. Thomas Yuen. The role is a Marketing Coordinator position.',
         promptText: 'You have recently completed a job interview at a company you are very interested in working for. Write a follow-up email to the hiring manager.',
@@ -348,7 +348,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'easy',
+        difficulty: 'intermediate',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A career guidance organization is collecting opinions: Some people believe that a university degree is the best investment young people can make for their future career because it opens more doors and leads to higher salaries. Others believe that skilled trades training (plumbing, electrical, carpentry) is a better choice because it leads to stable, well-paying jobs without the cost and time of a degree. Which path do you think is better for young people entering the workforce today? Give specific reasons.',
@@ -418,7 +418,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A technology ethics panel is gathering public views: Some experts argue that artificial intelligence (AI) is transforming the workplace in positive ways — increasing productivity, reducing repetitive tasks, and creating new job categories. Others warn that AI will lead to widespread job losses, growing inequality, and a workforce that is unprepared for rapid change. What is your view on the impact of AI on the workplace? Give a clear position and support it with specific reasons and examples.',
@@ -437,7 +437,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         timeLimitMinutes: 27,
         scenarioContext: 'The gym is called FitCore. The manager\'s name is Mr. Sam Patel.',
         promptText: 'You recently joined a gym and want to cancel your membership because of a personal financial hardship. The contract says there is a cancellation fee. Write an email to the gym manager.',
@@ -453,7 +453,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'easy',
+        difficulty: 'advanced',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A community wellness group is surveying residents: Parents, educators, and health experts are debating how much screen time teenagers should have outside of school. Some believe there should be strict daily limits (no more than 2 hours) to protect mental health and encourage physical activity. Others believe that teenagers are responsible enough to manage their own screen time without adult-imposed limits. What is your view? Should there be limits on teen screen time? Give specific reasons.',
@@ -488,7 +488,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'intermediate',
+        difficulty: 'advanced',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A business association is gathering opinions from community members: Some people prefer to shop at locally owned small businesses because it supports the community, creates local jobs, and maintains the unique character of neighbourhoods. Others prefer large chain stores because they offer lower prices, wider selection, and more consistent quality. Which do you prefer and why? Give specific reasons and examples to support your choice.',
@@ -507,7 +507,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         timeLimitMinutes: 27,
         scenarioContext: 'The councillor\'s name is Councillor Maria Santos. You represent a group of concerned residents.',
         promptText: 'You live near a city park that has been poorly maintained. You want to write to your local city councillor to advocate for park improvements.',
@@ -542,7 +542,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         timeLimitMinutes: 27,
         scenarioContext: 'The retailer is called HomeStyle Direct. Your order number is HS-99217.',
         promptText: 'You recently purchased a product from an online retailer and it arrived damaged. You have tried to contact their customer service but received no response after 10 days. Write a formal complaint email.',
@@ -577,7 +577,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'easy',
+        difficulty: 'advanced',
         timeLimitMinutes: 27,
         scenarioContext: 'Your departing colleague\'s name is James. The coworker you are inviting is named Priya.',
         promptText: 'A colleague at work is leaving for a new job in another city. You are organizing a small farewell gathering for them and want to invite another coworker. Write an email.',
@@ -612,7 +612,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         timeLimitMinutes: 27,
         scenarioContext: 'The company is called Novex Solutions. The hiring contact is Ms. Rachel Kim, Head of Talent.',
         promptText: 'You are interested in applying for a position at a new company in your field. You have not seen a posted job opening but believe you would be a strong fit. Write a cover letter-style email to introduce yourself.',
@@ -647,7 +647,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 1,
         taskType: 'email',
-        difficulty: 'intermediate',
+        difficulty: 'easy',
         timeLimitMinutes: 27,
         scenarioContext: 'The building manager\'s name is Mr. Kevin Marsh. You are writing on behalf of several residents.',
         promptText: 'Your building management recently sent a notice prohibiting the use of the rooftop terrace for personal gatherings. Many residents feel this is unfair. You want to write a respectful email requesting a review of this policy.',
@@ -698,7 +698,7 @@ export const WRITING_SETS = [
       {
         taskNumber: 2,
         taskType: 'survey',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         timeLimitMinutes: 26,
         scenarioContext: null,
         promptText: 'A national debate organization is asking participants to share their views: Remote work — where employees work from home full-time or most of the time — has become much more common since 2020. Some people believe remote work is a permanent positive shift that benefits employees\' wellbeing, productivity, and work-life balance. Others argue that office work is essential for collaboration, company culture, mentoring junior staff, and maintaining clear boundaries between work and personal life. What is your view? Is remote work a positive long-term shift, or should offices remain central to how we work? Give a clear, supported position.',

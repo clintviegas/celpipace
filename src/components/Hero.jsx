@@ -5,14 +5,14 @@ const SECTIONS = [
   {
     icon: '🎧',
     label: 'Listening',
-    desc: '6 Parts · 20 Practice Sets',
+    desc: '6 Parts · 120 Practice Sets',
     path: '/listening',
     accent: '#4A90D9',
   },
   {
     icon: '📖',
     label: 'Reading',
-    desc: '4 Parts · 20 Practice Sets',
+    desc: '4 Parts · 46 Practice Sets',
     path: '/reading',
     accent: '#2D8A56',
   },
@@ -26,15 +26,15 @@ const SECTIONS = [
   {
     icon: '🎙️',
     label: 'Speaking',
-    desc: '8 Tasks · 20 Practice Sets',
+    desc: '8 Tasks · 15 Practice Sets',
     path: '/speaking',
     accent: '#C8102E',
   },
 ]
 
 const STATS = [
-  { value: '520+', label: 'Questions' },
-  { value: '80', label: 'Practice Sets' },
+  { value: '1,190+', label: 'Questions' },
+  { value: '220+', label: 'Practice Sets' },
   { value: '4', label: 'Skills Covered' },
   { value: 'CLB 4–12', label: 'Score Range' },
 ]
@@ -52,7 +52,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          🍁 CELPIP Test Preparation
+          🍁 Your CELPIP Score Booster
         </motion.div>
 
         <motion.h1
@@ -61,8 +61,8 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
-          Practice Every Section of the{' '}
-          <span className="hp-hero-accent">CELPIP Exam</span>
+          Boost Your{' '}
+          <span className="hp-hero-accent">CELPIP Score</span>
         </motion.h1>
 
         <motion.p
@@ -71,8 +71,8 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Full-length practice sets for Listening, Reading, Writing, and Speaking.
-          AI&#8209;powered scoring on Writing responses. Built to match the real CELPIP format.
+          1,190+ real-format questions with AI scoring, targeted tips, and progress tracking.
+          Built to help you hit your target CLB.
         </motion.p>
 
         <motion.div

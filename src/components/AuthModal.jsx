@@ -10,16 +10,18 @@ import { useAuth } from '../context/AuthContext'
      reason  : string  (optional context message)
 ───────────────────────────────────────────────────────────── */
 export default function AuthModal({ isOpen, onClose, reason }) {
-  const { signInWithGoogle, signInWithMagicLink } = useAuth()
+  const { signInWithGoogle, signInWithMagicLink, signUpWithEmail, signInWithEmail, resetPassword } = useAuth()
 
-  const [view, setView]             = useState('main')   // 'main' | 'magic' | 'sent'
+  const [view, setView]             = useState('main')   // 'main' | 'signup' | 'login' | 'magic' | 'sent' | 'forgot' | 'reset-sent'
   const [email, setEmail]           = useState('')
+  const [password, setPassword]     = useState('')
   const [displayName, setDisplayName] = useState('')
   const [emailError, setEmailError] = useState('')
   const [sending, setSending]       = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleClose = () => {
-    setView('main'); setEmail(''); setDisplayName(''); setEmailError(''); onClose()
+    setView('main'); setEmail(''); setPassword(''); setDisplayName(''); setEmailError(''); setShowPassword(false); onClose()
   }
 
   const handleGoogle = () => { signInWithGoogle(); handleClose() }
@@ -35,6 +37,52 @@ export default function AuthModal({ isOpen, onClose, reason }) {
     setSending(false)
     if (result?.error) setEmailError(result.error)
     else setView('sent')
+  }
+
+  const handleSignUp = async (e) => {
+    e.preventDefault()
+    setEmailError('')
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setEmailError('Please enter a valid email address.'); return
+    }
+    if (password.length < 6) {
+      setEmailError('Password must be at least 6 characters.'); return
+    }
+    setSending(true)
+    const result = await signUpWithEmail(email, password, displayName)
+    setSending(false)
+    if (result?.error) setEmailError(result.error)
+    else if (result?.needsConfirmation) setView('sent')
+    else handleClose()
+  }
+
+  const handleSignIn = async (e) => {
+    e.preventDefault()
+    setEmailError('')
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setEmailError('Please enter a valid email address.'); return
+    }
+    if (!password) {
+      setEmailError('Please enter your password.'); return
+    }
+    setSending(true)
+    const result = await signInWithEmail(email, password)
+    setSending(false)
+    if (result?.error) setEmailError(result.error)
+    else handleClose()
+  }
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault()
+    setEmailError('')
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setEmailError('Please enter a valid email address.'); return
+    }
+    setSending(true)
+    const result = await resetPassword(email)
+    setSending(false)
+    if (result?.error) setEmailError(result.error)
+    else setView('reset-sent')
   }
 
   return (
@@ -93,8 +141,8 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                     transition={{ duration: 0.22 }}>
 
                     {reason && <div className="auth-modal-reason">🔒 {reason}</div>}
-                    <h2 className="auth-modal-title">Log in or Sign up</h2>
-                    <p className="auth-modal-sub">Join free — no password ever required.</p>
+                    <h2 className="auth-modal-title">Welcome to CELPIPiQ</h2>
+                    <p className="auth-modal-sub">Sign in or create an account to track your progress.</p>
 
                     {/* Google */}
                     <button className="auth-btn auth-btn--google" onClick={handleGoogle}>
@@ -107,16 +155,170 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                       Continue with Google
                     </button>
 
-                    <div className="auth-divider"><span>or use email</span></div>
+                    <div className="auth-divider"><span>or</span></div>
 
-                    {/* Email magic link */}
+                    {/* Email + Password */}
+                    <button className="auth-btn auth-btn--primary" onClick={() => { setView('signup'); setEmailError('') }}>
+                      📧 &nbsp;Sign up with Email
+                    </button>
+
+                    <button className="auth-btn auth-btn--outline" onClick={() => { setView('login'); setEmailError('') }}>
+                      Already have an account? Sign in
+                    </button>
+
+                    <div className="auth-divider"><span>or</span></div>
+
                     <button className="auth-btn auth-btn--email" onClick={() => setView('magic')}>
-                      ✉️ &nbsp;Continue with Email
+                      ✉️ &nbsp;Sign in with Magic Link
                     </button>
 
                     <p className="auth-modal-legal">
                       By continuing you agree to our <span className="auth-link">Terms</span> &amp; <span className="auth-link">Privacy Policy</span>.
                     </p>
+                  </motion.div>
+                )}
+
+                {/* ── Sign up view ── */}
+                {view === 'signup' && (
+                  <motion.div key="signup" className="auth-form-wrap"
+                    initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}
+                    transition={{ duration: 0.22 }}>
+
+                    <button className="auth-back" onClick={() => { setView('main'); setEmailError('') }}>← Back</button>
+                    <h2 className="auth-modal-title">Create your account</h2>
+                    <p className="auth-modal-sub">Start tracking your CELPIP progress today.</p>
+
+                    <form onSubmit={handleSignUp} className="auth-magic-form">
+                      <label className="auth-field-label">Your name</label>
+                      <input
+                        className="auth-email-input"
+                        type="text"
+                        placeholder="First name (optional)"
+                        value={displayName}
+                        onChange={e => setDisplayName(e.target.value)}
+                      />
+                      <label className="auth-field-label">Email address</label>
+                      <input
+                        className={`auth-email-input${emailError ? ' auth-email-input--error' : ''}`}
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={e => { setEmail(e.target.value); setEmailError('') }}
+                        autoFocus
+                      />
+                      <label className="auth-field-label">Password</label>
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          className={`auth-email-input${emailError ? ' auth-email-input--error' : ''}`}
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Min. 6 characters"
+                          value={password}
+                          onChange={e => { setPassword(e.target.value); setEmailError('') }}
+                        />
+                        <button type="button" className="auth-toggle-pw" onClick={() => setShowPassword(v => !v)}>
+                          {showPassword ? '🙈' : '👁️'}
+                        </button>
+                      </div>
+                      {emailError && <div className="auth-email-error">{emailError}</div>}
+                      <button type="submit" className="auth-btn auth-btn--primary" disabled={sending}>
+                        {sending ? 'Creating account…' : 'Create Account'}
+                      </button>
+                    </form>
+
+                    <p className="auth-modal-sub" style={{ marginTop: 12, textAlign: 'center' }}>
+                      Already have an account?{' '}
+                      <button className="auth-link-btn" onClick={() => { setView('login'); setEmailError('') }}>Sign in</button>
+                    </p>
+                  </motion.div>
+                )}
+
+                {/* ── Sign in view ── */}
+                {view === 'login' && (
+                  <motion.div key="login" className="auth-form-wrap"
+                    initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}
+                    transition={{ duration: 0.22 }}>
+
+                    <button className="auth-back" onClick={() => { setView('main'); setEmailError('') }}>← Back</button>
+                    <h2 className="auth-modal-title">Welcome back</h2>
+                    <p className="auth-modal-sub">Sign in to continue your practice.</p>
+
+                    <form onSubmit={handleSignIn} className="auth-magic-form">
+                      <label className="auth-field-label">Email address</label>
+                      <input
+                        className={`auth-email-input${emailError ? ' auth-email-input--error' : ''}`}
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={e => { setEmail(e.target.value); setEmailError('') }}
+                        autoFocus
+                      />
+                      <label className="auth-field-label">Password</label>
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          className={`auth-email-input${emailError ? ' auth-email-input--error' : ''}`}
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Your password"
+                          value={password}
+                          onChange={e => { setPassword(e.target.value); setEmailError('') }}
+                        />
+                        <button type="button" className="auth-toggle-pw" onClick={() => setShowPassword(v => !v)}>
+                          {showPassword ? '🙈' : '👁️'}
+                        </button>
+                      </div>
+                      {emailError && <div className="auth-email-error">{emailError}</div>}
+                      <button type="submit" className="auth-btn auth-btn--primary" disabled={sending}>
+                        {sending ? 'Signing in…' : 'Sign In'}
+                      </button>
+                    </form>
+
+                    <p className="auth-modal-sub" style={{ marginTop: 12, textAlign: 'center' }}>
+                      <button className="auth-link-btn" onClick={() => { setView('forgot'); setEmailError('') }}>Forgot password?</button>
+                      {' · '}
+                      <button className="auth-link-btn" onClick={() => { setView('signup'); setEmailError('') }}>Create account</button>
+                    </p>
+                  </motion.div>
+                )}
+
+                {/* ── Forgot password view ── */}
+                {view === 'forgot' && (
+                  <motion.div key="forgot" className="auth-form-wrap"
+                    initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}
+                    transition={{ duration: 0.22 }}>
+
+                    <button className="auth-back" onClick={() => { setView('login'); setEmailError('') }}>← Back</button>
+                    <h2 className="auth-modal-title">Reset password</h2>
+                    <p className="auth-modal-sub">Enter your email and we'll send a reset link.</p>
+
+                    <form onSubmit={handleForgotPassword} className="auth-magic-form">
+                      <label className="auth-field-label">Email address</label>
+                      <input
+                        className={`auth-email-input${emailError ? ' auth-email-input--error' : ''}`}
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={e => { setEmail(e.target.value); setEmailError('') }}
+                        autoFocus
+                      />
+                      {emailError && <div className="auth-email-error">{emailError}</div>}
+                      <button type="submit" className="auth-btn auth-btn--primary" disabled={sending}>
+                        {sending ? 'Sending…' : 'Send Reset Link'}
+                      </button>
+                    </form>
+                  </motion.div>
+                )}
+
+                {/* ── Reset email sent ── */}
+                {view === 'reset-sent' && (
+                  <motion.div key="reset-sent" className="auth-form-wrap auth-sent"
+                    initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.25 }}>
+                    <div className="auth-sent-icon">🔑</div>
+                    <h2 className="auth-modal-title">Check your inbox</h2>
+                    <p className="auth-modal-sub">
+                      Password reset link sent to <strong>{email}</strong>.<br />
+                      Click it to set a new password.
+                    </p>
+                    <button className="auth-btn auth-btn--outline" onClick={handleClose}>Close</button>
                   </motion.div>
                 )}
 

@@ -1,0 +1,135 @@
+{
+  "part": "R4",
+  "title": "Reading for Viewpoints",
+  "total_questions": 10,
+  "time_limit_minutes": 17,
+  "sets": [
+    {
+      "set_number": 1,
+      "difficulty": "easy",
+      "title": "Should Cities Ban Cars from Downtown Cores?",
+      "article": {
+        "headline": "Downtown Without Cars: A Bold Idea Divides Residents",
+        "body": "When the city council of Brookhaven proposed banning private vehicles from a twelve-block downtown zone last month, the response was immediate and polarized. Supporters celebrated the plan as overdue, while critics called it impractical and damaging to local business. The Gazette spoke with several residents whose perspectives capture the wider debate.\n\nElena Rodriguez, a small-business owner who runs a flower shop on Main Street, supports the ban with some hesitation. 'I've watched my customers struggle to cross the street safely for years. Foot traffic is what keeps shops like mine alive — not parking. When the city closed Maple Avenue for that pedestrian festival last summer, my sales went up forty percent. But I do worry about deliveries. The plan needs to guarantee that suppliers can still reach us, even if it means scheduled morning windows.'\n\nMark Thibault, a daily commuter from the suburbs, sees the proposal very differently. 'This sounds wonderful in a planning meeting, but it ignores how people actually live. I have two kids in different schools and a job downtown. Public transit from my neighbourhood takes nearly an hour each way and doesn't run early enough for my shift. Banning cars doesn't make me ride a bus that doesn't exist — it just punishes people who can't afford to live closer to the core.'\n\nDr. Priya Anand, an urban planner at the regional university, takes a longer view. 'Every successful pedestrian zone in Europe started with the same complaints we're hearing now. Within five years, every one of them saw rising property values, lower emissions, and higher retail revenue per square metre than comparable car-friendly areas. The transition is painful for about eighteen months, then the data turns sharply positive. The real question isn't whether to do this — it's whether we'll invest in the transit needed to make it fair.'\n\nFinally, Tom Wexler, who has owned a downtown hardware store for thirty-two years, opposes the plan outright. 'My customers buy lumber, paint, tools — heavy things they can't carry on a bicycle. If you take away their ability to drive up and load their truck, you don't get a vibrant pedestrian zone. You get an empty storefront where my shop used to be. The planners always forget that some businesses exist precisely because cars can reach them.'"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "opinion_identification",
+          "question_text": "What is Elena Rodriguez's main reason for supporting the ban?",
+          "options": {
+            "A": "She dislikes cars personally",
+            "B": "Pedestrian traffic helps her business more than parking does",
+            "C": "She wants the city to lose tax revenue",
+            "D": "Her shop is hard to reach by car"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 2,
+          "skill": "nuanced_inference",
+          "question_text": "What concern does Elena raise despite her overall support?",
+          "options": {
+            "A": "That her customers will not visit",
+            "B": "That suppliers may not be able to deliver to her shop",
+            "C": "That rent will increase",
+            "D": "That the festival was a failure"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 3,
+          "skill": "contrast_comparison",
+          "question_text": "How does Mark Thibault's main objection differ from Tom Wexler's?",
+          "options": {
+            "A": "Mark focuses on commuter access; Tom focuses on customer transport of goods",
+            "B": "Mark and Tom share exactly the same concern",
+            "C": "Mark opposes pedestrians; Tom opposes cyclists",
+            "D": "Mark is a planner; Tom is a commuter"
+          },
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 4,
+          "skill": "critical_reading",
+          "question_text": "According to Dr. Anand, what determines whether the ban will be fair?",
+          "options": {
+            "A": "How many shops close in the first year",
+            "B": "Whether the city invests in adequate public transit",
+            "C": "Whether property values rise quickly enough",
+            "D": "Whether European cities approve of the plan"
+          },
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "skill": "opinion_identification",
+          "question_text": "Which statement best summarizes the four viewpoints overall?",
+          "options": {
+            "A": "All four speakers support the ban",
+            "B": "All four speakers oppose the ban",
+            "C": "Two support with conditions, one opposes practically, one opposes outright",
+            "D": "Only the planner has any opinion"
+          },
+          "correct_answer": "C"
+        }
+      ],
+      "fill_in_blank_comment": {
+        "instructions": "Now read the following comment a reader posted in response to the article. Complete the comment by choosing the best option for each blank.",
+        "comment_text": "I read this article with great interest because my own neighbourhood went through a similar debate two years ago. What struck me most was Dr. Anand's point about the [BLANK_6] period being painful but short. That matches exactly what we experienced — about a year and a half of complaints, lost parking, and angry letters to the editor, followed by a noticeable [BLANK_7] in foot traffic and new businesses opening on streets that had been struggling for a decade.\n\nThat said, I think Tom Wexler raises a fair point that the planners are too quick to [BLANK_8]. Not every business can survive on people who arrive on foot or by bicycle. Hardware stores, furniture shops, and garden centres genuinely need vehicle access, and a thoughtful plan should include loading zones or short-term parking permits for these specific cases rather than treating all car traffic as a problem to be [BLANK_9].\n\nMark Thibault's frustration is also legitimate, but I would gently point out that the solution he is asking for — better suburban transit — is actually exactly what supporters of the ban are pushing for. The two sides have more in [BLANK_10] than they realize.",
+        "blanks": [
+          {
+            "blank_number": 6,
+            "options": {
+              "A": "permanent",
+              "B": "transition",
+              "C": "celebration",
+              "D": "construction"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "decline",
+              "B": "increase",
+              "C": "delay",
+              "D": "shortage"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "celebrate",
+              "B": "dismiss",
+              "C": "compensate",
+              "D": "investigate"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "encouraged",
+              "B": "rewarded",
+              "C": "eliminated",
+              "D": "studied"
+            },
+            "correct_answer": "C"
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "common",
+              "B": "conflict",
+              "C": "private",
+              "D": "secret"
+            },
+            "correct_answer": "A"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -127,8 +127,8 @@ export default function WritingPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(200,151,42,.2)', border: '1px solid rgba(200,151,42,.4)', color: '#e8c060' }}>
             ✍️ CELPIP Writing
           </div>
-          <h1 className="lp-hero-title">CELPIP Writing</h1>
-          <p className="lp-hero-subtitle">2 tasks · 53 minutes · 150–200 words each · CLB 4–12</p>
+          <h1 className="lp-hero-title">Write emails that actually sound like you.</h1>
+          <p className="lp-hero-subtitle">Real scenarios, grown-up prompts and AI feedback that tells you exactly what to fix.<br/>2 tasks · 53 minutes · 150–200 words each · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>2</strong><span>Tasks</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>53 min</strong><span>Total Time</span></div>

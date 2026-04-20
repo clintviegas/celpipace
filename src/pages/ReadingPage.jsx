@@ -40,7 +40,7 @@ const PARTS = [
     icon: '📄',
     questions: 9,
     duration: '14 min',
-    difficulty: 'Upper Intermediate',
+    difficulty: 'Intermediate',
     description:
       'A longer informational passage on a general topic — a magazine article, a consumer guide, a factsheet, or a report. The text is denser and requires you to understand both direct statements and implied meaning. Questions test main idea, supporting detail, vocabulary in context, and inference.',
     tip: 'Do not re-read the whole passage for every question. Identify which paragraph each question points to and focus there. For vocabulary-in-context questions, substitute each option into the sentence — the right answer fits the meaning of the full paragraph, not just the sentence.',
@@ -153,8 +153,8 @@ export default function ReadingPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(45,138,86,.2)', border: '1px solid rgba(45,138,86,.4)', color: '#7dcfa0' }}>
             📖 CELPIP Reading
           </div>
-          <h1 className="lp-hero-title">CELPIP Reading</h1>
-          <p className="lp-hero-subtitle">4 parts · 38 questions · 55–60 minutes · CLB 4–12</p>
+          <h1 className="lp-hero-title">Read between the Canadian lines.</h1>
+          <p className="lp-hero-subtitle">Emails, diagrams, features and viewpoints — the way real Canadian text actually shows up.<br/>4 parts · 38 questions · 55–60 minutes · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>4</strong><span>Parts</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>38</strong><span>Questions</span></div>

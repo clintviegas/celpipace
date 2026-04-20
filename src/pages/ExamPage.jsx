@@ -133,7 +133,7 @@ export default function ExamPage() {
                   {isFree ? (
                     <button
                       className="ep-exam-start-btn"
-                      onClick={() => requireAuth('Sign in to start a Mock Exam', () => navigate('/listening'))}
+                      onClick={() => navigate(`/mock-test/${exam.num}`)}
                     >
                       Start Free
                     </button>
@@ -169,7 +169,7 @@ export default function ExamPage() {
         <div className="ep-sections-grid">
           {[
             { id: 'listening', icon: '🎧', label: 'Listening', desc: '6 parts · 120 sets', color: '#4A90D9', bg: '#EEF4FF' },
-            { id: 'reading',   icon: '📖', label: 'Reading',   desc: '4 parts · 80 sets',  color: '#2D8A56', bg: '#F0FDF4' },
+            { id: 'reading',   icon: '📖', label: 'Reading',   desc: '4 parts · 46 sets',  color: '#2D8A56', bg: '#F0FDF4' },
             { id: 'writing',   icon: '✍️', label: 'Writing',   desc: '2 tasks · AI scoring',color: '#C8972A', bg: '#FFFBEB' },
             { id: 'speaking',  icon: '🎙️', label: 'Speaking',  desc: '8 tasks · practice',  color: '#C8102E', bg: '#FEF2F2' },
           ].map(s => (

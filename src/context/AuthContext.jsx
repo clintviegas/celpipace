@@ -74,6 +74,48 @@ export function AuthProvider({ children }) {
     return { success: true }
   }
 
+  /* ── Email + Password Sign Up ── */
+  const signUpWithEmail = async (email, password, displayName) => {
+    const { data: signUpData, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: displayName ? { full_name: displayName } : undefined,
+      },
+    })
+    if (error) {
+      console.error('Sign-up error:', error.message)
+      return { error: error.message }
+    }
+    // If email confirmation is required, user won't be logged in yet
+    if (signUpData?.user?.identities?.length === 0) {
+      return { error: 'An account with this email already exists. Try signing in instead.' }
+    }
+    return { success: true, needsConfirmation: !signUpData.session }
+  }
+
+  /* ── Email + Password Sign In ── */
+  const signInWithEmail = async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      console.error('Sign-in error:', error.message)
+      return { error: error.message }
+    }
+    return { success: true }
+  }
+
+  /* ── Forgot Password ── */
+  const resetPassword = async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    if (error) {
+      console.error('Reset password error:', error.message)
+      return { error: error.message }
+    }
+    return { success: true }
+  }
+
   /* ── Sign out ── */
   const signOut = () => {
     setUser(null)
@@ -81,7 +123,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signInWithMagicLink, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signInWithMagicLink, signUpWithEmail, signInWithEmail, resetPassword, signOut }}>
       {children}
     </AuthContext.Provider>
   )

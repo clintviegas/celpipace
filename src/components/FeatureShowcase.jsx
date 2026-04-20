@@ -5,7 +5,7 @@ const FEATURES = [
   {
     icon: '📋',
     title: 'Full-Length Practice Sets',
-    desc: 'Each set follows the exact CELPIP format — same question types, same timing, same structure. 20 complete sets across all four skills.',
+    desc: 'Each set follows the exact CELPIP format — same question types, same timing, same structure. 220+ practice sets across all four skills.',
     cta: 'Start Mock Exam',
     path: '/exam',
   },
@@ -23,6 +23,13 @@ const FEATURES = [
     cta: 'Try Reading Practice',
     path: '/reading',
   },
+  {
+    icon: '🎯',
+    title: 'Score-Boosting Tips on Every Question',
+    desc: 'Each practice set includes targeted "How to Score Higher" tips — response structure, scoring criteria, and key vocabulary tailored to the question type.',
+    cta: 'See Tips in Action',
+    path: '/listening',
+  },
 ]
 
 export default function FeatureShowcase() {
@@ -35,8 +42,7 @@ export default function FeatureShowcase() {
           Platform Features
         </motion.div>
         <motion.h2 className="section-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-          Built around the real{' '}
-          <span className="highlight">CELPIP format</span>
+          Built to <span className="highlight">boost your score</span>
         </motion.h2>
 
         <div className="hp-features-grid">

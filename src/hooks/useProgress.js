@@ -3,17 +3,18 @@
    Persists to localStorage, syncs across tabs via storage event.
    Tracks: completed sets, scores, streaks, activity feed.
 ══════════════════════════════════════════════════════════════ */
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { supabase } from '../lib/supabase'
 
 const STORAGE_KEY = 'celpipiq_progress'
 const STREAK_KEY  = 'celpipiq_streak'
 
 /* ── Section totals (sets × questions) ── */
 const SECTION_TOTALS = {
-  listening: { sets: 120, questions: 720, parts: { L1: 20, L2: 20, L3: 20, L4: 20, L5: 20, L6: 20 } },
-  reading:   { sets: 80,  questions: 760, parts: { R1: 20, R2: 20, R3: 20, R4: 20 } },
+  listening: { sets: 120, questions: 760, parts: { L1: 20, L2: 20, L3: 20, L4: 20, L5: 20, L6: 20 } },
+  reading:   { sets: 46,  questions: 430, parts: { R1: 15, R2: 15, R3: 15, R4: 1 } },
   writing:   { sets: 40,  questions: 40,  parts: { W1: 20, W2: 20 } },
-  speaking:  { sets: 8,   questions: 8,   parts: { S1: 1, S2: 1, S3: 1, S4: 1, S5: 1, S6: 1, S7: 1, S8: 1 } },
+  speaking:  { sets: 120, questions: 120, parts: { S1: 15, S2: 15, S3: 15, S4: 15, S5: 15, S6: 15, S7: 15, S8: 15 } },
 }
 
 /* ── helpers ── */
@@ -57,6 +58,7 @@ function yesterday() {
 export function useProgress() {
   const [data, setData]     = useState(loadProgress)
   const [streak, setStreak] = useState(loadStreak)
+  const syncedRef = useRef(false)
 
   /* Persist on change */
   useEffect(() => {
@@ -75,6 +77,51 @@ export function useProgress() {
     }
     window.addEventListener('storage', handler)
     return () => window.removeEventListener('storage', handler)
+  }, [])
+
+  /* ── Supabase: load cloud progress on login ── */
+  useEffect(() => {
+    if (syncedRef.current) return
+    const loadCloud = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session?.user) return
+        const uid = session.user.id
+
+        const { data: row } = await supabase
+          .from('user_progress')
+          .select('progress_data, streak_data')
+          .eq('user_id', uid)
+          .single()
+
+        if (row?.progress_data) {
+          // Merge cloud data with local — cloud wins for conflicting keys, local fills gaps
+          setData(prev => {
+            const cloud = row.progress_data
+            const merged = {
+              completed: { ...prev.completed, ...cloud.completed },
+              activity: mergeActivity(prev.activity || [], cloud.activity || []),
+              scores: mergeScores(prev.scores || {}, cloud.scores || {}),
+            }
+            return merged
+          })
+        }
+        if (row?.streak_data) {
+          setStreak(prev => {
+            const cloud = row.streak_data
+            return {
+              current: Math.max(prev.current || 0, cloud.current || 0),
+              best: Math.max(prev.best || 0, cloud.best || 0),
+              lastDate: prev.lastDate && prev.lastDate > (cloud.lastDate || '') ? prev.lastDate : (cloud.lastDate || prev.lastDate),
+            }
+          })
+        }
+        syncedRef.current = true
+      } catch (e) {
+        // Silently continue with localStorage if cloud sync fails
+      }
+    }
+    loadCloud()
   }, [])
 
   /* ── Record a set completion ── */
@@ -113,6 +160,31 @@ export function useProgress() {
       const current   = continued ? prev.current + 1 : 1
       return { current, best: Math.max(prev.best, current), lastDate: d }
     })
+
+    // ── Supabase: save to cloud for logged-in users ──
+    saveToCloud()
+  }, [])
+
+  /* ── Save progress to Supabase (debounced) ── */
+  const saveToCloud = useCallback(async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) return
+      const uid = session.user.id
+      const currentData = loadProgress()
+      const currentStreak = loadStreak()
+
+      await supabase
+        .from('user_progress')
+        .upsert({
+          user_id: uid,
+          progress_data: currentData,
+          streak_data: currentStreak,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' })
+    } catch (e) {
+      // Silently fail — localStorage is always the fallback
+    }
   }, [])
 
   /* ── Computed stats ── */
@@ -203,3 +275,34 @@ export function useProgress() {
 }
 
 export { SECTION_TOTALS }
+
+/* ── Merge helpers for cloud sync ── */
+function mergeActivity(local, cloud) {
+  const seen = new Set()
+  const merged = []
+  for (const entry of [...local, ...cloud]) {
+    const key = `${entry.section}:${entry.partId}:${entry.setNum}:${entry.ts}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      merged.push(entry)
+    }
+  }
+  return merged.sort((a, b) => b.ts - a.ts).slice(0, 50)
+}
+
+function mergeScores(local, cloud) {
+  const merged = { ...local }
+  for (const [key, cloudScore] of Object.entries(cloud)) {
+    const localScore = merged[key]
+    if (!localScore) {
+      merged[key] = cloudScore
+    } else {
+      merged[key] = {
+        best: Math.max(localScore.best || 0, cloudScore.best || 0),
+        last: (localScore.attempts || 0) >= (cloudScore.attempts || 0) ? localScore.last : cloudScore.last,
+        attempts: Math.max(localScore.attempts || 0, cloudScore.attempts || 0),
+      }
+    }
+  }
+  return merged
+}
