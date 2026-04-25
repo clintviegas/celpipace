@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Lock } from 'lucide-react'
 import SEO from '../components/SEO'
 import ScoreTips, { getReadingTips } from '../components/ScoreTips'
+import UpgradeModal from '../components/UpgradeModal'
+import { useAuth } from '../context/AuthContext'
+import { useProgress } from '../hooks/useProgress'
 import r1Data from '../data/reading/R1_correspondence.json'
 import r2Data from '../data/reading/R2_apply_diagram.json'
 import r3Data from '../data/reading/R3_information.json'
@@ -106,19 +110,52 @@ function PassageEmail({ passage }) {
 
 function PassageDiagram({ diagram, passage, setNumber }) {
   const [imgError, setImgError] = useState(false)
+  const [zoomed, setZoomed] = useState(false)
   const imgSrc = asset(`/images/R2/${setNumber}.png`)
+
+  // Close zoom on Escape
+  useEffect(() => {
+    if (!zoomed) return
+    const onKey = (e) => { if (e.key === 'Escape') setZoomed(false) }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [zoomed])
 
   return (
     <div className="rdg-diagram-wrap">
       <div className="rdg-diagram-label">📊 Visual Information</div>
-      <div className="rdg-diagram-box">
+      <div className="rdg-diagram-box" style={{ position: 'relative' }}>
         {!imgError ? (
-          <img
-            src={imgSrc}
-            alt={`Diagram — Set ${setNumber}`}
-            className="rdg-diagram-img"
-            onError={() => setImgError(true)}
-          />
+          <>
+            <img
+              src={imgSrc}
+              alt={`Diagram — Set ${setNumber}`}
+              className="rdg-diagram-img"
+              onError={() => setImgError(true)}
+              onClick={() => setZoomed(true)}
+              style={{ cursor: 'zoom-in' }}
+            />
+            <button
+              type="button"
+              onClick={() => setZoomed(true)}
+              aria-label="Zoom diagram"
+              style={{
+                position: 'absolute', top: 10, right: 10,
+                width: 36, height: 36, borderRadius: 8,
+                border: '1px solid rgba(15,31,61,0.12)',
+                background: 'rgba(255,255,255,0.95)',
+                color: '#0F1F3D', cursor: 'zoom-in',
+                fontSize: 16, fontWeight: 700,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(15,31,61,0.12)',
+              }}
+              title="Click to zoom"
+            >🔍</button>
+          </>
         ) : (
           <pre className="rdg-diagram-text">{diagram.text_description}</pre>
         )}
@@ -127,6 +164,42 @@ function PassageDiagram({ diagram, passage, setNumber }) {
         <div className="rdg-diagram-passage">
           <div className="rdg-diagram-passage-label">📝 Reading Passage</div>
           <pre className="rdg-passage-pre">{passage}</pre>
+        </div>
+      )}
+
+      {zoomed && !imgError && (
+        <div
+          onClick={() => setZoomed(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(15,31,61,0.85)',
+            zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24, cursor: 'zoom-out',
+          }}
+        >
+          <button
+            onClick={(e) => { e.stopPropagation(); setZoomed(false) }}
+            aria-label="Close zoom"
+            style={{
+              position: 'absolute', top: 18, right: 18,
+              width: 40, height: 40, borderRadius: 10, border: 'none',
+              background: 'rgba(255,255,255,0.95)', color: '#0F1F3D',
+              fontSize: 22, fontWeight: 700, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            }}
+          >×</button>
+          <img
+            src={imgSrc}
+            alt={`Diagram zoomed — Set ${setNumber}`}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '95vw', maxHeight: '92vh',
+              objectFit: 'contain',
+              borderRadius: 8,
+              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              background: '#fff',
+            }}
+          />
         </div>
       )}
     </div>
@@ -353,6 +426,9 @@ function FIBSection({ fibData, fibKey, pfx, answers, setAnswers, color }) {
 export default function ReadingPracticePage() {
   const { partId } = useParams()
   const navigate   = useNavigate()
+  const { isPremium } = useAuth()
+  const { recordCompletion, isCompleted, getSetScore, getPartStats } = useProgress()
+  const [upgradeFor, setUpgradeFor] = useState(null)
   const meta       = PART_META[partId] || PART_META.R1
   const sets       = meta.data.sets || []
   const type       = meta.type
@@ -374,9 +450,21 @@ export default function ReadingPracticePage() {
   const score = set ? setScore(activeIdx, set, type, answers) : 0
   const isSetDone = done === total && total > 0
 
+  /* Record completion when a set is fully answered — best score wins (deduped by ref) */
+  const recordedRef = useRef({})
+  useEffect(() => {
+    if (!set || !isSetDone) return
+    const sn = set.set_number
+    const key = `${partId}:${sn}:${score}`
+    if (recordedRef.current[key]) return
+    recordedRef.current[key] = true
+    recordCompletion('reading', partId, sn, score, total)
+  }, [isSetDone, score, total, set, partId, recordCompletion])
+
   const dc = DIFF_COLOR[set?.difficulty] || DIFF_COLOR.intermediate
 
   const switchSet = (idx) => {
+    if (!isPremium && idx > 0) { setUpgradeFor(sets[idx]?.set_number || idx + 1); return }
     setActiveIdx(idx)
     clearTimers()
     setTimeLeft(null)
@@ -528,7 +616,8 @@ export default function ReadingPracticePage() {
           <div className="rdg-sidebar-stats">
             <div className="rdg-sidebar-stat">
               <span className="rdg-sidebar-stat-val" style={{ color: COLOR }}>
-                {sets.filter((s, si) => setAnswered(si, s, type, answers) === setTotal(s, type) && setTotal(s, type) > 0).length}
+                {sets.filter(s => isCompleted('reading', partId, s.set_number)).length
+                  || sets.filter((s, si) => setAnswered(si, s, type, answers) === setTotal(s, type) && setTotal(s, type) > 0).length}
               </span>
               <span className="rdg-sidebar-stat-lbl">Done</span>
             </div>
@@ -541,13 +630,8 @@ export default function ReadingPracticePage() {
             <div className="rdg-sidebar-stat">
               <span className="rdg-sidebar-stat-val" style={{ color: COLOR }}>
                 {(() => {
-                  const scored = sets.reduce((acc, s, si) => {
-                    const t = setTotal(s, type)
-                    const d = setAnswered(si, s, type, answers)
-                    if (d === t && t > 0) return { sum: acc.sum + Math.round((setScore(si, s, type, answers) / t) * 100), n: acc.n + 1 }
-                    return acc
-                  }, { sum: 0, n: 0 })
-                  return scored.n > 0 ? `${Math.round(scored.sum / scored.n)}%` : '—'
+                  const ps = getPartStats('reading', partId)
+                  return ps.avgCLB != null ? `CLB ${ps.avgCLB}` : '—'
                 })()}
               </span>
               <span className="rdg-sidebar-stat-lbl">Avg Score</span>
@@ -556,7 +640,7 @@ export default function ReadingPracticePage() {
 
           <div className="rdg-sidebar-progress-wrap">
             <div className="rdg-sidebar-progress-bar">
-              <div className="rdg-sidebar-progress-fill" style={{ width: `${(sets.filter((s, si) => setAnswered(si, s, type, answers) === setTotal(s, type) && setTotal(s, type) > 0).length / sets.length) * 100}%`, background: COLOR }} />
+              <div className="rdg-sidebar-progress-fill" style={{ width: `${(sets.filter(s => isCompleted('reading', partId, s.set_number)).length / sets.length) * 100}%`, background: COLOR }} />
             </div>
           </div>
 
@@ -565,14 +649,17 @@ export default function ReadingPracticePage() {
           <div className="rdg-set-list">
             {sets.map((s, si) => {
               const isActive = si === activeIdx
-              const sDone = setAnswered(si, s, type, answers)
+              const stored = getSetScore('reading', partId, s.set_number)
+              const sDone = stored ? (stored.total || setTotal(s, type)) : setAnswered(si, s, type, answers)
               const sTotal = setTotal(s, type)
-              const isComplete = sDone === sTotal && sTotal > 0
+              const sCorrect = stored ? stored.score : setScore(si, s, type, answers)
+              const isComplete = !!stored || (sDone === sTotal && sTotal > 0)
               const sdiff = DIFF_COLOR[s.difficulty] || DIFF_COLOR.intermediate
+              const locked = !isPremium && si > 0
               return (
                 <button
                   key={si}
-                  className={`rdg-set-row${isActive ? ' rdg-set-row--active' : ''}${isComplete ? ' rdg-set-row--done' : ''}`}
+                  className={`rdg-set-row${isActive ? ' rdg-set-row--active' : ''}${isComplete ? ' rdg-set-row--done' : ''}${locked ? ' rdg-set-row--locked' : ''}`}
                   style={isActive ? { background: `${COLOR}0d`, borderLeftColor: COLOR } : {}}
                   onClick={() => switchSet(si)}
                 >
@@ -581,10 +668,15 @@ export default function ReadingPracticePage() {
                     <span className="rdg-set-title">{s.title}</span>
                     <span className="rdg-set-meta">
                       <span style={{ color: sdiff, fontWeight: 600, textTransform: 'capitalize' }}>{s.difficulty}</span>
-                      {' · '}{sDone}/{sTotal}
+                      {' · '}
+                      {isComplete
+                        ? <span style={{ color: sCorrect === sTotal ? '#22c55e' : '#888', fontWeight: 600 }}>{sCorrect}/{sTotal}</span>
+                        : <span>{sDone}/{sTotal}</span>}
                     </span>
                   </div>
-                  {isComplete && <span className="rdg-set-check">✓</span>}
+                  {locked
+                    ? <span className="set-lock-pill"><Lock size={10} strokeWidth={2.5} /> PRO</span>
+                    : isComplete && <span className="rdg-set-check">✓</span>}
                 </button>
               )
             })}
@@ -733,6 +825,7 @@ export default function ReadingPracticePage() {
         </div>
       </div>
       </div>
+      <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Reading" />
     </div>
   )
 }

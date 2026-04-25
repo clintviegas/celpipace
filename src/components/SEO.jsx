@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const SITE_NAME = 'CELPIPiQ'
+const SITE_NAME = 'celpipAce'
 const DEFAULT_OG_IMAGE = 'https://celpipace.vercel.app/og-image.png'
 const SITE_URL = 'https://celpipace.vercel.app'
 
@@ -14,7 +14,7 @@ const SITE_URL = 'https://celpipace.vercel.app'
  * @param {boolean} [noindex]    – Set true for auth-gated/private pages
  */
 export default function SEO({ title, description, ogImage, canonical, noindex = false }) {
-  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} – CELPIP Practice Tests, Mock Exams & AI Scoring`
+  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} – CELPIP Practice Tests, Mock Exams & Instant Scoring`
   const image = ogImage || DEFAULT_OG_IMAGE
   const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : null
 

@@ -38,7 +38,7 @@ export default function AIFeatures() {
     <section className="hp-why" id="why">
       <div className="section-inner">
         <motion.div className="section-label" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-          Why CELPIPiQ
+          Why celpipAce
         </motion.div>
         <motion.h2 className="section-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
           Everything you need to{' '}

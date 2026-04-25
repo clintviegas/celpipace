@@ -19,7 +19,7 @@ const SECTIONS = [
   {
     icon: '✍️',
     label: 'Writing',
-    desc: '2 Tasks · AI Scoring',
+    desc: '2 Tasks · Instant Scoring',
     path: '/writing',
     accent: '#C8972A',
   },
@@ -52,7 +52,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          🍁 Your CELPIP Score Booster
+          🍁 Score Higher, Guaranteed
         </motion.div>
 
         <motion.h1
@@ -61,7 +61,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
-          Boost Your{' '}
+          Ace Your{' '}
           <span className="hp-hero-accent">CELPIP Score</span>
         </motion.h1>
 
@@ -71,8 +71,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          1,190+ real-format questions with AI scoring, targeted tips, and progress tracking.
-          Built to help you hit your target CLB.
+          1,190+ real-format questions, instant scoring, and proven tips — built to get you to your target CLB, faster.
         </motion.p>
 
         <motion.div

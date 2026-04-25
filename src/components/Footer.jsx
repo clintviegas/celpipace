@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import CelpipAceLogo from './CelpipAceLogo'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -52,12 +53,11 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-top">
           <div className="footer-brand">
-            <button onClick={() => navigate('/')} className="nav-logo footer-logo" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
-              <span className="logo-maple">🍁</span>
-              <span className="logo-text">CELPIPiQ</span>
+            <button onClick={() => navigate('/')} className="footer-logo-btn" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
+              <CelpipAceLogo height={38} showTagline />
             </button>
             <p className="footer-tagline">
-              Your fastest path to a 10+ CELPIP score. Practice with AI-powered scoring across all 4 skills.
+              Your fastest path to a 10+ CELPIP score. Practice with instant scoring across all 4 skills.
             </p>
             <div className="footer-socials">
               <a href="https://www.youtube.com/@CELPIPiQ" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
@@ -89,9 +89,9 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {year} CELPIPiQ. All rights reserved.</p>
+          <p>© {year} celpipAce. All rights reserved.</p>
           <p className="footer-disclaimer">
-            CELPIPiQ is an independent practice tool and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
+            celpipAce is an independent practice tool and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
           </p>
         </div>
       </div>

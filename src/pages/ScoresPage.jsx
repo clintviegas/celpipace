@@ -132,9 +132,9 @@ export default function ScoresPage() {
           <div className="practice-overview-tiles">
             {[
               { val: stats.totalCompleted, label: 'Sets Done', icon: '✅', color: '#2D8A56' },
-              { val: stats.avgScore !== null ? `${stats.avgScore}%` : '—', label: 'Avg Score', icon: '📊', color: '#4A90D9' },
+              { val: stats.answered > 0 ? `${stats.correct}/${stats.answered}` : '—', label: 'Raw Score', icon: '📊', color: '#4A90D9' },
               { val: streak.current, label: 'Day Streak', icon: '🔥', color: '#C8972A' },
-              { val: `${stats.totalPct}%`, label: 'Progress', icon: '🏆', color: '#C8102E' },
+              { val: `${stats.totalCompleted}/${stats.totalSets}`, label: 'Sets Progress', icon: '🏆', color: '#C8102E' },
             ].map((t, i) => (
               <motion.div
                 key={t.label}
@@ -153,7 +153,7 @@ export default function ScoresPage() {
           {/* Section breakdown */}
           <div className="practice-sections">
             {SKILLS.map((s, i) => {
-              const ss = stats.sections[s.id] || { done: 0, total: 0, pct: 0, avgScore: null }
+              const ss = stats.sections[s.id] || { done: 0, total: 0, pct: 0, avgScore: null, correct: 0, answered: 0 }
               return (
                 <motion.div
                   key={s.id}
@@ -166,7 +166,7 @@ export default function ScoresPage() {
                   <div className="practice-section-header">
                     <span className="practice-section-icon" style={{ background: s.colorLight }}>{s.icon}</span>
                     <span className="practice-section-name">{s.label}</span>
-                    <span className="practice-section-pct" style={{ color: s.color }}>{ss.pct}%</span>
+                    <span className="practice-section-pct" style={{ color: s.color }}>{ss.done}/{ss.total}</span>
                   </div>
                   <div className="practice-section-bar-track">
                     <motion.div
@@ -179,7 +179,11 @@ export default function ScoresPage() {
                   <div className="practice-section-stats">
                     <span>{ss.done}/{ss.total} sets</span>
                     <span style={{ color: s.color, fontWeight: 600 }}>
-                      {ss.avgScore !== null ? `${ss.avgScore}% avg` : 'No scores yet'}
+                      {ss.done === 0
+                        ? 'No scores yet'
+                        : ss.isClbSection
+                          ? (ss.avgCLB != null ? `Avg CLB ${ss.avgCLB}` : 'No scores yet')
+                          : `${ss.correct}/${ss.answered} correct`}
                     </span>
                   </div>
                 </motion.div>
@@ -201,7 +205,7 @@ export default function ScoresPage() {
                       <span className="practice-recent-score" style={{
                         color: a.pct >= 80 ? '#2D8A56' : a.pct >= 60 ? '#C8972A' : '#C8102E'
                       }}>
-                        {a.score}/{a.total} ({a.pct}%)
+                        {a.score}/{a.total}
                       </span>
                       <span className="practice-recent-time">{new Date(a.ts).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })}</span>
                     </div>

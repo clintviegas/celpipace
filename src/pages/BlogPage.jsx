@@ -90,7 +90,7 @@ function ArticleView({ article, onBack, relatedArticles }) {
           <div className="blog-art-cta">
             <div className="blog-art-cta-text">
               <strong>Practice makes the difference.</strong>
-              <span> Use CELPIPiQ's AI-scored practice questions to put these strategies into action.</span>
+              <span> Use celpipAce's instant-scored practice questions to put these strategies into action.</span>
             </div>
             <a href="/exam" className="blog-art-cta-btn">Start Practising →</a>
           </div>
@@ -123,7 +123,7 @@ function ArticleView({ article, onBack, relatedArticles }) {
           <div className="blog-sidebar-cta">
             <div className="blog-sidebar-cta-icon">🎯</div>
             <h4 className="blog-sidebar-cta-title">Ready to Practice?</h4>
-            <p className="blog-sidebar-cta-sub">Apply these strategies with real CELPIP-style questions and AI scoring.</p>
+            <p className="blog-sidebar-cta-sub">Apply these strategies with real CELPIP-style questions and instant scoring.</p>
             <a href="/exam" className="blog-sidebar-cta-btn">Try a Mock Exam</a>
           </div>
         </aside>
@@ -230,7 +230,7 @@ export default function BlogPage() {
             {/* ── Blog Hero ── */}
             <div className="blog-hero">
               <div className="blog-hero-inner">
-                <span className="blog-hero-badge">CELPIPiQ Blog</span>
+                <span className="blog-hero-badge">celpipAce Blog</span>
                 <h1 className="blog-hero-title">
                   Expert Tips, Strategies &<br />
                   <span className="blog-hero-accent">Immigration Guides</span>

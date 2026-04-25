@@ -10,9 +10,9 @@ import { useAuth } from '../context/AuthContext'
      reason  : string  (optional context message)
 ───────────────────────────────────────────────────────────── */
 export default function AuthModal({ isOpen, onClose, reason }) {
-  const { signInWithGoogle, signInWithMagicLink, signUpWithEmail, signInWithEmail, resetPassword } = useAuth()
+  const { signInWithGoogle, signUpWithEmail, signInWithEmail, resetPassword } = useAuth()
 
-  const [view, setView]             = useState('main')   // 'main' | 'signup' | 'login' | 'magic' | 'sent' | 'forgot' | 'reset-sent'
+  const [view, setView]             = useState('main')   // 'main' | 'signup' | 'login' | 'sent' | 'forgot' | 'reset-sent'
   const [email, setEmail]           = useState('')
   const [password, setPassword]     = useState('')
   const [displayName, setDisplayName] = useState('')
@@ -25,19 +25,6 @@ export default function AuthModal({ isOpen, onClose, reason }) {
   }
 
   const handleGoogle = () => { signInWithGoogle(); handleClose() }
-
-  const handleMagicLink = async (e) => {
-    e.preventDefault()
-    setEmailError('')
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setEmailError('Please enter a valid email address.'); return
-    }
-    setSending(true)
-    const result = await signInWithMagicLink(email, displayName)
-    setSending(false)
-    if (result?.error) setEmailError(result.error)
-    else setView('sent')
-  }
 
   const handleSignUp = async (e) => {
     e.preventDefault()
@@ -107,7 +94,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
           >
             {/* ── Left panel — branding ── */}
             <div className="auth-panel-left">
-              <div className="auth-panel-logo">🍁 CELPIPiQ</div>
+              <div className="auth-panel-logo">🍁 celpipAce</div>
               <div className="auth-panel-tagline">
                 Your fastest path to<br />
                 <span className="auth-panel-highlight">CLB 9+</span>
@@ -141,7 +128,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                     transition={{ duration: 0.22 }}>
 
                     {reason && <div className="auth-modal-reason">🔒 {reason}</div>}
-                    <h2 className="auth-modal-title">Welcome to CELPIPiQ</h2>
+                    <h2 className="auth-modal-title">Welcome to celpipAce</h2>
                     <p className="auth-modal-sub">Sign in or create an account to track your progress.</p>
 
                     {/* Google */}
@@ -164,12 +151,6 @@ export default function AuthModal({ isOpen, onClose, reason }) {
 
                     <button className="auth-btn auth-btn--outline" onClick={() => { setView('login'); setEmailError('') }}>
                       Already have an account? Sign in
-                    </button>
-
-                    <div className="auth-divider"><span>or</span></div>
-
-                    <button className="auth-btn auth-btn--email" onClick={() => setView('magic')}>
-                      ✉️ &nbsp;Sign in with Magic Link
                     </button>
 
                     <p className="auth-modal-legal">
@@ -322,43 +303,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                   </motion.div>
                 )}
 
-                {/* ── Magic link form ── */}
-                {view === 'magic' && (
-                  <motion.div key="magic" className="auth-form-wrap"
-                    initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}
-                    transition={{ duration: 0.22 }}>
-
-                    <button className="auth-back" onClick={() => { setView('main'); setEmailError('') }}>← Back</button>
-                    <h2 className="auth-modal-title">Enter your details</h2>
-                    <p className="auth-modal-sub">We'll send a magic link — no password needed.</p>
-
-                    <form onSubmit={handleMagicLink} className="auth-magic-form">
-                      <label className="auth-field-label">Your name</label>
-                      <input
-                        className="auth-email-input"
-                        type="text"
-                        placeholder="First name (optional)"
-                        value={displayName}
-                        onChange={e => setDisplayName(e.target.value)}
-                      />
-                      <label className="auth-field-label">Email address</label>
-                      <input
-                        className={`auth-email-input${emailError ? ' auth-email-input--error' : ''}`}
-                        type="email"
-                        placeholder="you@example.com"
-                        value={email}
-                        onChange={e => { setEmail(e.target.value); setEmailError('') }}
-                        autoFocus
-                      />
-                      {emailError && <div className="auth-email-error">{emailError}</div>}
-                      <button type="submit" className="auth-btn auth-btn--primary" disabled={sending}>
-                        {sending ? 'Sending…' : '✉️ Send Magic Link'}
-                      </button>
-                    </form>
-                  </motion.div>
-                )}
-
-                {/* ── Sent ── */}
+                {/* ── Sent (email confirmation after signup) ── */}
                 {view === 'sent' && (
                   <motion.div key="sent" className="auth-form-wrap auth-sent"
                     initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
@@ -366,12 +311,12 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                     <div className="auth-sent-icon">📬</div>
                     <h2 className="auth-modal-title">Check your inbox!</h2>
                     <p className="auth-modal-sub">
-                      Magic link sent to <strong>{email}</strong>.<br />
-                      Click it to sign in instantly — no password.
+                      Confirmation email sent to <strong>{email}</strong>.<br />
+                      Click the link to verify and sign in.
                     </p>
                     <p className="auth-sent-note">
                       No email? Check spam or{' '}
-                      <button className="auth-link-btn" onClick={() => setView('magic')}>try again</button>.
+                      <button className="auth-link-btn" onClick={() => setView('signup')}>try again</button>.
                     </p>
                     <button className="auth-btn auth-btn--outline" onClick={handleClose}>Close</button>
                   </motion.div>

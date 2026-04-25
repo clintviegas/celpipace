@@ -104,7 +104,11 @@ function PartCard({ part, onStart }) {
         <span className="lp-part-tip-icon">💡</span>
         <span>{part.tip}</span>
       </div>
-      <button className="lp-part-cta" style={{ background: COLOR }} onClick={() => onStart(part)}>
+      <button
+        className="lp-part-cta"
+        style={{ background: COLOR }}
+        onClick={() => onStart(part)}
+      >
         Practice {part.num} →
       </button>
     </motion.div>

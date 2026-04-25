@@ -1,24 +1,64 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, Tag } from 'lucide-react'
+import { Check, Tag, Sparkles, Zap, Crown, ExternalLink } from 'lucide-react'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../context/AuthContext'
 
+/* ─────────────────────────────────────────────────────────────
+   celpipAce — Pricing
+   3 tiers, no auto-renewing yearly. One-time payments via Stripe.
+───────────────────────────────────────────────────────────── */
 const PLANS = [
-  { id: 'weekly',    label: 'Weekly',    price: '$12.99', original: '$19.99', save: '35% OFF', period: '/week' },
-  { id: 'monthly',   label: 'Monthly',   price: '$19.99', original: '$29.99', save: '33% OFF', period: '/month' },
-  { id: 'quarterly', label: 'Quarterly', price: '$39.99', original: '$59.99', save: '33% OFF', period: '/quarter', popular: true },
-  { id: 'annual',    label: 'Annual',    price: '$99.99', original: '$239.88', save: '58% OFF', period: '/year' },
+  {
+    id: 'weekly',
+    label: 'Weekly',
+    icon: Zap,
+    price: 12.99,
+    original: 19.99,
+    perMo: null,
+    period: '/week',
+    days: 7,
+    save: '35% OFF',
+    blurb: 'Best for last-minute test prep',
+  },
+  {
+    id: 'monthly',
+    label: 'Monthly',
+    icon: Sparkles,
+    price: 24.99,
+    original: 44.99,
+    perMo: null,
+    period: '/month',
+    days: 30,
+    save: '44% OFF',
+    blurb: 'Most flexible, full study cycle',
+  },
+  {
+    id: 'quarterly',
+    label: 'Quarterly',
+    icon: Crown,
+    price: 49.99,
+    original: 99.99,
+    perMo: 16.66,
+    period: '/3 months',
+    days: 90,
+    save: '50% OFF',
+    blurb: 'Best value — like 3 months for the price of 2',
+    popular: true,
+  },
 ]
 
 const PREMIUM_FEATURES = [
-  'All Mock Exams (8 full tests)',
-  'All Sample Questions (344+)',
+  'All 8 full Mock Exams',
+  'All 344+ Sample Questions',
   'Unlimited AI Scoring',
   'CELPIP Courses & Study Guides',
   'CELPIP Vocabulary Bundles',
   'Score Tracker & Progress Dashboard',
   'Detailed Explanations for Every Question',
   'CLB-Level Sample Responses',
-  'Priority Support',
+  'Priority Email Support',
 ]
 
 const FREE_SECTIONS = [
@@ -31,53 +71,173 @@ const FREE_SECTIONS = [
 const FAQS = [
   {
     q: 'What do I get with the free plan?',
-    a: 'The free plan lets you try the first question from each section — Listening, Reading, Writing, and Speaking. It\'s a great way to explore CELPIPiQ before upgrading. No credit card required.',
+    a: 'The free plan lets you try the first question from each section — Listening, Reading, Writing, and Speaking. It\'s a great way to explore celpipAce before upgrading. No credit card required.',
+  },
+  {
+    q: 'Will I be auto-charged?',
+    a: 'No. Every plan is a one-time purchase that grants access for the chosen window (7, 30 or 90 days). You\'ll never get a surprise charge — buy again only when you need more time.',
   },
   {
     q: 'Do you offer coupon codes?',
-    a: 'Yes! New users receive a welcome coupon for an extra discount. Look out for the coupon banner on this page or check your welcome email after signing up.',
+    a: 'Yes! New users receive a welcome coupon, and you can also enter a Stripe promotion code right at checkout. Look for the coupon banner on this page or check your welcome email.',
   },
   {
     q: 'Are there any limits on Premium?',
     a: 'No limits. Premium members get unlimited AI scoring, full access to all 8 mock exams, 344+ practice questions, courses, vocabulary bundles, and the progress dashboard.',
   },
   {
-    q: 'Does my plan auto-renew?',
-    a: 'Plans auto-renew but can be cancelled anytime from your account settings. You\'ll receive an email reminder before each renewal.',
+    q: 'Is there a money-back guarantee?',
+    a: 'Yes — every plan comes with a 7-day money-back guarantee. If you\'re not satisfied, email us for a full refund.',
   },
   {
-    q: 'Is there a money-back guarantee?',
-    a: 'Yes — all plans come with a 7-day money-back guarantee. If you\'re not satisfied, contact us for a full refund.',
+    q: 'Which payment methods do you accept?',
+    a: 'All major credit and debit cards (Visa, Mastercard, Amex), Apple Pay, Google Pay and Link — processed securely by Stripe. We never see or store your card details.',
   },
 ]
 
+const fmt = (n) => `$${n.toFixed(2).replace(/\.00$/, '')}`
+
 export default function Pricing({ onSignIn }) {
+  const { user, isPremium, isAdmin, currentPlan, premiumExpiresAt, cancelAtPeriodEnd, refreshProfile } = useAuth()
+  const navigate = useNavigate()
   const [selected, setSelected] = useState('quarterly')
-  const [openFaq, setOpenFaq] = useState(null)
-  const [coupon, setCoupon] = useState('')
+  const [openFaq, setOpenFaq]   = useState(null)
+  const [coupon, setCoupon]     = useState('')
   const [couponApplied, setCouponApplied] = useState(false)
+  const [couponMsg, setCouponMsg] = useState('')
+  const [couponBusy, setCouponBusy] = useState(false)
+  const [checkoutBusy, setCheckoutBusy] = useState(false)
+  const [checkoutMsg, setCheckoutMsg]   = useState('')
   const plan = PLANS.find(p => p.id === selected)
 
-  const handleApplyCoupon = () => {
-    if (coupon.trim().length > 0) setCouponApplied(true)
+  /* Show success / cancel banner after returning from Stripe */
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('checkout') === 'success') {
+      setCheckoutMsg('✅ Payment received! Your premium access is being activated.')
+      const t = setTimeout(() => refreshProfile?.(), 2000)
+      return () => clearTimeout(t)
+    }
+    if (params.get('checkout') === 'cancelled') {
+      setCheckoutMsg('Checkout cancelled. No charge was made.')
+    }
+  }, [refreshProfile])
+
+  const handleApplyCoupon = async () => {
+    const code = coupon.trim().toUpperCase()
+    if (!code) return
+    if (!user) { onSignIn?.(); return }
+    setCouponBusy(true)
+    setCouponMsg('')
+    try {
+      const { data, error } = await supabase.rpc('redeem_coupon', { p_code: code })
+      if (error) throw error
+      if (data?.ok) {
+        setCouponApplied(true)
+        setCouponMsg('✅ Coupon applied! Premium unlocked.')
+        await refreshProfile?.()
+      } else {
+        const msgs = {
+          invalid_code: 'Invalid coupon code.',
+          inactive: 'This coupon is no longer active.',
+          exhausted: 'This coupon has reached its redemption limit.',
+          already_redeemed: 'You have already redeemed this coupon.',
+          not_authenticated: 'Please sign in to redeem a coupon.',
+        }
+        setCouponMsg(msgs[data?.error] || 'Could not apply coupon.')
+      }
+    } catch (e) {
+      setCouponMsg(e.message || 'Could not apply coupon.')
+    } finally {
+      setCouponBusy(false)
+    }
+  }
+
+  const handleCheckout = async () => {
+    if (!user) { onSignIn?.(); return }
+    setCheckoutBusy(true)
+    setCheckoutMsg('')
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: selected,
+          userId: user.id,
+          email: user.email,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.url) throw new Error(data.error || 'Could not start checkout')
+      window.location.href = data.url
+    } catch (e) {
+      setCheckoutMsg(e.message || 'Could not start checkout. Please try again.')
+      setCheckoutBusy(false)
+    }
+  }
+
+  // ── If the user is already premium, hide pricing tiles entirely and show
+  // a Manage-Subscription card instead. (Spec: "Hide pricing section after
+  // user subscribes, show Manage Subscription instead".)
+  if (isPremium) {
+    const expires = premiumExpiresAt
+      ? new Date(premiumExpiresAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+      : 'Never'
+    return (
+      <section className="pricing-section" id="pricing">
+        <div className="section-inner" style={{ maxWidth: 720 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{
+              background: 'linear-gradient(135deg, #fef3c7 0%, #fff 60%)',
+              borderRadius: 24, padding: 40, textAlign: 'center',
+              boxShadow: '0 8px 32px rgba(245,158,11,0.12)',
+            }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              width: 64, height: 64, borderRadius: 16,
+              background: 'linear-gradient(135deg,#fbbf24,#f59e0b)', marginBottom: 16,
+            }}>
+              <Crown size={32} color="#fff" />
+            </div>
+            <h2 style={{ fontSize: 32, marginBottom: 8 }}>You're on celpipAce Premium</h2>
+            <p style={{ color: '#6b7280', marginBottom: 24 }}>
+              {isAdmin
+                ? 'Admin account — lifetime access.'
+                : <>Plan: <strong style={{ textTransform: 'capitalize' }}>{currentPlan}</strong> · {cancelAtPeriodEnd ? 'Access ends' : 'Renews'} {expires}</>}
+            </p>
+            <button
+              className="btn"
+              onClick={() => navigate('/subscription')}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            >
+              Manage Subscription <ExternalLink size={16} />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+    )
   }
 
   return (
     <section className="pricing-section" id="pricing">
       <div className="section-inner">
-        {/* Header */}
         <motion.div className="section-label" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
           Simple, Transparent Pricing
         </motion.div>
         <motion.h2 className="section-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-          Start free. Upgrade anytime.
+          Pay once. Study with confidence.
         </motion.h2>
         <motion.p className="section-sub" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
           Try the first question in every section for free — no credit card required.<br />
-          Unlock everything with Premium when you're ready.
+          <strong>One-time payments only</strong> — no subscriptions, no surprise renewals.
         </motion.p>
 
-        {/* Two-column cards */}
+        {checkoutMsg && (
+          <div className={`pricing-toast${checkoutMsg.startsWith('✅') ? ' success' : ''}`}>
+            {checkoutMsg}
+          </div>
+        )}
+
         <div className="pricing-grid pricing-grid-2">
           {/* ── Free card ── */}
           <motion.div
@@ -108,7 +268,7 @@ export default function Pricing({ onSignIn }) {
             </ul>
           </motion.div>
 
-          {/* ── Premium card ── */}
+          {/* ── Premium card with new tile-style selector ── */}
           <motion.div
             className="pricing-card pricing-card-featured"
             initial={{ opacity: 0, y: 32 }}
@@ -116,47 +276,63 @@ export default function Pricing({ onSignIn }) {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="pricing-badge">⭐ CELPIPiQ Premium</div>
+            <div className="pricing-badge">⭐ celpipAce Premium</div>
 
-            {/* Plan selector (radio-button style) */}
-            <div className="pricing-plan-selector">
-              {PLANS.map(p => (
-                <button
-                  key={p.id}
-                  className={`pricing-plan-option${selected === p.id ? ' active' : ''}`}
-                  onClick={() => setSelected(p.id)}
-                >
-                  <span className={`pricing-plan-radio${selected === p.id ? ' checked' : ''}`} />
-                  <span className="pricing-plan-label">{p.label}</span>
-                  <span className="pricing-plan-price">{p.price}<span className="pricing-plan-per">{p.period}</span></span>
-                  {p.save && <span className="pricing-plan-save">{p.save}</span>}
-                  {p.popular && <span className="pricing-plan-popular">POPULAR</span>}
-                </button>
-              ))}
+            <div className="plan-tiles" role="radiogroup" aria-label="Choose a plan">
+              {PLANS.map(p => {
+                const Icon = p.icon
+                const active = selected === p.id
+                return (
+                  <button
+                    key={p.id}
+                    className={`plan-tile${active ? ' active' : ''}${p.popular ? ' popular' : ''}`}
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => setSelected(p.id)}
+                    type="button"
+                  >
+                    {p.popular && <span className="plan-tile-ribbon">BEST VALUE</span>}
+                    <Icon size={18} className="plan-tile-icon" />
+                    <div className="plan-tile-name">{p.label}</div>
+                    <div className="plan-tile-price">{fmt(p.price)}</div>
+                    <div className="plan-tile-period">{p.period}</div>
+                    {p.perMo && (
+                      <div className="plan-tile-permo">≈ {fmt(p.perMo)}/mo</div>
+                    )}
+                    <div className="plan-tile-save">{p.save}</div>
+                  </button>
+                )
+              })}
             </div>
 
             <AnimatePresence mode="wait">
               <motion.div
                 key={selected}
-                className="pricing-price-block"
-                initial={{ opacity: 0, y: 8 }}
+                className="plan-summary"
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.18 }}
               >
-                <div className="pricing-price">
-                  {plan.price}<span className="pricing-period">{plan.period}</span>
+                <div className="plan-summary-price">
+                  <span className="plan-summary-amount">{fmt(plan.price)}</span>
+                  <span className="plan-summary-period">{plan.period}</span>
+                  <span className="plan-summary-strike">{fmt(plan.original)}</span>
                 </div>
-                <div className="pricing-original">
-                  <span style={{ textDecoration: 'line-through' }}>{plan.original}</span>
-                  <span className="pricing-save-tag">{plan.save}</span>
-                </div>
+                <div className="plan-summary-blurb">{plan.blurb}</div>
               </motion.div>
             </AnimatePresence>
 
-            <p className="pricing-desc">Full access to everything you need to reach CLB 10+.</p>
-            <button className="btn pricing-cta pricing-cta-green" onClick={onSignIn}>Upgrade to Premium</button>
-            <p className="pricing-guarantee">🔒 7-day money-back guarantee</p>
+            <button
+              className="btn pricing-cta pricing-cta-green"
+              onClick={handleCheckout}
+              disabled={checkoutBusy}
+            >
+              {checkoutBusy ? 'Redirecting to checkout…' : `Get ${plan.label} Premium →`}
+            </button>
+            <p className="pricing-guarantee">
+              🔒 Secure checkout by Stripe · 7-day money-back guarantee · No auto-renewal
+            </p>
 
             <ul className="pricing-features">
               {PREMIUM_FEATURES.map(f => (
@@ -166,7 +342,7 @@ export default function Pricing({ onSignIn }) {
           </motion.div>
         </div>
 
-        {/* Coupon code banner */}
+        {/* Coupon banner */}
         <motion.div
           className="pricing-coupon"
           initial={{ opacity: 0, y: 20 }}
@@ -177,7 +353,7 @@ export default function Pricing({ onSignIn }) {
           <div className="pricing-coupon-inner">
             <Tag size={20} className="pricing-coupon-icon" />
             <div className="pricing-coupon-text">
-              <strong>New user?</strong> Use a coupon code for an extra discount on any plan!
+              <strong>Have a coupon?</strong> Redeem it here for instant Premium, or use a Stripe promotion code at checkout.
             </div>
             <div className="pricing-coupon-form">
               <input
@@ -187,11 +363,12 @@ export default function Pricing({ onSignIn }) {
                 value={coupon}
                 onChange={e => { setCoupon(e.target.value); setCouponApplied(false) }}
               />
-              <button className="pricing-coupon-btn" onClick={handleApplyCoupon} disabled={!coupon.trim()}>
-                Apply
+              <button className="pricing-coupon-btn" onClick={handleApplyCoupon} disabled={!coupon.trim() || couponBusy}>
+                {couponBusy ? 'Applying…' : 'Apply'}
               </button>
             </div>
-            {couponApplied && <span className="pricing-coupon-success">✓ Coupon applied at checkout</span>}
+            {couponApplied && <span className="pricing-coupon-success">✓ Premium unlocked</span>}
+            {!couponApplied && couponMsg && <span className="pricing-coupon-success" style={{ color: '#C8102E' }}>{couponMsg}</span>}
           </div>
         </motion.div>
 

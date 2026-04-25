@@ -1,0 +1,363 @@
+import { readFileSync, writeFileSync } from 'fs';
+
+const existing = JSON.parse(readFileSync('./src/data/reading/R3_information.json', 'utf8'));
+
+// Fix set 1 difficulty to standardized value
+existing.sets[0].difficulty = "intermediate";
+
+const newSets = [
+  {
+    set_number: 2,
+    difficulty: "easy",
+    title: "How Microplastics Enter the Food Chain",
+    passage: {
+      intro: "Read the following article about microplastics. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Microplastics are tiny plastic fragments smaller than five millimetres that have become one of the most widespread pollutants on the planet. They come from two main sources: the breakdown of larger plastic items such as bottles, bags, and packaging, and the shedding of synthetic fibres from clothing during machine washing. A single load of laundry can release hundreds of thousands of microscopic plastic fibres into wastewater, most of which are too small to be caught by treatment plant filters.",
+        B: "Once in the environment, microplastics enter rivers, lakes, and oceans, where they are consumed by small marine organisms such as plankton and shellfish. These organisms are then eaten by larger fish, and the plastics move up the food chain. Researchers at the University of Victoria estimated in 2019 that the average person may ingest roughly 50,000 microplastic particles per year through food and water alone, with additional exposure from breathing airborne particles.",
+        C: "The health effects of microplastic ingestion in humans are still being studied. Some laboratory research suggests that microplastics may carry harmful chemicals such as phthalates and bisphenol A (BPA), which can disrupt hormones. Other studies have found plastic particles in human blood and lung tissue, raising concerns about long-term accumulation. However, scientists caution that the concentrations found so far are low, and it is too early to draw firm conclusions about disease risk.",
+        D: "Efforts to reduce microplastic pollution are growing. France became the first country to require microplastic filters on all new washing machines starting in 2025. Several Canadian municipalities have banned single-use plastics, and researchers are developing biodegradable alternatives to synthetic fabrics. Consumer choices also play a role: using a wash bag designed to capture fibres, choosing natural-fibre clothing, and reducing plastic packaging can all help limit the amount of microplastic entering the environment."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "Washing machines can release plastic fibres into wastewater.", correct_answer: "A" },
+      { question_number: 2, question_text: "Microplastics have been detected inside the human body.", correct_answer: "C" },
+      { question_number: 3, question_text: "France has required filters on washing machines to catch fibres.", correct_answer: "D" },
+      { question_number: 4, question_text: "Small marine creatures eat microplastics before larger fish do.", correct_answer: "B" },
+      { question_number: 5, question_text: "Scientists are not yet certain about the disease risk of microplastics.", correct_answer: "C" },
+      { question_number: 6, question_text: "Consumers can reduce microplastic pollution through their purchasing choices.", correct_answer: "D" },
+      { question_number: 7, question_text: "A person may consume around 50,000 microplastic particles each year.", correct_answer: "B" },
+      { question_number: 8, question_text: "Microplastics are defined as plastic pieces smaller than five millimetres.", correct_answer: "A" },
+      { question_number: 9, question_text: "Microplastic pollution has been completely eliminated in Northern Europe.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 3,
+    difficulty: "intermediate",
+    title: "The History of Canada's Railway Expansion",
+    passage: {
+      intro: "Read the following article about the Canadian railway. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "The construction of the Canadian Pacific Railway, completed in 1885, is widely regarded as one of the most ambitious engineering projects in North American history. The railway stretched nearly 4,700 kilometres from Montreal to Port Moody on the Pacific coast, crossing prairies, rivers, and the formidable Rocky Mountains. Its completion was a condition of British Columbia's entry into Confederation, and the federal government of Sir John A. Macdonald staked considerable political capital on its success.",
+        B: "The human cost of building the railway was enormous. Thousands of Chinese labourers were recruited to work on the most dangerous sections through the mountains of British Columbia. They were paid significantly less than their white counterparts and endured appalling living conditions. Historians estimate that at least 600 Chinese workers died during construction from accidents, landslides, and disease. Despite their contribution, Chinese Canadians were subjected to a discriminatory head tax from 1885 to 1923, and their role in building the railway went largely unacknowledged for over a century.",
+        C: "Economically, the railway transformed the country. It opened the western prairies to large-scale farming, enabling wheat and cattle to be shipped to eastern markets and international ports. Small towns sprang up along the route, many of which grew into the cities we know today, including Calgary, Regina, and Kamloops. The railway also made it feasible for the federal government to exert authority over western territories that had previously been too remote to administer effectively.",
+        D: "Today, the legacy of the Canadian Pacific Railway is complex. On one hand, it is celebrated as the project that physically united a country stretching from sea to sea. On the other, there is growing recognition of the injustices suffered by the workers who built it and the Indigenous communities whose lands it crossed, often without consent or adequate compensation. In 2006, the federal government formally apologized for the Chinese head tax, and ongoing efforts to acknowledge Indigenous land rights continue to reshape how Canadians understand this chapter of their history."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "Chinese workers were paid less than other labourers on the project.", correct_answer: "B" },
+      { question_number: 2, question_text: "British Columbia joined Confederation on the condition that the railway would be built.", correct_answer: "A" },
+      { question_number: 3, question_text: "The railway made western farming economically viable.", correct_answer: "C" },
+      { question_number: 4, question_text: "The federal government apologized for the head tax in 2006.", correct_answer: "D" },
+      { question_number: 5, question_text: "The railway was approximately 4,700 kilometres long.", correct_answer: "A" },
+      { question_number: 6, question_text: "Hundreds of Chinese workers lost their lives during construction.", correct_answer: "B" },
+      { question_number: 7, question_text: "The railway helped the federal government govern remote western regions.", correct_answer: "C" },
+      { question_number: 8, question_text: "Indigenous communities were not always consulted about the railway route.", correct_answer: "D" },
+      { question_number: 9, question_text: "The railway was privatized and sold to an American company in 1920.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 4,
+    difficulty: "easy",
+    title: "Why Do We Sleep?",
+    passage: {
+      intro: "Read the following article about sleep. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Sleep is one of the most basic biological needs, yet scientists are still working to fully understand why we do it. What is clear is that sleep is not simply a period of rest. During sleep, the brain cycles through several stages, including light sleep, deep sleep, and rapid eye movement (REM) sleep, each of which appears to serve a different function. Deep sleep is thought to be especially important for physical recovery, while REM sleep — the stage in which most dreaming occurs — plays a key role in memory and learning.",
+        B: "Chronic sleep deprivation has been linked to a wide range of health problems. Studies have shown that people who consistently sleep fewer than six hours per night are at greater risk for obesity, heart disease, diabetes, and depression. The immune system also suffers: researchers at Carnegie Mellon University found that people who slept fewer than seven hours were nearly three times more likely to develop a cold after being exposed to the virus, compared to those who slept eight hours or more.",
+        C: "Despite the evidence, many North Americans continue to sleep less than the recommended seven to nine hours per night. A 2023 survey by Statistics Canada found that roughly one in three Canadian adults reported sleeping fewer than seven hours on a typical weeknight. The most commonly cited reasons were work demands, screen time before bed, and stress. Young adults aged 18 to 34 were the most likely to report poor sleep quality.",
+        D: "Simple changes can significantly improve sleep. Experts recommend maintaining a consistent bedtime, avoiding caffeine after 2 p.m., and limiting screen exposure for at least 30 minutes before bed. Keeping the bedroom cool, dark, and quiet also helps. Exercise during the day has been shown to improve sleep quality, though vigorous activity too close to bedtime may have the opposite effect. For those with persistent sleep problems, cognitive behavioural therapy for insomnia (CBT-I) has emerged as a highly effective treatment, often preferred over medication."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "REM sleep is connected to memory and learning.", correct_answer: "A" },
+      { question_number: 2, question_text: "People who sleep too little are more likely to catch colds.", correct_answer: "B" },
+      { question_number: 3, question_text: "About one in three Canadian adults sleep fewer than seven hours.", correct_answer: "C" },
+      { question_number: 4, question_text: "Caffeine should be avoided in the afternoon for better sleep.", correct_answer: "D" },
+      { question_number: 5, question_text: "Young adults report the worst sleep quality among age groups.", correct_answer: "C" },
+      { question_number: 6, question_text: "Insufficient sleep increases the risk of heart disease and diabetes.", correct_answer: "B" },
+      { question_number: 7, question_text: "The brain goes through several different stages during sleep.", correct_answer: "A" },
+      { question_number: 8, question_text: "CBT-I is often recommended over sleeping pills.", correct_answer: "D" },
+      { question_number: 9, question_text: "Napping for 20 minutes at noon boosts afternoon productivity.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 5,
+    difficulty: "intermediate",
+    title: "The Rise of Electric Vehicles in Canada",
+    passage: {
+      intro: "Read the following article about electric vehicles. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Electric vehicle (EV) sales in Canada have surged in recent years, rising from about 3 percent of new car sales in 2020 to nearly 11 percent by mid-2024. The federal government's goal is for all new passenger vehicles sold in the country to be zero-emission by 2035. To support this target, Ottawa has introduced purchase incentives of up to $5,000 for qualifying battery-electric and plug-in hybrid vehicles, while British Columbia and Quebec offer additional provincial rebates that can bring total savings above $10,000.",
+        B: "However, the transition faces significant obstacles. Canada's vast distances and cold winters pose unique challenges for EVs, whose battery range can drop by 20 to 40 percent in sub-zero temperatures. Charging infrastructure remains unevenly distributed: while urban centres like Vancouver, Toronto, and Montreal have extensive networks, rural and northern communities often have few or no public chargers. A driver crossing northern Ontario or the Prairies may find gaps of 200 kilometres or more between charging stations.",
+        C: "The environmental case for EVs is strong but nuanced. Over their lifetime, battery-electric vehicles produce roughly 50 to 70 percent fewer greenhouse gas emissions than comparable gasoline cars, even when the electricity used for charging comes partly from fossil fuels. In provinces like Quebec and British Columbia, where hydroelectricity dominates the grid, the reduction is even greater. Critics point out, however, that mining the lithium, cobalt, and nickel needed for EV batteries carries its own environmental and human rights costs, particularly in countries with weak regulatory standards.",
+        D: "The used EV market is also beginning to grow, making electric cars more accessible to middle-income buyers. Early models like the Nissan Leaf and Chevrolet Bolt can now be found for under $20,000 on the secondhand market, though buyers must carefully evaluate battery health, as replacement packs remain expensive. Industry analysts expect that as battery technology improves and manufacturing scales up, the price gap between new EVs and gasoline vehicles will close by the late 2020s, potentially making government incentives unnecessary."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "EV sales have grown significantly in Canada since 2020.", correct_answer: "A" },
+      { question_number: 2, question_text: "Cold weather can substantially reduce an EV's driving range.", correct_answer: "B" },
+      { question_number: 3, question_text: "EVs produce fewer emissions over their lifetime than gasoline cars.", correct_answer: "C" },
+      { question_number: 4, question_text: "Used electric vehicles are becoming more affordable.", correct_answer: "D" },
+      { question_number: 5, question_text: "Rural areas often lack adequate charging infrastructure.", correct_answer: "B" },
+      { question_number: 6, question_text: "Some provinces offer rebates in addition to the federal incentive.", correct_answer: "A" },
+      { question_number: 7, question_text: "Battery production involves materials with environmental concerns.", correct_answer: "C" },
+      { question_number: 8, question_text: "Replacing an EV battery remains costly for used car buyers.", correct_answer: "D" },
+      { question_number: 9, question_text: "Canada has built more EV charging stations than any other G7 country.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 6,
+    difficulty: "advanced",
+    title: "The Science of Soil Degradation",
+    passage: {
+      intro: "Read the following article about soil degradation. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Soil is often described as a non-renewable resource on any human timescale: it can take up to a thousand years for nature to produce just three centimetres of topsoil. Yet globally, soil is being lost at rates that far exceed formation. The United Nations Food and Agriculture Organization estimates that 33 percent of the world's soils are already moderately to highly degraded, primarily through erosion, chemical contamination, compaction, and loss of organic matter. In Canada, the prairie provinces have lost an estimated 30 to 50 percent of their original topsoil organic carbon since large-scale cultivation began in the late 19th century.",
+        B: "The consequences of soil degradation extend well beyond agriculture. Healthy soil acts as a carbon sink, storing roughly twice as much carbon as the atmosphere and all plant life combined. When soil organic matter is depleted — through intensive tillage, monoculture farming, or deforestation — that carbon is released as carbon dioxide, contributing to climate change. Degraded soils also lose their capacity to absorb and filter rainwater, increasing the risk of flooding and reducing the recharge of groundwater aquifers that millions of people depend on for drinking water.",
+        C: "Regenerative agriculture has emerged as a promising approach to reversing soil decline. Practices such as cover cropping, crop rotation, reduced tillage, and the integration of livestock grazing can rebuild soil organic matter, improve water retention, and restore microbial biodiversity. A long-term study at the Rodale Institute in Pennsylvania found that regeneratively managed plots stored 30 percent more soil carbon than conventionally farmed plots over a 30-year period, while achieving comparable crop yields after an initial adjustment period.",
+        D: "Policy support for soil health remains uneven. While the European Union has proposed a Soil Health Law requiring member states to monitor and improve soil condition, Canada lacks equivalent federal legislation specifically targeting soil conservation. Some provinces fund voluntary stewardship programs, but participation rates are low. Soil scientists argue that without binding regulations, market incentives, or carbon-credit systems that reward farmers for building soil carbon, progress will remain incremental at best."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "It can take centuries for nature to create a few centimetres of topsoil.", correct_answer: "A" },
+      { question_number: 2, question_text: "Healthy soil stores significantly more carbon than the atmosphere.", correct_answer: "B" },
+      { question_number: 3, question_text: "Cover cropping and reduced tillage can help restore soil organic matter.", correct_answer: "C" },
+      { question_number: 4, question_text: "Canada does not have federal legislation focused specifically on soil conservation.", correct_answer: "D" },
+      { question_number: 5, question_text: "Canadian prairies have lost a large portion of their original soil carbon.", correct_answer: "A" },
+      { question_number: 6, question_text: "Degraded soil increases the risk of flooding.", correct_answer: "B" },
+      { question_number: 7, question_text: "Regenerative farming matched conventional yields in a long-term study.", correct_answer: "C" },
+      { question_number: 8, question_text: "The European Union has proposed legislation requiring soil health monitoring.", correct_answer: "D" },
+      { question_number: 9, question_text: "Canadian farmers receive automatic payments for adopting regenerative practices.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 7,
+    difficulty: "intermediate",
+    title: "The Growth of Remote Work After the Pandemic",
+    passage: {
+      intro: "Read the following article about remote work. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Before March 2020, only about 4 percent of Canadian workers performed their jobs entirely from home. By May 2020, that figure had risen to nearly 40 percent as employers scrambled to adapt to public health restrictions. While many workers have since returned to offices, the landscape has permanently shifted: Statistics Canada reported in early 2024 that approximately 20 percent of employees now work remotely at least part of the week, with hybrid arrangements — typically two to three days in the office — becoming the dominant model in knowledge-sector industries.",
+        B: "Employees generally report positive experiences with remote work. Surveys consistently show that workers value the elimination of commuting time, greater flexibility in managing family responsibilities, and the ability to design a comfortable work environment. A 2023 survey by Environics found that 68 percent of Canadian remote workers said their productivity had stayed the same or improved since leaving the traditional office. Workers in smaller cities and rural areas have particularly benefited, gaining access to higher-paying urban jobs without relocating.",
+        C: "Employers, however, remain divided. Some companies have embraced fully remote models and have closed or downsized office space to reduce costs. Others, including several major Canadian banks and technology firms, have mandated a return to the office, citing concerns about collaboration, mentorship of junior staff, and the erosion of workplace culture. Middle managers often report feeling that it is harder to assess performance, build team cohesion, and onboard new employees when teams are geographically scattered.",
+        D: "The long-term effects of mass remote work are still emerging. Urban planners have noted shifts in housing demand, with some workers moving to suburban or exurban areas where larger homes are affordable. Downtown commercial districts in cities like Toronto and Calgary have experienced higher office vacancy rates, prompting municipalities to explore converting unused office buildings into housing. Mental health researchers warn that isolation can be a risk for remote workers who live alone, and recommend that employers offer regular in-person social events or co-working stipends to maintain connection."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "Only a small percentage of Canadians worked from home before 2020.", correct_answer: "A" },
+      { question_number: 2, question_text: "Most remote workers say their productivity has been maintained or improved.", correct_answer: "B" },
+      { question_number: 3, question_text: "Some employers worry that remote work weakens collaboration and culture.", correct_answer: "C" },
+      { question_number: 4, question_text: "Empty office buildings may be converted into housing.", correct_answer: "D" },
+      { question_number: 5, question_text: "Hybrid work, with two to three days in the office, is now the most common model.", correct_answer: "A" },
+      { question_number: 6, question_text: "Remote work has helped rural workers access better-paying jobs.", correct_answer: "B" },
+      { question_number: 7, question_text: "Several large Canadian companies have required employees to return to the office.", correct_answer: "C" },
+      { question_number: 8, question_text: "Remote workers who live alone may face mental health risks due to isolation.", correct_answer: "D" },
+      { question_number: 9, question_text: "The Canadian government plans to make remote work mandatory for all federal employees.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 8,
+    difficulty: "easy",
+    title: "The Benefits of Community Gardens",
+    passage: {
+      intro: "Read the following article about community gardens. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Community gardens are shared green spaces where residents of a neighbourhood can grow their own fruits, vegetables, herbs, and flowers. In Canadian cities, these gardens are typically located on municipal land or donated private lots and are managed by volunteer committees. Members are usually assigned individual plots ranging in size from about 3 by 3 metres to 5 by 10 metres, depending on the garden. Most programs charge a small annual fee — often between $20 and $75 — to cover water, tools, and compost.",
+        B: "The health benefits of community gardening are well documented. Regular gardening provides moderate physical exercise equivalent to walking or light cycling, and exposure to sunlight helps the body produce vitamin D. Several studies have found that people who garden regularly eat more vegetables than non-gardeners, and children who help grow food are far more willing to try new vegetables at the dinner table. The mental health benefits are equally significant: gardeners frequently describe the activity as calming, and clinical research has linked gardening to reduced symptoms of anxiety and depression.",
+        C: "Beyond individual health, community gardens strengthen social connections. They bring together people of different ages, backgrounds, and cultures who might otherwise never interact. In many Toronto and Vancouver gardens, recent immigrants have introduced crops from their home countries — such as bok choy, bitter melon, and callaloo — and share growing techniques with long-time residents. These exchanges build trust, reduce isolation, and foster a sense of belonging, particularly in large cities where neighbours often live side by side without speaking.",
+        D: "Despite their popularity, community gardens face challenges. Waiting lists in cities like Montreal and Ottawa can stretch to two or three years. Land tenure is often uncertain: gardens built on privately donated or temporarily leased land can be lost when the owner decides to develop the property. Some municipalities have begun to address this by including community garden space in official city plans and zoning bylaws, treating them as essential urban infrastructure rather than temporary uses of vacant land."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "Community garden plots are usually assigned to individual members.", correct_answer: "A" },
+      { question_number: 2, question_text: "Gardening provides physical activity similar to walking.", correct_answer: "B" },
+      { question_number: 3, question_text: "Immigrants have introduced new crops and shared techniques with neighbours.", correct_answer: "C" },
+      { question_number: 4, question_text: "Waiting lists for garden plots can last several years in some cities.", correct_answer: "D" },
+      { question_number: 5, question_text: "Children who garden are more likely to eat vegetables.", correct_answer: "B" },
+      { question_number: 6, question_text: "Annual fees for a garden plot are typically quite modest.", correct_answer: "A" },
+      { question_number: 7, question_text: "Gardens can be lost if the landowner decides to build on the property.", correct_answer: "D" },
+      { question_number: 8, question_text: "Community gardens help reduce isolation in large cities.", correct_answer: "C" },
+      { question_number: 9, question_text: "The federal government provides grants to all community gardens in Canada.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 9,
+    difficulty: "intermediate",
+    title: "Artificial Intelligence in Canadian Healthcare",
+    passage: {
+      intro: "Read the following article about AI in healthcare. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Artificial intelligence is rapidly entering the Canadian healthcare system, with applications ranging from diagnostic imaging to administrative automation. In radiology, AI algorithms can now scan thousands of medical images — X-rays, MRIs, and CT scans — in a fraction of the time it takes a human specialist, flagging potential tumours, fractures, and other abnormalities for review. A 2023 pilot project at the University Health Network in Toronto found that an AI-assisted screening tool for lung cancer reduced the rate of missed nodules by 23 percent compared to radiologists working without the tool.",
+        B: "AI is also being used to address one of Canada's most pressing healthcare challenges: wait times. Machine learning models can predict patient flow, optimize operating room schedules, and identify which emergency department patients are most likely to require admission. At several Alberta hospitals, an AI scheduling system reduced surgical wait times by an average of 18 percent in its first year of operation by better matching available surgeon and room capacity to demand. Health administrators hope that similar tools can eventually ease the strain on overcrowded emergency rooms.",
+        C: "The use of AI in healthcare raises significant ethical and regulatory questions. Bias in training data is a well-documented concern: if the datasets used to build an AI model underrepresent certain populations — Indigenous patients, elderly women, or people with rare conditions, for example — the tool may perform poorly for those groups. There is also the question of accountability: when an AI system contributes to a misdiagnosis, it is unclear under current Canadian law whether responsibility lies with the software developer, the hospital, or the clinician who accepted the recommendation.",
+        D: "Patient attitudes toward AI in medicine are mixed but evolving. A 2024 Ipsos survey found that 54 percent of Canadians were comfortable with AI assisting in diagnostic tasks, provided a human physician made the final decision. Acceptance was highest among younger adults aged 18 to 34 and lowest among those over 65. Privacy concerns were frequently cited: many respondents worried about how their medical data would be stored, who would have access to it, and whether it might be shared with insurance companies or employers without consent."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "AI can analyze medical images much faster than human specialists.", correct_answer: "A" },
+      { question_number: 2, question_text: "AI scheduling reduced surgical wait times at Alberta hospitals.", correct_answer: "B" },
+      { question_number: 3, question_text: "AI training data may not represent all patient populations equally.", correct_answer: "C" },
+      { question_number: 4, question_text: "More than half of Canadians accept AI in diagnosis if a doctor is involved.", correct_answer: "D" },
+      { question_number: 5, question_text: "An AI tool improved lung cancer detection rates in a Toronto pilot project.", correct_answer: "A" },
+      { question_number: 6, question_text: "AI could help reduce emergency room overcrowding.", correct_answer: "B" },
+      { question_number: 7, question_text: "Legal responsibility for AI misdiagnosis is unclear in Canada.", correct_answer: "C" },
+      { question_number: 8, question_text: "Older Canadians are less comfortable with AI in healthcare than younger adults.", correct_answer: "D" },
+      { question_number: 9, question_text: "All Canadian provinces have passed legislation specifically governing AI in medicine.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 10,
+    difficulty: "advanced",
+    title: "The Collapse and Recovery of Atlantic Cod",
+    passage: {
+      intro: "Read the following article about Atlantic cod. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "For nearly five centuries, the cod fishery of Newfoundland and Labrador was one of the richest in the world. European vessels began fishing the Grand Banks as early as the 1490s, and by the 20th century, the northern cod stock supported a massive industrial fishery involving Canadian, European, and Soviet factory trawlers. At its peak in the late 1960s, the total annual catch exceeded 800,000 tonnes. The fishery was so central to the region's identity and economy that it was widely assumed to be inexhaustible — a belief that proved catastrophically wrong.",
+        B: "By the 1980s, scientists at the Department of Fisheries and Oceans (DFO) were raising alarms about declining cod stocks, but their warnings were met with political resistance. Fishing communities, provincial politicians, and the federal Fisheries Minister all pushed back against reducing quotas, fearing economic devastation. The scientific assessments themselves were later found to have overestimated stock sizes due to flawed survey methods and inadequate data on spawning biomass. When the federal government finally declared a moratorium on the northern cod fishery in July 1992, the stock had collapsed to less than one percent of its historical levels.",
+        C: "The moratorium devastated coastal Newfoundland. Approximately 40,000 people lost their livelihoods almost overnight — the largest mass layoff in Canadian history. Entire communities that had depended on fishing for generations were hollowed out, with many residents relocating to Alberta, Ontario, or larger Newfoundland centres. The federal government spent over $4 billion in aid packages over the following decade, including income support, retraining programs, and early retirement packages, but the social and psychological toll of the collapse — depression, substance abuse, family breakdown — persisted long after the financial aid ended.",
+        D: "More than 30 years after the moratorium, the northern cod stock has shown only modest signs of recovery. While biomass has increased from its 1994 low point, it remains well below the level needed to support a commercial fishery. Ocean warming, changing prey availability, and predation by growing seal populations have complicated recovery. In 2024, DFO permitted a small stewardship fishery with strict quotas, but scientists caution that any premature expansion could reverse decades of painstaking rebuilding. The cod moratorium remains a powerful cautionary tale about the consequences of ignoring scientific evidence in resource management."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "The Grand Banks cod fishery dates back to the 15th century.", correct_answer: "A" },
+      { question_number: 2, question_text: "Scientists' early warnings about declining stocks were resisted for political reasons.", correct_answer: "B" },
+      { question_number: 3, question_text: "The moratorium caused the largest mass layoff in Canadian history.", correct_answer: "C" },
+      { question_number: 4, question_text: "The cod stock has still not fully recovered after more than three decades.", correct_answer: "D" },
+      { question_number: 5, question_text: "Scientific surveys at the time overestimated how many fish remained.", correct_answer: "B" },
+      { question_number: 6, question_text: "The peak annual cod catch exceeded 800,000 tonnes.", correct_answer: "A" },
+      { question_number: 7, question_text: "The federal government spent billions on aid for displaced fishing workers.", correct_answer: "C" },
+      { question_number: 8, question_text: "Ocean warming and seal predation have slowed the stock's recovery.", correct_answer: "D" },
+      { question_number: 9, question_text: "Norway offered to share its cod management techniques with Canada in 1993.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 11,
+    difficulty: "intermediate",
+    title: "How Streaming Changed the Music Industry",
+    passage: {
+      intro: "Read the following article about music streaming. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "The music industry has undergone a dramatic transformation over the past two decades. In 2001, global recorded music revenue peaked at roughly $23 billion, driven almost entirely by physical sales — CDs, cassettes, and vinyl. By 2014, piracy and the shift to digital downloads had cut that figure to just $14 billion. The arrival of subscription streaming services, led by Spotify's global expansion starting in 2012, gradually reversed the decline. By 2023, global music revenue had climbed back to $28 billion, with streaming accounting for nearly 70 percent of the total.",
+        B: "For listeners, streaming has been revolutionary. Platforms like Spotify, Apple Music, and YouTube Music offer access to catalogues of over 100 million tracks for a monthly fee of roughly $10 to $12 — less than the cost of a single CD in the 1990s. Discovery algorithms introduce users to artists they might never have found through traditional radio, and playlists curated by both humans and AI have become a primary way people experience new music. The convenience is undeniable: any song, anytime, on any device.",
+        C: "For artists, however, the economics of streaming are far less favourable. The average payout per stream on Spotify is estimated at $0.003 to $0.005, meaning a song must be played roughly 250,000 times to generate $1,000 in royalties. Established superstars with billions of streams earn substantial income, but mid-level and independent musicians often report that streaming revenue alone cannot cover basic living expenses. Many artists have shifted their income model toward live performances, merchandise sales, and direct fan support through platforms like Patreon and Bandcamp.",
+        D: "The cultural impact of streaming extends beyond finances. Albums, once the primary artistic unit, have given way to singles and playlists as the dominant format. Artists increasingly release music in shorter, more frequent bursts to maintain algorithmic visibility, and songs are often front-loaded with catchy hooks in the first 30 seconds to prevent listeners from skipping — a phenomenon critics call the 'skip economy.' Whether streaming has enriched or impoverished musical creativity remains one of the most debated questions in the industry."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "Global music revenue declined sharply between 2001 and 2014.", correct_answer: "A" },
+      { question_number: 2, question_text: "Streaming services give listeners access to millions of songs for a low monthly fee.", correct_answer: "B" },
+      { question_number: 3, question_text: "Most mid-level artists cannot live solely on streaming income.", correct_answer: "C" },
+      { question_number: 4, question_text: "Artists now design songs to hook listeners within the first 30 seconds.", correct_answer: "D" },
+      { question_number: 5, question_text: "Streaming now accounts for the majority of global music revenue.", correct_answer: "A" },
+      { question_number: 6, question_text: "Algorithms help listeners discover new artists and music.", correct_answer: "B" },
+      { question_number: 7, question_text: "Many musicians now rely more on live shows and merchandise.", correct_answer: "C" },
+      { question_number: 8, question_text: "The traditional album format has become less dominant.", correct_answer: "D" },
+      { question_number: 9, question_text: "Spotify pays artists a guaranteed minimum salary regardless of streams.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 12,
+    difficulty: "easy",
+    title: "Invasive Species in the Great Lakes",
+    passage: {
+      intro: "Read the following article about invasive species in the Great Lakes. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "The Great Lakes, which hold about 20 percent of the world's surface fresh water, have been significantly altered by invasive species — plants and animals introduced from other parts of the world that have no natural predators in their new environment. More than 180 non-native species have been identified in the Great Lakes system. Many arrived in the ballast water of ocean-going cargo ships, which take on water in foreign ports and discharge it upon arriving in the lakes, releasing organisms that may include larvae, eggs, and microscopic creatures.",
+        B: "Among the most damaging invaders are zebra and quagga mussels, which first appeared in the late 1980s and have since spread to all five Great Lakes. These small, striped mollusks reproduce rapidly and attach themselves to hard surfaces by the millions, clogging water intake pipes for cities and power plants, coating boat hulls, and smothering native mussel species. They also filter vast quantities of water, removing plankton that native fish depend on for food. The economic cost of managing mussel infestations has been estimated at over $500 million per year across the Great Lakes basin.",
+        C: "Sea lampreys, an eel-like parasitic fish that enters the lakes through shipping canals, posed an even more dramatic threat in the mid-20th century. Lampreys attach to the bodies of large fish such as lake trout, sucking their blood and often killing them. By the 1950s, the lake trout fishery in most Great Lakes had collapsed. An intensive control program using a targeted chemical called lampricide, combined with physical barriers on spawning streams, reduced lamprey populations by about 90 percent. However, the program must be maintained indefinitely, as lampreys continue to reproduce in tributary rivers.",
+        D: "Preventing new invasions is an ongoing challenge. Canada and the United States have jointly implemented regulations requiring cargo ships to manage their ballast water — by exchanging it in the open ocean before entering the lakes, or by treating it with filtration or ultraviolet light. Environmental groups continue to advocate for stronger measures, including the permanent separation of the Great Lakes basin from the Mississippi River system, through which invasive Asian carp are advancing northward and could cause ecological devastation if they establish breeding populations."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "More than 180 non-native species have been found in the Great Lakes.", correct_answer: "A" },
+      { question_number: 2, question_text: "Zebra and quagga mussels damage infrastructure and eliminate native food sources.", correct_answer: "B" },
+      { question_number: 3, question_text: "Sea lampreys nearly destroyed the lake trout fishery by the 1950s.", correct_answer: "C" },
+      { question_number: 4, question_text: "Ships must now treat their ballast water before entering the Great Lakes.", correct_answer: "D" },
+      { question_number: 5, question_text: "Ballast water from cargo ships has been a major pathway for invasive species.", correct_answer: "A" },
+      { question_number: 6, question_text: "Managing mussel infestations costs hundreds of millions of dollars annually.", correct_answer: "B" },
+      { question_number: 7, question_text: "A chemical called lampricide has been used to control sea lamprey populations.", correct_answer: "C" },
+      { question_number: 8, question_text: "Asian carp pose a future threat to the Great Lakes if they reach the basin.", correct_answer: "D" },
+      { question_number: 9, question_text: "All invasive species in the Great Lakes have now been successfully eradicated.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 13,
+    difficulty: "advanced",
+    title: "The Ethics of Gene Editing with CRISPR",
+    passage: {
+      intro: "Read the following article about CRISPR gene editing. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "CRISPR-Cas9, a gene-editing tool first demonstrated in 2012, allows scientists to make precise cuts and modifications to DNA with a speed and affordability that earlier techniques could not match. The technology works by guiding a molecular 'scissors' to a specific location on a genome using a short RNA sequence, where it can snip out, replace, or silence a particular gene. Within a decade of its discovery, CRISPR has been used in thousands of laboratories worldwide and has led to breakthroughs in agriculture — including disease-resistant wheat and drought-tolerant rice — and in medicine, where it has shown promise in treating sickle cell disease, certain cancers, and hereditary blindness.",
+        B: "The most controversial application of CRISPR is germline editing — making changes to embryos, eggs, or sperm that would be inherited by future generations. In 2018, Chinese scientist He Jiankui announced that he had created the world's first gene-edited babies, twin girls whose CCR5 gene had been altered to confer resistance to HIV. The announcement was met with widespread condemnation from the scientific community, not because the goal of preventing HIV was unworthy, but because germline editing introduces irreversible changes whose long-term effects are unknown, and because the experiment was conducted without adequate ethical oversight or informed consent.",
+        C: "The prospect of germline editing raises profound questions about equity and access. If gene editing becomes a commercially available service, it could deepen existing social inequalities: wealthy families might purchase genetic advantages for their children — enhanced intelligence, physical strength, or disease immunity — that poorer families cannot afford. Critics call this scenario 'designer babies,' and warn that it could create a genetic underclass. Supporters counter that the same concerns were raised about earlier medical advances, such as in vitro fertilization, and that regulation rather than prohibition is the appropriate response.",
+        D: "Most countries, including Canada, currently prohibit germline editing for reproductive purposes. The Canadian Assisted Human Reproduction Act makes it a criminal offence to alter the genome of a human cell if the alteration is capable of being transmitted to descendants. However, somatic gene editing — changes made to a patient's own body cells that are not passed on — is permitted and actively pursued in clinical trials. The regulatory challenge lies in maintaining a clear line between acceptable therapeutic use and the more speculative applications that continue to generate ethical debate."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "CRISPR allows scientists to target specific genes using an RNA guide.", correct_answer: "A" },
+      { question_number: 2, question_text: "The first gene-edited babies were created without proper ethical oversight.", correct_answer: "B" },
+      { question_number: 3, question_text: "Gene editing could widen the gap between wealthy and disadvantaged families.", correct_answer: "C" },
+      { question_number: 4, question_text: "Canada bans germline editing but allows somatic gene editing.", correct_answer: "D" },
+      { question_number: 5, question_text: "CRISPR has been applied to both agriculture and medicine.", correct_answer: "A" },
+      { question_number: 6, question_text: "Germline changes are permanent and can be passed to future generations.", correct_answer: "B" },
+      { question_number: 7, question_text: "Some argue that regulation is better than an outright ban on gene editing.", correct_answer: "C" },
+      { question_number: 8, question_text: "Changes to a patient's own body cells are not heritable.", correct_answer: "D" },
+      { question_number: 9, question_text: "CRISPR has been used to completely eradicate malaria in Sub-Saharan Africa.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 14,
+    difficulty: "intermediate",
+    title: "The Psychology of Procrastination",
+    passage: {
+      intro: "Read the following article about procrastination. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Procrastination — the voluntary delay of an intended action despite knowing it will cause harm — is one of the most common and least understood self-regulation failures. Research suggests that roughly 20 percent of adults are chronic procrastinators, and the rate is even higher among students, with some studies placing it above 50 percent. Contrary to popular belief, procrastination is not caused by laziness. Psychologists increasingly view it as an emotional regulation problem: people procrastinate not because they cannot manage their time, but because they cannot manage the negative emotions — anxiety, boredom, frustration, self-doubt — associated with a task.",
+        B: "The emotional model of procrastination helps explain why people often delay tasks they find personally meaningful. Writing a thesis, applying for a dream job, or starting a creative project can trigger performance anxiety so intense that avoidance becomes a way of protecting self-esteem. As Dr. Tim Pychyl of Carleton University explains, 'We give in to feel good now, at the cost of feeling worse later.' The temporary relief of putting something off is immediately rewarding, even though the long-term consequences — missed deadlines, lower quality work, increased stress — are well understood.",
+        C: "Procrastination has measurable effects on both health and performance. A longitudinal study at Case Western Reserve University found that students who procrastinated habitually earned lower grades, reported higher levels of stress and illness, and rated their overall well-being more negatively than non-procrastinators. Other research has linked chronic procrastination to cardiovascular problems, poor sleep habits, and delayed medical care — procrastinators are more likely to postpone health screenings and dental appointments, sometimes with serious consequences.",
+        D: "Strategies to overcome procrastination focus on reducing emotional barriers rather than adding more structure. Breaking a large task into small, specific steps makes starting feel less overwhelming. The 'two-minute rule' — if a task takes less than two minutes, do it immediately — prevents small tasks from accumulating into an anxiety-inducing backlog. Self-compassion, rather than self-criticism, has been shown to reduce the shame spiral that often follows a bout of procrastination. And environmental design — removing distractions, pre-committing to work sessions, or using accountability partners — helps bridge the gap between intention and action."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "Procrastination is now understood as an emotion management problem, not laziness.", correct_answer: "A" },
+      { question_number: 2, question_text: "People sometimes avoid important tasks because starting them triggers anxiety.", correct_answer: "B" },
+      { question_number: 3, question_text: "Chronic procrastinators tend to have worse grades and more health problems.", correct_answer: "C" },
+      { question_number: 4, question_text: "Self-compassion helps reduce the shame that follows procrastination.", correct_answer: "D" },
+      { question_number: 5, question_text: "Over half of all students may procrastinate regularly.", correct_answer: "A" },
+      { question_number: 6, question_text: "Putting things off gives a temporary feeling of relief.", correct_answer: "B" },
+      { question_number: 7, question_text: "Procrastinators are more likely to delay medical check-ups.", correct_answer: "C" },
+      { question_number: 8, question_text: "The 'two-minute rule' prevents small tasks from building up.", correct_answer: "D" },
+      { question_number: 9, question_text: "A new medication has been approved to treat chronic procrastination.", correct_answer: "E" }
+    ]
+  },
+  {
+    set_number: 15,
+    difficulty: "advanced",
+    title: "Arctic Permafrost and Climate Feedback Loops",
+    passage: {
+      intro: "Read the following article about Arctic permafrost. Then answer the questions by choosing which paragraph (A, B, C, or D) each statement refers to. If the information is not given, choose E.",
+      paragraphs: {
+        A: "Permafrost — ground that has remained frozen for at least two consecutive years — underlies approximately 40 percent of Canada's land area, stretching across the Yukon, Northwest Territories, Nunavut, and the northern reaches of several provinces. This frozen layer, which in some locations extends hundreds of metres below the surface, contains vast quantities of organic material — dead plants, roots, and animal matter — that accumulated over thousands of years and was essentially locked away from decomposition by the cold. Scientists estimate that Arctic and sub-Arctic permafrost globally holds roughly 1,500 billion tonnes of carbon, approximately twice the amount currently in the atmosphere.",
+        B: "As global temperatures rise, permafrost is thawing at accelerating rates, and the consequences are both local and global. When permafrost melts, soil microorganisms begin breaking down the previously frozen organic matter, releasing carbon dioxide and, in waterlogged conditions, methane — a greenhouse gas roughly 80 times more potent than CO₂ over a 20-year period. This creates a dangerous feedback loop: rising temperatures cause permafrost thaw, which releases greenhouse gases, which cause further warming, which accelerates further thaw. Climate models suggest that permafrost emissions could add 0.2 to 0.4°C of additional warming by 2100, on top of emissions from human activity.",
+        C: "The thaw is already disrupting infrastructure and communities in Canada's North. Buildings, roads, and airport runways constructed on permafrost are buckling and sinking as the ground beneath them shifts. In Inuvik, Northwest Territories, homes built on pilings — designed to keep heat away from the frozen ground — are beginning to tilt as the permafrost they rest on degrades. The cost of maintaining and replacing northern infrastructure is rising sharply, straining the budgets of territorial governments and Indigenous communities that are disproportionately affected. In some cases, entire communities may need to be relocated.",
+        D: "Research into permafrost is intensifying, but significant uncertainties remain. Current climate models disagree on the speed and scale of carbon release from thawing permafrost, partly because the process involves complex interactions between temperature, soil moisture, microbial activity, and vegetation change. Canadian scientists at the Centre for Northern Studies and the Arctic Institute of North America are deploying networks of ground-temperature sensors and using satellite data to track changes in permafrost extent and depth. Understanding these dynamics is critical, because unlike fossil fuel emissions, which can theoretically be reduced through policy, permafrost emissions — once triggered — are largely beyond human control."
+      }
+    },
+    questions: [
+      { question_number: 1, question_text: "Permafrost covers roughly 40 percent of Canada's land.", correct_answer: "A" },
+      { question_number: 2, question_text: "Methane released from thawing permafrost is a very potent greenhouse gas.", correct_answer: "B" },
+      { question_number: 3, question_text: "Buildings in northern communities are sinking as the ground thaws.", correct_answer: "C" },
+      { question_number: 4, question_text: "Climate models disagree about how fast permafrost carbon will be released.", correct_answer: "D" },
+      { question_number: 5, question_text: "Permafrost holds about twice as much carbon as the atmosphere.", correct_answer: "A" },
+      { question_number: 6, question_text: "Permafrost thaw creates a self-reinforcing warming cycle.", correct_answer: "B" },
+      { question_number: 7, question_text: "Some northern communities may need to be completely relocated.", correct_answer: "C" },
+      { question_number: 8, question_text: "Once triggered, permafrost emissions cannot be directly controlled by humans.", correct_answer: "D" },
+      { question_number: 9, question_text: "Canadian scientists have found a way to refreeze thawed permafrost artificially.", correct_answer: "E" }
+    ]
+  }
+];
+
+existing.sets.push(...newSets);
+writeFileSync('./src/data/reading/R3_information.json', JSON.stringify(existing, null, 2));
+console.log('R3: 15 sets written');

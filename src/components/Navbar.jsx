@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import CelpipAceLogo from './CelpipAceLogo'
 
 /* ── Dropdown data matching CELTESTPIP nav ── */
 const NAV_ITEMS = [
@@ -269,8 +270,7 @@ export default function Navbar({ onSignIn }) {
       <div className="nav-inner">
         {/* Logo */}
         <button className="nav-logo" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-          <span className="logo-maple">🍁</span>
-          <span className="logo-text">CELPIPiQ</span>
+          <CelpipAceLogo height={34} />
         </button>
 
         {/* Desktop nav */}

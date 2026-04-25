@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useProgress } from '../hooks/useProgress'
+import { supabase } from '../lib/supabase'
 import SEO from '../components/SEO'
 
 /* ── section config ── */
@@ -57,21 +58,46 @@ function getCLB(pct) {
 
 const DashboardPage = () => {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, isPremium } = useAuth()
   const { stats, streak, activity } = useProgress()
   const [motivIdx] = useState(() => Math.floor(Math.random() * MOTIVATIONAL.length))
+
+  // ── Active in-progress sessions (for Resume card) ────────────────────
+  const [activeSessions, setActiveSessions] = useState([])
+  useEffect(() => {
+    if (!user?.id) return
+    let cancelled = false
+    ;(async () => {
+      const { data, error } = await supabase
+        .from('test_sessions')
+        .select('id, kind, section, part_id, set_number, exam_number, current_section, current_part, current_question_index, updated_at')
+        .eq('user_id', user.id)
+        .eq('is_completed', false)
+        .order('updated_at', { ascending: false })
+        .limit(5)
+      if (!cancelled && !error && data) setActiveSessions(data)
+    })()
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  const resumeSession = (s) => {
+    if (s.kind === 'mock') {
+      navigate(`/mock-test/${s.exam_number || 1}`)
+    } else if (s.section && s.part_id) {
+      navigate(`/${s.section}/${s.part_id}`)
+    }
+  }
 
   const firstName = user?.user_metadata?.full_name?.split(' ')[0]
     ?? user?.email?.split('@')[0]
     ?? 'there'
 
-  const isPremium = false
   const greeting = getGreeting()
 
   // Find weakest section for smart recommendation
   const weakest = SECTIONS.reduce((w, s) => {
     const ss = stats.sections[s.key]
-    if (!w || (ss?.avgScore !== null && (w.avgScore === null || ss.avgScore < w.avgScore))) {
+    if (!w || (ss?.avgCLB != null && (w.avgCLB == null || ss.avgCLB < w.avgCLB))) {
       return { ...s, ...ss }
     }
     return w
@@ -132,13 +158,60 @@ const DashboardPage = () => {
             <div className="db-upgrade-banner-left">
               <span className="db-upgrade-plan-tag">Free Plan</span>
               <span className="db-upgrade-banner-text">
-                Unlock all practice questions and AI scoring with Premium
+                Unlock all practice questions and instant scoring with Premium
               </span>
             </div>
             <button className="db-upgrade-btn" onClick={() => navigate('/pricing')}>
               Upgrade Now
             </button>
           </motion.div>
+        )}
+
+        {/* ── Resume In-Progress Sessions ── */}
+        {activeSessions.length > 0 && (
+          <motion.section
+            className="db-section"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="db-section-title">Resume Where You Left Off</h2>
+            <div className="db-section-rows">
+              {activeSessions.map((s) => {
+                const isMock = s.kind === 'mock'
+                const sec = isMock
+                  ? SECTIONS.find(x => x.key === s.current_section) || SECTIONS[0]
+                  : SECTIONS.find(x => x.key === s.section) || SECTIONS[0]
+                const title = isMock
+                  ? `Mock Exam #${s.exam_number || 1}`
+                  : `${sec.label} — ${s.part_id || ''}${s.set_number ? ` Set ${s.set_number}` : ''}`
+                const sub = isMock
+                  ? `Currently on ${s.current_part || s.current_section || 'L1'} · updated ${timeAgo(new Date(s.updated_at).getTime())}`
+                  : `Question ${(s.current_question_index || 0) + 1} · updated ${timeAgo(new Date(s.updated_at).getTime())}`
+                return (
+                  <div key={s.id} className="db-section-row">
+                    <div className="db-section-row-icon" style={{ background: sec.colorLight }}>{sec.icon}</div>
+                    <div className="db-section-row-body">
+                      <div className="db-section-row-top">
+                        <span className="db-section-row-label">{title}</span>
+                        <span className="db-section-row-count" style={{ color: sec.color }}>In progress</span>
+                      </div>
+                      <div className="db-section-row-bottom">
+                        <span className="db-section-row-pct">{sub}</span>
+                      </div>
+                    </div>
+                    <button
+                      className="db-section-row-btn"
+                      style={{ color: sec.color, borderColor: sec.color + '50', background: sec.colorLight }}
+                      onClick={() => resumeSession(s)}
+                    >
+                      Resume
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          </motion.section>
         )}
 
         {/* ── Stat Tiles ── */}
@@ -217,9 +290,9 @@ const DashboardPage = () => {
                     </div>
                     <div className="db-section-row-bottom">
                       <span className="db-section-row-pct">{ss.pct}% complete</span>
-                      {ss.avgScore !== null && (
+                      {ss.avgCLB != null && (
                         <span className="db-section-row-score" style={{ color: s.color }}>
-                          CLB {getCLB(ss.avgScore)}
+                          CLB {ss.avgCLB}
                         </span>
                       )}
                     </div>

@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { Lock } from 'lucide-react'
 import { LISTENING_DATA } from '../data/listeningData'
 import { READING_DATA } from '../data/readingData'
 import { asset } from '../data/constants'
 import speakingQData from '../data/speakingQuestions.json'
 import { useProgress } from '../hooks/useProgress'
+import { useAuth } from '../context/AuthContext'
+import UpgradeModal from '../components/UpgradeModal'
 import SEO from '../components/SEO'
 import ScoreTips, { getListeningTips, getWritingTips } from '../components/ScoreTips'
 
@@ -1693,7 +1696,7 @@ function AIFeedbackPanel({ result, color, onClose }) {
       </div>
       {/* Overall band */}
       <div className="wl-ai-band" style={{ borderColor: bandColor }}>
-        <div className="wl-ai-band-score" style={{ color: bandColor }}>{result.overall}</div>
+        <div className="wl-ai-band-score" style={{ color: bandColor }}>{Math.round(result.overall)}</div>
         <div className="wl-ai-band-label">
           <span>Estimated CLB Band</span>
           <strong style={{ color: bandColor }}>CLB {result.clbBand}</strong>
@@ -1748,6 +1751,9 @@ function AIFeedbackPanel({ result, color, onClose }) {
    └────────┴───────────────────────────┘
 ══════════════════════════════════════════════════════════════ */
 function WritingLayout({ questions, color, partId, partLabel, partIcon, onComplete }) {
+  const { isPremium } = useAuth()
+  const { isCompleted, getSetScore, getPartStats } = useProgress()
+  const [upgradeFor, setUpgradeFor] = useState(null)
   const [activeIdx, setActiveIdx] = useState(0)
   const [responses, setResponses] = useState({})   // { [idx]: text }
   const [timeLeft, setTimeLeft]   = useState(null)
@@ -1760,16 +1766,23 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
   const timerRef = useRef(null)
   const otRef    = useRef(null)
 
+  /* Sidebar helpers — persisted progress is the source of truth */
   const sorted = [...questions].sort((a, b) => a.num - b.num)
   const q = sorted[activeIdx]
   const text = responses[activeIdx] || ''
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
-
-  /* Sidebar helpers */
-  const completedCount = sorted.filter((_, i) => !!(responses[i] && responses[i].trim())).length
   const DIFF_COLORS = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
 
+  // Persisted completion per task
+  const storedFor = (num) => getSetScore('writing', partId, num)
+  const hasStored = (num) => isCompleted('writing', partId, num)
+  const hasLocalDraft = (i) => !!(responses[i] && responses[i].trim())
+  const isTaskDone = (i) => hasStored(sorted[i].num) || hasLocalDraft(i)
+  const completedCount = sorted.reduce((n, item, i) => n + (isTaskDone(i) ? 1 : 0), 0)
+  const partStats = getPartStats('writing', partId)
+
   const switchQ = (idx) => {
+    if (!isPremium && idx > 0) { setUpgradeFor(idx + 1); return }
     setActiveIdx(idx)
     setAiResult(null)
     setShowModel(false)
@@ -1817,7 +1830,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
     setAiResult(result)
     setAiLoading(false)
     if (result && result.overall && onComplete) {
-      onComplete('writing', q.section, q.num, result.overall, 12)
+      onComplete('writing', q.section, q.num, Math.round(result.overall), 12)
     }
   }
 
@@ -1829,6 +1842,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
   const diffC = DIFF_COLOURS[q?.difficulty] || DIFF_COLOURS.intermediate
 
   return (
+    <>
     <div className="wl-shell">
       {/* ── SIDEBAR ── */}
       <aside className="wl-sidebar">
@@ -1852,7 +1866,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
           </div>
           <div className="wl-sidebar-stat-divider" />
           <div className="wl-sidebar-stat">
-            <span className="wl-sidebar-stat-val">{(() => { const scored = sorted.filter((_, i) => responses[i]?.trim()); return scored.length > 0 ? `${scored.length}` : '—' })()}</span>
+            <span className="wl-sidebar-stat-val" style={{ color }}>{partStats.avgCLB != null ? `CLB ${partStats.avgCLB}` : '—'}</span>
             <span className="wl-sidebar-stat-lbl">Avg Score</span>
           </div>
         </div>
@@ -1867,24 +1881,32 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
         <div className="wl-topic-list">
           {sorted.map((item, idx) => {
             const isActive = idx === activeIdx
-            const hasResponse = !!(responses[idx] && responses[idx].trim())
+            const stored = storedFor(item.num)
+            const hasDraft = hasLocalDraft(idx)
+            const isDone = !!stored || hasDraft
             const dc = DIFF_COLORS[item.difficulty] || DIFF_COLORS.easy
+            const locked = !isPremium && idx > 0
             return (
               <button
                 key={item.id}
-                className={`wl-topic-row${isActive ? ' wl-topic-row--active' : ''}${hasResponse ? ' wl-topic-row--done' : ''}`}
+                className={`wl-topic-row${isActive ? ' wl-topic-row--active' : ''}${isDone ? ' wl-topic-row--done' : ''}${locked ? ' wl-topic-row--locked' : ''}`}
                 style={isActive ? { borderLeftColor: color } : {}}
                 onClick={() => switchQ(idx)}
               >
-                <span className="wl-topic-num" style={isActive ? { background: color } : hasResponse ? { background: '#22c55e' } : {}}>{item.num}</span>
+                <span className="wl-topic-num" style={isActive ? { background: color } : isDone ? { background: '#22c55e' } : {}}>{item.num}</span>
                 <div className="wl-topic-info">
                   <span className="wl-topic-title">{item.title}</span>
                   <span className="wl-topic-meta">
                     <span className="wl-topic-diff-dot" style={{ background: dc }} />
                     <span style={{ color: dc, textTransform: 'capitalize' }}>{item.difficulty}</span>
+                    {stored && <span className="wl-topic-score" style={{ color }}>CLB {stored.score}</span>}
                   </span>
                 </div>
-                {hasResponse && <span className="wl-topic-check">{'\u2713'}</span>}
+                {locked
+                  ? <span className="set-lock-pill"><Lock size={10} strokeWidth={2.5} /> PRO</span>
+                  : stored
+                    ? <span className="wl-topic-check">{'\u2713'}</span>
+                    : hasDraft && <span className="wl-topic-draft">draft</span>}
               </button>
             )
           })}
@@ -2037,6 +2059,8 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
         </div>
       </div>
     </div>
+    <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Writing" />
+    </>
   )
 }
 
@@ -2046,6 +2070,9 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
    → Completion panel with CLB estimate, skill breakdown, motivation
 ══════════════════════════════════════════════════════════════ */
 function ListeningLayout({ color, partId, onComplete }) {
+  const { isPremium } = useAuth()
+  const { isCompleted, getSetScore, getPartStats } = useProgress()
+  const [upgradeFor, setUpgradeFor] = useState(null)
   const part = LISTENING_DATA[partId]
   if (!part) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>No data available for {partId}.</div>
 
@@ -2083,11 +2110,24 @@ function ListeningLayout({ color, partId, onComplete }) {
   const isSetDone  = doneCount === total
   const scorePct   = total > 0 ? Math.round((correctCnt / total) * 100) : 0
 
-  /* Per-set sidebar helpers */
-  const sidebarDone    = (si) => part.sets[si].questions.filter((_, qi) => answers[`${si}_${qi}`] !== undefined).length
-  const sidebarCorrect = (si) => part.sets[si].questions.filter((q, qi) => { const a = answers[`${si}_${qi}`]; return a !== undefined && a === q.answer }).length
-  const sidebarIsDone  = (si) => sidebarDone(si) === part.sets[si].questions.length
+  /* Per-set sidebar helpers — persisted progress + live-session fallback */
+  const storedFor = (si) => part.sets[si] && getSetScore('listening', partId, part.sets[si].setNumber)
+  const sidebarDone    = (si) => {
+    const s = storedFor(si)
+    if (s) return s.total || part.sets[si].questions.length
+    return part.sets[si].questions.filter((_, qi) => answers[`${si}_${qi}`] !== undefined).length
+  }
+  const sidebarCorrect = (si) => {
+    const s = storedFor(si)
+    if (s) return s.score
+    return part.sets[si].questions.filter((q, qi) => { const a = answers[`${si}_${qi}`]; return a !== undefined && a === q.answer }).length
+  }
+  const sidebarIsDone  = (si) => {
+    if (isCompleted('listening', partId, part.sets[si].setNumber)) return true
+    return part.sets[si].questions.filter((_, qi) => answers[`${si}_${qi}`] !== undefined).length === part.sets[si].questions.length
+  }
   const completedSets  = part.sets.filter((_, si) => sidebarIsDone(si)).length
+  const listeningPartStats = getPartStats('listening', partId)
 
   /* ── Audio path builder ── */
   const getAudioPath = (setNum, lineIdx) => {
@@ -2210,6 +2250,7 @@ function ListeningLayout({ color, partId, onComplete }) {
 
   /* ── Switch set ── */
   const switchSet = (si) => {
+    if (!isPremium && si > 0) { setUpgradeFor(part.sets[si]?.setNumber || si + 1); return }
     if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute('src') }
     setActiveSetIdx(si)
     setShowBanner(false)
@@ -2284,6 +2325,7 @@ function ListeningLayout({ color, partId, onComplete }) {
   const timerColor   = timeUp ? '#999' : timeCritical ? '#C8102E' : timeAmber ? '#C8972A' : color
 
   return (
+    <>
     <div className="ll-shell">
       {/* Hidden audio element */}
       <audio ref={audioRef} preload="none" />
@@ -2310,7 +2352,7 @@ function ListeningLayout({ color, partId, onComplete }) {
           </div>
           <div className="ll-sidebar-stat-divider" />
           <div className="ll-sidebar-stat">
-            <span className="ll-sidebar-stat-val">{(() => { const scores = part.sets.map((s, si) => { const t = s.questions.length; const c = s.questions.filter((q, qi) => answers[`${si}_${qi}`] === q.answer).length; return sidebarIsDone(si) ? Math.round((c / t) * 100) : null }).filter(v => v !== null); return scores.length > 0 ? `${Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)}%` : '—' })()}</span>
+            <span className="ll-sidebar-stat-val" style={{ color }}>{listeningPartStats.avgCLB != null ? `CLB ${listeningPartStats.avgCLB}` : '—'}</span>
             <span className="ll-sidebar-stat-lbl">Avg Score</span>
           </div>
         </div>
@@ -2329,10 +2371,11 @@ function ListeningLayout({ color, partId, onComplete }) {
             const allDone = sidebarIsDone(si)
             const correct = sidebarCorrect(si)
             const dc = DIFF_COLORS[s.difficulty] || DIFF_COLORS.easy
+            const locked = !isPremium && si > 0
             return (
               <button
                 key={si}
-                className={`ll-set-row${isActive ? ' ll-set-row--active' : ''}${allDone ? ' ll-set-row--done' : ''}`}
+                className={`ll-set-row${isActive ? ' ll-set-row--active' : ''}${allDone ? ' ll-set-row--done' : ''}${locked ? ' ll-set-row--locked' : ''}`}
                 style={isActive ? { borderLeftColor: color } : {}}
                 onClick={() => switchSet(si)}
               >
@@ -2346,7 +2389,9 @@ function ListeningLayout({ color, partId, onComplete }) {
                     {!allDone && done > 0 && <span className="ll-set-score">{done}/{s.questions.length}</span>}
                   </span>
                 </div>
-                {allDone && <span className="ll-set-check">{'\u2713'}</span>}
+                {locked
+                  ? <span className="set-lock-pill"><Lock size={10} strokeWidth={2.5} /> PRO</span>
+                  : allDone && <span className="ll-set-check">{'\u2713'}</span>}
               </button>
             )
           })}
@@ -2660,6 +2705,8 @@ function ListeningLayout({ color, partId, onComplete }) {
         </div>
       </div>
     </div>
+    <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Listening" />
+    </>
   )
 }
 
@@ -2668,6 +2715,9 @@ function ListeningLayout({ color, partId, onComplete }) {
    Question types: MCQ, Dropdown (fill blanks), Drag & Drop (matching)
 ══════════════════════════════════════════════════════════════ */
 function ReadingLayout({ color, partId, onComplete }) {
+  const { isPremium } = useAuth()
+  const { isCompleted, getSetScore } = useProgress()
+  const [upgradeFor, setUpgradeFor] = useState(null)
   const PARTS_ORDER = ['R1', 'R2', 'R3', 'R4']
   const parts = PARTS_ORDER.map(id => READING_DATA[id]).filter(Boolean)
   const initIdx = Math.max(0, PARTS_ORDER.indexOf(partId))
@@ -2702,13 +2752,19 @@ function ReadingLayout({ color, partId, onComplete }) {
       return acc + (a === q.answer ? 1 : 0)
     }, 0)
   }
-  const totalDone = parts.reduce((acc, p, pi) => acc + p.sets.reduce((a2, _, si) => a2 + setDoneCount(pi, si), 0), 0)
   const totalQs   = parts.reduce((acc, p) => acc + p.sets.reduce((a2, s) => a2 + s.questions.length, 0), 0)
+  // Sidebar progress uses persisted completion (so it never "disappears" on navigation)
+  const totalDone = parts.reduce((acc, p, pi) => acc + p.sets.reduce((a2, s, si) => {
+    const stored = getSetScore('reading', p.partId, s.setNumber)
+    if (stored) return a2 + (stored.total || s.questions.length)
+    return a2 + setDoneCount(pi, si)
+  }, 0), 0)
 
   const DIFF_COLORS = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
 
   /* switch */
   const switchTo = (pi, si) => {
+    if (!isPremium && si > 0) { setUpgradeFor(parts[pi]?.sets[si]?.setNumber || si + 1); return }
     setActivePartIdx(pi)
     setActiveSetIdx(si)
     setShowBanner(false)
@@ -2973,6 +3029,7 @@ function ReadingLayout({ color, partId, onComplete }) {
   }, [answers]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
+    <>
     <div className="rl-shell">
       {/* ── SIDEBAR ── */}
       <aside className="rl-sidebar">
@@ -3007,13 +3064,16 @@ function ReadingLayout({ color, partId, onComplete }) {
                   <div className="ll-set-list">
                     {p.sets.map((s, si) => {
                       const isActiveSet = si === activeSetIdx
-                      const done = setDoneCount(pi, si)
-                      const allDone = done === s.questions.length
+                      const stored = getSetScore('reading', p.partId, s.setNumber)
+                      const done = stored ? (stored.total || s.questions.length) : setDoneCount(pi, si)
+                      const allDone = !!stored || isCompleted('reading', p.partId, s.setNumber) || setDoneCount(pi, si) === s.questions.length
+                      const correct = stored ? stored.score : setCorrectCount(pi, si)
                       const dc = DIFF_COLORS[s.difficulty] || DIFF_COLORS.easy
+                      const locked = !isPremium && si > 0
                       return (
                         <button
                           key={si}
-                          className={`ll-set-row${isActiveSet ? ' ll-set-row--active' : ''}${allDone ? ' ll-set-row--done' : ''}`}
+                          className={`ll-set-row${isActiveSet ? ' ll-set-row--active' : ''}${allDone ? ' ll-set-row--done' : ''}${locked ? ' ll-set-row--locked' : ''}`}
                           style={isActiveSet ? { background: `${color}08`, borderLeftColor: color } : {}}
                           onClick={() => switchTo(pi, si)}
                         >
@@ -3021,10 +3081,16 @@ function ReadingLayout({ color, partId, onComplete }) {
                           <div className="ll-set-info">
                             <span className="ll-set-title">{s.title}</span>
                             <span className="ll-set-meta">
-                              <span style={{ color: dc, textTransform: 'capitalize' }}>{s.difficulty}</span> · {done}/{s.questions.length}
+                              <span style={{ color: dc, textTransform: 'capitalize' }}>{s.difficulty}</span>
+                              {' · '}
+                              {allDone
+                                ? <span style={{ color: correct === s.questions.length ? '#22c55e' : '#888', fontWeight: 600 }}>{correct}/{s.questions.length}</span>
+                                : <span>{done}/{s.questions.length}</span>}
                             </span>
                           </div>
-                          {allDone && <span className="ll-set-check">{'\u2713'}</span>}
+                          {locked
+                            ? <span className="set-lock-pill"><Lock size={10} strokeWidth={2.5} /> PRO</span>
+                            : allDone && <span className="ll-set-check">{'\u2713'}</span>}
                         </button>
                       )
                     })}
@@ -3148,6 +3214,8 @@ function ReadingLayout({ color, partId, onComplete }) {
         </div>
       </div>
     </div>
+    <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Reading" />
+    </>
   )
 }
 
@@ -3792,7 +3860,7 @@ function SpeakingFeedbackPanel({ result, color, onClose }) {
         <button className="sl-ai-close" onClick={onClose}>{'\u2715'}</button>
       </div>
       <div className="sl-ai-band" style={{ borderColor: bandColor }}>
-        <div className="sl-ai-band-score" style={{ color: bandColor }}>{result.overall}</div>
+        <div className="sl-ai-band-score" style={{ color: bandColor }}>{Math.round(result.overall)}</div>
         <div className="sl-ai-band-label">
           <span>Estimated CLB Band</span>
           <strong style={{ color: bandColor }}>CLB {result.clbBand}</strong>
@@ -3886,9 +3954,11 @@ function ComparingPrompt({ text, color }) {
 }
 
 function SpeakingLayout({ color, partId, onComplete }) {
+  const { isPremium } = useAuth()
+  const [upgradeFor, setUpgradeFor] = useState(null)
   const taskNum = parseInt(partId.replace('S', ''), 10)
   const meta = SPEAKING_TASK_META[taskNum] || SPEAKING_TASK_META[1]
-  const { getPartStats } = useProgress()
+  const { getPartStats, isCompleted, getSetScore } = useProgress()
 
   /* ── Extract a short topic name from the prompt text ── */
   const getTopicName = (promptText, taskType) => {
@@ -4091,10 +4161,14 @@ function SpeakingLayout({ color, partId, onComplete }) {
   if (!prompt) return null
 
   const totalSets = prompts.length
-  const completedCount = Object.keys(completedSets).length
+  const spPartStats = getPartStats('speaking', partId)
+  // Persisted + live completion
+  const isSetDone = (p, idx) => isCompleted('speaking', partId, p.setId) || !!completedSets[idx]
+  const completedCount = prompts.reduce((n, p, idx) => n + (isSetDone(p, idx) ? 1 : 0), 0)
   const diffColor = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
 
   const switchSet = (idx) => {
+    if (!isPremium && idx > 0) { setUpgradeFor(prompts[idx]?.setId || idx + 1); return }
     if (timerRef.current) clearInterval(timerRef.current)
     stopRecognition()
     setActiveIdx(idx)
@@ -4182,7 +4256,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setAiResult(result)
     setAiLoading(false)
     if (result && result.overall && onComplete) {
-      onComplete('speaking', partId, prompt.setId, result.overall, 12)
+      onComplete('speaking', partId, prompt.setId, Math.round(result.overall), 12)
     }
   }
 
@@ -4632,6 +4706,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const promptTips = getPromptTips()
 
   return (
+    <>
     <div className="sl-shell">
       {/* ── SIDEBAR ── */}
       <aside className="sl-sidebar">
@@ -4655,17 +4730,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
           </div>
           <div className="sl-sidebar-stat-divider" />
           <div className="sl-sidebar-stat">
-            <span className="sl-sidebar-stat-val">{prompt.prep_time_seconds}s</span>
-            <span className="sl-sidebar-stat-lbl">Prep</span>
-          </div>
-          <div className="sl-sidebar-stat-divider" />
-          <div className="sl-sidebar-stat">
-            <span className="sl-sidebar-stat-val">{prompt.speak_time_seconds}s</span>
-            <span className="sl-sidebar-stat-lbl">Speak</span>
-          </div>
-          <div className="sl-sidebar-stat-divider" />
-          <div className="sl-sidebar-stat">
-            <span className="sl-sidebar-stat-val" style={{ color }}>{getPartStats('speaking', partId).avgScore != null ? getPartStats('speaking', partId).avgScore + '%' : '—'}</span>
+            <span className="sl-sidebar-stat-val" style={{ color }}>{spPartStats.avgCLB != null ? `CLB ${spPartStats.avgCLB}` : '—'}</span>
             <span className="sl-sidebar-stat-lbl">Avg Score</span>
           </div>
         </div>
@@ -4680,12 +4745,14 @@ function SpeakingLayout({ color, partId, onComplete }) {
         <div className="sl-topic-list">
           {prompts.map((p, idx) => {
             const isActive = idx === activeIdx
-            const isDone = !!completedSets[idx]
+            const stored = getSetScore('speaking', partId, p.setId)
+            const isDone = !!stored || !!completedSets[idx]
             const dcc = diffColor[p.difficulty] || diffColor.intermediate
+            const locked = !isPremium && idx > 0
             return (
               <button
                 key={p.setId}
-                className={`sl-topic-row${isActive ? ' sl-topic-row--active' : ''}${isDone ? ' sl-topic-row--done' : ''}`}
+                className={`sl-topic-row${isActive ? ' sl-topic-row--active' : ''}${isDone ? ' sl-topic-row--done' : ''}${locked ? ' sl-topic-row--locked' : ''}`}
                 style={isActive ? { borderLeftColor: color } : {}}
                 onClick={() => switchSet(idx)}
               >
@@ -4697,9 +4764,12 @@ function SpeakingLayout({ color, partId, onComplete }) {
                   <span className="sl-topic-meta">
                     <span className="sl-topic-diff-dot" style={{ background: dcc }} />
                     <span style={{ color: dcc, textTransform: 'capitalize' }}>{p.difficulty}</span>
+                    {stored && <span className="sl-topic-score" style={{ color, marginLeft: 6, fontWeight: 600 }}>CLB {stored.score}</span>}
                   </span>
                 </div>
-                {isDone && <span className="sl-topic-check">{'\u2713'}</span>}
+                {locked
+                  ? <span className="set-lock-pill"><Lock size={10} strokeWidth={2.5} /> PRO</span>
+                  : isDone && <span className="sl-topic-check">{'\u2713'}</span>}
               </button>
             )
           })}
@@ -4954,6 +5024,8 @@ function SpeakingLayout({ color, partId, onComplete }) {
         </div>
       </div>
     </div>
+    <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Speaking" />
+    </>
   )
 }
 
@@ -5428,6 +5500,8 @@ function SingleQuestionPanel({ q, qIndex, total, color, onPrev, onNext, answer, 
    └────────┴──────────────────────────┴──────────────────────┘
 ══════════════════════════════════════════════════════════════ */
 function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet, onComplete }) {
+  const { isPremium } = useAuth()
+  const [upgradeFor, setUpgradeFor] = useState(null)
   const [activeSet, setActiveSet] = useState(0)
   const [timeLeft,  setTimeLeft]  = useState(null)
   const [qIndex,    setQIndex]    = useState(0)
@@ -5452,6 +5526,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
   }
 
   const switchSet = (i) => {
+    if (!isPremium && i > 0) { setUpgradeFor(sets[i]?.setNumber || i + 1); return }
     if (timerRef.current) clearInterval(timerRef.current)
     setTimeLeft(null)
     setActiveSet(i)
@@ -5494,6 +5569,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
   }, [allDone, activeSet]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
+    <>
     <div className="pcp-shell">
 
       {/* ════ TOP BAR ════ */}
@@ -5676,6 +5752,8 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
 
       </div>
     </div>
+    <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel={section} />
+    </>
   )
 }
 
@@ -5732,7 +5810,7 @@ export default function PracticeSetPage({ section: propSection }) {
     <div className={`ps-root${isListening || isReading || isWriting || isSpeaking ? ' ps-root--wide' : ''}`}>
       <SEO
         title="CELPIP Practice Set"
-        description="Work through a timed CELPIP practice set with real exam-format questions. AI scoring and instant feedback after every answer."
+        description="Work through a timed CELPIP practice set with real exam-format questions. Instant scoring and feedback after every answer."
         noindex={true}
       />
 

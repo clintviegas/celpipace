@@ -27,7 +27,7 @@ export default function CTA() {
             </button>
           </div>
           <p className="hp-cta-disclaimer">
-            CELPIPiQ is an independent preparation platform and is not affiliated with
+            celpipAce is an independent preparation platform and is not affiliated with
             Paragon Testing Enterprises or the official CELPIP® test.
           </p>
         </motion.div>

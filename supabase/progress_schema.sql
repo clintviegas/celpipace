@@ -13,17 +13,21 @@ CREATE TABLE IF NOT EXISTS user_progress (
 -- RLS: users can only access their own progress
 ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can read own progress" ON user_progress;
 CREATE POLICY "Users can read own progress"
   ON user_progress FOR SELECT
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can insert own progress" ON user_progress;
 CREATE POLICY "Users can insert own progress"
   ON user_progress FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can update own progress" ON user_progress;
 CREATE POLICY "Users can update own progress"
   ON user_progress FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
 
 -- Index for fast lookups
 CREATE INDEX IF NOT EXISTS idx_user_progress_updated

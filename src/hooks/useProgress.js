@@ -8,6 +8,7 @@ import { supabase } from '../lib/supabase'
 
 const STORAGE_KEY = 'celpipiq_progress'
 const STREAK_KEY  = 'celpipiq_streak'
+const GUEST_ID = 'guest'
 
 /* ── Section totals (sets × questions) ── */
 const SECTION_TOTALS = {
@@ -18,12 +19,31 @@ const SECTION_TOTALS = {
 }
 
 /* ── helpers ── */
-function loadProgress() {
+function storageId(userId) {
+  return userId || GUEST_ID
+}
+
+function progressStorageKey(userId) {
+  return `${STORAGE_KEY}:${storageId(userId)}`
+}
+
+function streakStorageKey(userId) {
+  return `${STREAK_KEY}:${storageId(userId)}`
+}
+
+function loadProgress(userId = null) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    let raw = localStorage.getItem(progressStorageKey(userId))
+    // One-time compatibility with older app versions that used a global key.
+    // Only migrate it into a signed-in user's namespace, never into guest state.
+    if (!raw && userId) raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return getDefault()
     return { ...getDefault(), ...JSON.parse(raw) }
   } catch { return getDefault() }
+}
+
+function saveProgressLocal(userId, value) {
+  localStorage.setItem(progressStorageKey(userId), JSON.stringify(value || getDefault()))
 }
 
 function getDefault() {
@@ -34,12 +54,21 @@ function getDefault() {
   }
 }
 
-function loadStreak() {
+function defaultStreak() {
+  return { current: 0, best: 0, lastDate: null }
+}
+
+function loadStreak(userId = null) {
   try {
-    const raw = localStorage.getItem(STREAK_KEY)
-    if (!raw) return { current: 0, best: 0, lastDate: null }
+    let raw = localStorage.getItem(streakStorageKey(userId))
+    if (!raw && userId) raw = localStorage.getItem(STREAK_KEY)
+    if (!raw) return defaultStreak()
     return JSON.parse(raw)
-  } catch { return { current: 0, best: 0, lastDate: null } }
+  } catch { return defaultStreak() }
+}
+
+function saveStreakLocal(userId, value) {
+  localStorage.setItem(streakStorageKey(userId), JSON.stringify(value || defaultStreak()))
 }
 
 function today() {
@@ -52,127 +81,206 @@ function yesterday() {
   return d.toISOString().slice(0, 10)
 }
 
+/* Map a raw percentage (0-100) to CLB band (3-12) — used for MCQ-based sections */
+function getCLBFromPct(pct) {
+  if (pct == null) return null
+  if (pct >= 95) return 12
+  if (pct >= 90) return 11
+  if (pct >= 85) return 10
+  if (pct >= 78) return 9
+  if (pct >= 70) return 8
+  if (pct >= 60) return 7
+  if (pct >= 50) return 6
+  if (pct >= 40) return 5
+  if (pct >= 30) return 4
+  return 3
+}
+
 /* ══════════════════════════════════════════════════════════════
    Hook
 ══════════════════════════════════════════════════════════════ */
 export function useProgress() {
-  const [data, setData]     = useState(loadProgress)
-  const [streak, setStreak] = useState(loadStreak)
+  const [data, setData]     = useState(() => loadProgress(null))
+  const [streak, setStreak] = useState(() => loadStreak(null))
+  const activeUserIdRef = useRef(null)
+  const dataRef = useRef(data)
+  const streakRef = useRef(streak)
   const syncedRef = useRef(false)
 
-  /* Persist on change */
+  /* Persist active namespace on change */
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    dataRef.current = data
+    saveProgressLocal(activeUserIdRef.current, data)
   }, [data])
 
   useEffect(() => {
-    localStorage.setItem(STREAK_KEY, JSON.stringify(streak))
+    streakRef.current = streak
+    saveStreakLocal(activeUserIdRef.current, streak)
   }, [streak])
 
   /* Cross-tab sync */
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === STORAGE_KEY) setData(loadProgress())
-      if (e.key === STREAK_KEY)  setStreak(loadStreak())
+      const uid = activeUserIdRef.current
+      if (e.key === progressStorageKey(uid)) setData(loadProgress(uid))
+      if (e.key === streakStorageKey(uid))  setStreak(loadStreak(uid))
     }
     window.addEventListener('storage', handler)
     return () => window.removeEventListener('storage', handler)
   }, [])
 
-  /* ── Supabase: load cloud progress on login ── */
+  /* ── Supabase: load cloud progress on login + on auth state change ── */
   useEffect(() => {
-    if (syncedRef.current) return
-    const loadCloud = async () => {
+    const loadForSession = async (sessionArg = null) => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (!session?.user) return
-        const uid = session.user.id
+        const session = sessionArg || (await supabase.auth.getSession()).data?.session || null
+        const uid = session?.user?.id || null
 
-        const { data: row } = await supabase
+        activeUserIdRef.current = uid
+        const localProgress = loadProgress(uid)
+        const localStreak = loadStreak(uid)
+
+        if (!uid) {
+          dataRef.current = localProgress
+          streakRef.current = localStreak
+          setData(localProgress)
+          setStreak(localStreak)
+          syncedRef.current = false
+          return
+        }
+
+        const { data: row, error } = await supabase
           .from('user_progress')
           .select('progress_data, streak_data')
           .eq('user_id', uid)
-          .single()
+          .maybeSingle()
 
-        if (row?.progress_data) {
-          // Merge cloud data with local — cloud wins for conflicting keys, local fills gaps
-          setData(prev => {
-            const cloud = row.progress_data
-            const merged = {
-              completed: { ...prev.completed, ...cloud.completed },
-              activity: mergeActivity(prev.activity || [], cloud.activity || []),
-              scores: mergeScores(prev.scores || {}, cloud.scores || {}),
-            }
-            return merged
-          })
-        }
-        if (row?.streak_data) {
-          setStreak(prev => {
-            const cloud = row.streak_data
-            return {
-              current: Math.max(prev.current || 0, cloud.current || 0),
-              best: Math.max(prev.best || 0, cloud.best || 0),
-              lastDate: prev.lastDate && prev.lastDate > (cloud.lastDate || '') ? prev.lastDate : (cloud.lastDate || prev.lastDate),
-            }
-          })
-        }
+        if (error) throw error
+
+        const nextProgress = row?.progress_data
+          ? mergeProgress(localProgress, row.progress_data)
+          : localProgress
+        const nextStreak = row?.streak_data
+          ? mergeStreak(localStreak, row.streak_data)
+          : localStreak
+
+        dataRef.current = nextProgress
+        streakRef.current = nextStreak
+        setData(nextProgress)
+        setStreak(nextStreak)
+        saveProgressLocal(uid, nextProgress)
+        saveStreakLocal(uid, nextStreak)
+
+        // If local had progress that cloud did not, push the merge back up.
+        await supabase
+          .from('user_progress')
+          .upsert({
+            user_id: uid,
+            progress_data: nextProgress,
+            streak_data: nextStreak,
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'user_id' })
         syncedRef.current = true
-      } catch (e) {
-        // Silently continue with localStorage if cloud sync fails
+      } catch {
+        syncedRef.current = false
       }
     }
-    loadCloud()
+
+    // Initial load
+    loadForSession()
+
+    // Re-sync whenever auth state changes (login, token refresh, cross-tab login)
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+        syncedRef.current = false
+        loadForSession(session)
+      }
+      if (event === 'SIGNED_OUT') {
+        const previousUserId = activeUserIdRef.current
+        if (previousUserId) {
+          try {
+            saveProgressLocal(previousUserId, dataRef.current)
+            saveStreakLocal(previousUserId, streakRef.current)
+          } catch { void 0 }
+        }
+        activeUserIdRef.current = null
+        syncedRef.current = false
+        const guestProgress = loadProgress(null)
+        const guestStreak = loadStreak(null)
+        dataRef.current = guestProgress
+        streakRef.current = guestStreak
+        setData(guestProgress)
+        setStreak(guestStreak)
+      }
+    })
+    return () => { sub?.subscription?.unsubscribe?.() }
   }, [])
 
-  /* ── Record a set completion ── */
+  /* ── Record a set completion (best-score-wins; re-attempts never lower progress) ── */
   const recordCompletion = useCallback((section, partId, setNum, score, total) => {
     const key = `${section}:${partId}:${setNum}`
     const ts  = Date.now()
-    const pct = total > 0 ? Math.round((score / total) * 100) : 0
+    const safeScore = Number.isFinite(score) ? score : 0
+    const pct = total > 0 ? Math.round((safeScore / total) * 100) : 0
 
-    setData(prev => {
-      const completed = { ...prev.completed, [key]: { score, total, pct, ts } }
+    const prev = dataRef.current || getDefault()
+    const prevEntry = prev.completed[key]
+    const keepEntry = prevEntry && (prevEntry.pct ?? 0) >= pct
+      ? { ...prevEntry, attempts: (prevEntry.attempts || 1) + 1, lastTs: ts }
+      : { score: safeScore, total, pct, ts, attempts: (prevEntry?.attempts || 0) + 1, lastTs: ts }
+    const completed = { ...prev.completed, [key]: keepEntry }
 
-      // Activity feed (newest first, max 50)
-      const entry = { section, partId, setNum, score, total, pct, ts }
-      const activity = [entry, ...prev.activity].slice(0, 50)
+    const entry = { section, partId, setNum, score: safeScore, total, pct, ts }
+    const activity = [entry, ...(prev.activity || [])].slice(0, 50)
 
-      // Best / last score per part
-      const scoreKey = `${section}:${partId}`
-      const prev_score = prev.scores[scoreKey] || { best: 0, last: 0, attempts: 0 }
-      const scores = {
-        ...prev.scores,
-        [scoreKey]: {
-          best:     Math.max(prev_score.best, pct),
-          last:     pct,
-          attempts: prev_score.attempts + 1,
-        },
-      }
+    const scoreKey = `${section}:${partId}`
+    const prev_score = prev.scores[scoreKey] || { best: 0, last: 0, attempts: 0 }
+    const scores = {
+      ...prev.scores,
+      [scoreKey]: {
+        best:     Math.max(prev_score.best, pct),
+        last:     pct,
+        attempts: prev_score.attempts + 1,
+      },
+    }
+    const nextData = { completed, activity, scores }
 
-      return { completed, activity, scores }
-    })
+    const prevStreak = streakRef.current || defaultStreak()
+    const d = today()
+    const nextStreak = prevStreak.lastDate === d
+      ? prevStreak
+      : {
+          current: prevStreak.lastDate === yesterday() ? (prevStreak.current || 0) + 1 : 1,
+          best: Math.max(prevStreak.best || 0, prevStreak.lastDate === yesterday() ? (prevStreak.current || 0) + 1 : 1),
+          lastDate: d,
+        }
 
-    // Update streak
-    setStreak(prev => {
-      const d = today()
-      if (prev.lastDate === d) return prev   // already counted today
-      const continued = prev.lastDate === yesterday()
-      const current   = continued ? prev.current + 1 : 1
-      return { current, best: Math.max(prev.best, current), lastDate: d }
-    })
+    dataRef.current = nextData
+    streakRef.current = nextStreak
+    setData(nextData)
+    setStreak(nextStreak)
 
-    // ── Supabase: save to cloud for logged-in users ──
-    saveToCloud()
+    // ── Write localStorage synchronously so navigation doesn't lose data ──
+    try {
+      saveProgressLocal(activeUserIdRef.current, nextData)
+      saveStreakLocal(activeUserIdRef.current, nextStreak)
+    } catch { void 0 }
+
+    // ── Supabase: save to cloud for logged-in users with the fresh data ──
+    saveToCloud(nextData, nextStreak)
   }, [])
 
-  /* ── Save progress to Supabase (debounced) ── */
-  const saveToCloud = useCallback(async () => {
+  /* ── Save progress to Supabase ── */
+  const saveToCloud = useCallback(async (progressData, streakData) => {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.user) return
       const uid = session.user.id
-      const currentData = loadProgress()
-      const currentStreak = loadStreak()
+      const currentData = progressData || loadProgress(uid)
+      const currentStreak = streakData || loadStreak(uid)
+
+      saveProgressLocal(uid, currentData)
+      saveStreakLocal(uid, currentStreak)
 
       await supabase
         .from('user_progress')
@@ -182,8 +290,8 @@ export function useProgress() {
           streak_data: currentStreak,
           updated_at: new Date().toISOString(),
         }, { onConflict: 'user_id' })
-    } catch (e) {
-      // Silently fail — localStorage is always the fallback
+    } catch {
+      return
     }
   }, [])
 
@@ -193,33 +301,62 @@ export function useProgress() {
     let totalCompleted = 0
     let totalScore = 0
     let totalScored = 0
+    let totalCorrect = 0
+    let totalQuestions = 0
+
+    // Writing & Speaking store the AI overall band (0-12 CLB scale) as "score" with total=12.
+    // For these sections the average CLB is simply the mean of stored scores — NOT a pct mapping.
+    const CLB_SECTIONS = new Set(['writing', 'speaking'])
 
     for (const [section, meta] of Object.entries(SECTION_TOTALS)) {
       let done = 0
-      let sectionScore = 0
+      let sectionScore = 0      // sum of pct values (0-100)
       let sectionScored = 0
+      let sectionCorrect = 0
+      let sectionQuestions = 0
+      let clbSum = 0            // sum of raw 0-12 band scores (writing/speaking only)
+      let clbCount = 0
 
       for (const [partId, partSets] of Object.entries(meta.parts)) {
         for (let s = 1; s <= partSets; s++) {
           const key = `${section}:${partId}:${s}`
           if (data.completed[key]) {
             done++
-            sectionScore += data.completed[key].pct
+            const entry = data.completed[key]
+            sectionScore += entry.pct || 0
             sectionScored++
+            if (typeof entry.score === 'number' && typeof entry.total === 'number' && entry.total > 0) {
+              sectionCorrect += entry.score
+              sectionQuestions += entry.total
+              if (CLB_SECTIONS.has(section)) {
+                clbSum += entry.score
+                clbCount++
+              }
+            }
           }
         }
       }
 
+      const isClb = CLB_SECTIONS.has(section)
       sectionStats[section] = {
         done,
         total: meta.sets,
         questions: meta.questions,
         pct: meta.sets > 0 ? Math.round((done / meta.sets) * 100) : 0,
         avgScore: sectionScored > 0 ? Math.round(sectionScore / sectionScored) : null,
+        // avgCLB: direct band for writing/speaking, derived from pct for listening/reading
+        avgCLB: isClb
+          ? (clbCount > 0 ? Math.round(clbSum / clbCount) : null)
+          : (sectionScored > 0 ? getCLBFromPct(Math.round(sectionScore / sectionScored)) : null),
+        correct: sectionCorrect,
+        answered: sectionQuestions,
+        isClbSection: isClb,
       }
       totalCompleted += done
       totalScore += sectionScore
       totalScored += sectionScored
+      totalCorrect += sectionCorrect
+      totalQuestions += sectionQuestions
     }
 
     const totalSets = Object.values(SECTION_TOTALS).reduce((s, m) => s + m.sets, 0)
@@ -230,6 +367,8 @@ export function useProgress() {
       totalSets,
       totalPct: totalSets > 0 ? Math.round((totalCompleted / totalSets) * 100) : 0,
       avgScore: totalScored > 0 ? Math.round(totalScore / totalScored) : null,
+      correct: totalCorrect,
+      answered: totalQuestions,
     }
   }, [data])
 
@@ -243,22 +382,33 @@ export function useProgress() {
     return data.completed[`${section}:${partId}:${setNum}`] || null
   }, [data])
 
-  /* ── Part-level stats ── */
+  /* ── Part-level stats (section-aware CLB) ── */
   const getPartStats = useCallback((section, partId) => {
     const total = SECTION_TOTALS[section]?.parts[partId] || 0
-    let done = 0, scoreSum = 0
+    const isClb = section === 'writing' || section === 'speaking'
+    let done = 0, scoreSum = 0, clbSum = 0, clbCount = 0
     for (let s = 1; s <= total; s++) {
       const key = `${section}:${partId}:${s}`
-      if (data.completed[key]) {
+      const entry = data.completed[key]
+      if (entry) {
         done++
-        scoreSum += data.completed[key].pct
+        scoreSum += entry.pct || 0
+        if (isClb && typeof entry.score === 'number' && entry.total > 0) {
+          clbSum += entry.score
+          clbCount++
+        }
       }
     }
+    const avgPct = done > 0 ? Math.round(scoreSum / done) : null
     return {
       done,
       total,
       pct: total > 0 ? Math.round((done / total) * 100) : 0,
-      avgScore: done > 0 ? Math.round(scoreSum / done) : null,
+      avgScore: avgPct,
+      avgCLB: isClb
+        ? (clbCount > 0 ? Math.round(clbSum / clbCount) : null)
+        : (avgPct != null ? getCLBFromPct(avgPct) : null),
+      isClbSection: isClb,
     }
   }, [data])
 
@@ -288,6 +438,31 @@ function mergeActivity(local, cloud) {
     }
   }
   return merged.sort((a, b) => b.ts - a.ts).slice(0, 50)
+}
+
+function mergeProgress(local, cloud) {
+  const mergedCompleted = { ...(local.completed || {}) }
+  for (const [key, cloudEntry] of Object.entries(cloud.completed || {})) {
+    const localEntry = mergedCompleted[key]
+    if (!localEntry || (cloudEntry.pct ?? 0) >= (localEntry.pct ?? 0)) {
+      mergedCompleted[key] = cloudEntry
+    }
+  }
+  return {
+    completed: mergedCompleted,
+    activity: mergeActivity(local.activity || [], cloud.activity || []),
+    scores: mergeScores(local.scores || {}, cloud.scores || {}),
+  }
+}
+
+function mergeStreak(local, cloud) {
+  return {
+    current: Math.max(local.current || 0, cloud.current || 0),
+    best: Math.max(local.best || 0, cloud.best || 0),
+    lastDate: local.lastDate && local.lastDate > (cloud.lastDate || '')
+      ? local.lastDate
+      : (cloud.lastDate || local.lastDate || null),
+  }
 }
 
 function mergeScores(local, cloud) {

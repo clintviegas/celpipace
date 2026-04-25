@@ -16,7 +16,6 @@ import AIFeatures from './components/AIFeatures'
 import CRSBooster from './components/CRSBooster'
 import HowItWorks from './components/HowItWorks'
 import Pricing from './components/Pricing'
-import Testimonials from './components/Testimonials'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
 import PracticePage from './pages/PracticePage'
@@ -34,6 +33,8 @@ import DashboardPage from './pages/DashboardPage'
 import BlogPage from './pages/BlogPage'
 import WritingPracticePage from './pages/WritingPracticePage'
 import MockTestPage from './pages/MockTestPage'
+import AdminPage from './pages/AdminPage'
+import ManageSubscriptionPage from './pages/ManageSubscriptionPage'
 import SEO from './components/SEO'
 import './App.css'
 
@@ -41,8 +42,8 @@ function HomePage({ onSignIn }) {
   return (
     <main>
       <SEO
-        title="CELPIPiQ – CELPIP Practice Tests, Mock Exams & AI Scoring"
-        description="Prepare for CELPIP with full-length mock tests, AI-powered scoring, and practice for all 4 sections — Listening, Reading, Writing, and Speaking."
+        title="celpipAce – CELPIP Practice Tests, Mock Exams & Instant Scoring"
+        description="Prepare for CELPIP with full-length mock tests, instant scoring and feedback, and practice for all 4 sections — Listening, Reading, Writing, and Speaking."
         canonical="/"
       />
       <Hero />
@@ -50,7 +51,6 @@ function HomePage({ onSignIn }) {
       <AIFeatures />
       <HowItWorks />
       <CRSBooster />
-      <Testimonials />
       <Pricing onSignIn={onSignIn} />
       <CTA />
     </main>
@@ -74,10 +74,20 @@ export function AppInner() {
   useEffect(() => { window.scrollTo(0, 0) }, [location.pathname])
 
   const isDashboard = location.pathname === '/dashboard'
+  const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
   // Show the dashboard navbar on all inner app pages (when user is likely logged in)
-  const innerPaths = ['/dashboard','/exam','/listening','/reading','/writing','/speaking','/practice','/practice-set','/tips','/scores','/calculator','/pricing','/blog','/writing-practice']
+  const innerPaths = ['/dashboard','/exam','/mock-test','/listening','/reading','/writing','/speaking','/practice','/practice-set','/tips','/scores','/calculator','/pricing','/blog','/writing-practice']
   const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
+
+  // Admin is self-contained — no site chrome
+  if (isAdminRoute) {
+    return (
+      <Routes>
+        <Route path="/admin" element={<AdminPage />} />
+      </Routes>
+    )
+  }
 
   return (
     <>
@@ -108,6 +118,7 @@ export function AppInner() {
         <Route path="/speaking/:partId" element={<PracticeSetPage section="speaking" />} />
         <Route path="/practice-set" element={<PracticeSetPage />} />
         <Route path="/pricing" element={<main style={{ paddingTop: '80px' }}><Pricing /></main>} />
+        <Route path="/subscription" element={<ManageSubscriptionPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/writing-practice" element={<WritingPracticePage />} />
         {/* catch-all */}

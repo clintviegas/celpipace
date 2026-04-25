@@ -295,7 +295,7 @@ export const PRICING_PLANS = [
       'Everything in Pro',
       'Lifetime access — no subscription',
       '6 full-length mock tests',
-      'AI-powered writing feedback',
+      'Instant writing feedback',
       'AI speaking assessment',
       'Personalised study plan',
       'Priority email support',

@@ -103,7 +103,7 @@ const FAQ = [
   },
   {
     q: 'Can I replay the audio during the CELPIP Listening test?',
-    a: 'No — each audio clip plays only once on the real CELPIP test. This is one of the key differences from IELTS Listening. In CELPIPiQ practice, you can choose to replay audio in drill mode to study, or simulate real conditions by listening only once.',
+    a: 'No — each audio clip plays only once on the real CELPIP test. This is one of the key differences from IELTS Listening. In celpipAce practice, you can choose to replay audio in drill mode to study, or simulate real conditions by listening only once.',
   },
   {
     q: 'Is CELPIP Listening harder than IELTS Listening?',
@@ -165,14 +165,18 @@ function PartCard({ part, onStart }) {
         <span className="lp-part-tip-icon">💡</span>
         <span>{part.tip}</span>
       </div>
-      <button className="lp-part-cta" style={{ background: COLOR }} onClick={() => onStart(part)}>
+      <button
+        className="lp-part-cta"
+        style={{ background: COLOR }}
+        onClick={() => onStart(part)}
+      >
         Practice {part.num} →
       </button>
     </motion.div>
   )
 }
 
-/* ── Main ListeningPage ───────────────────────────────────────── */
+/* ── Main ListeningPage ─────────────────────────────────── */
 export default function ListeningPage() {
   const navigate = useNavigate()
   const handleStart = (part) => {

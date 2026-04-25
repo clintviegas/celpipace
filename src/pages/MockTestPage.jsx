@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import SEO from '../components/SEO'
+import { useAuth } from '../context/AuthContext'
+import { useTestSession } from '../hooks/useTestSession'
 import { LISTENING_DATA } from '../data/listeningData'
 import { WRITING_SETS } from '../data/writingData'
 import { asset } from '../data/constants'
@@ -43,11 +45,13 @@ const PART_LABELS = {
   S7: 'Expressing Opinions', S8: 'Unusual Situation',
 }
 
+// Listening 55 min total (per-part audio+questions), Reading 55 min (single section-level timer), Writing 53 min (per-task), Speaking per-prompt
 const PART_TIMES = {
-  L1: 8, L2: 5, L3: 8, L4: 5, L5: 6, L6: 6,
+  L1: 11, L2: 8, L3: 11, L4: 7, L5: 9, L6: 9,
   R1: 11, R2: 13, R3: 14, R4: 17,
   W1: 27, W2: 26,
 }
+const READING_SECTION_MINUTES = 55
 
 const READING_JSON = { R1: r1Data, R2: r2Data, R3: r3Data, R4: r4Data }
 const READING_TYPE = { R1: 'correspondence', R2: 'diagram', R3: 'information', R4: 'viewpoints' }
@@ -105,19 +109,23 @@ function fmtTime(secs) {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-/* CELPIP raw-score bands (out of 38) — official-style ranges */
+/* CELPIP score levels — matches official CELPIP 1–12 / M scale.
+   Listening & Reading share ~38 raw questions; we scale raw → level. */
 function getCelpipLevel(correct, total) {
-  // Fallback for non-38 totals: scale raw to 38 equivalent
   const raw = total === 38 ? correct : Math.round((correct / Math.max(total, 1)) * 38)
-  if (raw >= 35) return { level: '10–12', num: 11, label: 'Advanced', color: '#2D8A56', tier: 'expert' }
-  if (raw >= 33) return { level: 9, num: 9, label: 'Advanced', color: '#2D8A56', tier: 'expert' }
-  if (raw >= 30) return { level: 8, num: 8, label: 'Upper Intermediate', color: '#2D8A56', tier: 'strong' }
-  if (raw >= 27) return { level: 7, num: 7, label: 'Intermediate', color: '#4A90D9', tier: 'strong' }
-  if (raw >= 22) return { level: 6, num: 6, label: 'Adequate', color: '#4A90D9', tier: 'fair' }
-  if (raw >= 17) return { level: 5, num: 5, label: 'Developing', color: '#C8972A', tier: 'fair' }
-  if (raw >= 11) return { level: 4, num: 4, label: 'Below Adequate', color: '#C8972A', tier: 'weak' }
-  if (raw >= 7)  return { level: 3, num: 3, label: 'Minimal', color: '#C8102E', tier: 'weak' }
-  return { level: 'M', num: 0, label: 'Minimal Proficiency', color: '#C8102E', tier: 'weak' }
+  if (raw >= 37) return { level: 12, num: 12, label: 'Advanced Proficiency',          color: '#166534', tier: 'expert' }
+  if (raw >= 35) return { level: 11, num: 11, label: 'Advanced Proficiency',          color: '#166534', tier: 'expert' }
+  if (raw >= 33) return { level: 10, num: 10, label: 'Highly Effective Proficiency',  color: '#15803D', tier: 'expert' }
+  if (raw >= 31) return { level: 9,  num: 9,  label: 'Effective Proficiency',         color: '#16A34A', tier: 'strong' }
+  if (raw >= 28) return { level: 8,  num: 8,  label: 'Good Proficiency',              color: '#2D8A56', tier: 'strong' }
+  if (raw >= 25) return { level: 7,  num: 7,  label: 'Adequate Proficiency',          color: '#4A90D9', tier: 'strong' }
+  if (raw >= 21) return { level: 6,  num: 6,  label: 'Developing Proficiency',        color: '#4A90D9', tier: 'fair'   }
+  if (raw >= 17) return { level: 5,  num: 5,  label: 'Acquiring Proficiency',         color: '#C8972A', tier: 'fair'   }
+  if (raw >= 13) return { level: 4,  num: 4,  label: 'Adequate for Daily Life',       color: '#C8972A', tier: 'weak'   }
+  if (raw >= 9)  return { level: 3,  num: 3,  label: 'Some Proficiency',              color: '#D97706', tier: 'weak'   }
+  if (raw >= 5)  return { level: 2,  num: 2,  label: 'Limited Proficiency',           color: '#DC2626', tier: 'weak'   }
+  if (raw >= 1)  return { level: 1,  num: 1,  label: 'Minimal Proficiency',           color: '#C8102E', tier: 'weak'   }
+  return              { level: 'M', num: 0,  label: 'Minimal (very little/no ability)', color: '#991B1B', tier: 'weak' }
 }
 
 function optsArr(opts) {
@@ -186,14 +194,18 @@ async function scoreSpeakingAI(responseText, prompt, taskType, topic) {
 /* ═══════════════════════════════════════════════════════════════
    MOCK SIDEBAR — shows parts in current section
 ═══════════════════════════════════════════════════════════════ */
-function MockSidebar({ section, parts, activePartIdx, color, scores, icon, sectionLabel }) {
+function MockSidebar({ section, parts, activePartIdx, color, scores, icon, sectionLabel, onSkipSection }) {
   const completedCount = parts.filter(p => scores[p]).length
-  const avgPct = (() => {
-    const done = parts.filter(p => scores[p])
-    if (!done.length) return null
-    const sum = done.reduce((a, p) => a + (scores[p].total > 0 ? Math.round((scores[p].correct / scores[p].total) * 100) : 0), 0)
-    return Math.round(sum / done.length)
-  })()
+  // Raw correct/total fraction across completed parts (only makes sense for Listening & Reading)
+  const totals = parts.reduce((acc, p) => {
+    const sc = scores[p]
+    if (sc && typeof sc.total === 'number' && sc.total > 0) {
+      acc.correct += (sc.correct || 0)
+      acc.total += sc.total
+    }
+    return acc
+  }, { correct: 0, total: 0 })
+  const hasFraction = totals.total > 0
 
   return (
     <aside className="ll-sidebar">
@@ -216,14 +228,28 @@ function MockSidebar({ section, parts, activePartIdx, color, scores, icon, secti
         </div>
         <div className="ll-sidebar-stat-divider" />
         <div className="ll-sidebar-stat">
-          <span className="ll-sidebar-stat-val">{avgPct !== null ? `${avgPct}%` : '\u2014'}</span>
-          <span className="ll-sidebar-stat-lbl">Avg Score</span>
+          <span className="ll-sidebar-stat-val">{hasFraction ? `${totals.correct}/${totals.total}` : '\u2014'}</span>
+          <span className="ll-sidebar-stat-lbl">Score</span>
         </div>
       </div>
       <div className="ll-sidebar-progress-wrap">
         <div className="ll-sidebar-progress-bar">
           <div className="ll-sidebar-progress-fill" style={{ width: `${parts.length > 0 ? (completedCount / parts.length) * 100 : 0}%`, background: color }} />
         </div>
+      </div>
+      <div style={{ padding: '0 16px 12px' }}>
+        {onSkipSection && completedCount < parts.length && (
+          <button
+            type="button"
+            onClick={() => { if (window.confirm(`Skip the rest of ${sectionLabel}? Unanswered parts will be marked as skipped.`)) onSkipSection() }}
+            style={{
+              width: '100%', padding: '9px 12px', fontSize: 12, fontWeight: 700, letterSpacing: '0.6px', textTransform: 'uppercase',
+              color: '#6b7280', background: '#fff', border: '1px dashed #d1d5db', borderRadius: 8, cursor: 'pointer',
+            }}
+          >
+            Skip section →
+          </button>
+        )}
       </div>
       <div className="ll-sidebar-list-label">Exam Parts</div>
       <div className="ll-part-list">
@@ -393,7 +419,6 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
           {doneCount > 0 && (
             <div className="ll-live-score" style={{ borderColor: color }}>
               <span className="ll-live-score-num" style={{ color }}>{correctCnt}/{doneCount}</span>
-              <span className="ll-live-score-pct" style={{ color: scorePct >= 70 ? '#22c55e' : scorePct >= 50 ? '#C8972A' : '#C8102E' }}>{scorePct}%</span>
             </div>
           )}
           {started ? (
@@ -549,10 +574,10 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
       {/* Done — next part button */}
       {isSetDone && (
         <motion.div className="mk-part-done" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="mk-part-done-score">
-            <span className="mk-part-done-emoji">{scorePct >= 80 ? '\u2B50' : scorePct >= 60 ? '\uD83D\uDCAA' : '\uD83D\uDCA1'}</span>
-            <span className="mk-part-done-text">{partId} complete — <strong>{correctCnt}/{total}</strong> ({scorePct}%)</span>
-          </div>
+                <motion.div className="mk-part-done-score" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <span className="mk-part-done-emoji">{scorePct >= 80 ? '⭐' : scorePct >= 60 ? '💪' : '💡'}</span>
+                <span className="mk-part-done-text">{partId} complete — <strong>{correctCnt}/{total}</strong></span>
+              </motion.div>
           <button className="mk-next-btn" style={{ background: color }} onClick={() => onDone({ correct: correctCnt, total, answers, questions: qs })}>
             Next Part {'\u2192'}
           </button>
@@ -566,6 +591,82 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
 /* ═══════════════════════════════════════════════════════════════
    READING PART — One set, same rdg-* UI with split pane
 ═══════════════════════════════════════════════════════════════ */
+function ZoomableDiagram({ src, alt, onError }) {
+  const [zoomed, setZoomed] = useState(false)
+  useEffect(() => {
+    if (!zoomed) return
+    const onKey = (e) => { if (e.key === 'Escape') setZoomed(false) }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [zoomed])
+
+  return (
+    <>
+      <img
+        src={src}
+        alt={alt}
+        className="rdg-diagram-img"
+        onError={onError}
+        onClick={() => setZoomed(true)}
+        style={{ cursor: 'zoom-in' }}
+      />
+      <button
+        type="button"
+        onClick={() => setZoomed(true)}
+        aria-label="Zoom diagram"
+        title="Click to zoom"
+        style={{
+          position: 'absolute', top: 10, right: 10,
+          width: 36, height: 36, borderRadius: 8,
+          border: '1px solid rgba(15,31,61,0.12)',
+          background: 'rgba(255,255,255,0.95)',
+          color: '#0F1F3D', cursor: 'zoom-in',
+          fontSize: 16, fontWeight: 700,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(15,31,61,0.12)',
+        }}
+      >🔍</button>
+      {zoomed && (
+        <div
+          onClick={() => setZoomed(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(15,31,61,0.85)',
+            zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24, cursor: 'zoom-out',
+          }}
+        >
+          <button
+            onClick={(e) => { e.stopPropagation(); setZoomed(false) }}
+            aria-label="Close zoom"
+            style={{
+              position: 'absolute', top: 18, right: 18,
+              width: 40, height: 40, borderRadius: 10, border: 'none',
+              background: 'rgba(255,255,255,0.95)', color: '#0F1F3D',
+              fontSize: 22, fontWeight: 700, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            }}
+          >×</button>
+          <img
+            src={src}
+            alt={alt}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '95vw', maxHeight: '92vh', objectFit: 'contain',
+              borderRadius: 8, background: '#fff',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+            }}
+          />
+        </div>
+      )}
+    </>
+  )
+}
+
 function ReadingPassage({ set, type }) {
   const [imgOk, setImgOk] = useState(true)
 
@@ -587,9 +688,9 @@ function ReadingPassage({ set, type }) {
     return (
       <div className="rdg-diagram-wrap">
         <div className="rdg-diagram-label">{'\uD83D\uDCCA'} Visual Information</div>
-        <div className="rdg-diagram-box">
+        <div className="rdg-diagram-box" style={{ position: 'relative' }}>
           {imgOk ? (
-            <img src={imgSrc} alt="Diagram" className="rdg-diagram-img" onError={() => setImgOk(false)} />
+            <ZoomableDiagram src={imgSrc} alt={`Diagram — Set ${set.set_number}`} onError={() => setImgOk(false)} />
           ) : (
             <div className="mk-img-fallback"><span className="mk-img-fallback-icon">{'\uD83D\uDCCA'}</span><span>Diagram image could not be loaded.<br/>Answer from the passage text below.</span></div>
           )}
@@ -636,7 +737,7 @@ function ReadingPassage({ set, type }) {
   return null
 }
 
-function ReadingFIBText({ text, blanks, pfx, answers, setAnswers, color }) {
+function ReadingFIBText({ text, blanks, pfx, answers, setAnswers, color, locked }) {
   const blankMap = {}
   blanks.forEach(b => { blankMap[b.blank_number] = b })
   const parts = []
@@ -669,7 +770,7 @@ function ReadingFIBText({ text, blanks, pfx, answers, setAnswers, color }) {
           )
         }
         return (
-          <select key={i} className="rdg-fib-select" style={{ borderColor: color }} value="" onChange={e => e.target.value && setAnswers(a => ({ ...a, [key]: e.target.value }))}>
+          <select key={i} className="rdg-fib-select" style={{ borderColor: color }} value="" disabled={locked} onChange={e => e.target.value && setAnswers(a => ({ ...a, [key]: e.target.value }))}>
             <option value="" disabled>_____</option>
             {opts.map(o => <option key={o.letter} value={o.letter}>{o.letter}) {o.text}</option>)}
           </select>
@@ -679,16 +780,9 @@ function ReadingFIBText({ text, blanks, pfx, answers, setAnswers, color }) {
   )
 }
 
-function ReadingPart({ partId, setData, color, onDone }) {
+function ReadingPart({ partId, setData, color, onDone, sectionTimer }) {
   const type = READING_TYPE[partId]
   const [answers, setAnswers] = useState({})
-  const [timeLeft, setTimeLeft] = useState(null)
-  const [started, setStarted] = useState(false)
-  const [overtime, setOvertime] = useState(0)
-  const [showBanner, setShowBanner] = useState(false)
-  const timerRef = useRef(null)
-  const otRef = useRef(null)
-  const mainRef = useRef(null)
 
   const pfx = 'mk_'
   const total = rdgSetTotal(setData, type)
@@ -697,20 +791,9 @@ function ReadingPart({ partId, setData, color, onDone }) {
   const isSetDone = done === total && total > 0
   const scorePct = total > 0 ? Math.round((score / total) * 100) : 0
 
-  const clearTimers = () => { if (timerRef.current) clearInterval(timerRef.current); if (otRef.current) clearInterval(otRef.current) }
-  const startTimer = () => {
-    clearTimers()
-    const mins = PART_TIMES[partId] || 13
-    setTimeLeft(mins * 60); setStarted(true); setOvertime(0); setShowBanner(false)
-    timerRef.current = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) { clearInterval(timerRef.current); setShowBanner(true); otRef.current = setInterval(() => setOvertime(o => o + 1), 1000); return 0 }
-        return t - 1
-      })
-    }, 1000)
-  }
-  useEffect(() => () => clearTimers(), [])
-  useEffect(() => { if (isSetDone) clearTimers() }, [isSetDone])
+  const { timeLeft, started, overtime, showBanner, dismissBanner, startTimer } = sectionTimer
+  const mainRef = useRef(null)
+  const locked = !started
 
   const timeCritical = timeLeft !== null && timeLeft <= 60 && timeLeft > 0
   const timeAmber = timeLeft !== null && timeLeft <= 300 && timeLeft > 60
@@ -765,7 +848,7 @@ function ReadingPart({ partId, setData, color, onDone }) {
                         {ans}{!correct && <span className="rdg-r3-badge-correct"> {'\u2192'} {q.correct_answer}</span>}
                       </span>
                     ) : (
-                      <select className="rdg-r3-select" style={{ borderColor: color }} value="" onChange={e => e.target.value && setAnswers(a => ({ ...a, [qKey]: e.target.value }))}>
+                      <select className="rdg-r3-select" style={{ borderColor: color }} value="" disabled={locked} onChange={e => e.target.value && setAnswers(a => ({ ...a, [qKey]: e.target.value }))}>
                         <option value="" disabled>Select paragraph</option>
                         {['A','B','C','D','E'].map(l => <option key={l} value={l}>{l}{l === 'E' ? ' \u2014 Not Given' : ''}</option>)}
                       </select>
@@ -804,7 +887,7 @@ function ReadingPart({ partId, setData, color, onDone }) {
                     let cls = 'rdg-q-opt'
                     if (answered) { if (o.letter === q.correct_answer) cls += ' rdg-q-opt--correct'; else if (o.letter === ans) cls += ' rdg-q-opt--wrong'; else cls += ' rdg-q-opt--dim' }
                     return (
-                      <button key={o.letter} className={cls} onClick={() => !answered && setAnswers(a => ({ ...a, [qKey]: o.letter }))} disabled={answered}>
+                      <button key={o.letter} className={cls} onClick={() => !answered && !locked && setAnswers(a => ({ ...a, [qKey]: o.letter }))} disabled={answered || locked}>
                         <span className="rdg-q-letter">{o.letter}</span><span className="rdg-q-opt-text">{o.text}</span>
                       </button>
                     )
@@ -820,7 +903,7 @@ function ReadingPart({ partId, setData, color, onDone }) {
             <div className="rdg-fib-header"><span className="rdg-fib-icon">{'\u270F\uFE0F'}</span><span className="rdg-fib-title">Fill in the Blanks</span></div>
             <p className="rdg-fib-instructions">{fibData.instructions}</p>
             <div className="rdg-fib-card">
-              <ReadingFIBText text={fibData.response_text || fibData.comment_text || ''} blanks={fibData.blanks || []} pfx={pfx} answers={answers} setAnswers={setAnswers} color={color} />
+              <ReadingFIBText text={fibData.response_text || fibData.comment_text || ''} blanks={fibData.blanks || []} pfx={pfx} answers={answers} setAnswers={setAnswers} locked={locked} color={color} />
             </div>
           </div>
         )}
@@ -840,7 +923,7 @@ function ReadingPart({ partId, setData, color, onDone }) {
         </div>
         <div className="rdg-topbar-right">
           {!started ? (
-            <button className="rdg-start-btn" style={{ background: color }} onClick={startTimer}>{'\u25B6'} Start Timer ({PART_TIMES[partId]} min)</button>
+            <button className="rdg-start-btn" style={{ background: color }} onClick={startTimer}>{'\u25B6'} Start Timer ({READING_SECTION_MINUTES} min · Reading section)</button>
           ) : (
             <div className={`rdg-timer${timeCritical ? ' rdg-timer--critical' : ''}${timeAmber ? ' rdg-timer--amber' : ''}`} style={{ color: timerColor, borderColor: timerColor }}>
               <span className="rdg-timer-icon">{'\u23F1'}</span>
@@ -855,7 +938,7 @@ function ReadingPart({ partId, setData, color, onDone }) {
       {showBanner && (
         <div className="rdg-banner">
           <span>{'\u23F0'} Time is up! In practice, you may continue.</span>
-          <button className="rdg-banner-close" onClick={() => setShowBanner(false)}>{'\u2715'}</button>
+          <button className="rdg-banner-close" onClick={dismissBanner}>{'\u2715'}</button>
         </div>
       )}
       <div className="rdg-split">
@@ -873,8 +956,8 @@ function ReadingPart({ partId, setData, color, onDone }) {
           {isSetDone && (
             <motion.div className="mk-part-done" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
               <div className="mk-part-done-score">
-                <span className="mk-part-done-emoji">{scorePct >= 80 ? '\u2B50' : '\uD83D\uDCAA'}</span>
-                <span className="mk-part-done-text">{partId} — <strong>{score}/{total}</strong> ({scorePct}%)</span>
+                <span className="mk-part-done-emoji">{scorePct >= 80 ? '⭐' : '💪'}</span>
+                <span className="mk-part-done-text">{partId} — <strong>{score}/{total}</strong></span>
               </div>
               <button className="mk-next-btn" style={{ background: color }} onClick={collectResult}>Next Part {'\u2192'}</button>
             </motion.div>
@@ -934,7 +1017,7 @@ function WritingPart({ partId, taskData, color, onDone }) {
           <span className="wl-q-num-badge" style={{ background: color }}>{partId}</span>
           <div className="wl-topbar-title-group">
             <span className="wl-q-title">{PART_LABELS[partId]}</span>
-            <span className="wl-topbar-set-tag">{mins} min \u00B7 150{'\u2013'}200 words</span>
+            <span className="wl-topbar-set-tag">{mins} min · 150–200 words</span>
           </div>
         </div>
         <div className="wl-topbar-right">
@@ -979,7 +1062,7 @@ function WritingPart({ partId, taskData, color, onDone }) {
         </div>
       </div>
       <div className="wl-editor">
-        <textarea className="wl-textarea" value={text} onChange={e => setText(e.target.value)} placeholder="Write your response here\u2026" rows={14} style={{ borderColor: text ? color : undefined }} />
+        <textarea className="wl-textarea" value={text} onChange={e => setText(e.target.value)} placeholder={started ? 'Write your response here…' : 'Press “Start Timer” above to begin writing…'} disabled={!started} rows={14} style={{ borderColor: text ? color : undefined }} />
         <div className="wl-editor-footer">
           <span className={`wl-word-count${wordCount >= 150 && wordCount <= 200 ? ' wl-wc--good' : wordCount > 200 ? ' wl-wc--over' : ''}`}>
             {wordCount} words{wordCount >= 150 && wordCount <= 200 && ' \u2713'}{wordCount > 200 && ' \u2014 over limit'}{wordCount > 0 && wordCount < 150 && ` \u2014 ${150 - wordCount} more needed`}
@@ -995,7 +1078,7 @@ function WritingPart({ partId, taskData, color, onDone }) {
         <motion.div className="wl-ai-panel" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <div className="wl-ai-header"><div className="wl-ai-title"><span>{'\uD83D\uDCCB'} Score Report</span></div></div>
           <div className="wl-ai-band" style={{ borderColor: color }}>
-            <div className="wl-ai-band-score" style={{ color }}>{aiResult.overall || 0}</div>
+            <div className="wl-ai-band-score" style={{ color }}>{Math.round(aiResult.overall || 0)}</div>
             <div className="wl-ai-band-label"><span>CELPIP Level</span><strong style={{ color }}>CLB {aiResult.clbBand || '-'}</strong></div>
           </div>
           {aiResult.scores && (
@@ -1095,7 +1178,7 @@ function SpeakingPart({ partId, promptData, color, meta, onDone }) {
           <span className="sl-task-badge" style={{ background: color }}>{partId}</span>
           <div className="sl-topbar-title-group">
             <span className="sl-topbar-title">{meta.label}</span>
-            <span className="sl-topbar-sub">Prep {prepTime}s \u00B7 Speak {speakTime}s</span>
+            <span className="sl-topbar-sub">Prep {prepTime}s · Speak {speakTime}s</span>
           </div>
         </div>
       </div>
@@ -1170,13 +1253,13 @@ function SpeakingPart({ partId, promptData, color, meta, onDone }) {
           {transcript && <div className="sl-transcript-review"><p className="sl-transcript-label">Your transcript ({wordCount} words):</p><pre className="sl-transcript-text">{transcript}</pre></div>}
           <div className="sl-done-actions">
             <button className="wl-ai-btn" style={{ background: aiLoading ? '#aaa' : color }} onClick={handleAIScore} disabled={aiLoading || !transcript.trim()}>
-              {aiLoading ? '\u23F3 Scoring\u2026' : '\uD83E\uDD16 Get AI Score'}
+              {aiLoading ? '⏳ Scoring…' : '⚡ Get Instant Score'}
             </button>
           </div>
           {aiResult && (
             <motion.div className="sl-ai-panel" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div className="sl-ai-band" style={{ borderColor: color }}>
-                <div className="sl-ai-band-score" style={{ color }}>{aiResult.overall || 0}</div>
+                <div className="sl-ai-band-score" style={{ color }}>{Math.round(aiResult.overall || 0)}</div>
                 <div className="sl-ai-band-label"><span>CELPIP Level</span><strong style={{ color }}>CLB {aiResult.clbBand || '-'}</strong></div>
               </div>
               {aiResult.feedback && <div className="wl-ai-feedback"><p>{aiResult.feedback}</p></div>}
@@ -1230,7 +1313,7 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
             <p className="mk-sr-heroV2-sub">
               {isObjective
                 ? 'Your raw score has been mapped to CELPIP bands below. Review every question before moving on.'
-                : 'AI-scored tasks are summarised below. Expand a card to review your response.'}
+                : 'Your responses are scored instantly. Expand a card to review your response and feedback.'}
             </p>
           </div>
         </div>
@@ -1253,10 +1336,6 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
                 <span className="mk-sr-bandCard-cap">Correct</span>
               </div>
               <div className="mk-sr-bandCard-row">
-                <span className="mk-sr-bandCard-val">{overallPct}<span className="mk-sr-bandCard-denom">%</span></span>
-                <span className="mk-sr-bandCard-cap">Accuracy</span>
-              </div>
-              <div className="mk-sr-bandCard-row">
                 <span className="mk-sr-bandCard-val">{parts.filter(p => scores[p]).length}<span className="mk-sr-bandCard-denom">/{parts.length}</span></span>
                 <span className="mk-sr-bandCard-cap">Parts</span>
               </div>
@@ -1270,8 +1349,8 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="mk-sr-aiPill-icon">{'\uD83E\uDD16'}</span>
-            <span>AI-scored — expand each part below for detailed feedback</span>
+            <span className="mk-sr-aiPill-icon">{'⚡'}</span>
+            <span>Instant scoring and feedback — expand each part below for detailed insights</span>
           </motion.div>
         )}
       </motion.div>
@@ -1287,7 +1366,7 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
               <div className="mk-sr-part-header" style={{ borderLeftColor: color }}>
                 <span className="mk-sr-part-id" style={{ background: color }}>{p}</span>
                 <span className="mk-sr-part-label">{PART_LABELS[p]}</span>
-                {isObjective && <span className="mk-sr-part-score" style={{ color: partPct >= 70 ? '#22c55e' : partPct >= 50 ? '#C8972A' : '#C8102E' }}>{sc.correct}/{sc.total} ({partPct}%)</span>}
+                {isObjective && <span className="mk-sr-part-score" style={{ color: partPct >= 70 ? '#22c55e' : partPct >= 50 ? '#C8972A' : '#C8102E' }}>{sc.correct}/{sc.total}</span>}
               </div>
 
               {/* Listening / Reading: question detail list */}
@@ -1378,13 +1457,75 @@ function FinalResults({ examNumber, scores }) {
     return { section: sec, correct, total, pct, celpip, isObj }
   })
 
+  // Overall CELPIP band = derived from combined raw correct / total across objective sections
+  const overallBand = getCelpipLevel(
+    sectionSummary.reduce((a, s) => a + (s.isObj ? s.correct : 0), 0),
+    sectionSummary.reduce((a, s) => a + (s.isObj ? s.total : 0), 0) || 38
+  )
+
+  // Motivation copy by tier
+  const MOTIVATION = {
+    expert: {
+      emoji: '🏆',
+      headline: 'Outstanding! You’re exam-ready.',
+      body: 'You’re performing at an advanced CELPIP level. Polish your subjective sections, simulate one more full mock under strict timing, and book the test with confidence.'
+    },
+    strong: {
+      emoji: '🚀',
+      headline: 'Great work — you’re on the path to a high band.',
+      body: 'Solid effective proficiency. Focus on the few question types that cost you points, keep your writing tight around 150–200 words, and you’ll break into the advanced tier soon.'
+    },
+    fair: {
+      emoji: '💪',
+      headline: 'Good progress — keep the momentum going.',
+      body: 'You’re building real proficiency. Target one weak section per week, drill under timed conditions, and revisit every wrong answer. Steady practice compounds fast.'
+    },
+    weak: {
+      emoji: '🌱',
+      headline: 'Every expert started here — you’ve got this.',
+      body: 'Don’t get discouraged. Master the basics in each section, rebuild your timing, and treat this mock as a diagnostic. Small daily practice makes a measurable difference.'
+    },
+  }
+  const mot = MOTIVATION[overallBand.tier] || MOTIVATION.fair
+
   return (
     <div className="mk-final-page">
       <motion.div className="mk-final-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-        <span className="mk-final-trophy">{'\uD83C\uDFC6'}</span>
+        <span className="mk-final-trophy">{'🏆'}</span>
         <h1 className="mk-final-title">Mock Test #{examNumber} — Complete!</h1>
-        <p className="mk-final-sub">Here's your performance across all 4 sections.</p>
+        <p className="mk-final-sub">Here’s your performance across all 4 sections.</p>
       </motion.div>
+
+      {/* Overall CELPIP band & motivation banner */}
+      {overallBand && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.35 }}
+          style={{
+            maxWidth: 960, margin: '0 auto 32px', padding: '28px 32px',
+            background: `linear-gradient(135deg, ${overallBand.color}0d, ${overallBand.color}05)`,
+            border: `1px solid ${overallBand.color}33`,
+            borderRadius: 20, display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap',
+          }}
+        >
+          <div style={{
+            minWidth: 130, padding: '18px 22px', borderRadius: 16, textAlign: 'center',
+            background: `linear-gradient(135deg, ${overallBand.color}, ${overallBand.color}dd)`, color: '#fff',
+            boxShadow: `0 10px 30px -12px ${overallBand.color}55`,
+          }}>
+            <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.6, opacity: 0.9 }}>OVERALL CELPIP</div>
+            <div style={{ fontSize: 48, fontWeight: 900, lineHeight: 1, margin: '4px 0' }}>{overallBand.level}</div>
+            <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.95 }}>{overallBand.label}</div>
+          </div>
+          <div style={{ flex: 1, minWidth: 260 }}>
+            <div style={{ fontSize: 22, fontWeight: 800, color: '#0F1F3D', marginBottom: 6 }}>
+              <span style={{ marginRight: 8 }}>{mot.emoji}</span>{mot.headline}
+            </div>
+            <p style={{ fontSize: 14, lineHeight: 1.6, color: '#4b5563', margin: 0 }}>{mot.body}</p>
+          </div>
+        </motion.div>
+      )}
 
       <div className="mk-final-grid">
         {sectionSummary.map((s, i) => (
@@ -1397,17 +1538,21 @@ function FinalResults({ examNumber, scores }) {
             {s.isObj && (
               <>
                 <div className="mk-final-bar"><div className="mk-final-bar-fill" style={{ width: `${s.pct}%`, background: COLORS[s.section] }} /></div>
-                <p className="mk-final-detail">{s.correct}/{s.total} ({s.pct}%) — {s.celpip.label}</p>
+                <p className="mk-final-detail">{s.correct}/{s.total} — {s.celpip.label}</p>
               </>
             )}
-            {!s.isObj && <p className="mk-final-detail">AI-scored — see section results</p>}
+            {!s.isObj && <p className="mk-final-detail">Instant scoring — see section results</p>}
           </motion.div>
         ))}
       </div>
 
       <div className="mk-final-actions">
         <button className="mk-btn mk-btn--outline" onClick={() => navigate('/dashboard')}>{'\u2190'} Dashboard</button>
-        <button className="mk-btn mk-btn--primary" onClick={() => navigate(`/mock-test/${examNumber + 1}`)}>Try Mock #{examNumber + 1} {'\u2192'}</button>
+        {examNumber < 8 ? (
+          <button className="mk-btn mk-btn--primary" onClick={() => navigate(`/mock-test/${examNumber + 1}`)}>Try Mock #{examNumber + 1} {'\u2192'}</button>
+        ) : (
+          <button className="mk-btn mk-btn--primary" onClick={() => navigate('/exam')}>Mock Exams {'\u2192'}</button>
+        )}
       </div>
     </div>
   )
@@ -1444,7 +1589,7 @@ function MockLanding({ examNumber, onStart }) {
           <div className="mk-heroV2-meta">
             <span className="mk-heroV2-meta-pill">{'\u23F1'} ~3 hours</span>
             <span className="mk-heroV2-meta-pill">{'\uD83D\uDCDD'} 86 questions</span>
-            <span className="mk-heroV2-meta-pill">{'\uD83E\uDD16'} AI scoring</span>
+            <span className="mk-heroV2-meta-pill">{'⚡'} Instant scoring</span>
             <span className="mk-heroV2-meta-pill">{'\uD83C\uDFC6'} CLB band report</span>
           </div>
         </div>
@@ -1473,20 +1618,6 @@ function MockLanding({ examNumber, onStart }) {
         ))}
       </div>
 
-      <div className="mk-info-listV2">
-        {[
-          { icon: '\u2728', text: 'Same sidebar, timers and instant feedback you get in Practice mode' },
-          { icon: '\uD83D\uDCCA', text: 'Section reports use official CELPIP raw-score bands (out of 38)' },
-          { icon: '\u27A1\uFE0F', text: 'Auto-advances through all 20 parts in true exam order' },
-          { icon: '\uD83C\uDFB2', text: `Mock #${examNumber} seeds a different set per part — mock #${examNumber + 1} gives you a fresh combination` },
-        ].map(x => (
-          <div key={x.text} className="mk-info-itemV2">
-            <span className="mk-info-itemV2-icon">{x.icon}</span>
-            <span>{x.text}</span>
-          </div>
-        ))}
-      </div>
-
       <motion.div
         className="mk-start-areaV2"
         initial={{ opacity: 0, scale: 0.95 }}
@@ -1498,8 +1629,6 @@ function MockLanding({ examNumber, onStart }) {
         </button>
         <p className="mk-start-sub">No pauses between sections once you begin — plan for ~3 hours.</p>
       </motion.div>
-
-      <p className="mk-hint">Looking for a different attempt? <code>/mock-test/2</code>, <code>/mock-test/3</code>… each uses a fresh combination.</p>
     </div>
   )
 }
@@ -1511,7 +1640,15 @@ function MockLanding({ examNumber, onStart }) {
 export default function MockTestPage() {
   const navigate = useNavigate()
   const { examId } = useParams()
+  const { isPremium, profileLoaded } = useAuth()
   const examNumber = parseInt(examId) || 1
+
+  // Premium gate: all full mock exams are premium-only.
+  useEffect(() => {
+    if (profileLoaded && !isPremium) {
+      navigate('/pricing', { replace: true })
+    }
+  }, [profileLoaded, isPremium, navigate])
 
   const examSets = useMemo(() => buildExamSets(examNumber), [examNumber])
 
@@ -1527,6 +1664,71 @@ export default function MockTestPage() {
   const [partIdx, setPartIdx] = useState(0)
   const [scores, setScores] = useState({}) // { L1: { correct, total, answers, questions }, ... }
 
+  // ── Persistent cloud-backed session (resume across reload/device) ────────
+  const session = useTestSession({ kind: 'mock', examNumber, enabled: profileLoaded && isPremium })
+  const restoredRef = useRef(false)
+
+  // One-shot: rehydrate UI state from session row when it loads
+  useEffect(() => {
+    if (restoredRef.current) return
+    if (session.loading || !session.id) return
+    restoredRef.current = true
+    const cs = session.currentSection
+    const cp = session.currentPart
+    if (session.scores && Object.keys(session.scores).length) {
+      setScores(session.scores)
+    }
+    if (cs && SECTION_ORDER.includes(cs)) {
+      const sIdx = SECTION_ORDER.indexOf(cs)
+      setSectionIdx(sIdx)
+      const parts = SECTION_PARTS[cs] || []
+      const pIdx = cp ? Math.max(0, parts.indexOf(cp)) : 0
+      setPartIdx(pIdx)
+      // If user already had progress, jump straight back into the exam
+      if (session.scores && Object.keys(session.scores).length) {
+        setPhase('exam')
+      }
+    }
+  }, [session.loading, session.id, session.currentSection, session.currentPart, session.scores])
+
+  // Shared Reading section timer (single 55-min timer across R1-R4)
+  const [rdgTimeLeft, setRdgTimeLeft] = useState(null)
+  const [rdgStarted, setRdgStarted] = useState(false)
+  const [rdgOvertime, setRdgOvertime] = useState(0)
+  const [rdgShowBanner, setRdgShowBanner] = useState(false)
+  const rdgTimerRef = useRef(null)
+  const rdgOtRef = useRef(null)
+  const startRdgTimer = () => {
+    if (rdgStarted) return
+    if (rdgTimerRef.current) clearInterval(rdgTimerRef.current)
+    if (rdgOtRef.current) clearInterval(rdgOtRef.current)
+    setRdgTimeLeft(READING_SECTION_MINUTES * 60); setRdgStarted(true); setRdgOvertime(0); setRdgShowBanner(false)
+    rdgTimerRef.current = setInterval(() => {
+      setRdgTimeLeft(t => {
+        if (t === null) return t
+        if (t <= 1) {
+          clearInterval(rdgTimerRef.current); setRdgShowBanner(true)
+          rdgOtRef.current = setInterval(() => setRdgOvertime(o => o + 1), 1000)
+          return 0
+        }
+        return t - 1
+      })
+    }, 1000)
+  }
+  const resetRdgTimer = () => {
+    if (rdgTimerRef.current) clearInterval(rdgTimerRef.current)
+    if (rdgOtRef.current) clearInterval(rdgOtRef.current)
+    setRdgTimeLeft(null); setRdgStarted(false); setRdgOvertime(0); setRdgShowBanner(false)
+  }
+  useEffect(() => () => {
+    if (rdgTimerRef.current) clearInterval(rdgTimerRef.current)
+    if (rdgOtRef.current) clearInterval(rdgOtRef.current)
+  }, [])
+  const readingTimer = {
+    timeLeft: rdgTimeLeft, started: rdgStarted, overtime: rdgOvertime, showBanner: rdgShowBanner,
+    dismissBanner: () => setRdgShowBanner(false), startTimer: startRdgTimer,
+  }
+
   const section = SECTION_ORDER[sectionIdx] || 'listening'
   const parts = SECTION_PARTS[section] || []
   const currentPartId = parts[partIdx]
@@ -1537,30 +1739,89 @@ export default function MockTestPage() {
     setSectionIdx(0)
     setPartIdx(0)
     setScores({})
+    // Persist initial position
+    session.setCurrentSection('listening')
+    session.setCurrentPart('L1')
+    session.setCurrentQuestionIndex(0)
   }
 
   const handlePartDone = (result) => {
     setScores(s => ({ ...s, [currentPartId]: result }))
+    // Autosave per-part score + advance pointer in cloud session
+    session.setScores(currentPartId, result)
     if (partIdx < parts.length - 1) {
+      const nextPart = parts[partIdx + 1]
       setPartIdx(partIdx + 1)
+      session.setCurrentPart(nextPart)
+      session.setCurrentQuestionIndex(0)
     } else {
       setPhase('section-results')
     }
   }
 
+  const handleSkipSection = () => {
+    // Mark all unscored parts in the current section as skipped (0/total with empty answers)
+    const patch = {}
+    for (const p of parts) {
+      if (scores[p]) continue
+      // Determine a reasonable total based on section
+      if (section === 'listening') {
+        const set = examSets[p]
+        const total = (set?.questions || []).length
+        patch[p] = { correct: 0, total, answers: {}, questions: (set?.questions || []).map(q => ({ num: q.num, text: q.text, userAnswer: undefined, correctAnswer: q.answer })), skipped: true }
+      } else if (section === 'reading') {
+        const set = examSets[p]
+        const type = READING_TYPE[p]
+        const total = set ? rdgSetTotal(set, type) : 0
+        const qs = []
+        if (set) {
+          if (type === 'information') {
+            (set.questions || []).forEach(q => qs.push({ num: q.question_number, text: q.question_text, userAnswer: undefined, correctAnswer: q.correct_answer, type: 'r3' }))
+          } else {
+            (set.mcq_questions || []).forEach(q => qs.push({ num: q.question_number, text: q.question_text, userAnswer: undefined, correctAnswer: q.correct_answer, type: 'mcq', options: q.options }))
+            const fibs = type === 'viewpoints' ? (set.fill_in_blank_comment?.blanks || []) : (set.fill_in_blank_response?.blanks || [])
+            fibs.forEach(b => qs.push({ num: b.blank_number, text: b.context || 'Fill in blank', userAnswer: undefined, correctAnswer: b.correct_answer, type: 'fib', options: b.options }))
+          }
+        }
+        patch[p] = { correct: 0, total, answers: {}, questions: qs, skipped: true }
+      } else if (section === 'writing') {
+        patch[p] = { text: '', wordCount: 0, aiResult: null, skipped: true }
+      } else if (section === 'speaking') {
+        patch[p] = { transcript: '', wordCount: 0, aiResult: null, skipped: true }
+      }
+    }
+    setScores(s => ({ ...s, ...patch }))
+    Object.entries(patch).forEach(([partKey, result]) => session.setScores(partKey, result))
+    setPhase('section-results')
+  }
+
   const handleContinueSection = () => {
+    // Reset reading timer when leaving Reading section
+    if (section === 'reading') resetRdgTimer()
+    // Mark this section as completed in cloud session
+    session.markSectionComplete(section)
     if (sectionIdx < SECTION_ORDER.length - 1) {
+      const nextSection = SECTION_ORDER[sectionIdx + 1]
+      const nextPart = (SECTION_PARTS[nextSection] || [])[0] || null
       setSectionIdx(sectionIdx + 1)
       setPartIdx(0)
       setPhase('section-transition')
+      session.setCurrentSection(nextSection)
+      session.setCurrentPart(nextPart)
+      session.setCurrentQuestionIndex(0)
     } else {
       setPhase('final')
+      // Mock exam fully done — close the session so a new one can start later
+      session.complete()
     }
   }
 
   const handleTransitionDone = () => {
     setPhase('exam')
   }
+
+  if (!profileLoaded) return <div className="mk-loading">Loading mock exam...</div>
+  if (!isPremium) return null
 
   if (phase === 'landing') return (
     <AnimatePresence mode="wait">
@@ -1630,7 +1891,7 @@ export default function MockTestPage() {
   const renderActivePart = () => {
     if (!setData) return <div style={{ padding: 40, color: '#888' }}>No data for {currentPartId}</div>
     if (section === 'listening') return <ListeningPart key={currentPartId} partId={currentPartId} setData={setData} partData={partData} color={color} onDone={handlePartDone} />
-    if (section === 'reading') return <ReadingPart key={currentPartId} partId={currentPartId} setData={setData} color={color} onDone={handlePartDone} />
+    if (section === 'reading') return <ReadingPart key={currentPartId} partId={currentPartId} setData={setData} color={color} onDone={handlePartDone} sectionTimer={readingTimer} />
     if (section === 'writing') return <WritingPart key={currentPartId} partId={currentPartId} taskData={setData} color={color} onDone={handlePartDone} />
     if (section === 'speaking') {
       const taskNum = parseInt(currentPartId.replace('S', ''), 10)
@@ -1664,7 +1925,7 @@ export default function MockTestPage() {
       </div>
       <div className="ps-layout-wrap ps-layout-wrap--wide">
         <div className={shellClass}>
-          <MockSidebar section={section} parts={parts} activePartIdx={partIdx} color={color} scores={scores} icon={SECTION_ICONS[section]} sectionLabel={section.charAt(0).toUpperCase() + section.slice(1)} />
+          <MockSidebar section={section} parts={parts} activePartIdx={partIdx} color={color} scores={scores} icon={SECTION_ICONS[section]} sectionLabel={section.charAt(0).toUpperCase() + section.slice(1)} onSkipSection={handleSkipSection} />
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPartId}
