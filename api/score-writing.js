@@ -1,3 +1,5 @@
+/* global process, fetch */
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -118,19 +120,21 @@ Score this response. Return ONLY the JSON object.`;
     const jsonStr = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
     const result = JSON.parse(jsonStr);
 
-    // Validate and clamp scores
-    const clamp = (v) => Math.max(3, Math.min(12, Number(v) || 5));
+    // Validate, clamp, and round scores to the CELPIP 0-12 display scale.
+    const clamp = (v) => Math.max(3, Math.min(12, Math.round(Number(v) || 5)));
     const scores = {
       taskFulfillment: clamp(result.scores?.taskFulfillment),
       coherence: clamp(result.scores?.coherence),
       vocabulary: clamp(result.scores?.vocabulary),
       readability: clamp(result.scores?.readability),
     };
-    const overall = +((scores.taskFulfillment + scores.coherence + scores.vocabulary + scores.readability) / 4).toFixed(1);
-    const clbBand = overall >= 10 ? '10+' : overall >= 9 ? '9' : overall >= 7.5 ? '8' : overall >= 6 ? '7' : overall >= 5 ? '6' : '5';
+    const rawOverall = +((scores.taskFulfillment + scores.coherence + scores.vocabulary + scores.readability) / 4).toFixed(1);
+    const overall = Math.max(3, Math.min(12, Math.round(rawOverall)));
+    const clbBand = overall;
 
     return res.status(200).json({
       overall,
+      rawOverall,
       clbBand,
       scores,
       feedback: result.feedback || 'No feedback available.',

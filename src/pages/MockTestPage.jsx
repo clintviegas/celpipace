@@ -1,9 +1,18 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import SEO from '../components/SEO'
 import { useAuth } from '../context/AuthContext'
 import { useTestSession } from '../hooks/useTestSession'
+import { supabase } from '../lib/supabase'
+import {
+  buildMockReportCard,
+  formatBandScore,
+  getAiBand,
+  normalizeAiResult,
+  summarizeMockScores,
+  summarizeSubjectiveSection,
+} from '../lib/mockScoreUtils'
 import { LISTENING_DATA } from '../data/listeningData'
 import { WRITING_SETS } from '../data/writingData'
 import { asset } from '../data/constants'
@@ -172,8 +181,8 @@ async function scoreWritingAI(responseText, prompt, criteria, taskType) {
       body: JSON.stringify({ responseText, prompt, criteria, taskType }),
     })
     if (!res.ok) throw new Error('Scoring failed')
-    return await res.json()
-  } catch (err) {
+    return normalizeAiResult(await res.json())
+  } catch {
     return { overall: 0, clbBand: '-', scores: {}, feedback: 'Scoring unavailable.', suggestions: [], error: true }
   }
 }
@@ -184,10 +193,15 @@ async function scoreSpeakingAI(responseText, prompt, taskType, topic) {
       body: JSON.stringify({ responseText, prompt, taskType, topic }),
     })
     if (!res.ok) throw new Error('Scoring failed')
-    return await res.json()
-  } catch (err) {
+    return normalizeAiResult(await res.json())
+  } catch {
     return { overall: 0, clbBand: '-', scores: {}, feedback: 'Scoring unavailable.', suggestions: [], error: true }
   }
+}
+
+function normalizePartResult(result) {
+  if (!result?.aiResult) return result
+  return { ...result, aiResult: normalizeAiResult(result.aiResult) }
 }
 
 
@@ -195,6 +209,7 @@ async function scoreSpeakingAI(responseText, prompt, taskType, topic) {
    MOCK SIDEBAR — shows parts in current section
 ═══════════════════════════════════════════════════════════════ */
 function MockSidebar({ section, parts, activePartIdx, color, scores, icon, sectionLabel, onSkipSection }) {
+  const isObjective = section === 'listening' || section === 'reading'
   const completedCount = parts.filter(p => scores[p]).length
   // Raw correct/total fraction across completed parts (only makes sense for Listening & Reading)
   const totals = parts.reduce((acc, p) => {
@@ -206,6 +221,10 @@ function MockSidebar({ section, parts, activePartIdx, color, scores, icon, secti
     return acc
   }, { correct: 0, total: 0 })
   const hasFraction = totals.total > 0
+  const subjectiveSummary = isObjective ? null : summarizeSubjectiveSection(scores, parts)
+  const sectionScoreText = isObjective
+    ? (hasFraction ? `${totals.correct}/${totals.total}` : '\u2014')
+    : formatBandScore(subjectiveSummary?.band)
 
   return (
     <aside className="ll-sidebar">
@@ -228,7 +247,7 @@ function MockSidebar({ section, parts, activePartIdx, color, scores, icon, secti
         </div>
         <div className="ll-sidebar-stat-divider" />
         <div className="ll-sidebar-stat">
-          <span className="ll-sidebar-stat-val">{hasFraction ? `${totals.correct}/${totals.total}` : '\u2014'}</span>
+          <span className="ll-sidebar-stat-val">{sectionScoreText}</span>
           <span className="ll-sidebar-stat-lbl">Score</span>
         </div>
       </div>
@@ -257,6 +276,11 @@ function MockSidebar({ section, parts, activePartIdx, color, scores, icon, secti
           const isActive = pi === activePartIdx
           const done = !!scores[p]
           const sc = scores[p]
+          const subjectiveBand = isObjective ? null : getAiBand(sc?.aiResult)
+          const partScoreText = isObjective ? `${sc?.correct ?? 0}/${sc?.total ?? 0}` : formatBandScore(subjectiveBand)
+          const partScoreColor = isObjective
+            ? (sc?.correct === sc?.total ? '#22c55e' : '#888')
+            : (subjectiveBand != null ? color : '#888')
           return (
             <div
               key={p}
@@ -267,7 +291,7 @@ function MockSidebar({ section, parts, activePartIdx, color, scores, icon, secti
               <div className="ll-set-info">
                 <span className="ll-set-title">{PART_LABELS[p]}</span>
                 <span className="ll-set-meta">
-                  {done && sc && <span className="ll-set-score" style={{ color: sc.correct === sc.total ? '#22c55e' : '#888' }}>{sc.correct}/{sc.total}</span>}
+                  {done && sc && <span className="ll-set-score" style={{ color: partScoreColor }}>{partScoreText}</span>}
                   {!done && isActive && <span style={{ color, fontWeight: 600 }}>In Progress</span>}
                   {!done && !isActive && pi > activePartIdx && <span style={{ color: '#bbb' }}>Upcoming</span>}
                 </span>
@@ -299,6 +323,7 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
   const lineIdxRef = useRef(-1)
   const audioLoadingRef = useRef(false)
   const audioFailCountRef = useRef(0)
+  const audioRetryRef = useRef(null)
   const [allLinesFailed, setAllLinesFailed] = useState(false)
   const [partialAudioFail, setPartialAudioFail] = useState(false)
   const timerRef = useRef(null)
@@ -314,11 +339,29 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
   const correctCnt = qs.filter((q, qi) => { const a = answers[aKey(qi)]; return a !== undefined && a === q.answer }).length
   const isSetDone = doneCount === total && total > 0
   const scorePct = total > 0 ? Math.round((correctCnt / total) * 100) : 0
+  const reviewQuestions = () => qs.map((q, qi) => ({
+    num: q.num ?? qi + 1,
+    text: q.text,
+    userAnswer: answers[aKey(qi)],
+    correctAnswer: q.answer,
+    options: q.options,
+    skill: q.skill,
+  }))
 
   const getAudioPath = (lineIdx) => {
     const sn = String(setData.setNumber).padStart(2, '0')
     const ln = String(lineIdx).padStart(2, '0')
     return asset(`/audio/${partId}/set-${sn}/line-${ln}.mp3`)
+  }
+
+  const playAudioElement = (audio, idx, attempt = 0) => {
+    audio.play().catch(() => {
+      audioLoadingRef.current = false
+      if (audio.error || lineIdxRef.current !== idx) return
+      if (audioRetryRef.current) clearTimeout(audioRetryRef.current)
+      const retryDelay = document.hidden ? 1000 : Math.min(1200, 250 + attempt * 250)
+      audioRetryRef.current = setTimeout(() => playAudioElement(audio, idx, attempt + 1), retryDelay)
+    })
   }
 
   const playFromLine = (idx) => {
@@ -337,11 +380,7 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
     lineIdxRef.current = idx; setCurrentLineIdx(idx)
     const audio = audioRef.current
     audio.src = getAudioPath(idx)
-    audio.play().catch(() => {
-      // play() rejected — error event will also fire, so just set guard false
-      // We let the error event handler do the advance
-      audioLoadingRef.current = false
-    })
+    playAudioElement(audio, idx)
   }
 
   useEffect(() => {
@@ -368,7 +407,49 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
 
   const startAudio = () => { setAudioPhase('playing'); setAudioError(false); setAllLinesFailed(false); setPartialAudioFail(false); audioFailCountRef.current = 0; audioLoadingRef.current = false; playFromLine(0) }
 
+  const stopAudio = () => {
+    if (audioRetryRef.current) clearTimeout(audioRetryRef.current)
+    audioRetryRef.current = null
+    audioLoadingRef.current = false
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.removeAttribute('src')
+      audioRef.current.load()
+    }
+  }
+
+  const skipAudio = () => {
+    stopAudio()
+    setAudioPhase('done')
+    setCurrentLineIdx(-1)
+    lineIdxRef.current = -1
+    setAllLinesFailed(false)
+    setPartialAudioFail(false)
+    setAudioError(false)
+    if (!started && startTimerRef.current) startTimerRef.current()
+  }
+
+  const tryAgain = () => {
+    stopAudio()
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current) clearInterval(otRef.current)
+    setAnswers({})
+    setTimeLeft(null)
+    setStarted(false)
+    setOvertime(0)
+    setShowBanner(false)
+    setShowTranscript(false)
+    setAudioPhase('idle')
+    setCurrentLineIdx(-1)
+    lineIdxRef.current = -1
+    setAudioError(false)
+    setAllLinesFailed(false)
+    setPartialAudioFail(false)
+    audioFailCountRef.current = 0
+  }
+
   const startTimer = () => {
+    if (started) return
     const mins = PART_TIMES[partId] || 8
     setTimeLeft(mins * 60); setStarted(true); setOvertime(0); setShowBanner(false)
     if (timerRef.current) clearInterval(timerRef.current)
@@ -382,7 +463,7 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
   }
   startTimerRef.current = startTimer
 
-  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); if (otRef.current) clearInterval(otRef.current); if (audioRef.current) audioRef.current.pause() }, [])
+  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); if (otRef.current) clearInterval(otRef.current); stopAudio() }, [])
 
   useEffect(() => {
     if (isSetDone) {
@@ -406,7 +487,7 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
 
   return (
     <div className="ll-main">
-      <audio ref={audioRef} preload="none" />
+      <audio ref={audioRef} preload="auto" />
       <div className="ll-topbar">
         <div className="ll-topbar-left">
           <span className="ll-part-badge" style={{ background: color }}>{partId}</span>
@@ -428,9 +509,12 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
               {timeUp && <span className="ll-timer-up-label">overtime</span>}
             </div>
           ) : (
-            <button className="ll-start-btn" style={{ background: color }} onClick={startAudio}>
-              {'\u25B6'} Listen & Start ({PART_TIMES[partId] || 8} min)
-            </button>
+            <div className="ll-audio-actions">
+              <button className="ll-start-btn" style={{ background: color }} onClick={startAudio}>
+                {'\u25B6'} Listen & Start ({PART_TIMES[partId] || 8} min)
+              </button>
+              <button className="ll-skip-audio-btn" onClick={skipAudio}>Skip Audio</button>
+            </div>
           )}
         </div>
       </div>
@@ -471,6 +555,7 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
         <div className="ll-audio-bar ll-audio-bar--playing" style={{ borderColor: color, background: `${color}0a` }}>
           <span className="ll-audio-pulse" style={{ background: color }} />
           <span className="ll-audio-bar-text">{'\uD83D\uDD0A'} Playing line {currentLineIdx + 1} of {(setData.transcript || []).length}...</span>
+          <button className="ll-audio-skip" onClick={skipAudio}>Skip Audio</button>
         </div>
       )}
       {audioPhase === 'done' && !allLinesFailed && (
@@ -573,12 +658,15 @@ function ListeningPart({ partId, setData, partData, color, onDone }) {
 
       {/* Done — next part button */}
       {isSetDone && (
-        <motion.div className="mk-part-done" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-                <motion.div className="mk-part-done-score" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <motion.div className="mk-part-done" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.18 }}>
+                <motion.div className="mk-part-done-score" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.18 }}>
                 <span className="mk-part-done-emoji">{scorePct >= 80 ? '⭐' : scorePct >= 60 ? '💪' : '💡'}</span>
                 <span className="mk-part-done-text">{partId} complete — <strong>{correctCnt}/{total}</strong></span>
               </motion.div>
-          <button className="mk-next-btn" style={{ background: color }} onClick={() => onDone({ correct: correctCnt, total, answers, questions: qs })}>
+          <button className="mk-next-btn mk-next-btn--secondary" onClick={tryAgain}>
+            Try Again
+          </button>
+          <button className="mk-next-btn" style={{ background: color }} onClick={() => onDone({ correct: correctCnt, total, answers, questions: reviewQuestions() })}>
             Next Part {'\u2192'}
           </button>
         </motion.div>
@@ -954,7 +1042,7 @@ function ReadingPart({ partId, setData, color, onDone, sectionTimer }) {
         <div className="rdg-split-questions">
           {renderQuestions()}
           {isSetDone && (
-            <motion.div className="mk-part-done" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+            <motion.div className="mk-part-done" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.18 }}>
               <div className="mk-part-done-score">
                 <span className="mk-part-done-emoji">{scorePct >= 80 ? '⭐' : '💪'}</span>
                 <span className="mk-part-done-text">{partId} — <strong>{score}/{total}</strong></span>
@@ -972,7 +1060,7 @@ function ReadingPart({ partId, setData, color, onDone, sectionTimer }) {
 /* ═══════════════════════════════════════════════════════════════
    WRITING PART — One task, same wl-* UI
 ═══════════════════════════════════════════════════════════════ */
-function WritingPart({ partId, taskData, color, onDone }) {
+function WritingPart({ partId, taskData, color, onDone, onScore }) {
   const [text, setText] = useState('')
   const [timeLeft, setTimeLeft] = useState(null)
   const [started, setStarted] = useState(false)
@@ -1001,8 +1089,9 @@ function WritingPart({ partId, taskData, color, onDone }) {
   const handleAIScore = async () => {
     if (!text.trim() || aiLoading) return
     setAiLoading(true); setAiResult(null)
-    const result = await scoreWritingAI(text, taskData.promptText, [], taskData.taskType === 'email' ? 'W1' : 'W2')
+    const result = normalizeAiResult(await scoreWritingAI(text, taskData.promptText, [], taskData.taskType === 'email' ? 'W1' : 'W2'))
     setAiResult(result); setAiLoading(false)
+    onScore?.({ text, wordCount, aiResult: result })
   }
 
   const timeCritical = timeLeft !== null && timeLeft <= 120 && timeLeft > 0
@@ -1078,23 +1167,26 @@ function WritingPart({ partId, taskData, color, onDone }) {
         <motion.div className="wl-ai-panel" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <div className="wl-ai-header"><div className="wl-ai-title"><span>{'\uD83D\uDCCB'} Score Report</span></div></div>
           <div className="wl-ai-band" style={{ borderColor: color }}>
-            <div className="wl-ai-band-score" style={{ color }}>{Math.round(aiResult.overall || 0)}</div>
-            <div className="wl-ai-band-label"><span>CELPIP Level</span><strong style={{ color }}>CLB {aiResult.clbBand || '-'}</strong></div>
+            <div className="wl-ai-band-score" style={{ color }}>{getAiBand(aiResult) ?? '-'}</div>
+            <div className="wl-ai-band-label"><span>Score out of 12</span><strong style={{ color }}>CLB {getAiBand(aiResult) ?? '-'}</strong></div>
           </div>
           {aiResult.scores && (
             <div className="wl-ai-scores">
-              {Object.entries(aiResult.scores).map(([k, v]) => (
-                <div key={k} className="wl-ai-score-row">
-                  <div className="wl-ai-score-label"><span>{k.replace(/([A-Z])/g, ' $1').trim()}</span><span className="wl-ai-score-val">{v}/12</span></div>
-                  <div className="wl-ai-score-track"><div className="wl-ai-score-fill" style={{ width: `${Math.min((v/12)*100,100)}%`, background: color }} /></div>
-                </div>
-              ))}
+              {Object.entries(aiResult.scores).map(([k, v]) => {
+                const score = getAiBand({ overall: v })
+                return (
+                  <div key={k} className="wl-ai-score-row">
+                    <div className="wl-ai-score-label"><span>{k.replace(/([A-Z])/g, ' $1').trim()}</span><span className="wl-ai-score-val">{formatBandScore(score)}</span></div>
+                    <div className="wl-ai-score-track"><div className="wl-ai-score-fill" style={{ width: `${Math.min(((score || 0)/12)*100,100)}%`, background: color }} /></div>
+                  </div>
+                )
+              })}
             </div>
           )}
           {aiResult.feedback && <div className="wl-ai-feedback"><p>{aiResult.feedback}</p></div>}
         </motion.div>
       )}
-      <motion.div className="mk-part-done" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: 24 }}>
+      <motion.div className="mk-part-done" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.18 }} style={{ marginTop: 24 }}>
         <button className="mk-next-btn" style={{ background: color }} onClick={() => onDone({ text, wordCount, aiResult })}>
           {aiResult ? 'Next Part \u2192' : 'Skip Scoring & Continue \u2192'}
         </button>
@@ -1107,7 +1199,7 @@ function WritingPart({ partId, taskData, color, onDone }) {
 /* ═══════════════════════════════════════════════════════════════
    SPEAKING PART — One prompt, same sl-* UI
 ═══════════════════════════════════════════════════════════════ */
-function SpeakingPart({ partId, promptData, color, meta, onDone }) {
+function SpeakingPart({ partId, promptData, color, meta, onDone, onScore }) {
   const [phase, setPhase] = useState('idle')
   const [elapsed, setElapsed] = useState(0)
   const [transcript, setTranscript] = useState('')
@@ -1136,13 +1228,13 @@ function SpeakingPart({ partId, promptData, color, meta, onDone }) {
         }
         setInterimText(interim)
       }
-      recog.onerror = () => {}
-      recog.onend = () => { if (recognitionRef.current === recog) try { recog.start() } catch (_) {} }
+      recog.onerror = () => { /* browser speech errors are non-fatal */ }
+      recog.onend = () => { if (recognitionRef.current === recog) try { recog.start() } catch { /* ignore restart errors */ } }
       recog.start(); recognitionRef.current = recog; setIsListening(true)
-    } catch (_) {}
+    } catch { /* speech recognition may be unavailable */ }
   }
   const stopRecognition = () => {
-    if (recognitionRef.current) { try { recognitionRef.current.stop() } catch (_) {}; recognitionRef.current = null }
+    if (recognitionRef.current) { try { recognitionRef.current.stop() } catch { /* ignore stop errors */ }; recognitionRef.current = null }
     setIsListening(false); setInterimText('')
   }
 
@@ -1161,8 +1253,9 @@ function SpeakingPart({ partId, promptData, color, meta, onDone }) {
   const handleAIScore = async () => {
     if (!transcript.trim() || aiLoading) return
     setAiLoading(true); setAiResult(null)
-    const result = await scoreSpeakingAI(transcript, promptData.prompt, meta.label, promptData.topic || '')
+    const result = normalizeAiResult(await scoreSpeakingAI(transcript, promptData.prompt, meta.label, promptData.topic || ''))
     setAiResult(result); setAiLoading(false)
+    onScore?.({ transcript, wordCount, aiResult: result })
   }
 
   const prepRemaining = Math.max(0, prepTime - elapsed)
@@ -1259,8 +1352,8 @@ function SpeakingPart({ partId, promptData, color, meta, onDone }) {
           {aiResult && (
             <motion.div className="sl-ai-panel" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div className="sl-ai-band" style={{ borderColor: color }}>
-                <div className="sl-ai-band-score" style={{ color }}>{Math.round(aiResult.overall || 0)}</div>
-                <div className="sl-ai-band-label"><span>CELPIP Level</span><strong style={{ color }}>CLB {aiResult.clbBand || '-'}</strong></div>
+                <div className="sl-ai-band-score" style={{ color }}>{getAiBand(aiResult) ?? '-'}</div>
+                <div className="sl-ai-band-label"><span>Score out of 12</span><strong style={{ color }}>CLB {getAiBand(aiResult) ?? '-'}</strong></div>
               </div>
               {aiResult.feedback && <div className="wl-ai-feedback"><p>{aiResult.feedback}</p></div>}
             </motion.div>
@@ -1278,15 +1371,15 @@ function SpeakingPart({ partId, promptData, color, meta, onDone }) {
 /* ═══════════════════════════════════════════════════════════════
    SECTION RESULTS — Bands + detailed answer review
 ═══════════════════════════════════════════════════════════════ */
-function SectionResults({ section, color, scores, examSets, onContinue, isLast }) {
+function SectionResults({ section, color, scores, onContinue, isLast }) {
   const parts = SECTION_PARTS[section]
   const isObjective = section === 'listening' || section === 'reading'
+  const subjectiveSummary = isObjective ? null : summarizeSubjectiveSection(scores, parts)
 
   let totalCorrect = 0, totalQs = 0
   if (isObjective) {
     parts.forEach(p => { if (scores[p]) { totalCorrect += scores[p].correct; totalQs += scores[p].total } })
   }
-  const overallPct = totalQs > 0 ? Math.round((totalCorrect / totalQs) * 100) : 0
   const celpip = getCelpipLevel(totalCorrect, totalQs || 38)
 
   return (
@@ -1343,15 +1436,40 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
           </motion.div>
         )}
         {!isObjective && (
-          <motion.div
-            className="mk-sr-aiPill"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <span className="mk-sr-aiPill-icon">{'⚡'}</span>
-            <span>Instant scoring and feedback — expand each part below for detailed insights</span>
-          </motion.div>
+          subjectiveSummary?.band != null ? (
+            <motion.div
+              className="mk-sr-bandCard"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 180, damping: 18 }}
+            >
+              <div className="mk-sr-bandCard-left" style={{ background: `linear-gradient(135deg, ${color}, ${color}dd)` }}>
+                <span className="mk-sr-bandCard-eyebrow">CELPIP</span>
+                <span className="mk-sr-bandCard-level">{subjectiveSummary.band}</span>
+                <span className="mk-sr-bandCard-label">Score out of 12</span>
+              </div>
+              <div className="mk-sr-bandCard-right">
+                <div className="mk-sr-bandCard-row">
+                  <span className="mk-sr-bandCard-val">{formatBandScore(subjectiveSummary.band)}</span>
+                  <span className="mk-sr-bandCard-cap">Average</span>
+                </div>
+                <div className="mk-sr-bandCard-row">
+                  <span className="mk-sr-bandCard-val">{subjectiveSummary.scoredParts}<span className="mk-sr-bandCard-denom">/{subjectiveSummary.totalParts}</span></span>
+                  <span className="mk-sr-bandCard-cap">Scored</span>
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              className="mk-sr-aiPill"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <span className="mk-sr-aiPill-icon">{'⚡'}</span>
+              <span>Submit responses for AI scoring to generate a full band out of 12.</span>
+            </motion.div>
+          )
         )}
       </motion.div>
 
@@ -1361,6 +1479,7 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
           const sc = scores[p]
           if (!sc) return null
           const partPct = sc.total > 0 ? Math.round((sc.correct / sc.total) * 100) : 0
+          const aiBand = getAiBand(sc.aiResult)
           return (
             <motion.div key={p} className="mk-sr-part-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
               <div className="mk-sr-part-header" style={{ borderLeftColor: color }}>
@@ -1373,26 +1492,30 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
               {isObjective && sc.questions && (
                 <div className="mk-sr-q-list">
                   {(sc.questions || []).map((q, qi) => {
-                    const isCorrect = q.userAnswer !== undefined && (
-                      typeof q.correctAnswer === 'number'
-                        ? q.userAnswer === q.correctAnswer
-                        : String(q.userAnswer) === String(q.correctAnswer)
+                    const userAnswer = q.userAnswer !== undefined ? q.userAnswer : sc.answers?.[`q_${qi}`]
+                    const correctAnswer = q.correctAnswer !== undefined ? q.correctAnswer : q.answer
+                    const questionText = q.text || q.question_text || 'Question review'
+                    const questionNum = q.num || q.question_number || qi + 1
+                    const isCorrect = userAnswer !== undefined && (
+                      typeof correctAnswer === 'number'
+                        ? userAnswer === correctAnswer
+                        : String(userAnswer) === String(correctAnswer)
                     )
-                    const unanswered = q.userAnswer === undefined
+                    const unanswered = userAnswer === undefined
                     return (
                       <div key={qi} className={`mk-sr-q-row${isCorrect ? ' mk-sr-q-row--ok' : unanswered ? ' mk-sr-q-row--skip' : ' mk-sr-q-row--err'}`}>
-                        <span className="mk-sr-q-num">Q{q.num}</span>
-                        <span className="mk-sr-q-text">{q.text}</span>
+                        <span className="mk-sr-q-num">Q{questionNum}</span>
+                        <span className="mk-sr-q-text">{questionText}</span>
                         <span className="mk-sr-q-ans">
                           {unanswered ? (
                             <span className="mk-sr-q-skip">Skipped</span>
                           ) : isCorrect ? (
-                            <span className="mk-sr-q-correct">{'\u2713'} {typeof q.userAnswer === 'number' ? LETTERS[q.userAnswer] : q.userAnswer}</span>
+                            <span className="mk-sr-q-correct">{'\u2713'} {typeof userAnswer === 'number' ? LETTERS[userAnswer] : userAnswer}</span>
                           ) : (
                             <span className="mk-sr-q-wrong">
-                              <span className="mk-sr-q-your">{typeof q.userAnswer === 'number' ? LETTERS[q.userAnswer] : q.userAnswer}</span>
+                              <span className="mk-sr-q-your">{typeof userAnswer === 'number' ? LETTERS[userAnswer] : userAnswer}</span>
                               <span className="mk-sr-q-arrow">{'\u2192'}</span>
-                              <span className="mk-sr-q-right">{typeof q.correctAnswer === 'number' ? LETTERS[q.correctAnswer] : q.correctAnswer}</span>
+                              <span className="mk-sr-q-right">{typeof correctAnswer === 'number' ? LETTERS[correctAnswer] : correctAnswer}</span>
                             </span>
                           )}
                         </span>
@@ -1408,8 +1531,8 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
                   <p className="mk-sr-writing-wc">{sc.wordCount} words</p>
                   {sc.aiResult && !sc.aiResult.error && (
                     <div className="mk-sr-writing-score">
-                      <span>CELPIP Level: <strong style={{ color }}>{sc.aiResult.overall}/12</strong></span>
-                      <span> (CLB {sc.aiResult.clbBand})</span>
+                      <span>CELPIP Level: <strong style={{ color }}>{formatBandScore(aiBand)}</strong></span>
+                      <span> (CLB {aiBand ?? '-'})</span>
                     </div>
                   )}
                 </div>
@@ -1421,7 +1544,7 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
                   <p className="mk-sr-speaking-wc">{sc.wordCount} words spoken</p>
                   {sc.aiResult && !sc.aiResult.error && (
                     <div className="mk-sr-speaking-score">
-                      <span>CELPIP Level: <strong style={{ color }}>{sc.aiResult.overall}/12</strong></span>
+                      <span>CELPIP Level: <strong style={{ color }}>{formatBandScore(aiBand)}</strong></span>
                     </div>
                   )}
                 </div>
@@ -1444,24 +1567,9 @@ function SectionResults({ section, color, scores, examSets, onContinue, isLast }
 /* ═══════════════════════════════════════════════════════════════
    FINAL RESULTS
 ═══════════════════════════════════════════════════════════════ */
-function FinalResults({ examNumber, scores }) {
+function FinalResults({ examNumber, scores, onTryAgain }) {
   const navigate = useNavigate()
-
-  const sectionSummary = SECTION_ORDER.map(sec => {
-    const parts = SECTION_PARTS[sec]
-    const isObj = sec === 'listening' || sec === 'reading'
-    let correct = 0, total = 0
-    if (isObj) { parts.forEach(p => { if (scores[p]) { correct += scores[p].correct; total += scores[p].total } }) }
-    const pct = total > 0 ? Math.round((correct / total) * 100) : 0
-    const celpip = getCelpipLevel(correct, total || 38)
-    return { section: sec, correct, total, pct, celpip, isObj }
-  })
-
-  // Overall CELPIP band = derived from combined raw correct / total across objective sections
-  const overallBand = getCelpipLevel(
-    sectionSummary.reduce((a, s) => a + (s.isObj ? s.correct : 0), 0),
-    sectionSummary.reduce((a, s) => a + (s.isObj ? s.total : 0), 0) || 38
-  )
+  const { sections: sectionSummary, overallBand } = summarizeMockScores(scores)
 
   // Motivation copy by tier
   const MOTIVATION = {
@@ -1533,21 +1641,39 @@ function FinalResults({ examNumber, scores }) {
             <div className="mk-final-card-header">
               <span>{SECTION_ICONS[s.section]}</span>
               <h3>{s.section.charAt(0).toUpperCase() + s.section.slice(1)}</h3>
-              {s.isObj && <span className="mk-final-level" style={{ color: s.celpip.color }}>CELPIP {s.celpip.level}</span>}
+              {s.objective && s.band && <span className="mk-final-level" style={{ color: s.band.color }}>CELPIP {s.band.level}</span>}
+              {!s.objective && s.band != null && (
+                <span className="mk-final-level" style={{ color: COLORS[s.section] }}>CLB {s.band}</span>
+              )}
             </div>
-            {s.isObj && (
+            {s.objective && s.hasData && (
               <>
                 <div className="mk-final-bar"><div className="mk-final-bar-fill" style={{ width: `${s.pct}%`, background: COLORS[s.section] }} /></div>
-                <p className="mk-final-detail">{s.correct}/{s.total} — {s.celpip.label}</p>
+                <p className="mk-final-detail">{s.correct}/{s.total} — {s.band.label}</p>
               </>
             )}
-            {!s.isObj && <p className="mk-final-detail">Instant scoring — see section results</p>}
+            {s.objective && !s.hasData && (
+              <p className="mk-final-detail">Not attempted</p>
+            )}
+            {!s.objective && s.band != null && (
+              <>
+                <div className="mk-final-bar"><div className="mk-final-bar-fill" style={{ width: `${Math.min(100, Math.round((s.band / 12) * 100))}%`, background: COLORS[s.section] }} /></div>
+                <p className="mk-final-detail">
+                  AI score {formatBandScore(s.band)} · {s.scoredParts}/{s.totalParts} scored
+                </p>
+              </>
+            )}
+            {!s.objective && s.band == null && (
+              <p className="mk-final-detail">Not AI-scored — submit responses for evaluation</p>
+            )}
           </motion.div>
         ))}
       </div>
 
       <div className="mk-final-actions">
         <button className="mk-btn mk-btn--outline" onClick={() => navigate('/dashboard')}>{'\u2190'} Dashboard</button>
+        <button className="mk-btn mk-btn--outline" onClick={() => navigate('/scores?tab=mocks')}>Saved Reports</button>
+        <button className="mk-btn mk-btn--outline" onClick={onTryAgain}>Try Again</button>
         {examNumber < 8 ? (
           <button className="mk-btn mk-btn--primary" onClick={() => navigate(`/mock-test/${examNumber + 1}`)}>Try Mock #{examNumber + 1} {'\u2192'}</button>
         ) : (
@@ -1640,8 +1766,10 @@ function MockLanding({ examNumber, onStart }) {
 export default function MockTestPage() {
   const navigate = useNavigate()
   const { examId } = useParams()
-  const { isPremium, profileLoaded } = useAuth()
+  const [searchParams] = useSearchParams()
+  const { user, isPremium, profileLoaded } = useAuth()
   const examNumber = parseInt(examId) || 1
+  const reviewAttemptId = searchParams.get('attempt')
 
   // Premium gate: all full mock exams are premium-only.
   useEffect(() => {
@@ -1665,11 +1793,78 @@ export default function MockTestPage() {
   const [scores, setScores] = useState({}) // { L1: { correct, total, answers, questions }, ... }
 
   // ── Persistent cloud-backed session (resume across reload/device) ────────
-  const session = useTestSession({ kind: 'mock', examNumber, enabled: profileLoaded && isPremium })
+  const session = useTestSession({ kind: 'mock', examNumber, enabled: profileLoaded && isPremium && !reviewAttemptId })
   const restoredRef = useRef(false)
+  const [completedFallback, setCompletedFallback] = useState(null)
+  const [reviewLoading, setReviewLoading] = useState(false)
+
+  useEffect(() => {
+    if (!reviewAttemptId || !user?.id || !examNumber) return
+    let cancelled = false
+    setReviewLoading(true)
+    ;(async () => {
+      try {
+        const { data, error } = await supabase
+          .from('test_sessions')
+          .select('id, scores, meta, completed_at, updated_at')
+          .eq('id', reviewAttemptId)
+          .eq('kind', 'mock')
+          .eq('exam_number', examNumber)
+          .eq('is_completed', true)
+          .maybeSingle()
+        if (error) throw error
+        if (cancelled) return
+        if (data?.scores) {
+          setScores(data.scores || {})
+          setPhase('final')
+        } else {
+          navigate('/exam', { replace: true })
+        }
+      } catch {
+        if (!cancelled) navigate('/exam', { replace: true })
+      } finally {
+        if (!cancelled) setReviewLoading(false)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [reviewAttemptId, user?.id, examNumber, navigate])
+
+  // If no active session exists, fetch the most recent completed mock attempt
+  // so direct visits can still display a saved final results page.
+  useEffect(() => {
+    if (reviewAttemptId) return
+    if (!user?.id || !examNumber) return
+    if (session.loading) return
+    if (session.id) return
+    // Only fetch fallback when current session has no scores yet
+    if (session.scores && Object.keys(session.scores).length) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const { data, error } = await supabase
+          .from('test_sessions')
+          .select('id, scores, meta, completed_at, updated_at')
+          .eq('kind', 'mock')
+          .eq('exam_number', examNumber)
+          .eq('is_completed', true)
+          .order('completed_at', { ascending: false })
+          .limit(1)
+        if (error) throw error
+        if (cancelled) return
+        const row = (data || [])[0]
+        if (row && row.scores && Object.keys(row.scores).length) {
+          setCompletedFallback(row)
+        }
+      } catch {
+        /* ignore — fallback is optional */
+      }
+    })()
+    return () => { cancelled = true }
+  }, [reviewAttemptId, user?.id, examNumber, session.loading, session.id, session.scores])
 
   // One-shot: rehydrate UI state from session row when it loads
   useEffect(() => {
+    if (reviewAttemptId) return
     if (restoredRef.current) return
     if (session.loading || !session.id) return
     restoredRef.current = true
@@ -1678,18 +1873,31 @@ export default function MockTestPage() {
     if (session.scores && Object.keys(session.scores).length) {
       setScores(session.scores)
     }
+    const restoredPhase = session.meta?.phase
     if (cs && SECTION_ORDER.includes(cs)) {
       const sIdx = SECTION_ORDER.indexOf(cs)
       setSectionIdx(sIdx)
       const parts = SECTION_PARTS[cs] || []
       const pIdx = cp ? Math.max(0, parts.indexOf(cp)) : 0
       setPartIdx(pIdx)
-      // If user already had progress, jump straight back into the exam
-      if (session.scores && Object.keys(session.scores).length) {
+      if (restoredPhase === 'final') {
+        setPhase('final')
+      } else if (restoredPhase === 'section-results') {
+        setPhase('section-results')
+      } else if (session.scores && Object.keys(session.scores).length) {
         setPhase('exam')
       }
     }
-  }, [session.loading, session.id, session.currentSection, session.currentPart, session.scores])
+  }, [reviewAttemptId, session.loading, session.id, session.currentSection, session.currentPart, session.scores, session.meta])
+
+  // Show final results from a completed prior attempt when fresh session is empty
+  useEffect(() => {
+    if (!completedFallback) return
+    if (phase !== 'landing') return
+    if (Object.keys(scores).length) return
+    setScores(completedFallback.scores || {})
+    setPhase('final')
+  }, [completedFallback, phase, scores])
 
   // Shared Reading section timer (single 55-min timer across R1-R4)
   const [rdgTimeLeft, setRdgTimeLeft] = useState(null)
@@ -1743,23 +1951,39 @@ export default function MockTestPage() {
     session.setCurrentSection('listening')
     session.setCurrentPart('L1')
     session.setCurrentQuestionIndex(0)
+    session.setMeta({ phase: 'exam', startedAt: new Date().toISOString() })
+    void session.flush()
   }
 
-  const handlePartDone = (result) => {
-    setScores(s => ({ ...s, [currentPartId]: result }))
+  const handlePartScoreUpdate = async (result) => {
+    const normalized = normalizePartResult(result)
+    const nextScores = { ...scores, [currentPartId]: normalized }
+    setScores(nextScores)
+    session.setScores(currentPartId, normalized)
+    session.setMeta({ phase: 'exam', lastScoredPart: currentPartId, lastSavedAt: new Date().toISOString() })
+    await session.flush()
+  }
+
+  const handlePartDone = async (result) => {
+    const normalized = normalizePartResult(result)
+    const nextScores = { ...scores, [currentPartId]: normalized }
+    setScores(nextScores)
     // Autosave per-part score + advance pointer in cloud session
-    session.setScores(currentPartId, result)
+    session.setScores(currentPartId, normalized)
     if (partIdx < parts.length - 1) {
       const nextPart = parts[partIdx + 1]
       setPartIdx(partIdx + 1)
       session.setCurrentPart(nextPart)
       session.setCurrentQuestionIndex(0)
+      session.setMeta({ phase: 'exam', lastSavedPart: currentPartId, lastSavedAt: new Date().toISOString() })
     } else {
+      session.setMeta({ phase: 'section-results', lastSavedPart: currentPartId, lastSavedAt: new Date().toISOString() })
       setPhase('section-results')
     }
+    await session.flush()
   }
 
-  const handleSkipSection = () => {
+  const handleSkipSection = async () => {
     // Mark all unscored parts in the current section as skipped (0/total with empty answers)
     const patch = {}
     for (const p of parts) {
@@ -1792,10 +2016,12 @@ export default function MockTestPage() {
     }
     setScores(s => ({ ...s, ...patch }))
     Object.entries(patch).forEach(([partKey, result]) => session.setScores(partKey, result))
+    session.setMeta({ phase: 'section-results', lastSkippedSection: section, lastSavedAt: new Date().toISOString() })
+    await session.flush()
     setPhase('section-results')
   }
 
-  const handleContinueSection = () => {
+  const handleContinueSection = async () => {
     // Reset reading timer when leaving Reading section
     if (section === 'reading') resetRdgTimer()
     // Mark this section as completed in cloud session
@@ -1809,18 +2035,43 @@ export default function MockTestPage() {
       session.setCurrentSection(nextSection)
       session.setCurrentPart(nextPart)
       session.setCurrentQuestionIndex(0)
+      session.setMeta({ phase: 'section-transition', lastCompletedSection: section, lastSavedAt: new Date().toISOString() })
+      await session.flush()
     } else {
+      session.setMeta({
+        phase: 'final',
+        lastCompletedSection: section,
+        completedAt: new Date().toISOString(),
+        reportCard: buildMockReportCard(examNumber, scores),
+      })
+      await session.flush()
+      // Mark the session as completed so the Mock Exams "Score" modal can find it.
+      // This also unblocks a fresh attempt next time the user starts this mock.
+      try { await session.complete() } catch { /* non-fatal */ }
       setPhase('final')
-      // Mock exam fully done — close the session so a new one can start later
-      session.complete()
     }
   }
 
   const handleTransitionDone = () => {
+    session.setMeta({ phase: 'exam', lastSavedAt: new Date().toISOString() })
+    void session.flush()
     setPhase('exam')
   }
 
+  const handleTryAgain = async () => {
+    try {
+      await supabase
+        .from('test_sessions')
+        .delete()
+        .eq('kind', 'mock')
+        .eq('exam_number', examNumber)
+        .eq('is_completed', false)
+    } catch { /* non-fatal */ }
+    window.location.assign(`/mock-test/${examNumber}`)
+  }
+
   if (!profileLoaded) return <div className="mk-loading">Loading mock exam...</div>
+  if (reviewAttemptId && reviewLoading) return <div className="mk-loading">Loading saved report...</div>
   if (!isPremium) return null
 
   if (phase === 'landing') return (
@@ -1833,7 +2084,7 @@ export default function MockTestPage() {
   if (phase === 'final') return (
     <AnimatePresence mode="wait">
       <motion.div key="final" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-        <FinalResults examNumber={examNumber} scores={scores} />
+        <FinalResults examNumber={examNumber} scores={scores} onTryAgain={handleTryAgain} />
       </motion.div>
     </AnimatePresence>
   )
@@ -1841,7 +2092,7 @@ export default function MockTestPage() {
     return (
       <AnimatePresence mode="wait">
         <motion.div key={`sr-${section}`} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }}>
-          <SectionResults section={section} color={color} scores={scores} examSets={examSets} onContinue={handleContinueSection} isLast={sectionIdx === SECTION_ORDER.length - 1} />
+          <SectionResults section={section} color={color} scores={scores} onContinue={handleContinueSection} isLast={sectionIdx === SECTION_ORDER.length - 1} />
         </motion.div>
       </AnimatePresence>
     )
@@ -1892,10 +2143,10 @@ export default function MockTestPage() {
     if (!setData) return <div style={{ padding: 40, color: '#888' }}>No data for {currentPartId}</div>
     if (section === 'listening') return <ListeningPart key={currentPartId} partId={currentPartId} setData={setData} partData={partData} color={color} onDone={handlePartDone} />
     if (section === 'reading') return <ReadingPart key={currentPartId} partId={currentPartId} setData={setData} color={color} onDone={handlePartDone} sectionTimer={readingTimer} />
-    if (section === 'writing') return <WritingPart key={currentPartId} partId={currentPartId} taskData={setData} color={color} onDone={handlePartDone} />
+    if (section === 'writing') return <WritingPart key={currentPartId} partId={currentPartId} taskData={setData} color={color} onDone={handlePartDone} onScore={handlePartScoreUpdate} />
     if (section === 'speaking') {
       const taskNum = parseInt(currentPartId.replace('S', ''), 10)
-      return <SpeakingPart key={currentPartId} partId={currentPartId} promptData={setData} color={color} meta={SPEAKING_META[taskNum] || SPEAKING_META[1]} onDone={handlePartDone} />
+      return <SpeakingPart key={currentPartId} partId={currentPartId} promptData={setData} color={color} meta={SPEAKING_META[taskNum] || SPEAKING_META[1]} onDone={handlePartDone} onScore={handlePartScoreUpdate} />
     }
     return null
   }
@@ -1926,18 +2177,9 @@ export default function MockTestPage() {
       <div className="ps-layout-wrap ps-layout-wrap--wide">
         <div className={shellClass}>
           <MockSidebar section={section} parts={parts} activePartIdx={partIdx} color={color} scores={scores} icon={SECTION_ICONS[section]} sectionLabel={section.charAt(0).toUpperCase() + section.slice(1)} onSkipSection={handleSkipSection} />
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPartId}
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -24 }}
-              transition={{ duration: 0.28, ease: [0.22, 0.61, 0.36, 1] }}
-              style={{ flex: 1, minWidth: 0 }}
-            >
-              {renderActivePart()}
-            </motion.div>
-          </AnimatePresence>
+          <div key={currentPartId} className="mk-active-part-wrap">
+            {renderActivePart()}
+          </div>
         </div>
       </div>
     </div>

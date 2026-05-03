@@ -1,8 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { SCORE_LEVELS } from '../data/constants'
 import { useProgress } from '../hooks/useProgress'
+import { useAuth } from '../context/AuthContext'
+import { supabase } from '../lib/supabase'
+import { formatBandScore, summarizeMockScores } from '../lib/mockScoreUtils'
 import SEO from '../components/SEO'
 
 /* ── CRS points table per CLB per skill (FSW core points) ── */
@@ -67,9 +70,56 @@ function CLBSelector({ value, onChange, color }) {
 
 export default function ScoresPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const { user } = useAuth()
   const [clbScores, setClbScores] = useState({ listening: 7, reading: 7, writing: 7, speaking: 7 })
-  const [activeTab, setActiveTab] = useState('practice')
-  const { stats, getPartStats, activity, streak } = useProgress()
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') === 'mocks' ? 'mocks' : 'practice')
+  const [mockReports, setMockReports] = useState([])
+  const [mockReportsLoading, setMockReportsLoading] = useState(false)
+  const { stats, activity, streak } = useProgress()
+
+  useEffect(() => {
+    if (searchParams.get('tab') === 'mocks') setActiveTab('mocks')
+  }, [searchParams])
+
+  useEffect(() => {
+    if (!user?.id) { setMockReports([]); return }
+    let cancelled = false
+    setMockReportsLoading(true)
+    ;(async () => {
+      try {
+        const { data, error } = await supabase
+          .from('test_sessions')
+          .select('id, exam_number, scores, meta, completed_at, updated_at')
+          .eq('kind', 'mock')
+          .eq('is_completed', true)
+          .order('completed_at', { ascending: false })
+        if (error) throw error
+        if (!cancelled) setMockReports(data || [])
+      } catch {
+        if (!cancelled) setMockReports([])
+      } finally {
+        if (!cancelled) setMockReportsLoading(false)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  const handleReviewMock = (report) => {
+    navigate(`/mock-test/${report.exam_number || 1}?attempt=${report.id}`)
+  }
+
+  const handleReattemptMock = async (examNumber) => {
+    try {
+      await supabase
+        .from('test_sessions')
+        .delete()
+        .eq('kind', 'mock')
+        .eq('exam_number', examNumber)
+        .eq('is_completed', false)
+    } catch { /* non-fatal */ }
+    navigate(`/mock-test/${examNumber || 1}`)
+  }
 
   const setSkill = (id, val) => setClbScores(prev => ({ ...prev, [id]: val }))
 
@@ -103,6 +153,12 @@ export default function ScoresPage() {
           onClick={() => setActiveTab('practice')}
         >
           📈 Practice Scores
+        </button>
+        <button
+          className={`scores-tab${activeTab === 'mocks' ? ' scores-tab--active' : ''}`}
+          onClick={() => setActiveTab('mocks')}
+        >
+          📋 Mock Reports
         </button>
         <button
           className={`scores-tab${activeTab === 'tracker' ? ' scores-tab--active' : ''}`}
@@ -217,7 +273,90 @@ export default function ScoresPage() {
         </div>
       )}
 
-      {/* ── TAB 1: Progress Tracker ── */}
+      {/* ── TAB 1: Mock Reports ── */}
+      {activeTab === 'mocks' && (
+        <div className="tracker-root">
+          <div className="tracker-intro">
+            <h2 className="tracker-intro-title">Saved Mock Reports</h2>
+            <p className="tracker-intro-sub">
+              Review completed mock exams, see final CELPIP bands, and start a clean re-attempt when you want to try again.
+            </p>
+          </div>
+
+          {!user ? (
+            <div className="mock-report-empty">
+              <div className="mock-report-empty-title">Sign in to view saved mock reports</div>
+              <button className="mock-report-primary" onClick={() => navigate('/exam')}>Go to mock exams</button>
+            </div>
+          ) : mockReportsLoading ? (
+            <div className="mock-report-empty">Loading saved reports...</div>
+          ) : mockReports.length === 0 ? (
+            <div className="mock-report-empty">
+              <div className="mock-report-empty-title">No completed mock reports yet</div>
+              <button className="mock-report-primary" onClick={() => navigate('/exam')}>Start a mock exam</button>
+            </div>
+          ) : (
+            <div className="mock-report-grid">
+              {mockReports.map((report, index) => {
+                const { sections, overallBand } = summarizeMockScores(report.scores || {})
+                const completedAt = report.completed_at || report.updated_at
+                return (
+                  <motion.div
+                    key={report.id}
+                    className="mock-report-card"
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.28, delay: index * 0.04 }}
+                  >
+                    <div className="mock-report-head">
+                      <div>
+                        <div className="mock-report-kicker">Mock Exam {report.exam_number || 1}</div>
+                        <h3 className="mock-report-title">Final Report Card</h3>
+                        <p className="mock-report-date">
+                          {completedAt ? new Date(completedAt).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Completed date unavailable'}
+                        </p>
+                      </div>
+                      <div className="mock-report-band" style={{ borderColor: overallBand?.color || '#E5E7EB', color: overallBand?.color || '#6B7280' }}>
+                        <span>{overallBand?.level ?? '-'}</span>
+                        <small>Overall</small>
+                      </div>
+                    </div>
+
+                    <div className="mock-report-sections">
+                      {sections.map((section) => {
+                        const skill = SKILLS.find(s => s.id === section.section)
+                        const value = section.objective
+                          ? (section.band?.level != null ? `CELPIP ${section.band.level}` : '-')
+                          : formatBandScore(section.band)
+                        const detail = section.objective
+                          ? (section.hasData ? `${section.correct}/${section.total}` : 'Not attempted')
+                          : (section.band != null ? `${section.scoredParts}/${section.totalParts} scored` : 'Not AI-scored')
+                        return (
+                          <div className="mock-report-section" key={section.section} style={{ borderLeftColor: skill?.color || '#CBD5E1' }}>
+                            <span className="mock-report-section-icon" style={{ background: skill?.colorLight || '#F3F4F6' }}>{skill?.icon}</span>
+                            <div>
+                              <strong>{skill?.label}</strong>
+                              <small>{detail}</small>
+                            </div>
+                            <span className="mock-report-section-score" style={{ color: skill?.color }}>{value}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    <div className="mock-report-actions">
+                      <button className="mock-report-secondary" onClick={() => handleReviewMock(report)}>Review Attempt</button>
+                      <button className="mock-report-primary" onClick={() => handleReattemptMock(report.exam_number || 1)}>Re-attempt</button>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── TAB 2: Progress Tracker ── */}
       {activeTab === 'tracker' && (
         <div className="tracker-root">
 
