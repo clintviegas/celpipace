@@ -1,46 +1,41 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { PRODUCT_STATS, SECTION_LIBRARY } from '../data/constants'
 
 const SECTIONS = [
   {
-    icon: '🎧',
-    label: 'Listening',
-    desc: '6 Parts · 120 Practice Sets',
-    path: '/listening',
+    ...SECTION_LIBRARY.listening,
+    desc: `6 Parts · ${PRODUCT_STATS.listeningSets} Practice Sets`,
     accent: '#4A90D9',
   },
   {
-    icon: '📖',
-    label: 'Reading',
-    desc: '4 Parts · 46 Practice Sets',
-    path: '/reading',
+    ...SECTION_LIBRARY.reading,
+    desc: `4 Parts · ${PRODUCT_STATS.readingSets} Practice Sets`,
     accent: '#2D8A56',
   },
   {
-    icon: '✍️',
-    label: 'Writing',
-    desc: '2 Tasks · Instant Scoring',
-    path: '/writing',
+    ...SECTION_LIBRARY.writing,
+    desc: `2 Tasks · ${PRODUCT_STATS.writingSets} Writing Prompts`,
     accent: '#C8972A',
   },
   {
-    icon: '🎙️',
-    label: 'Speaking',
-    desc: '8 Tasks · 15 Practice Sets',
-    path: '/speaking',
+    ...SECTION_LIBRARY.speaking,
+    desc: `8 Tasks · ${PRODUCT_STATS.speakingPrompts} Speaking Prompts`,
     accent: '#C8102E',
   },
 ]
 
 const STATS = [
-  { value: '1,190+', label: 'Questions' },
-  { value: '220+', label: 'Practice Sets' },
+  { value: PRODUCT_STATS.questionItems, label: 'Question Items' },
+  { value: PRODUCT_STATS.practiceSets, label: 'Practice Sets' },
   { value: '4', label: 'Skills Covered' },
   { value: 'CLB 4–12', label: 'Score Range' },
 ]
 
 export default function Hero() {
   const navigate = useNavigate()
+  const { isPremium } = useAuth()
 
   return (
     <section className="hp-hero" id="hero">
@@ -52,8 +47,22 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          🍁 Score Higher, Guaranteed
+          <span aria-hidden="true">🍁</span> Practice smarter for CELPIP
         </motion.div>
+
+        {!isPremium && (
+          <motion.button
+            type="button"
+            className="hp-hero-offer"
+            onClick={() => navigate('/pricing?coupon=CELPIP25')}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.03 }}
+          >
+            <span className="hp-hero-offer-code">CELPIP25</span>
+            <span>25% off for first-time subscribers</span>
+          </motion.button>
+        )}
 
         <motion.h1
           className="hp-hero-title"
@@ -61,8 +70,8 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
-          Ace Your{' '}
-          <span className="hp-hero-accent">CELPIP Score</span>
+          CELPIP Practice Tests With{' '}
+          <span className="hp-hero-accent">AI Scoring</span>
         </motion.h1>
 
         <motion.p
@@ -71,7 +80,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          1,190+ real-format questions, instant scoring, and proven tips — built to get you to your target CLB, faster.
+          {PRODUCT_STATS.questionItems} CELPIP-style question items, {PRODUCT_STATS.mockExams} full mock exams, writing and speaking AI feedback, and saved CLB reports for your target score.
         </motion.p>
 
         <motion.div
@@ -80,11 +89,11 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <button className="btn btn-white btn-lg" onClick={() => navigate('/exam')}>
-            Start Practicing
+          <button className="btn btn-white btn-lg" onClick={() => navigate('/calculator')}>
+            Calculate CRS Score
           </button>
-          <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/calculator')}>
-            CRS Calculator →
+          <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/celpip-mock-test')}>
+            See Mock Tests →
           </button>
         </motion.div>
 
@@ -101,7 +110,7 @@ export default function Hero() {
               onClick={() => navigate(s.path)}
               style={{ '--section-accent': s.accent }}
             >
-              <span className="hp-section-icon">{s.icon}</span>
+              <span className="hp-section-icon" aria-hidden="true">{s.icon}</span>
               <span className="hp-section-label">{s.label}</span>
               <span className="hp-section-desc">{s.desc}</span>
             </button>

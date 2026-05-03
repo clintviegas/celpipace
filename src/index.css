@@ -7027,6 +7027,95 @@ img { display: block; max-width: 100%; }
   background: #EAECF0;
   color: var(--red);
 }
+.dbn-has-drop {
+  position: relative;
+}
+.dbn-link-drop {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.dbn-link-chevron {
+  color: currentColor;
+  opacity: .58;
+  transition: transform .16s ease;
+  flex-shrink: 0;
+}
+.dbn-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  max-width: min(88vw, 360px);
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px -24px rgba(15,31,61,.38), 0 8px 20px -14px rgba(15,31,61,.24);
+  overflow: hidden;
+  z-index: 1350;
+  animation: dbnDropIn .14s ease;
+}
+@keyframes dbnDropIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.dbn-drop-header {
+  padding: 11px 15px;
+  border-bottom: 1px solid rgba(15,31,61,.06);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.dbn-drop-list {
+  display: grid;
+  gap: 2px;
+  padding: 7px;
+}
+.dbn-drop-item {
+  width: 100%;
+  display: grid;
+  gap: 2px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 9px 11px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.dbn-drop-item:hover {
+  background: #F5F7FA;
+}
+.dbn-drop-label {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.dbn-drop-desc {
+  color: #6B7280;
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+.dbn-drop-footer {
+  padding: 8px 12px 12px;
+  border-top: 1px solid #EEF0F4;
+}
+.dbn-drop-cta {
+  width: 100%;
+  min-height: 38px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.dbn-drop-cta:hover {
+  filter: brightness(.96);
+}
 
 /* right side */
 .dbn-right {
@@ -7279,6 +7368,17 @@ img { display: block; max-width: 100%; }
   }
   .dbn-links--open { display: flex; }
   .dbn-link { width: 100%; text-align: left; padding: 11px 12px; border-radius: 10px; }
+  .dbn-link-drop { justify-content: space-between; }
+  .dbn-dropdown {
+    position: static;
+    width: 100%;
+    max-width: none;
+    transform: none;
+    box-shadow: none;
+    border-radius: 12px;
+    margin: 2px 0 6px;
+    animation: none;
+  }
   .dbn-hamburger { display: flex; }
   .dbn-right { gap: 6px; }
   .dbn-signout { display: none; }

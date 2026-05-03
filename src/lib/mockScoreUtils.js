@@ -61,8 +61,51 @@ export function normalizeAiResult(aiResult) {
   }
 }
 
+function looksLikeAiResult(value) {
+  return !!value && typeof value === 'object' && (
+    Object.prototype.hasOwnProperty.call(value, 'overall') ||
+    Object.prototype.hasOwnProperty.call(value, 'clbBand') ||
+    (Object.prototype.hasOwnProperty.call(value, 'scores') && Object.prototype.hasOwnProperty.call(value, 'feedback'))
+  )
+}
+
+export function getPartAiResult(partScore) {
+  if (!partScore || typeof partScore !== 'object') return null
+  const candidates = [
+    partScore.aiResult,
+    partScore.ai_result,
+    partScore.aiScore,
+    partScore.result,
+    partScore.score,
+  ]
+  const directResult = candidates.find(looksLikeAiResult)
+  if (directResult) return directResult
+  return looksLikeAiResult(partScore) ? partScore : null
+}
+
+export function getPartAiBand(partScore) {
+  return getAiBand(getPartAiResult(partScore))
+}
+
+export function normalizePartScore(partScore) {
+  if (!partScore || typeof partScore !== 'object') return partScore
+  const aiResult = getPartAiResult(partScore)
+  if (!aiResult) return partScore
+  return {
+    ...partScore,
+    aiResult: normalizeAiResult(aiResult),
+  }
+}
+
+export function normalizeMockScores(scores = {}) {
+  return Object.fromEntries(
+    Object.entries(scores || {}).map(([part, score]) => [part, normalizePartScore(score)])
+  )
+}
+
 export function formatBandScore(band) {
-  return band == null ? '-/12' : `${band}/12`
+  const rounded = roundBand(band)
+  return rounded == null ? '-/12' : `${rounded}/12`
 }
 
 export function getCelpipLevel(correct, total) {
@@ -88,9 +131,12 @@ export function getCelpipBandMeta(level) {
 }
 
 export function summarizeSubjectiveSection(scores, parts) {
-  const submitted = parts.filter(part => scores?.[part])
+  const submitted = parts.filter(part => {
+    const score = scores?.[part]
+    return !!score && !score.skipped && (score.text || score.transcript || getPartAiBand(score) != null)
+  })
   const bands = parts
-    .map(part => getAiBand(scores?.[part]?.aiResult))
+    .map(part => getPartAiBand(scores?.[part]))
     .filter(band => band != null)
   const band = bands.length ? roundBand(bands.reduce((sum, value) => sum + value, 0) / bands.length) : null
 

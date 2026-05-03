@@ -464,7 +464,7 @@ function ScoreModal({ examNumber, session, attempts = [], onClose, onReview, onR
                         background: `${meta.color}15`, color: meta.color,
                         fontSize: 12, fontWeight: 800,
                       }}>
-                        CLB {s.band}
+                        {formatBandScore(s.band)}
                       </div>
                     )}
                   </div>

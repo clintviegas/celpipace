@@ -9,7 +9,11 @@ import {
   buildMockReportCard,
   formatBandScore,
   getAiBand,
+  getPartAiBand,
+  getPartAiResult,
   normalizeAiResult,
+  normalizeMockScores,
+  normalizePartScore,
   summarizeMockScores,
   summarizeSubjectiveSection,
 } from '../lib/mockScoreUtils'
@@ -200,8 +204,7 @@ async function scoreSpeakingAI(responseText, prompt, taskType, topic) {
 }
 
 function normalizePartResult(result) {
-  if (!result?.aiResult) return result
-  return { ...result, aiResult: normalizeAiResult(result.aiResult) }
+  return normalizePartScore(result)
 }
 
 
@@ -276,7 +279,7 @@ function MockSidebar({ section, parts, activePartIdx, color, scores, icon, secti
           const isActive = pi === activePartIdx
           const done = !!scores[p]
           const sc = scores[p]
-          const subjectiveBand = isObjective ? null : getAiBand(sc?.aiResult)
+          const subjectiveBand = isObjective ? null : getPartAiBand(sc)
           const partScoreText = isObjective ? `${sc?.correct ?? 0}/${sc?.total ?? 0}` : formatBandScore(subjectiveBand)
           const partScoreColor = isObjective
             ? (sc?.correct === sc?.total ? '#22c55e' : '#888')
@@ -1479,7 +1482,8 @@ function SectionResults({ section, color, scores, onContinue, isLast }) {
           const sc = scores[p]
           if (!sc) return null
           const partPct = sc.total > 0 ? Math.round((sc.correct / sc.total) * 100) : 0
-          const aiBand = getAiBand(sc.aiResult)
+          const aiResult = getPartAiResult(sc)
+          const aiBand = getPartAiBand(sc)
           return (
             <motion.div key={p} className="mk-sr-part-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
               <div className="mk-sr-part-header" style={{ borderLeftColor: color }}>
@@ -1529,7 +1533,7 @@ function SectionResults({ section, color, scores, onContinue, isLast }) {
               {section === 'writing' && sc.text && (
                 <div className="mk-sr-writing">
                   <p className="mk-sr-writing-wc">{sc.wordCount} words</p>
-                  {sc.aiResult && !sc.aiResult.error && (
+                  {aiResult && !aiResult.error && (
                     <div className="mk-sr-writing-score">
                       <span>CELPIP Level: <strong style={{ color }}>{formatBandScore(aiBand)}</strong></span>
                       <span> (CLB {aiBand ?? '-'})</span>
@@ -1542,7 +1546,7 @@ function SectionResults({ section, color, scores, onContinue, isLast }) {
               {section === 'speaking' && sc.transcript && (
                 <div className="mk-sr-speaking">
                   <p className="mk-sr-speaking-wc">{sc.wordCount} words spoken</p>
-                  {sc.aiResult && !sc.aiResult.error && (
+                  {aiResult && !aiResult.error && (
                     <div className="mk-sr-speaking-score">
                       <span>CELPIP Level: <strong style={{ color }}>{formatBandScore(aiBand)}</strong></span>
                     </div>
@@ -1594,7 +1598,7 @@ function FinalResults({ examNumber, scores, onTryAgain }) {
       body: 'Don’t get discouraged. Master the basics in each section, rebuild your timing, and treat this mock as a diagnostic. Small daily practice makes a measurable difference.'
     },
   }
-  const mot = MOTIVATION[overallBand.tier] || MOTIVATION.fair
+  const mot = MOTIVATION[overallBand?.tier] || MOTIVATION.fair
 
   return (
     <div className="mk-final-page">
@@ -1815,7 +1819,7 @@ export default function MockTestPage() {
         if (error) throw error
         if (cancelled) return
         if (data?.scores) {
-          setScores(data.scores || {})
+          setScores(normalizeMockScores(data.scores || {}))
           setPhase('final')
         } else {
           navigate('/exam', { replace: true })
@@ -1853,7 +1857,7 @@ export default function MockTestPage() {
         if (cancelled) return
         const row = (data || [])[0]
         if (row && row.scores && Object.keys(row.scores).length) {
-          setCompletedFallback(row)
+          setCompletedFallback({ ...row, scores: normalizeMockScores(row.scores || {}) })
         }
       } catch {
         /* ignore — fallback is optional */
@@ -1871,7 +1875,7 @@ export default function MockTestPage() {
     const cs = session.currentSection
     const cp = session.currentPart
     if (session.scores && Object.keys(session.scores).length) {
-      setScores(session.scores)
+      setScores(normalizeMockScores(session.scores))
     }
     const restoredPhase = session.meta?.phase
     if (cs && SECTION_ORDER.includes(cs)) {
@@ -1895,7 +1899,7 @@ export default function MockTestPage() {
     if (!completedFallback) return
     if (phase !== 'landing') return
     if (Object.keys(scores).length) return
-    setScores(completedFallback.scores || {})
+    setScores(normalizeMockScores(completedFallback.scores || {}))
     setPhase('final')
   }, [completedFallback, phase, scores])
 
@@ -2038,16 +2042,39 @@ export default function MockTestPage() {
       session.setMeta({ phase: 'section-transition', lastCompletedSection: section, lastSavedAt: new Date().toISOString() })
       await session.flush()
     } else {
-      session.setMeta({
+      const completedAt = new Date().toISOString()
+      const finalScores = normalizeMockScores({ ...(session.scores || {}), ...scores })
+      const finalMetaPatch = {
         phase: 'final',
         lastCompletedSection: section,
-        completedAt: new Date().toISOString(),
-        reportCard: buildMockReportCard(examNumber, scores),
+        completedAt,
+        reportCard: buildMockReportCard(examNumber, finalScores),
+      }
+      const finalMeta = { ...(session.meta || {}), ...finalMetaPatch }
+      setScores(finalScores)
+      Object.entries(finalScores).forEach(([partKey, result]) => session.setScores(partKey, result))
+      session.setMeta({
+        ...finalMetaPatch,
       })
       await session.flush()
       // Mark the session as completed so the Mock Exams "Score" modal can find it.
       // This also unblocks a fresh attempt next time the user starts this mock.
-      try { await session.complete() } catch { /* non-fatal */ }
+      const sessionId = session.id
+      let completedRow = null
+      try { completedRow = await session.complete() } catch { /* non-fatal */ }
+      if (!completedRow && sessionId) {
+        try {
+          await supabase
+            .from('test_sessions')
+            .update({
+              scores: finalScores,
+              meta: finalMeta,
+              is_completed: true,
+              completed_at: completedAt,
+            })
+            .eq('id', sessionId)
+        } catch { /* non-fatal */ }
+      }
       setPhase('final')
     }
   }
