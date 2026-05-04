@@ -60,6 +60,7 @@ export function useTestSession({
   const [completedSections, setCompletedSectionsState] = useState([])
   const [scoresState, setScoresStateRaw] = useState({})
   const [metaState, setMetaStateRaw] = useState({})
+  const [saveError, setSaveError] = useState(null)
 
   // Hold mutable copies so debounced saves see latest values.
   const stateRef = useRef({
@@ -146,6 +147,46 @@ export function useTestSession({
           scores: row.scores || {},
           meta: row.meta || {},
         }
+
+        // ── Restore from local backup if it has unsynced data ──
+        // Backup key uses the session id so cross-session pollution is impossible.
+        try {
+          const backupKey = `celpip_session_backup:${row.id}`
+          const rawBackup = localStorage.getItem(backupKey)
+          if (rawBackup) {
+            const backup = JSON.parse(rawBackup)
+            const serverUpdated = row.updated_at ? new Date(row.updated_at).getTime() : 0
+            if (backup?.ts && backup.ts > serverUpdated) {
+              // Local has newer state — adopt it and trigger a flush so server catches up.
+              next.answers = backup.answers || next.answers
+              next.currentSection = backup.currentSection || next.currentSection
+              next.currentPart = backup.currentPart || next.currentPart
+              next.currentQuestionIndex = backup.currentQuestionIndex ?? next.currentQuestionIndex
+              next.completedSections = backup.completedSections || next.completedSections
+              next.scores = backup.scores || next.scores
+              next.meta = backup.meta || next.meta
+              // Schedule a sync so the cloud catches up; fire-and-forget.
+              setTimeout(() => {
+                stateRef.current = next
+                supabase.from('test_sessions').update({
+                  selected_answers: next.answers,
+                  current_section: next.currentSection,
+                  current_part: next.currentPart,
+                  current_question_index: next.currentQuestionIndex,
+                  completed_sections: next.completedSections,
+                  scores: next.scores,
+                  meta: next.meta,
+                }).eq('id', row.id).then(({ error }) => {
+                  if (!error) localStorage.removeItem(backupKey)
+                })
+              }, 100)
+            } else {
+              // Server is up-to-date; clear stale backup.
+              localStorage.removeItem(backupKey)
+            }
+          }
+        } catch { void 0 }
+
         stateRef.current = next
         setId(row.id)
         setAnswersState(next.answers)
@@ -167,12 +208,39 @@ export function useTestSession({
   }, [enabled, user?.id, kind, section, partId, setNumber, practiceSetId, examNumber, clearLocalState])
 
   // ── Debounced cloud autosave ───────────────────────────────────────────────
+  // Local storage backup key — protects against debounce-window data loss.
+  const localKey = useCallback(() => {
+    const sid = idRef.current
+    return sid ? `celpip_session_backup:${sid}` : null
+  }, [])
+
+  const writeLocalBackup = useCallback(() => {
+    try {
+      const k = localKey()
+      if (!k) return
+      const s = stateRef.current
+      localStorage.setItem(k, JSON.stringify({
+        answers: s.answers,
+        currentSection: s.currentSection,
+        currentPart: s.currentPart,
+        currentQuestionIndex: s.currentQuestionIndex,
+        completedSections: s.completedSections,
+        scores: s.scores,
+        meta: s.meta,
+        ts: Date.now(),
+      }))
+    } catch { void 0 }
+  }, [localKey])
+
   const flush = useCallback(async () => {
     const sid = idRef.current
-    if (!sid) return
+    if (!sid) return false
     const s = stateRef.current
+    // Always write the local backup BEFORE the network call so the
+    // current state is durable even if the page is closed mid-flush.
+    writeLocalBackup()
     try {
-      await supabase
+      const { error } = await supabase
         .from('test_sessions')
         .update({
           selected_answers: s.answers,
@@ -184,15 +252,28 @@ export function useTestSession({
           meta: s.meta,
         })
         .eq('id', sid)
+      if (error) throw error
+      setSaveError(null)
+      // Clear local backup once successfully synced
+      try {
+        const k = localKey()
+        if (k) localStorage.removeItem(k)
+      } catch { void 0 }
+      return true
     } catch (e) {
+      setSaveError(e?.message || 'Could not save progress')
       console.warn('[useTestSession] save failed', e?.message || e)
+      return false
     }
-  }, [])
+  }, [localKey, writeLocalBackup])
 
-  const queueSave = useCallback((delay = 400) => {
+  const queueSave = useCallback((delay = 250) => {
+    // Always write local backup synchronously so even if the debounce window
+    // gets cut short by a navigation, no data is lost.
+    writeLocalBackup()
     if (saveTimer.current) clearTimeout(saveTimer.current)
-    saveTimer.current = setTimeout(() => { flush() }, delay)
-  }, [flush])
+    saveTimer.current = setTimeout(() => { saveTimer.current = null; flush() }, delay)
+  }, [flush, writeLocalBackup])
 
   // Flush on tab close / route change
   useEffect(() => {
@@ -202,8 +283,13 @@ export function useTestSession({
       flush()
     }
     window.addEventListener('beforeunload', onBeforeUnload)
+    window.addEventListener('pagehide', onBeforeUnload)
+    const onVisibilityChange = () => { if (document.visibilityState === 'hidden') onBeforeUnload() }
+    document.addEventListener('visibilitychange', onVisibilityChange)
     return () => {
       window.removeEventListener('beforeunload', onBeforeUnload)
+      window.removeEventListener('pagehide', onBeforeUnload)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
       // Final flush on unmount
       if (saveTimer.current) {
         clearTimeout(saveTimer.current)
@@ -263,6 +349,15 @@ export function useTestSession({
     queueSave(0)
   }, [queueSave])
 
+  const setScoresMap = useCallback((mapOrUpdater) => {
+    const next = typeof mapOrUpdater === 'function'
+      ? mapOrUpdater(stateRef.current.scores)
+      : mapOrUpdater
+    stateRef.current.scores = next || {}
+    setScoresStateRaw(next || {})
+    queueSave(0)
+  }, [queueSave])
+
   const setMeta = useCallback((patch) => {
     const next = { ...stateRef.current.meta, ...patch }
     stateRef.current.meta = next
@@ -291,6 +386,12 @@ export function useTestSession({
     // Caller should re-mount or change deps to trigger a new bootstrap.
   }, [complete])
 
+  // Synchronous reader for the latest scores/meta — bypasses React state
+  // staleness when a caller needs the freshest snapshot mid-event-handler
+  // (e.g. final mock completion where multiple setScores fire in a loop).
+  const getScores = useCallback(() => stateRef.current.scores || {}, [])
+  const getMeta = useCallback(() => stateRef.current.meta || {}, [])
+
   return {
     id,
     loading,
@@ -301,6 +402,7 @@ export function useTestSession({
     completedSections,
     scores: scoresState,
     meta: metaState,
+    saveError,
     saveAnswer,
     setAnswers,
     setCurrentQuestionIndex,
@@ -308,10 +410,13 @@ export function useTestSession({
     setCurrentPart,
     markSectionComplete,
     setScores,
+    setScoresMap,
     setMeta,
     complete,
     reset,
     flush,
+    getScores,
+    getMeta,
   }
 }
 

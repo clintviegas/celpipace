@@ -2043,28 +2043,32 @@ export default function MockTestPage() {
       await session.flush()
     } else {
       const completedAt = new Date().toISOString()
-      const finalScores = normalizeMockScores({ ...(session.scores || {}), ...scores })
+      // Use the synchronous ref-backed reader to avoid React state staleness:
+      // session.scores can lag behind because setScoresStateRaw is async, but
+      // session.getScores() returns whatever was set via session.setScores synchronously.
+      const refScores = typeof session.getScores === 'function' ? session.getScores() : (session.scores || {})
+      const refMeta = typeof session.getMeta === 'function' ? session.getMeta() : (session.meta || {})
+      const finalScores = normalizeMockScores({ ...refScores, ...scores })
       const finalMetaPatch = {
         phase: 'final',
         lastCompletedSection: section,
         completedAt,
         reportCard: buildMockReportCard(examNumber, finalScores),
       }
-      const finalMeta = { ...(session.meta || {}), ...finalMetaPatch }
+      const finalMeta = { ...refMeta, ...finalMetaPatch }
       setScores(finalScores)
       Object.entries(finalScores).forEach(([partKey, result]) => session.setScores(partKey, result))
-      session.setMeta({
-        ...finalMetaPatch,
-      })
-      await session.flush()
-      // Mark the session as completed so the Mock Exams "Score" modal can find it.
-      // This also unblocks a fresh attempt next time the user starts this mock.
+      session.setMeta({ ...finalMetaPatch })
+
+      // Single atomic write — scores + meta + completion in ONE update.
+      // Don't rely on the debounced flush + RPC sequence; that could race and leave
+      // the saved row with stale scores (or unflagged completion) so the Score modal
+      // either misses the row or shows blank Writing/Speaking bands.
       const sessionId = session.id
-      let completedRow = null
-      try { completedRow = await session.complete() } catch { /* non-fatal */ }
-      if (!completedRow && sessionId) {
+      let saved = false
+      if (sessionId) {
         try {
-          await supabase
+          const { error } = await supabase
             .from('test_sessions')
             .update({
               scores: finalScores,
@@ -2073,7 +2077,17 @@ export default function MockTestPage() {
               completed_at: completedAt,
             })
             .eq('id', sessionId)
-        } catch { /* non-fatal */ }
+          if (error) throw error
+          saved = true
+        } catch (e) {
+          console.warn('[mock] final save failed', e?.message || e)
+        }
+      }
+      // If the direct update failed (e.g. network blip), fall back to the RPC
+      // path so at least is_completed gets flipped via the previously-flushed scores.
+      if (!saved) {
+        try { await session.flush() } catch { /* non-fatal */ }
+        try { await session.complete() } catch { /* non-fatal */ }
       }
       setPhase('final')
     }
