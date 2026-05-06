@@ -14,21 +14,21 @@ const FEATURES = [
     title: 'AI-Powered Writing Scores',
     desc: 'Submit your Writing responses and get instant CLB-level scoring. Our AI evaluates coherence, vocabulary, grammar, and task fulfillment.',
     cta: 'Try Writing Practice',
-    path: '/writing',
+    path: '/celpip-writing-practice',
   },
   {
     icon: '💡',
     title: 'Explanations for Every Question',
     desc: 'Understand why each answer is correct with detailed explanations. See sample responses at different CLB levels to calibrate your own answers.',
     cta: 'Try Reading Practice',
-    path: '/reading',
+    path: '/celpip-reading-practice',
   },
   {
     icon: '🎯',
     title: 'Score-Boosting Tips on Every Question',
     desc: 'Each practice set includes targeted "How to Score Higher" tips — response structure, scoring criteria, and key vocabulary tailored to the question type.',
     cta: 'See Tips in Action',
-    path: '/listening',
+    path: '/celpip-listening-practice',
   },
 ]
 

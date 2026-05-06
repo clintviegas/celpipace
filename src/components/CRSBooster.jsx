@@ -95,7 +95,7 @@ export default function CRSBooster() {
               </tbody>
             </table>
             <p className="table-note">
-              * Points shown for first official language. Source: IRCC.
+              * Points shown for first official language. Source: IRCC. CRS rules and points can change; verify current requirements with IRCC before applying.
             </p>
           </motion.div>
 

@@ -103,7 +103,7 @@ const FAQ = [
   },
   {
     q: 'Can I replay the audio during the CELPIP Listening test?',
-    a: 'No — each audio clip plays only once on the real CELPIP test. This is one of the key differences from IELTS Listening. In celpipAce practice, you can choose to replay audio in drill mode to study, or simulate real conditions by listening only once.',
+    a: 'No — each audio clip plays only once on the real CELPIP test. This is one of the key differences from IELTS Listening. In CELPIPACE practice, you can choose to replay audio in drill mode to study, or simulate real conditions by listening only once.',
   },
   {
     q: 'Is CELPIP Listening harder than IELTS Listening?',
@@ -176,19 +176,30 @@ function PartCard({ part, onStart }) {
   )
 }
 
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 /* ── Main ListeningPage ─────────────────────────────────── */
 export default function ListeningPage() {
   const navigate = useNavigate()
   const handleStart = (part) => {
-    navigate(`/listening/${part.id}`)
+    navigate(`/celpip-listening-practice/${part.id}`)
   }
 
   return (
     <div className="lp-root">
       <SEO
-        title="CELPIP Listening Practice – All 6 Parts Explained"
-        description="Master CELPIP Listening with guided practice for all 6 parts: Problem Solving, Daily Life, Information, News Item, Discussion, and Viewpoints. Study strategies included."
-        canonical="/listening"
+        title="CELPIP Listening Practice — All 6 Parts With Canadian English Audio"
+        description="CELPIP Listening practice for all 6 parts: Problem Solving, Daily Life, Information, News Item, Discussion, and Viewpoints. Canadian English audio, scoring, and tips."
+        canonical="/celpip-listening-practice"
+        jsonLd={FAQ_JSONLD}
       />
       {/* ── Hero ── */}
       <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #0f2040 60%, #162d5a 100%)' }}>
@@ -196,7 +207,7 @@ export default function ListeningPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(74,144,217,.2)', border: '1px solid rgba(74,144,217,.4)', color: '#7db8f0' }}>
             🎧 CELPIP Listening
           </div>
-          <h1 className="lp-hero-title">Hear Canada like a local.</h1>
+          <h1 className="lp-hero-title">Train your ear for real Canadian conversations.</h1>
           <p className="lp-hero-subtitle">Six parts of real-world Canadian English — phone calls, news, debates and more.<br/>38 questions · 47–55 minutes · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>6</strong><span>Parts</span></div>

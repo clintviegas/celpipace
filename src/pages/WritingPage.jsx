@@ -29,7 +29,7 @@ const PARTS = [
     duration: '26 min',
     difficulty: 'Upper Intermediate',
     description:
-      'You are presented with a topic and asked to respond to two or three survey questions. Each question asks you to state and defend an opinion — typically choosing between two options and explaining your reasoning. Responses should be 150 to 200 words per question and written in a clear, direct style.',
+      'You are presented with a survey-style topic and asked to choose one option or state an opinion. Your response should be one clear 150 to 200 word answer that explains your position and supports it with specific reasons.',
     tip: 'Pick one clear position and commit to it. The most common mistake is hedging — writing "both sides have merit" instead of defending one view. Examiners score how well you support your position, not which position you choose. Give two or three specific, concrete reasons.',
     skills: ['Opinion writing', 'Argument development', 'Specific support', 'Task fulfillment'],
   },
@@ -115,16 +115,27 @@ function PartCard({ part, onStart }) {
   )
 }
 
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 export default function WritingPage() {
   const navigate = useNavigate()
-  const handleStart = (part) => { navigate(`/writing/${part.id}`) }
+  const handleStart = (part) => { navigate(`/celpip-writing-practice/${part.id}`) }
 
   return (
     <div className="lp-root">
       <SEO
-        title="CELPIP Writing Practice – Email & Survey Response Tasks"
-        description="Prepare for CELPIP Writing tasks W1 and W2. Learn how to write a high-scoring email and survey response with time management and scoring tips."
-        canonical="/writing"
+        title="CELPIP Writing Practice With AI Scoring — Task 1 & Task 2"
+        description="CELPIP Writing practice for Task 1 (email) and Task 2 (survey response) with AI CLB scoring, word-count tools, structure tips, and saved attempts."
+        canonical="/celpip-writing-practice"
+        jsonLd={FAQ_JSONLD}
       />
       <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #2d2010 60%, #3d2c10 100%)' }}>
         <div className="lp-hero-inner">
@@ -157,7 +168,7 @@ export default function WritingPage() {
             <div className="lp-info-block">
               <div className="lp-info-icon">📋</div>
               <h3>What the Test Includes</h3>
-              <p>The Writing test has two tasks totalling 53 minutes. W1 gives you a scenario and asks for a 150–200 word email response in 27 minutes. W2 presents a topic with survey-style questions and gives 26 minutes to write your opinion responses.</p>
+              <p>The Writing test has two tasks totalling 53 minutes. W1 gives you a scenario and asks for a 150–200 word email response in 27 minutes. W2 presents a survey-style topic and gives 26 minutes to write one 150–200 word opinion response.</p>
               <p style={{ marginTop: 10 }}>Both tasks are completed on a computer. There is a word count tool visible while you type. Basic cut, copy, and paste functions are available — no spell checker or grammar tool.</p>
             </div>
             <div className="lp-info-block">

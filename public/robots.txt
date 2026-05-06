@@ -1,4 +1,13 @@
 User-agent: *
 Disallow: /dashboard
-Disallow: /exam
+Disallow: /admin
+Disallow: /payment
+Disallow: /subscription
+Disallow: /mock-test
+Allow: /celpip-listening-practice
+Allow: /celpip-reading-practice
+Allow: /celpip-writing-practice
+Allow: /celpip-speaking-practice
 Allow: /
+
+Sitemap: https://celpipace.ca/sitemap.xml

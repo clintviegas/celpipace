@@ -113,6 +113,7 @@ GRANT EXECUTE ON FUNCTION public.expire_premium_users() TO service_role;
 -- replacing the UPDATE policy with one that rejects billing-column changes.
 
 DROP POLICY IF EXISTS "Users update own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Admin updates all profiles" ON public.profiles;
 
 -- Users can update only safe columns (others must come from service role / webhook)
 CREATE POLICY "Users update own profile (safe columns)"
@@ -120,12 +121,17 @@ CREATE POLICY "Users update own profile (safe columns)"
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
+CREATE POLICY "Admin updates all profiles"
+  ON public.profiles FOR UPDATE
+  USING (auth.jwt() ->> 'email' = 'sales@celpipace.com')
+  WITH CHECK (auth.jwt() ->> 'email' = 'sales@celpipace.com');
+
 -- Trigger guard: even with a permissive UPDATE policy, reject changes to billing fields
 CREATE OR REPLACE FUNCTION public.guard_profile_billing_columns()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
-  -- Allow service role to bypass (auth.role() = 'service_role')
-  IF auth.role() = 'service_role' THEN
+  -- Allow service role and the admin console account to bypass.
+  IF auth.role() = 'service_role' OR auth.jwt() ->> 'email' = 'sales@celpipace.com' THEN
     RETURN NEW;
   END IF;
 

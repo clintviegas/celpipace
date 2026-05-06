@@ -20,6 +20,7 @@
 
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import { sendEmail, renderWelcome, renderReceipt, renderCancelFinal, renderPastDue } from './_lib/email.js'
 
 export const config = { api: { bodyParser: false } }
 
@@ -36,7 +37,8 @@ async function readRawBody(req) {
 const PLAN_BY_PRICE = {
   [process.env.STRIPE_PRICE_WEEKLY    || '']: 'weekly',
   [process.env.STRIPE_PRICE_MONTHLY   || '']: 'monthly',
-  [process.env.STRIPE_PRICE_QUARTERLY || '']: 'quarterly',
+  [process.env.STRIPE_PRICE_ANNUAL    || '']: 'annual',
+  [process.env.STRIPE_PRICE_QUARTERLY || '']: 'annual',
 }
 
 // Find a profile row from any of: user_id metadata, customer_id, sub_id, email.
@@ -127,6 +129,42 @@ export default async function handler(req, res) {
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
+  // Archive every event we receive (idempotent on stripe_event_id) so we can
+  // replay or audit later. Failures here must not block processing.
+  await supabase.from('webhook_events').upsert({
+    source:           'stripe',
+    stripe_event_id:  event.id,
+    event_type:       event.type,
+    payload:          event,
+    signature_valid:  true,
+    processed:        false,
+    received_at:      new Date().toISOString(),
+  }, { onConflict: 'stripe_event_id' }).then(({ error }) => {
+    if (error) console.error('[stripe-webhook] webhook_events insert error:', error.message)
+  })
+
+  // Helper — append an interpreted row to subscription_events.
+  const logSubEvent = (row) =>
+    supabase.from('subscription_events').insert({
+      stripe_event_id: event.id,
+      event_type:      event.type,
+      ...row,
+    }).then(({ error }) => {
+      if (error) console.error('[stripe-webhook] subscription_events insert error:', error.message)
+    })
+
+  // Helper — when we can't find a profile match, mark the webhook_events row
+  // as a soft-failure so it surfaces in the admin Observability tab instead
+  // of silently passing through. We still 200 to Stripe (no point retrying —
+  // the profile genuinely doesn't exist on our side).
+  const flagProfileMiss = async (lookup) => {
+    const msg = `profile_not_found: ${JSON.stringify(lookup)}`
+    console.warn(`[stripe-webhook] ${msg}`)
+    await supabase.from('webhook_events').update({
+      processing_error: msg,
+    }).eq('stripe_event_id', event.id)
+  }
+
   try {
     switch (event.type) {
       // ── Initial purchase ────────────────────────────────────────────────
@@ -146,7 +184,7 @@ export default async function handler(req, res) {
 
         const profile = await findProfile(supabase, { userId, customerId, subscriptionId: subId, email })
         if (!profile) {
-          console.warn('[stripe-webhook] no profile match for checkout.session.completed', { userId, email, customerId })
+          await flagProfileMiss({ event: 'checkout.session.completed', userId, email, customerId, subId })
           break
         }
 
@@ -162,7 +200,7 @@ export default async function handler(req, res) {
         if (profErr) console.error('[stripe-webhook] profile update error:', profErr.message)
 
         // Record a payments row for revenue/audit. Idempotent on stripe_session_id.
-        await supabase.from('payments').upsert({
+        const { error: payErr } = await supabase.from('payments').upsert({
           user_id:                  profile.id,
           email,
           plan:                     patch.current_plan,
@@ -174,6 +212,28 @@ export default async function handler(req, res) {
           stripe_customer_id:       customerId,
           granted_days:             null,
         }, { onConflict: 'stripe_session_id' })
+        if (payErr) console.error('[stripe-webhook] payments upsert error (checkout):', payErr.message)
+
+        await logSubEvent({
+          user_id:                profile.id,
+          email,
+          prev_status:            profile.subscription_status,
+          new_status:             patch.subscription_status,
+          plan:                   patch.current_plan,
+          amount_cents:           s.amount_total ?? 0,
+          currency:               (s.currency || 'usd').toLowerCase(),
+          cancel_at_period_end:   patch.cancel_at_period_end,
+          current_period_end:     patch.current_period_end,
+          stripe_subscription_id: subId,
+          stripe_customer_id:     customerId,
+          metadata:               { mode: s.mode, payment_status: s.payment_status },
+        })
+
+        // Welcome email — first activation only
+        if (!profile.is_premium && email) {
+          const { subject, html } = renderWelcome({ name: profile.full_name, plan: patch.current_plan })
+          await sendEmail({ supabase, userId: profile.id, toEmail: email, kind: 'welcome', subject, html, metadata: { stripe_session_id: s.id } })
+        }
 
         break
       }
@@ -185,13 +245,29 @@ export default async function handler(req, res) {
         const userId     = sub.metadata?.user_id || null
         const email      = sub.metadata?.email || null
         const profile    = await findProfile(supabase, { userId, customerId, subscriptionId: sub.id, email })
-        if (!profile) break
+        if (!profile) {
+          await flagProfileMiss({ event: event.type, userId, email, customerId, subId: sub.id })
+          break
+        }
 
         const patch = subscriptionToProfilePatch(sub)
         await supabase.from('profiles').update({
           ...patch,
           stripe_customer_id: customerId || profile.stripe_customer_id,
         }).eq('id', profile.id)
+
+        await logSubEvent({
+          user_id:                profile.id,
+          email:                  profile.email,
+          prev_status:            profile.subscription_status,
+          new_status:             patch.subscription_status,
+          plan:                   patch.current_plan,
+          cancel_at_period_end:   patch.cancel_at_period_end,
+          current_period_end:     patch.current_period_end,
+          stripe_subscription_id: sub.id,
+          stripe_customer_id:     customerId,
+          metadata:               { previous_attributes: event.data.previous_attributes || {} },
+        })
         break
       }
 
@@ -200,7 +276,10 @@ export default async function handler(req, res) {
         const sub        = event.data.object
         const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer?.id
         const profile    = await findProfile(supabase, { customerId, subscriptionId: sub.id })
-        if (!profile) break
+        if (!profile) {
+          await flagProfileMiss({ event: event.type, customerId, subId: sub.id })
+          break
+        }
 
         await supabase.from('profiles').update({
           is_premium:             false,
@@ -209,6 +288,23 @@ export default async function handler(req, res) {
           cancel_at_period_end:   false,
           // Keep stripe_customer_id so they can resubscribe with same Stripe identity
         }).eq('id', profile.id)
+
+        await logSubEvent({
+          user_id:                profile.id,
+          email:                  profile.email,
+          prev_status:            profile.subscription_status,
+          new_status:             'expired',
+          plan:                   profile.current_plan,
+          stripe_subscription_id: sub.id,
+          stripe_customer_id:     customerId,
+          reason:                 sub.cancellation_details?.reason || null,
+          metadata:               { cancellation_details: sub.cancellation_details || {} },
+        })
+
+        if (profile.email) {
+          const { subject, html } = renderCancelFinal({ name: profile.full_name })
+          await sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'cancel_final', subject, html, metadata: { stripe_subscription_id: sub.id } })
+        }
         break
       }
 
@@ -221,7 +317,10 @@ export default async function handler(req, res) {
 
         const sub     = await stripe.subscriptions.retrieve(subId)
         const profile = await findProfile(supabase, { customerId, subscriptionId: subId })
-        if (!profile) break
+        if (!profile) {
+          await flagProfileMiss({ event: 'invoice.paid', customerId, subId })
+          break
+        }
 
         const patch = subscriptionToProfilePatch(sub)
         await supabase.from('profiles').update({
@@ -230,7 +329,7 @@ export default async function handler(req, res) {
         }).eq('id', profile.id)
 
         // Audit row
-        await supabase.from('payments').upsert({
+        const { error: renewPayErr } = await supabase.from('payments').upsert({
           user_id:            profile.id,
           email:              profile.email,
           plan:               patch.current_plan,
@@ -241,6 +340,44 @@ export default async function handler(req, res) {
           stripe_customer_id: customerId,
           granted_days:       null,
         }, { onConflict: 'stripe_session_id' })
+        if (renewPayErr) console.error('[stripe-webhook] payments upsert error (renewal):', renewPayErr.message)
+
+        await logSubEvent({
+          user_id:                profile.id,
+          email:                  profile.email,
+          new_status:             patch.subscription_status,
+          plan:                   patch.current_plan,
+          amount_cents:           inv.amount_paid ?? 0,
+          currency:               (inv.currency || 'usd').toLowerCase(),
+          current_period_end:     patch.current_period_end,
+          stripe_subscription_id: subId,
+          stripe_customer_id:     customerId,
+          stripe_invoice_id:      inv.id,
+          metadata:               { hosted_invoice_url: inv.hosted_invoice_url || null, invoice_pdf: inv.invoice_pdf || null, invoice_number: inv.number || null },
+        })
+
+        if (profile.email) {
+          const { subject, html } = renderReceipt({
+            name:             profile.full_name,
+            plan:             patch.current_plan,
+            amountCents:      inv.amount_paid ?? 0,
+            currency:         (inv.currency || 'usd').toLowerCase(),
+            invoiceNumber:    inv.number || null,
+            invoicePdfUrl:    inv.invoice_pdf || null,
+            hostedInvoiceUrl: inv.hosted_invoice_url || null,
+            periodEnd:        patch.current_period_end,
+          })
+          await sendEmail({
+            supabase,
+            userId:   profile.id,
+            toEmail:  profile.email,
+            kind:     'receipt',
+            subject,
+            html,
+            pdfUrl:   inv.invoice_pdf || null,
+            metadata: { stripe_invoice_id: inv.id, invoice_number: inv.number || null },
+          })
+        }
         break
       }
 
@@ -249,17 +386,56 @@ export default async function handler(req, res) {
         const customerId = typeof inv.customer === 'string' ? inv.customer : inv.customer?.id
         const subId = typeof inv.subscription === 'string' ? inv.subscription : inv.subscription?.id
         const profile = await findProfile(supabase, { customerId, subscriptionId: subId })
-        if (!profile) break
+        if (!profile) {
+          await flagProfileMiss({ event: 'invoice.payment_failed', customerId, subId })
+          break
+        }
         await supabase.from('profiles').update({ subscription_status: 'past_due' }).eq('id', profile.id)
+
+        await logSubEvent({
+          user_id:                profile.id,
+          email:                  profile.email,
+          prev_status:            profile.subscription_status,
+          new_status:             'past_due',
+          amount_cents:           inv.amount_due ?? 0,
+          currency:               (inv.currency || 'usd').toLowerCase(),
+          stripe_subscription_id: subId,
+          stripe_customer_id:     customerId,
+          stripe_invoice_id:      inv.id,
+          reason:                 inv.last_finalization_error?.message || 'payment_failed',
+          metadata:               { attempt_count: inv.attempt_count, next_payment_attempt: inv.next_payment_attempt },
+        })
+
+        if (profile.email) {
+          const { subject, html } = renderPastDue({
+            name:             profile.full_name,
+            amountCents:      inv.amount_due ?? 0,
+            currency:         (inv.currency || 'usd').toLowerCase(),
+            hostedInvoiceUrl: inv.hosted_invoice_url || null,
+          })
+          await sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'past_due', subject, html, metadata: { stripe_invoice_id: inv.id, attempt_count: inv.attempt_count } })
+        }
         break
       }
 
       case 'charge.refunded': {
         const c = event.data.object
         const pi = typeof c.payment_intent === 'string' ? c.payment_intent : c.payment_intent?.id
+        const customerId = typeof c.customer === 'string' ? c.customer : c.customer?.id
         if (pi) {
-          await supabase.from('payments').update({ status: 'refunded' }).eq('stripe_payment_intent_id', pi)
+          const { error: refundErr } = await supabase.from('payments').update({ status: 'refunded' }).eq('stripe_payment_intent_id', pi)
+          if (refundErr) console.error('[stripe-webhook] payments refund update error:', refundErr.message)
         }
+        const profile = customerId ? await findProfile(supabase, { customerId }) : null
+        await logSubEvent({
+          user_id:                profile?.id || null,
+          email:                  profile?.email || null,
+          new_status:             'refunded',
+          amount_cents:           c.amount_refunded ?? 0,
+          currency:               (c.currency || 'usd').toLowerCase(),
+          stripe_customer_id:     customerId,
+          metadata:               { payment_intent: pi, charge_id: c.id },
+        })
         break
       }
 
@@ -271,9 +447,18 @@ export default async function handler(req, res) {
     // didn't (e.g. delivery delay).
     await supabase.rpc('expire_premium_users').catch(() => {})
 
+    await supabase.from('webhook_events').update({
+      processed:    true,
+      processed_at: new Date().toISOString(),
+    }).eq('stripe_event_id', event.id)
+
     return res.status(200).json({ received: true })
   } catch (err) {
     console.error('[stripe-webhook] handler error:', err)
+    await supabase.from('webhook_events').update({
+      processed:        false,
+      processing_error: String(err?.message || err),
+    }).eq('stripe_event_id', event.id).catch(() => {})
     return res.status(500).json({ error: err.message || 'Handler error' })
   }
 }

@@ -1,9 +1,37 @@
+const viteEnv = import.meta.env || {}
+const nodeEnv = typeof process !== 'undefined' ? process.env : {}
+
 // ─── CDN base URL for audio/images ────────────────────────────────
 // Empty in dev (serves from /public), R2 URL in production
-export const CDN_URL = import.meta.env.VITE_CDN_URL || ''
+export const CDN_URL = viteEnv.VITE_CDN_URL || nodeEnv.VITE_CDN_URL || ''
 
 /** Prefix a static asset path with the CDN URL */
 export const asset = (path) => `${CDN_URL}${path}`
+
+export const BRAND_NAME = 'CELPIPACE'
+export const SUPPORT_EMAIL = 'info@celpipace.ca'
+export const PUBLIC_SITE_URL = (viteEnv.VITE_SITE_URL || nodeEnv.VITE_SITE_URL || 'https://celpipace.ca').replace(/\/$/, '')
+
+// Canonical public copy. "Question items" includes objective questions plus
+// writing/speaking prompts, so it is broader than official 38-question test sections.
+export const PRODUCT_STATS = {
+  questionItems: '1,190+',
+  practiceSets: '220+',
+  mockExams: '8',
+  listeningSets: '120',
+  readingSets: '46',
+  writingSets: '40',
+  speakingPrompts: '120',
+  listeningOfficialQuestions: '38',
+  readingOfficialQuestions: '38',
+}
+
+export const SECTION_LIBRARY = {
+  listening: { label: 'Listening', icon: '🎧', desc: `${PRODUCT_STATS.listeningSets} practice sets`, path: '/celpip-listening-practice' },
+  reading: { label: 'Reading', icon: '📖', desc: `${PRODUCT_STATS.readingSets} practice sets`, path: '/celpip-reading-practice' },
+  writing: { label: 'Writing', icon: '✍️', desc: `${PRODUCT_STATS.writingSets} writing prompts`, path: '/celpip-writing-practice' },
+  speaking: { label: 'Speaking', icon: '🎙️', desc: `8 tasks · ${PRODUCT_STATS.speakingPrompts} prompts`, path: '/celpip-speaking-practice' },
+}
 
 // ─── Section metadata ─────────────────────────────────────────────
 export const SECTIONS = [
@@ -288,20 +316,20 @@ export const PRICING_PLANS = [
   },
   {
     name: 'Premium',
-    price: '$49',
-    period: 'one-time',
+    price: '$49.99',
+    period: '/year',
     badge: '🏆 Best Value',
     features: [
       'Everything in Pro',
-      'Lifetime access — no subscription',
-      '6 full-length mock tests',
+      'Annual subscription',
+      '8 full-length mock tests',
       'Instant writing feedback',
       'AI speaking assessment',
       'Personalised study plan',
       'Priority email support',
     ],
     locked: [],
-    cta: 'Get Lifetime Access',
+    cta: 'Get Annual Premium',
     ctaStyle: 'gold',
   },
 ]

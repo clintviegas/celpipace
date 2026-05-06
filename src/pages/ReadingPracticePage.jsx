@@ -89,6 +89,65 @@ function setScore(setIdx, set, type, answers) {
   return correct
 }
 
+function buildReadingAttemptDetails(setIdx, set, type, answers) {
+  const pfx = `${setIdx}_`
+  const questions = []
+
+  if (type === 'information') {
+    ;(set.questions || []).forEach(question => {
+      const selectedAnswer = answers[pfx + `r3_${question.question_number}`]
+      questions.push({
+        questionId: question.id ?? question.question_number,
+        number: question.question_number,
+        type: 'information',
+        text: question.question,
+        selectedAnswer,
+        correctAnswer: question.correct_answer,
+        isCorrect: selectedAnswer !== undefined && selectedAnswer === question.correct_answer,
+        options: question.options || {},
+      })
+    })
+  } else {
+    ;(set.mcq_questions || []).forEach(question => {
+      const selectedAnswer = answers[pfx + `mcq_${question.question_number}`]
+      questions.push({
+        questionId: question.id ?? question.question_number,
+        number: question.question_number,
+        type: 'mcq',
+        text: question.question,
+        selectedAnswer,
+        correctAnswer: question.correct_answer,
+        isCorrect: selectedAnswer !== undefined && selectedAnswer === question.correct_answer,
+        options: question.options || {},
+      })
+    })
+
+    const blanks = type === 'viewpoints'
+      ? (set.fill_in_blank_comment?.blanks || [])
+      : (set.fill_in_blank_response?.blanks || [])
+    blanks.forEach(blank => {
+      const selectedAnswer = answers[pfx + `fib_${blank.blank_number}`]
+      questions.push({
+        questionId: `fib_${blank.blank_number}`,
+        number: blank.blank_number,
+        type: 'fill_blank',
+        text: blank.sentence || blank.context || '',
+        selectedAnswer,
+        correctAnswer: blank.correct_answer,
+        isCorrect: selectedAnswer !== undefined && selectedAnswer === blank.correct_answer,
+        options: blank.options || {},
+      })
+    })
+  }
+
+  return {
+    source: 'reading-practice-page',
+    setTitle: set.title || set.set_title || '',
+    setType: type,
+    questions,
+  }
+}
+
 /* ══════════════════════════════════════════════════════════════
    PASSAGE RENDERING
 ══════════════════════════════════════════════════════════════ */
@@ -458,7 +517,7 @@ export default function ReadingPracticePage() {
     const key = `${partId}:${sn}:${score}`
     if (recordedRef.current[key]) return
     recordedRef.current[key] = true
-    recordCompletion('reading', partId, sn, score, total)
+    recordCompletion('reading', partId, sn, score, total, buildReadingAttemptDetails(activeIdx, set, type, answers))
   }, [isSetDone, score, total, set, partId, recordCompletion])
 
   const dc = DIFF_COLOR[set?.difficulty] || DIFF_COLOR.intermediate
@@ -587,18 +646,18 @@ export default function ReadingPracticePage() {
       <SEO
         title={`CELPIP ${partId} — ${meta.label} Practice`}
         description={`Practice CELPIP ${meta.label} with 15 sets, instant feedback, and a countdown timer.`}
-        canonical={`/reading/${partId}`}
+        canonical={`/celpip-reading-practice/${partId}`}
       />
 
       {/* ── Breadcrumb topbar ── */}
       <div className="ps-topbar ps-topbar--wide">
         <div className="ps-topbar-left">
-          <button className="ps-bc-link" onClick={() => navigate('/reading')}>📖 Reading</button>
+          <button className="ps-bc-link" onClick={() => navigate('/celpip-reading-practice')}>📖 Reading</button>
           <span className="ps-bc-sep">›</span>
           <span className="ps-bc-current-bold">{partId} — {meta.label}</span>
           <span className="ps-bc-qs-tag">{sets.length} sets · CLB 4–12</span>
         </div>
-        <button className="ps-arrow-btn" onClick={() => navigate('/reading')}>← Back to Reading</button>
+        <button className="ps-arrow-btn" onClick={() => navigate('/celpip-reading-practice')}>← Back to Reading</button>
       </div>
 
       <div className="ps-layout-wrap ps-layout-wrap--wide">

@@ -1,18 +1,20 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useAuth } from '../context/AuthContext'
-import { supabase } from '../lib/supabase'
+import { adminSupabase } from '../lib/adminSupabase'
 
 /* ─────────────────────────────────────────────────────────────
    Hidden admin dashboard — URL: /admin
    Only accessible when signed in as sales@celpipace.com.
 ───────────────────────────────────────────────────────────── */
 const ADMIN_EMAIL = 'sales@celpipace.com'
+const PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at, last_seen_at'
+const LEGACY_PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at'
 
 // Rough MRR estimate (monthly-equivalent ARPU per premium user in USD)
 const MRR_PER_PREMIUM = 24.99
 
 export default function AdminPage() {
-  const { user, isAdmin, signInWithEmail, signOut, loading } = useAuth()
+  const { user, loading, signOut } = useAdminAuth()
+  const isAdmin = !!user && user.email?.toLowerCase() === ADMIN_EMAIL
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [loginErr, setLoginErr] = useState('')
@@ -26,9 +28,9 @@ export default function AdminPage() {
     setLoginErr('')
     if (email.trim().toLowerCase() !== ADMIN_EMAIL) { setLoginErr('Unauthorized.'); return }
     setSending(true)
-    const result = await signInWithEmail(email.trim(), password)
+    const { error } = await adminSupabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password })
     setSending(false)
-    if (result?.error) setLoginErr(result.error)
+    if (error) setLoginErr(error.message)
   }
 
   if (loading) {
@@ -68,7 +70,7 @@ export default function AdminPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div style={{ fontSize: 12, letterSpacing: '.18em', color: '#ffd66a' }}>ADMIN</div>
-            <h1 style={{ margin: '4px 0 0', fontSize: 26, fontWeight: 700 }}>celpipAce Dashboard</h1>
+            <h1 style={{ margin: '4px 0 0', fontSize: 26, fontWeight: 700 }}>CELPIPACE Dashboard</h1>
             <p style={{ color: '#98a2b5', fontSize: 13, margin: '4px 0 0' }}>
               Signed in as <strong style={{ color: '#E6ECF5' }}>{user.email}</strong>
             </p>
@@ -82,7 +84,9 @@ export default function AdminPage() {
             ['overview', 'Overview'],
             ['revenue', 'Revenue'],
             ['users', 'Users'],
+            ['activity', 'Activity'],
             ['subscriptions', 'Subscriptions'],
+            ['observability', 'Observability'],
             ['coupons', 'Coupons'],
             ['analytics', 'Analytics'],
           ].map(([id, label]) => (
@@ -109,12 +113,42 @@ export default function AdminPage() {
         {tab === 'overview' && <OverviewTab />}
         {tab === 'revenue' && <RevenueTab />}
         {tab === 'users' && <UsersTab />}
+        {tab === 'activity' && <ActivityTab />}
         {tab === 'subscriptions' && <SubscriptionsTab />}
+        {tab === 'observability' && <ObservabilityTab />}
         {tab === 'coupons' && <CouponsTab />}
         {tab === 'analytics' && <AnalyticsTab />}
       </div>
     </div>
   )
+}
+
+function useAdminAuth() {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let mounted = true
+    adminSupabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    const { data: { subscription } } = adminSupabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    return () => { mounted = false; subscription.unsubscribe() }
+  }, [])
+
+  const signOut = async () => {
+    setUser(null)
+    await adminSupabase.auth.signOut({ scope: 'local' }).catch(() => {})
+  }
+
+  return { user, loading, signOut }
 }
 
 /* ═══════════════════════════════════════════════════════════ */
@@ -126,10 +160,18 @@ function useProfiles() {
   useEffect(() => {
     let cancel = false
     ;(async () => {
-      const { data, error } = await supabase
+      let { data, error } = await adminSupabase
         .from('profiles')
-        .select('id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at')
+        .select(PROFILE_COLUMNS)
         .order('created_at', { ascending: false })
+      if (error?.message?.includes('last_seen_at')) {
+        const fallback = await adminSupabase
+          .from('profiles')
+          .select(LEGACY_PROFILE_COLUMNS)
+          .order('created_at', { ascending: false })
+        data = fallback.data?.map(row => ({ ...row, last_seen_at: null })) ?? null
+        error = fallback.error
+      }
       if (cancel) return
       if (error) setErr(error.message)
       else setRows(data ?? [])
@@ -137,6 +179,24 @@ function useProfiles() {
     return () => { cancel = true }
   }, [])
   return { rows, setRows, err }
+}
+
+function useAdminActivity() {
+  const [rows, setRows] = useState(null)
+  const [err, setErr] = useState('')
+
+  useEffect(() => {
+    let cancel = false
+    ;(async () => {
+      const { data, error } = await adminSupabase.rpc('get_admin_user_activity')
+      if (cancel) return
+      if (error) setErr(error.message)
+      else setRows(data ?? [])
+    })()
+    return () => { cancel = true }
+  }, [])
+
+  return { rows, err }
 }
 
 /* ═══════════════════════════════════════════════════════════ */
@@ -211,7 +271,7 @@ function UsersTab() {
     const payload = next
       ? { is_premium: true, premium_source: 'admin', premium_granted_at: new Date().toISOString() }
       : { is_premium: false, premium_source: null, premium_granted_at: null, premium_expires_at: null }
-    const { error } = await supabase.from('profiles').update(payload).eq('id', row.id)
+    const { error } = await adminSupabase.from('profiles').update(payload).eq('id', row.id)
     setBusyId(null)
     if (error) { alert('Update failed: ' + error.message); return }
     setRows(prev => prev.map(r => r.id === row.id ? { ...r, ...payload } : r))
@@ -271,6 +331,74 @@ function UsersTab() {
       <p style={{ color: '#667', fontSize: 12, marginTop: 16, textAlign: 'center' }}>
         {filtered.length} of {rows.length} users shown
       </p>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  ACTIVITY                                                    */
+/* ═══════════════════════════════════════════════════════════ */
+function ActivityTab() {
+  const { rows, err } = useAdminActivity()
+  const [query, setQuery] = useState('')
+
+  if (err) return <Err msg={`${err}. Run supabase/admin_hardening.sql if this is the first deploy of activity analytics.`} />
+  if (!rows) return <Loading />
+
+  const now = Date.now()
+  const inWindow = (row, days) => {
+    const source = row.last_activity_at || row.last_seen_at || row.last_response_at || row.created_at
+    if (!source) return false
+    return now - new Date(source).getTime() <= days * 864e5
+  }
+  const total = rows.length
+  const active24h = rows.filter(r => inWindow(r, 1)).length
+  const active7d = rows.filter(r => inWindow(r, 7)).length
+  const active30d = rows.filter(r => inWindow(r, 30)).length
+
+  const q = query.trim().toLowerCase()
+  const filtered = q
+    ? rows.filter(r => `${r.full_name || ''} ${r.email || ''}`.toLowerCase().includes(q))
+    : rows
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>User Activity</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            {total} total · {active24h} in 24h · {active7d} in 7d · {active30d} in 30d
+            <span style={{ marginLeft: 8, color: '#667' }}>(includes progress saves, practice responses, writing, and mock exams)</span>
+          </p>
+        </div>
+        <input
+          placeholder="Search users…"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          style={{ ...inputStyle, width: 260, margin: 0 }}
+        />
+      </div>
+
+      <Panel>
+        <Table
+          cols={['User', 'Last Seen', 'Last Response', 'Activity', 'Joined']}
+          rows={filtered.map(r => [
+            <div>
+              <div style={{ fontWeight: 700 }}>{r.full_name || friendlyName(r.email)}</div>
+              <div style={{ color: '#98a2b5', fontSize: 13, marginTop: 2 }}>{r.email || '—'}</div>
+            </div>,
+            <span style={{ color: r.last_seen_at ? '#E6ECF5' : '#98a2b5' }}>{formatRelativeTime(r.last_seen_at)}</span>,
+            <span style={{ color: r.last_response_at ? '#E6ECF5' : '#98a2b5' }}>{formatRelativeTime(r.last_response_at)}</span>,
+            <div>
+              <strong>{r.response_count || 0}</strong>
+              <span style={{ color: '#98a2b5', marginLeft: 6 }}>events</span>
+              {!!r.completed_sessions_count && <span style={{ color: '#7dffb0', marginLeft: 8 }}>{r.completed_sessions_count} completed</span>}
+            </div>,
+            r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
+          ])}
+          empty="No activity found."
+        />
+      </Panel>
     </>
   )
 }
@@ -347,7 +475,7 @@ function CouponsTab() {
   const [busy, setBusy]       = useState(false)
 
   const load = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await adminSupabase
       .from('coupons')
       .select('code, active, max_redemptions, times_redeemed, grants_days, note, created_at')
       .order('created_at', { ascending: false })
@@ -360,7 +488,7 @@ function CouponsTab() {
     const code = newCode.trim().toUpperCase()
     if (!code) return
     setBusy(true)
-    const { error } = await supabase.from('coupons').insert({
+    const { error } = await adminSupabase.from('coupons').insert({
       code,
       active: true,
       grants_days: newDays ? parseInt(newDays, 10) : null,
@@ -373,7 +501,7 @@ function CouponsTab() {
   }
 
   const toggleActive = async (c) => {
-    const { error } = await supabase.from('coupons').update({ active: !c.active }).eq('code', c.code)
+    const { error } = await adminSupabase.from('coupons').update({ active: !c.active }).eq('code', c.code)
     if (error) { alert(error.message); return }
     setCoupons(prev => prev.map(x => x.code === c.code ? { ...x, active: !c.active } : x))
   }
@@ -487,7 +615,7 @@ function RevenueTab() {
   useEffect(() => {
     let cancel = false
     ;(async () => {
-      const { data, error } = await supabase
+      const { data, error } = await adminSupabase
         .from('payments')
         .select('id, email, plan, amount_cents, currency, status, granted_days, stripe_session_id, created_at')
         .order('created_at', { ascending: false })
@@ -610,7 +738,7 @@ function RevenueTab() {
           <option value="all">All plans</option>
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
-          <option value="quarterly">Quarterly</option>
+          <option value="annual">Annual</option>
         </select>
         <button onClick={downloadCsv} style={btnPrimaryCompact}>⇣ Export CSV</button>
       </div>
@@ -640,6 +768,33 @@ function RevenueTab() {
 /* ═══════════════════════════════════════════════════════════ */
 /*  SHARED UI                                                   */
 /* ═══════════════════════════════════════════════════════════ */
+function friendlyName(email) {
+  const local = (email || '').split('@')[0]
+  if (!local) return 'Unknown user'
+  return local
+    .split(/[._-]+/)
+    .filter(Boolean)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+}
+
+function formatRelativeTime(value) {
+  if (!value) return 'never'
+  const time = new Date(value).getTime()
+  if (!Number.isFinite(time)) return 'never'
+  const diff = Math.max(0, Date.now() - time)
+  const mins = Math.floor(diff / 60000)
+  if (mins < 1) return 'just now'
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  const days = Math.floor(hrs / 24)
+  if (days < 30) return `${days}d ago`
+  const months = Math.floor(days / 30)
+  if (months < 12) return `${months}mo ago`
+  return `${Math.floor(months / 12)}y ago`
+}
+
 function StatCard({ label, value, accent = '#E6ECF5' }) {
   return (
     <div style={{ background: '#12223A', border: '1px solid #1d3152', borderRadius: 12, padding: '16px 18px' }}>
@@ -688,6 +843,178 @@ function Chip({ color, text }) {
 
 function Loading() { return <div style={{ color: '#98a2b5', padding: 20 }}>Loading…</div> }
 function Err({ msg }) { return <div style={{ color: '#ff9a9a', padding: 20 }}>Error: {msg}</div> }
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  OBSERVABILITY                                              */
+/*  Per-user audit trail across:                                */
+/*    - subscription_events (interpreted)                       */
+/*    - cancellation_feedback                                   */
+/*    - email_log                                               */
+/*    - webhook_events (most recent, all users)                 */
+/* ═══════════════════════════════════════════════════════════ */
+function ObservabilityTab() {
+  const [emailQuery, setEmailQuery] = useState('')
+  const [activeEmail, setActiveEmail] = useState('')
+  const [subEvents, setSubEvents] = useState(null)
+  const [cancelFb, setCancelFb] = useState(null)
+  const [emails, setEmails] = useState(null)
+  const [webhooks, setWebhooks] = useState(null)
+  const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  // Recent webhook_events on mount (across all users)
+  useEffect(() => {
+    let alive = true
+    adminSupabase
+      .from('webhook_events')
+      .select('id, stripe_event_id, event_type, processed, processing_error, received_at, processed_at')
+      .order('received_at', { ascending: false })
+      .limit(50)
+      .then(({ data, error }) => {
+        if (!alive) return
+        if (error) setErr(error.message)
+        else setWebhooks(data)
+      })
+    return () => { alive = false }
+  }, [])
+
+  const lookup = async (e) => {
+    e?.preventDefault?.()
+    const target = emailQuery.trim().toLowerCase()
+    if (!target) return
+    setBusy(true)
+    setErr('')
+    setActiveEmail(target)
+    try {
+      const [s, c, m] = await Promise.all([
+        adminSupabase.from('subscription_events')
+          .select('id, created_at, event_type, prev_status, new_status, plan, amount_cents, currency, reason, stripe_event_id, stripe_invoice_id')
+          .eq('email', target).order('created_at', { ascending: false }).limit(100),
+        adminSupabase.from('cancellation_feedback')
+          .select('id, created_at, reason, free_text, would_return, plan_at_cancel, current_period_end')
+          .eq('email', target).order('created_at', { ascending: false }).limit(20),
+        adminSupabase.from('email_log')
+          .select('id, created_at, sent_at, kind, subject, status, provider_id, error, pdf_url')
+          .eq('to_email', target).order('created_at', { ascending: false }).limit(50),
+      ])
+      if (s.error) throw s.error
+      if (c.error) throw c.error
+      if (m.error) throw m.error
+      setSubEvents(s.data || [])
+      setCancelFb(c.data || [])
+      setEmails(m.data || [])
+    } catch (ex) {
+      setErr(ex.message || 'Lookup failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <>
+      <h2 style={sectionTitleStyle}>Observability</h2>
+      <p style={{ color: '#98a2b5', fontSize: 13, marginBottom: 20 }}>
+        Per-user audit trail of subscription state changes, cancellations, and emails sent. Plus the 50 most recent Stripe webhook events.
+      </p>
+
+      <form onSubmit={lookup} style={{ display: 'flex', gap: 8, marginBottom: 20, maxWidth: 480 }}>
+        <input
+          type="email"
+          placeholder="user@example.com"
+          value={emailQuery}
+          onChange={(e) => setEmailQuery(e.target.value)}
+          style={{ ...inputStyle, flex: 1 }}
+        />
+        <button type="submit" disabled={busy || !emailQuery.trim()} style={btnPrimaryCompact}>
+          {busy ? 'Loading…' : 'Lookup'}
+        </button>
+      </form>
+
+      {err && <Err msg={err} />}
+
+      {activeEmail && subEvents && (
+        <div style={{ marginBottom: 28 }}>
+          <h3 style={subTitleStyle}>Subscription events for {activeEmail}</h3>
+          <Table
+            cols={['When', 'Event', 'Prev', 'New', 'Plan', 'Amount', 'Reason', 'Stripe event']}
+            rows={subEvents.map(r => [
+              new Date(r.created_at).toLocaleString(),
+              r.event_type,
+              r.prev_status || '—',
+              r.new_status || '—',
+              r.plan || '—',
+              r.amount_cents != null ? `${(r.currency || 'cad').toUpperCase()} $${(r.amount_cents / 100).toFixed(2)}` : '—',
+              r.reason || '—',
+              r.stripe_event_id || r.stripe_invoice_id || '—',
+            ])}
+            empty="No subscription events for this email."
+          />
+        </div>
+      )}
+
+      {activeEmail && cancelFb && cancelFb.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <h3 style={subTitleStyle}>Cancellation feedback</h3>
+          <Table
+            cols={['When', 'Reason', 'Would return?', 'Plan at cancel', 'Period end', 'Note']}
+            rows={cancelFb.map(r => [
+              new Date(r.created_at).toLocaleString(),
+              r.reason,
+              r.would_return == null ? 'Not sure' : r.would_return ? 'Yes' : 'No',
+              r.plan_at_cancel || '—',
+              r.current_period_end ? new Date(r.current_period_end).toLocaleDateString() : '—',
+              r.free_text || '—',
+            ])}
+          />
+        </div>
+      )}
+
+      {activeEmail && emails && (
+        <div style={{ marginBottom: 28 }}>
+          <h3 style={subTitleStyle}>Email log</h3>
+          <Table
+            cols={['When', 'Sent', 'Kind', 'Subject', 'Status', 'Error', 'PDF']}
+            rows={emails.map(r => [
+              new Date(r.created_at).toLocaleString(),
+              r.sent_at ? new Date(r.sent_at).toLocaleString() : '—',
+              r.kind,
+              r.subject || '—',
+              <Chip
+                key={r.id}
+                color={r.status === 'sent' ? '#a7f3d0' : r.status === 'failed' ? '#fecaca' : '#fde68a'}
+                text={r.status}
+              />,
+              r.error || '—',
+              r.pdf_url ? <a href={r.pdf_url} target="_blank" rel="noreferrer" style={{ color: '#ffd66a' }}>PDF</a> : '—',
+            ])}
+            empty="No emails sent to this address yet."
+          />
+        </div>
+      )}
+
+      <div>
+        <h3 style={subTitleStyle}>Recent webhook events (last 50)</h3>
+        {!webhooks ? <Loading /> : (
+          <Table
+            cols={['Received', 'Type', 'Processed', 'Stripe event id', 'Error']}
+            rows={webhooks.map(r => [
+              new Date(r.received_at).toLocaleString(),
+              r.event_type,
+              r.processed
+                ? <Chip key={r.id + 'p'} color="#a7f3d0" text="ok" />
+                : <Chip key={r.id + 'p'} color="#fecaca" text="pending/failed" />,
+              r.stripe_event_id || '—',
+              r.processing_error || '—',
+            ])}
+          />
+        )}
+      </div>
+    </>
+  )
+}
+
+const sectionTitleStyle = { margin: '0 0 6px', fontSize: 22, fontWeight: 700 }
+const subTitleStyle = { margin: '0 0 10px', fontSize: 15, fontWeight: 600, color: '#E6ECF5' }
 
 /* ── Styles ── */
 const shellStyle = {

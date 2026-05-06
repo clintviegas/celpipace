@@ -3,7 +3,36 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "installCommand": "npm install --legacy-peer-deps",
+  "crons": [
+    { "path": "/api/cron-sweep", "schedule": "0 0 * * *" }
+  ],
+  "redirects": [
+    { "source": "/writing", "destination": "/celpip-writing-practice", "permanent": true },
+    { "source": "/writing/:path*", "destination": "/celpip-writing-practice/:path*", "permanent": true },
+    { "source": "/speaking", "destination": "/celpip-speaking-practice", "permanent": true },
+    { "source": "/speaking/:path*", "destination": "/celpip-speaking-practice/:path*", "permanent": true },
+    { "source": "/reading", "destination": "/celpip-reading-practice", "permanent": true },
+    { "source": "/reading/:path*", "destination": "/celpip-reading-practice/:path*", "permanent": true },
+    { "source": "/listening", "destination": "/celpip-listening-practice", "permanent": true },
+    { "source": "/listening/:path*", "destination": "/celpip-listening-practice/:path*", "permanent": true }
+  ],
   "rewrites": [
+    { "source": "/celpip-practice-test", "destination": "/celpip-practice-test/index.html" },
+    { "source": "/celpip-mock-test", "destination": "/celpip-mock-test/index.html" },
+    { "source": "/celpip-writing-practice", "destination": "/celpip-writing-practice/index.html" },
+    { "source": "/celpip-speaking-practice", "destination": "/celpip-speaking-practice/index.html" },
+    { "source": "/celpip-reading-practice", "destination": "/celpip-reading-practice/index.html" },
+    { "source": "/celpip-listening-practice", "destination": "/celpip-listening-practice/index.html" },
+    { "source": "/celpip-score-calculator", "destination": "/celpip-score-calculator/index.html" },
+    { "source": "/celpip-vs-ielts", "destination": "/celpip-vs-ielts/index.html" },
+    { "source": "/practice", "destination": "/practice/index.html" },
+    { "source": "/exam", "destination": "/exam/index.html" },
+    { "source": "/calculator", "destination": "/calculator/index.html" },
+    { "source": "/tips", "destination": "/tips/index.html" },
+    { "source": "/pricing", "destination": "/pricing/index.html" },
+    { "source": "/contact", "destination": "/contact/index.html" },
+    { "source": "/blog", "destination": "/blog/index.html" },
+    { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

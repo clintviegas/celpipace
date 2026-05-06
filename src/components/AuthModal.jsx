@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
 
 /* ─────────────────────────────────────────────────────────────
    AuthModal — premium split-panel login modal
@@ -29,14 +30,14 @@ export default function AuthModal({ isOpen, onClose, reason }) {
   const handleSignUp = async (e) => {
     e.preventDefault()
     setEmailError('')
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (!email.trim().match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setEmailError('Please enter a valid email address.'); return
     }
-    if (password.length < 6) {
-      setEmailError('Password must be at least 6 characters.'); return
+    if (password.length < 8) {
+      setEmailError('Password must be at least 8 characters.'); return
     }
     setSending(true)
-    const result = await signUpWithEmail(email, password, displayName)
+    const result = await signUpWithEmail(email.trim(), password, displayName.trim())
     setSending(false)
     if (result?.error) setEmailError(result.error)
     else if (result?.needsConfirmation) setView('sent')
@@ -46,7 +47,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
   const handleSignIn = async (e) => {
     e.preventDefault()
     setEmailError('')
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (!email.trim().match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setEmailError('Please enter a valid email address.'); return
     }
     if (!password) {
@@ -62,7 +63,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
   const handleForgotPassword = async (e) => {
     e.preventDefault()
     setEmailError('')
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (!email.trim().match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setEmailError('Please enter a valid email address.'); return
     }
     setSending(true)
@@ -94,7 +95,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
           >
             {/* ── Left panel — branding ── */}
             <div className="auth-panel-left">
-              <div className="auth-panel-logo">🍁 celpipAce</div>
+              <div className="auth-panel-logo"><span aria-hidden="true">🍁</span> {BRAND_NAME}</div>
               <div className="auth-panel-tagline">
                 Your fastest path to<br />
                 <span className="auth-panel-highlight">CLB 9+</span>
@@ -102,12 +103,12 @@ export default function AuthModal({ isOpen, onClose, reason }) {
               <div className="auth-panel-perks">
                 {[
                   { icon: '📊', text: 'Track every score & CLB band' },
-                  { icon: '🏆', text: '20+ full-length mock tests' },
+                  { icon: '🏆', text: `${PRODUCT_STATS.mockExams} full-length mock exams` },
                   { icon: '⚡', text: 'Section drills, anytime' },
                   { icon: '🎯', text: 'CRS boost calculator' },
                 ].map(p => (
                   <div key={p.text} className="auth-perk">
-                    <span className="auth-perk-icon">{p.icon}</span>
+                    <span className="auth-perk-icon" aria-hidden="true">{p.icon}</span>
                     <span>{p.text}</span>
                   </div>
                 ))}
@@ -128,7 +129,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                     transition={{ duration: 0.22 }}>
 
                     {reason && <div className="auth-modal-reason">🔒 {reason}</div>}
-                    <h2 className="auth-modal-title">Welcome to celpipAce</h2>
+                    <h2 className="auth-modal-title">Welcome to {BRAND_NAME}</h2>
                     <p className="auth-modal-sub">Sign in or create an account to track your progress.</p>
 
                     {/* Google */}
@@ -146,7 +147,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
 
                     {/* Email + Password */}
                     <button className="auth-btn auth-btn--primary" onClick={() => { setView('signup'); setEmailError('') }}>
-                      📧 &nbsp;Sign up with Email
+                      <span aria-hidden="true">📧</span> &nbsp;Sign up with Email
                     </button>
 
                     <button className="auth-btn auth-btn--outline" onClick={() => { setView('login'); setEmailError('') }}>
@@ -154,7 +155,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                     </button>
 
                     <p className="auth-modal-legal">
-                      By continuing you agree to our <span className="auth-link">Terms</span> &amp; <span className="auth-link">Privacy Policy</span>.
+                      By continuing you agree to our <a className="auth-link" href="/terms">Terms</a> &amp; <a className="auth-link" href="/privacy">Privacy Policy</a>.
                     </p>
                   </motion.div>
                 )}
@@ -192,7 +193,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                         <input
                           className={`auth-email-input${emailError ? ' auth-email-input--error' : ''}`}
                           type={showPassword ? 'text' : 'password'}
-                          placeholder="Min. 6 characters"
+                          placeholder="Min. 8 characters"
                           value={password}
                           onChange={e => { setPassword(e.target.value); setEmailError('') }}
                         />

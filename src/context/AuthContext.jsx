@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
+import { PUBLIC_SITE_URL } from '../data/constants'
 
 /* ─────────────────────────────────────────────────────────────
    AuthContext — global auth state
@@ -10,12 +11,38 @@ import { supabase } from '../lib/supabase'
 const AuthContext = createContext(null)
 
 const ADMIN_EMAIL = 'sales@celpipace.com'
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+function normalizeEmail(email) {
+  return (email || '').trim().toLowerCase()
+}
+
+function normalizeDisplayName(displayName) {
+  return (displayName || '').trim().replace(/\s+/g, ' ')
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [profileLoaded, setProfileLoaded] = useState(false)
+  const lastSeenTouchRef = useRef(0)
+
+  const touchUserActivity = useCallback(async (currentUser) => {
+    if (!currentUser?.id) return
+    const now = Date.now()
+    if (now - lastSeenTouchRef.current < 5 * 60 * 1000) return
+    lastSeenTouchRef.current = now
+    try {
+      const { error } = await supabase.rpc('touch_user_activity')
+      if (!error) return
+      await supabase
+        .from('profiles')
+        .update({ last_seen_at: new Date().toISOString() })
+        .eq('id', currentUser.id)
+        .catch(() => {})
+    } catch { void 0 }
+  }, [])
 
   /* ── Load / refresh profile row ── */
   const loadProfile = useCallback(async (currentUser) => {
@@ -23,7 +50,7 @@ export function AuthProvider({ children }) {
     setProfileLoaded(false)
 
     // NOTE: profile row is created by the `handle_new_user` trigger
-    // (see auth_premium.sql). We don't upsert here because that path runs on
+    // (see supabase/admin_hardening.sql). We don't upsert here because that path runs on
     // every auth state change and could deadlock with the billing-column
     // guard trigger if something goes wrong. Use `select('*')` so we don't
     // crash if the subscriptions_schema migration hasn't been run yet.
@@ -71,6 +98,7 @@ export function AuthProvider({ children }) {
       const currentUser = session?.user ?? null
       setUser(currentUser)
       setLoading(false)            // unblock UI immediately
+      touchUserActivity(currentUser)
       loadProfile(currentUser)     // hydrate profile in background
     })
 
@@ -79,29 +107,43 @@ export function AuthProvider({ children }) {
         const currentUser = session?.user ?? null
         setUser(currentUser)
         setLoading(false)
+        touchUserActivity(currentUser)
         loadProfile(currentUser)
       }
     )
 
     return () => { mounted = false; subscription.unsubscribe() }
-  }, [loadProfile])
+  }, [loadProfile, touchUserActivity])
 
   /* ── Google OAuth ── */
+  const appBaseUrl = PUBLIC_SITE_URL
+
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: `${appBaseUrl}/dashboard` },
     })
     if (error) console.error('Google sign-in error:', error.message)
   }
 
   /* ── Email + Password Sign Up ── */
   const signUpWithEmail = async (email, password, displayName) => {
+    const normalizedEmail = normalizeEmail(email)
+    const cleanName = normalizeDisplayName(displayName)
+
+    if (!EMAIL_RE.test(normalizedEmail)) {
+      return { error: 'Please enter a valid email address.' }
+    }
+    if (!password || password.length < 8) {
+      return { error: 'Password must be at least 8 characters.' }
+    }
+
     const { data: signUpData, error } = await supabase.auth.signUp({
-      email,
+      email: normalizedEmail,
       password,
       options: {
-        data: displayName ? { full_name: displayName } : undefined,
+        emailRedirectTo: `${appBaseUrl}/dashboard`,
+        data: cleanName ? { full_name: cleanName, name: cleanName } : undefined,
       },
     })
     if (error) {
@@ -116,7 +158,7 @@ export function AuthProvider({ children }) {
 
   /* ── Email + Password Sign In ── */
   const signInWithEmail = async (email, password) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await supabase.auth.signInWithPassword({ email: normalizeEmail(email), password })
     if (error) {
       console.error('Sign-in error:', error.message)
       return { error: error.message }
@@ -126,8 +168,8 @@ export function AuthProvider({ children }) {
 
   /* ── Forgot Password ── */
   const resetPassword = async (email) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+    const { error } = await supabase.auth.resetPasswordForEmail(normalizeEmail(email), {
+      redirectTo: `${appBaseUrl}/reset-password`,
     })
     if (error) {
       console.error('Reset password error:', error.message)
@@ -137,17 +179,29 @@ export function AuthProvider({ children }) {
   }
 
   /* ── Sign out ── */
-  const signOut = () => {
-    setUser(null)
-    setProfile(null)
-    setProfileLoaded(true)
-    supabase.auth.signOut({ scope: 'local' }).catch(() => {})
+  const signOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut({ scope: 'local' })
+      if (error) {
+        console.warn('[auth] sign out failed:', error.message)
+        return { error: error.message }
+      }
+      return { success: true }
+    } catch (e) {
+      console.warn('[auth] sign out exception:', e?.message)
+      return { error: e?.message || 'Unable to sign out right now.' }
+    } finally {
+      setUser(null)
+      setProfile(null)
+      setProfileLoaded(true)
+      setLoading(false)
+    }
   }
 
   const refreshProfile = useCallback(() => loadProfile(user), [loadProfile, user])
 
   /* ── Derived flags ── */
-  const isAdmin = !!user && user.email === ADMIN_EMAIL
+  const isAdmin = !!user && user.email?.toLowerCase() === ADMIN_EMAIL
 
   // Premium is true iff the profile flag is set AND we're still inside the
   // paid window. The DB sweep + webhook eventually flip is_premium=false on

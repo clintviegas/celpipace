@@ -185,16 +185,27 @@ function PartCard({ part, onStart }) {
   )
 }
 
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 export default function SpeakingPage() {
   const navigate = useNavigate()
-  const handleStart = (part) => { navigate(`/speaking/${part.id}`) }
+  const handleStart = (part) => { navigate(`/celpip-speaking-practice/${part.id}`) }
 
   return (
     <div className="lp-root">
       <SEO
-        title="CELPIP Speaking Practice – All 8 Tasks Explained"
-        description="Practice all 8 CELPIP Speaking tasks with expert tips on fluency, vocabulary, and task fulfillment. Includes prep timers and scoring guidance."
-        canonical="/speaking"
+        title="CELPIP Speaking Practice for All 8 Tasks With AI Feedback"
+        description="Practice all 8 CELPIP Speaking tasks with timed prompts, recordings, transcripts, and AI feedback for fluency, vocabulary, and task fulfillment."
+        canonical="/celpip-speaking-practice"
+        jsonLd={FAQ_JSONLD}
       />
       <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #3d1020 60%, #4a1828 100%)' }}>
         <div className="lp-hero-inner">

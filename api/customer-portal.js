@@ -19,6 +19,20 @@
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
+function getBearerToken(req) {
+  const header = req.headers.authorization || req.headers.Authorization || ''
+  const match = String(header).match(/^Bearer\s+(.+)$/i)
+  return match?.[1] || ''
+}
+
+function getBody(req) {
+  if (!req.body) return {}
+  if (typeof req.body === 'string') {
+    try { return JSON.parse(req.body) } catch { return {} }
+  }
+  return req.body
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
@@ -28,18 +42,26 @@ export default async function handler(req, res) {
   const siteUrl   =
     process.env.PUBLIC_SITE_URL ||
     (req.headers.origin || '').replace(/\/$/, '') ||
-    'https://celpipace.com'
+    'https://celpipace.ca'
 
   if (!secret || !supaUrl || !svcKey) {
     return res.status(500).json({ error: 'Server not configured' })
   }
 
-  const { userId } = req.body || {}
+  const body = getBody(req)
+  const { userId } = body
   if (!userId) return res.status(400).json({ error: 'Missing userId' })
 
   const supabase = createClient(supaUrl, svcKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   })
+
+  const token = getBearerToken(req)
+  if (token) {
+    const { data: authData, error: authError } = await supabase.auth.getUser(token)
+    if (authError || !authData?.user) return res.status(401).json({ error: 'Invalid session' })
+    if (authData.user.id !== userId) return res.status(403).json({ error: 'Cannot manage another user subscription' })
+  }
 
   const { data: prof, error } = await supabase
     .from('profiles')

@@ -58,6 +58,102 @@ function defaultStreak() {
   return { current: 0, best: 0, lastDate: null }
 }
 
+async function saveAttemptToCloud({ section, partId, setNum, score, total, pct, details }) {
+  const payload = {
+    section,
+    part_id: String(partId || ''),
+    set_number: String(setNum || ''),
+    score: Number.isFinite(score) ? score : null,
+    total: Number.isFinite(total) ? total : null,
+    pct: Number.isFinite(pct) ? pct : null,
+    payload: details && typeof details === 'object' ? details : {},
+  }
+
+  const attemptInsert = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return { skipped: true }
+    const { error } = await supabase
+      .from('practice_attempts')
+      .insert({ user_id: session.user.id, ...payload })
+    if (error) throw error
+    return { ok: true }
+  }
+
+  // 2 retries with exponential backoff (250ms, 750ms)
+  for (let i = 0; i < 3; i++) {
+    try {
+      const r = await attemptInsert()
+      if (r.skipped) return { skipped: true }
+      return { ok: true }
+    } catch (err) {
+      if (i === 2) {
+        console.warn('[practice_attempts] insert failed after retries:', err?.message || err)
+        try { queueFailedAttempt(payload) } catch { void 0 }
+        return { ok: false, error: err }
+      }
+      await new Promise(r => setTimeout(r, 250 * Math.pow(3, i)))
+    }
+  }
+}
+
+const FAILED_QUEUE_KEY = 'celpipiq_failed_attempts'
+
+function readPendingCount() {
+  try {
+    const raw = localStorage.getItem(FAILED_QUEUE_KEY)
+    if (!raw) return 0
+    const list = JSON.parse(raw)
+    return Array.isArray(list) ? list.length : 0
+  } catch { return 0 }
+}
+
+function queueFailedAttempt(payload) {
+  try {
+    const raw = localStorage.getItem(FAILED_QUEUE_KEY)
+    const list = raw ? JSON.parse(raw) : []
+    list.push({ ...payload, queued_at: Date.now() })
+    // keep last 50
+    localStorage.setItem(FAILED_QUEUE_KEY, JSON.stringify(list.slice(-50)))
+  } catch { void 0 }
+}
+
+async function flushFailedAttempts() {
+  let list
+  try {
+    const raw = localStorage.getItem(FAILED_QUEUE_KEY)
+    list = raw ? JSON.parse(raw) : []
+  } catch { return }
+  if (!Array.isArray(list) || list.length === 0) return
+
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.user) return
+
+  const remaining = []
+  for (const item of list) {
+    try {
+      const { error } = await supabase
+        .from('practice_attempts')
+        .insert({
+          user_id: session.user.id,
+          section: item.section,
+          part_id: item.part_id,
+          set_number: item.set_number,
+          score: item.score,
+          total: item.total,
+          pct: item.pct,
+          payload: item.payload || {},
+        })
+      if (error) remaining.push(item)
+    } catch {
+      remaining.push(item)
+    }
+  }
+  try {
+    if (remaining.length === 0) localStorage.removeItem(FAILED_QUEUE_KEY)
+    else localStorage.setItem(FAILED_QUEUE_KEY, JSON.stringify(remaining))
+  } catch { void 0 }
+}
+
 function loadStreak(userId = null) {
   try {
     let raw = localStorage.getItem(streakStorageKey(userId))
@@ -102,10 +198,19 @@ function getCLBFromPct(pct) {
 export function useProgress() {
   const [data, setData]     = useState(() => loadProgress(null))
   const [streak, setStreak] = useState(() => loadStreak(null))
+  // Count of practice attempts that failed to persist to Supabase and are
+  // waiting in the localStorage retry queue. Pages can render a banner if > 0.
+  const [pendingSync, setPendingSync] = useState(() => readPendingCount())
   const activeUserIdRef = useRef(null)
   const dataRef = useRef(data)
   const streakRef = useRef(streak)
   const syncedRef = useRef(false)
+
+  // Sync the pending count into React state whenever the queue changes
+  // (after each save attempt or after a flush).
+  const refreshPendingSync = useCallback(() => {
+    setPendingSync(readPendingCount())
+  }, [])
 
   /* Persist active namespace on change */
   useEffect(() => {
@@ -194,6 +299,10 @@ export function useProgress() {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
         syncedRef.current = false
         loadForSession(session)
+        // Flush any practice_attempts that failed previously
+        flushFailedAttempts()
+          .then(() => refreshPendingSync())
+          .catch(() => void 0)
       }
       if (event === 'SIGNED_OUT') {
         const previousUserId = activeUserIdRef.current
@@ -217,7 +326,7 @@ export function useProgress() {
   }, [])
 
   /* ── Record a set completion (best-score-wins; re-attempts never lower progress) ── */
-  const recordCompletion = useCallback((section, partId, setNum, score, total) => {
+  const recordCompletion = useCallback((section, partId, setNum, score, total, details = null) => {
     const key = `${section}:${partId}:${setNum}`
     const ts  = Date.now()
     const safeScore = Number.isFinite(score) ? score : 0
@@ -268,7 +377,11 @@ export function useProgress() {
 
     // ── Supabase: save to cloud for logged-in users with the fresh data ──
     saveToCloud(nextData, nextStreak)
-  }, [])
+    // Now retries internally and queues failures to localStorage for re-sync on next login
+    saveAttemptToCloud({ section, partId, setNum, score: safeScore, total, pct, details })
+      .catch(err => console.warn('[practice_attempts] unexpected:', err?.message || err))
+      .finally(() => refreshPendingSync())
+  }, [refreshPendingSync])
 
   /* ── Save progress to Supabase ── */
   const saveToCloud = useCallback(async (progressData, streakData) => {
@@ -412,6 +525,13 @@ export function useProgress() {
     }
   }, [data])
 
+  // Manual flush — pages can offer a "Retry sync" button alongside the
+  // pending-sync banner.
+  const retryPendingSync = useCallback(async () => {
+    await flushFailedAttempts()
+    refreshPendingSync()
+  }, [refreshPendingSync])
+
   return {
     recordCompletion,
     isCompleted,
@@ -421,6 +541,8 @@ export function useProgress() {
     streak,
     activity: data.activity,
     SECTION_TOTALS,
+    pendingSync,
+    retryPendingSync,
   }
 }
 

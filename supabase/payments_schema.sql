@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.payments (
   id                       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id                  UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   email                    TEXT NOT NULL,
-  plan                     TEXT NOT NULL,            -- 'weekly' | 'monthly' | 'quarterly'
+  plan                     TEXT NOT NULL,            -- 'weekly' | 'monthly' | 'annual'
   amount_cents             INTEGER NOT NULL,         -- amount actually charged, in cents
   currency                 TEXT NOT NULL DEFAULT 'usd',
   status                   TEXT NOT NULL DEFAULT 'paid',  -- paid | refunded | failed

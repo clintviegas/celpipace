@@ -117,7 +117,7 @@ function DropItem({ item, color, closeAll, parentId }) {
 }
 
 /* ── Nav item with optional dropdown ── */
-function NavItem({ item, active, openId, setOpenId }) {
+function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
   const ref = useRef(null)
   const navigate = useNavigate()
   const open = openId === item.id
@@ -139,7 +139,7 @@ function NavItem({ item, active, openId, setOpenId }) {
       <li ref={ref}>
         <button
           className={`nav-link-btn${active ? ' nav-link-active' : ''}`}
-          onClick={() => { navigate('/' + item.id); setOpenId(null) }}
+          onClick={() => { navigate('/' + item.id); setOpenId(null); closeMenu?.() }}
         >
           {item.label}
         </button>
@@ -147,14 +147,13 @@ function NavItem({ item, active, openId, setOpenId }) {
     )
   }
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
-
   return (
     <li ref={ref} className="nav-has-drop">
       <button
         className={`nav-link-btn nav-link-drop${active ? ' nav-link-active' : ''} ${open ? 'nav-link-drop--open' : ''}`}
+        aria-expanded={open}
         onClick={() => {
-          if (isMobile) {
+          if (mobileOpen) {
             setOpenId(open ? null : item.id)
           } else {
             navigate('/' + item.id)
@@ -182,7 +181,7 @@ function NavItem({ item, active, openId, setOpenId }) {
                 key={p.label}
                 item={p}
                 color={item.color}
-                closeAll={() => setOpenId(null)}
+                closeAll={() => { setOpenId(null); closeMenu?.() }}
                 parentId={item.id}
               />
             ))}
@@ -192,7 +191,7 @@ function NavItem({ item, active, openId, setOpenId }) {
               <button
                 className="nav-drop-cta"
                 style={{ background: item.color }}
-                onClick={() => { navigate('/' + item.id); setOpenId(null) }}
+                onClick={() => { navigate('/' + item.id); setOpenId(null); closeMenu?.() }}
               >
                 Practice {item.label} →
               </button>
@@ -238,8 +237,11 @@ function UserMenu({ user, signOut }) {
           <button className="nav-user-menu-item" onClick={() => { navigate('/dashboard'); setOpen(false) }}>
             <span className="nav-user-menu-icon">▣</span> Dashboard
           </button>
+          <button className="nav-user-menu-item" onClick={() => { navigate('/subscription'); setOpen(false) }}>
+            <span className="nav-user-menu-icon">$</span> Manage subscription
+          </button>
           <div className="nav-user-menu-divider" />
-          <button className="nav-user-menu-item nav-user-menu-item--danger" onClick={() => { signOut(); setOpen(false) }}>
+          <button className="nav-user-menu-item nav-user-menu-item--danger" onClick={async () => { await signOut(); setOpen(false); navigate('/') }}>
             <span className="nav-user-menu-icon">↩</span> Sign out
           </button>
         </div>
@@ -256,21 +258,43 @@ export default function Navbar({ onSignIn }) {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const handleMobileSignOut = useCallback(async () => {
+    await signOut()
+    setOpenId(null)
+    setMenuOpen(false)
+    navigate('/')
+  }, [navigate, signOut])
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const currentPath = location.pathname.replace('/', '') || 'home'
-  const activeId = currentPath
+  // Lock body scroll while the mobile menu is open so the page behind doesn't move
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const prev = document.body.style.overflow
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = prev || ''
+    }
+    return () => { document.body.style.overflow = prev || '' }
+  }, [menuOpen])
+
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false); setOpenId(null) }, [location.pathname])
+
+  const currentPath = location.pathname.split('/').filter(Boolean)[0] || 'home'
+  const activeId = ['tips', 'scores', 'calculator', 'blog'].includes(currentPath) ? 'learn' : currentPath
 
   return (
     <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
       <div className="nav-inner">
         {/* Logo */}
         <button className="nav-logo" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-          <CelpipAceLogo height={34} />
+          <CelpipAceLogo height={44} />
         </button>
 
         {/* Desktop nav */}
@@ -281,7 +305,9 @@ export default function Navbar({ onSignIn }) {
               item={item}
               active={activeId === item.id}
               openId={openId}
-              setOpenId={(id) => { setOpenId(id); if (!id) setMenuOpen(false) }}
+              setOpenId={setOpenId}
+              closeMenu={() => setMenuOpen(false)}
+              mobileOpen={menuOpen}
             />
           ))}
           {/* Mobile-only auth buttons at bottom of dropdown */}
@@ -289,6 +315,19 @@ export default function Navbar({ onSignIn }) {
             <li className="nav-mobile-auth">
               <button className="btn btn-outline" onClick={() => { onSignIn(); setMenuOpen(false) }}>Log in</button>
               <button className="btn btn-primary" onClick={() => { onSignIn(); setMenuOpen(false) }}>Sign up free</button>
+            </li>
+          )}
+          {menuOpen && user && (
+            <li className="nav-mobile-account">
+              <button className="nav-mobile-account-link" onClick={() => { navigate('/dashboard'); setMenuOpen(false) }}>
+                Dashboard
+              </button>
+              <button className="nav-mobile-account-link" onClick={() => { navigate('/subscription'); setMenuOpen(false) }}>
+                Manage subscription
+              </button>
+              <button className="nav-mobile-signout" onClick={handleMobileSignOut}>
+                Sign out
+              </button>
             </li>
           )}
         </ul>

@@ -2,64 +2,27 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Tag, Sparkles, Zap, Crown, ExternalLink } from 'lucide-react'
-import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
+import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
+import {
+  BILLING_PLANS,
+  PREMIUM_FEATURES,
+  WELCOME_COUPON_CODE,
+  WELCOME_DISCOUNT,
+  formatPlanPrice,
+} from '../data/paymentPlans'
 
 /* ─────────────────────────────────────────────────────────────
-   celpipAce — Pricing
-   3 tiers, no auto-renewing yearly. One-time payments via Stripe.
+  CELPIPACE — Pricing
+  3 recurring subscription plans via Stripe.
 ───────────────────────────────────────────────────────────── */
-const PLANS = [
-  {
-    id: 'weekly',
-    label: 'Weekly',
-    icon: Zap,
-    price: 12.99,
-    original: 19.99,
-    perMo: null,
-    period: '/week',
-    days: 7,
-    save: '35% OFF',
-    blurb: 'Best for last-minute test prep',
-  },
-  {
-    id: 'monthly',
-    label: 'Monthly',
-    icon: Sparkles,
-    price: 24.99,
-    original: 44.99,
-    perMo: null,
-    period: '/month',
-    days: 30,
-    save: '44% OFF',
-    blurb: 'Most flexible, full study cycle',
-  },
-  {
-    id: 'quarterly',
-    label: 'Quarterly',
-    icon: Crown,
-    price: 49.99,
-    original: 99.99,
-    perMo: 16.66,
-    period: '/3 months',
-    days: 90,
-    save: '50% OFF',
-    blurb: 'Best value — like 3 months for the price of 2',
-    popular: true,
-  },
-]
+const PLAN_ICONS = {
+  weekly: Zap,
+  monthly: Sparkles,
+  annual: Crown,
+}
 
-const PREMIUM_FEATURES = [
-  'All 8 full Mock Exams',
-  'All 344+ Sample Questions',
-  'Unlimited AI Scoring',
-  'CELPIP Courses & Study Guides',
-  'CELPIP Vocabulary Bundles',
-  'Score Tracker & Progress Dashboard',
-  'Detailed Explanations for Every Question',
-  'CLB-Level Sample Responses',
-  'Priority Email Support',
-]
+const PLANS = BILLING_PLANS.map(plan => ({ ...plan, icon: PLAN_ICONS[plan.id] }))
 
 const FREE_SECTIONS = [
   { icon: '🎧', section: 'Listening', desc: '1st question free' },
@@ -71,23 +34,23 @@ const FREE_SECTIONS = [
 const FAQS = [
   {
     q: 'What do I get with the free plan?',
-    a: 'The free plan lets you try the first question from each section — Listening, Reading, Writing, and Speaking. It\'s a great way to explore celpipAce before upgrading. No credit card required.',
+    a: `The free plan lets you try the first question from each section — Listening, Reading, Writing, and Speaking. It is a simple way to explore ${BRAND_NAME} before upgrading. No credit card required.`,
   },
   {
     q: 'Will I be auto-charged?',
-    a: 'No. Every plan is a one-time purchase that grants access for the chosen window (7, 30 or 90 days). You\'ll never get a surprise charge — buy again only when you need more time.',
+    a: 'Yes. Premium plans are recurring subscriptions handled securely by Stripe. You can cancel any time from Manage Subscription, and access continues until the end of the paid billing period.',
   },
   {
     q: 'Do you offer coupon codes?',
-    a: 'Yes! New users receive a welcome coupon, and you can also enter a Stripe promotion code right at checkout. Look for the coupon banner on this page or check your welcome email.',
+    a: 'Yes! First-time subscribers can use CELPIP25 for 25% off their first subscription checkout. Other Stripe promotion codes can still be entered at checkout.',
   },
   {
     q: 'Are there any limits on Premium?',
-    a: 'No limits. Premium members get unlimited AI scoring, full access to all 8 mock exams, 344+ practice questions, courses, vocabulary bundles, and the progress dashboard.',
+    a: `No limits during your access window. Premium members get unlimited AI scoring, full access to all ${PRODUCT_STATS.mockExams} mock exams, ${PRODUCT_STATS.questionItems} question items and prompts, courses, vocabulary bundles, and the progress dashboard.`,
   },
   {
-    q: 'Is there a money-back guarantee?',
-    a: 'Yes — every plan comes with a 7-day money-back guarantee. If you\'re not satisfied, email us for a full refund.',
+    q: 'How do refunds work?',
+    a: 'Refund requests are reviewed within 7 days of purchase. See the refund policy for details before checkout.',
   },
   {
     q: 'Which payment methods do you accept?',
@@ -95,20 +58,17 @@ const FAQS = [
   },
 ]
 
-const fmt = (n) => `$${n.toFixed(2).replace(/\.00$/, '')}`
-
-export default function Pricing({ onSignIn }) {
+export default function Pricing({ onSignIn, showFaq = true }) {
   const { user, isPremium, isAdmin, currentPlan, premiumExpiresAt, cancelAtPeriodEnd, refreshProfile } = useAuth()
   const navigate = useNavigate()
-  const [selected, setSelected] = useState('quarterly')
+  const [selected, setSelected] = useState('annual')
   const [openFaq, setOpenFaq]   = useState(null)
-  const [coupon, setCoupon]     = useState('')
+  const [coupon, setCoupon]     = useState(WELCOME_COUPON_CODE)
   const [couponApplied, setCouponApplied] = useState(false)
   const [couponMsg, setCouponMsg] = useState('')
-  const [couponBusy, setCouponBusy] = useState(false)
-  const [checkoutBusy, setCheckoutBusy] = useState(false)
   const [checkoutMsg, setCheckoutMsg]   = useState('')
   const plan = PLANS.find(p => p.id === selected)
+  const discountPrice = couponApplied ? plan.price * (1 - WELCOME_DISCOUNT) : null
 
   /* Show success / cancel banner after returning from Stripe */
   useEffect(() => {
@@ -121,59 +81,34 @@ export default function Pricing({ onSignIn }) {
     if (params.get('checkout') === 'cancelled') {
       setCheckoutMsg('Checkout cancelled. No charge was made.')
     }
+
+    const incomingCoupon = params.get('coupon')?.trim().toUpperCase()
+    if (incomingCoupon === WELCOME_COUPON_CODE) {
+      setCoupon(WELCOME_COUPON_CODE)
+      setCouponApplied(true)
+      setCouponMsg('CELPIP25 is ready for Stripe checkout.')
+    }
   }, [refreshProfile])
 
-  const handleApplyCoupon = async () => {
+  const handleApplyCoupon = () => {
     const code = coupon.trim().toUpperCase()
     if (!code) return
     if (!user) { onSignIn?.(); return }
-    setCouponBusy(true)
     setCouponMsg('')
-    try {
-      const { data, error } = await supabase.rpc('redeem_coupon', { p_code: code })
-      if (error) throw error
-      if (data?.ok) {
-        setCouponApplied(true)
-        setCouponMsg('✅ Coupon applied! Premium unlocked.')
-        await refreshProfile?.()
-      } else {
-        const msgs = {
-          invalid_code: 'Invalid coupon code.',
-          inactive: 'This coupon is no longer active.',
-          exhausted: 'This coupon has reached its redemption limit.',
-          already_redeemed: 'You have already redeemed this coupon.',
-          not_authenticated: 'Please sign in to redeem a coupon.',
-        }
-        setCouponMsg(msgs[data?.error] || 'Could not apply coupon.')
-      }
-    } catch (e) {
-      setCouponMsg(e.message || 'Could not apply coupon.')
-    } finally {
-      setCouponBusy(false)
+    if (code !== WELCOME_COUPON_CODE) {
+      setCouponApplied(false)
+      setCouponMsg('Enter CELPIP25 here, or enter another Stripe promotion code during checkout.')
+      return
     }
+    setCouponApplied(true)
+    setCouponMsg('CELPIP25 will be applied at Stripe checkout if this is your first subscription.')
   }
 
   const handleCheckout = async () => {
     if (!user) { onSignIn?.(); return }
-    setCheckoutBusy(true)
-    setCheckoutMsg('')
-    try {
-      const res = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          plan: selected,
-          userId: user.id,
-          email: user.email,
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok || !data.url) throw new Error(data.error || 'Could not start checkout')
-      window.location.href = data.url
-    } catch (e) {
-      setCheckoutMsg(e.message || 'Could not start checkout. Please try again.')
-      setCheckoutBusy(false)
-    }
+    const params = new URLSearchParams({ plan: selected })
+    if (couponApplied) params.set('coupon', WELCOME_COUPON_CODE)
+    navigate(`/payment?${params.toString()}`)
   }
 
   // ── If the user is already premium, hide pricing tiles entirely and show
@@ -199,7 +134,7 @@ export default function Pricing({ onSignIn }) {
             }}>
               <Crown size={32} color="#fff" />
             </div>
-            <h2 style={{ fontSize: 32, marginBottom: 8 }}>You're on celpipAce Premium</h2>
+            <h2 style={{ fontSize: 32, marginBottom: 8 }}>You're on {BRAND_NAME} Premium</h2>
             <p style={{ color: '#6b7280', marginBottom: 24 }}>
               {isAdmin
                 ? 'Admin account — lifetime access.'
@@ -225,11 +160,11 @@ export default function Pricing({ onSignIn }) {
           Simple, Transparent Pricing
         </motion.div>
         <motion.h2 className="section-title" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-          Pay once. Study with confidence.
+          Subscribe. Study with confidence.
         </motion.h2>
         <motion.p className="section-sub" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
           Try the first question in every section for free — no credit card required.<br />
-          <strong>One-time payments only</strong> — no subscriptions, no surprise renewals.
+          <strong>Cancel any time</strong> through the secure Stripe billing portal.
         </motion.p>
 
         {checkoutMsg && (
@@ -276,7 +211,7 @@ export default function Pricing({ onSignIn }) {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="pricing-badge">⭐ celpipAce Premium</div>
+            <div className="pricing-badge"><span aria-hidden="true">⭐</span> {BRAND_NAME} Premium</div>
 
             <div className="plan-tiles" role="radiogroup" aria-label="Choose a plan">
               {PLANS.map(p => {
@@ -291,15 +226,15 @@ export default function Pricing({ onSignIn }) {
                     onClick={() => setSelected(p.id)}
                     type="button"
                   >
-                    {p.popular && <span className="plan-tile-ribbon">BEST VALUE</span>}
+                    {p.popular && <span className="plan-tile-ribbon">RECOMMENDED</span>}
                     <Icon size={18} className="plan-tile-icon" />
                     <div className="plan-tile-name">{p.label}</div>
-                    <div className="plan-tile-price">{fmt(p.price)}</div>
+                    <div className="plan-tile-price">{formatPlanPrice(p.price)}</div>
                     <div className="plan-tile-period">{p.period}</div>
                     {p.perMo && (
-                      <div className="plan-tile-permo">≈ {fmt(p.perMo)}/mo</div>
+                      <div className="plan-tile-permo">≈ {formatPlanPrice(p.perMo)}/mo</div>
                     )}
-                    <div className="plan-tile-save">{p.save}</div>
+                    <div className="plan-tile-save">{p.badge}</div>
                   </button>
                 )
               })}
@@ -315,23 +250,31 @@ export default function Pricing({ onSignIn }) {
                 transition={{ duration: 0.18 }}
               >
                 <div className="plan-summary-price">
-                  <span className="plan-summary-amount">{fmt(plan.price)}</span>
+                  {couponApplied && <span className="plan-summary-strike">{formatPlanPrice(plan.price)}</span>}
+                  <span className="plan-summary-amount">{formatPlanPrice(discountPrice || plan.price)}</span>
                   <span className="plan-summary-period">{plan.period}</span>
-                  <span className="plan-summary-strike">{fmt(plan.original)}</span>
                 </div>
-                <div className="plan-summary-blurb">{plan.blurb}</div>
+                <div className="plan-summary-blurb">
+                  {plan.blurb}{couponApplied ? ` · CELPIP25 saves 25% on this first checkout.` : ''}
+                </div>
               </motion.div>
             </AnimatePresence>
 
             <button
               className="btn pricing-cta pricing-cta-green"
               onClick={handleCheckout}
-              disabled={checkoutBusy}
             >
-              {checkoutBusy ? 'Redirecting to checkout…' : `Get ${plan.label} Premium →`}
+              Continue with {plan.label} Premium
             </button>
             <p className="pricing-guarantee">
-              🔒 Secure checkout by Stripe · 7-day money-back guarantee · No auto-renewal
+              <span aria-hidden="true">🔒</span> Secure checkout by Stripe · Recurring subscription · Cancel any time
+              <br />Access continues until the end of your paid billing period after cancellation.
+              <br />
+              <button type="button" onClick={() => navigate('/terms')}>Terms</button>
+              {' · '}
+              <button type="button" onClick={() => navigate('/privacy')}>Privacy</button>
+              {' · '}
+              <button type="button" onClick={() => navigate('/refund')}>Refund policy</button>
             </p>
 
             <ul className="pricing-features">
@@ -353,21 +296,21 @@ export default function Pricing({ onSignIn }) {
           <div className="pricing-coupon-inner">
             <Tag size={20} className="pricing-coupon-icon" />
             <div className="pricing-coupon-text">
-              <strong>Have a coupon?</strong> Redeem it here for instant Premium, or use a Stripe promotion code at checkout.
+              <strong>First-time offer: 25% off.</strong> Use <span className="pricing-coupon-code">CELPIP25</span> on your first subscription. The discount is verified and applied securely in Stripe.
             </div>
             <div className="pricing-coupon-form">
               <input
                 type="text"
                 className="pricing-coupon-input"
-                placeholder="Enter coupon code"
+                placeholder="CELPIP25"
                 value={coupon}
                 onChange={e => { setCoupon(e.target.value); setCouponApplied(false) }}
               />
-              <button className="pricing-coupon-btn" onClick={handleApplyCoupon} disabled={!coupon.trim() || couponBusy}>
-                {couponBusy ? 'Applying…' : 'Apply'}
+              <button className="pricing-coupon-btn" onClick={handleApplyCoupon} disabled={!coupon.trim()}>
+                Apply
               </button>
             </div>
-            {couponApplied && <span className="pricing-coupon-success">✓ Premium unlocked</span>}
+            {couponApplied && <span className="pricing-coupon-success">✓ CELPIP25 ready for checkout</span>}
             {!couponApplied && couponMsg && <span className="pricing-coupon-success" style={{ color: '#C8102E' }}>{couponMsg}</span>}
           </div>
         </motion.div>
@@ -388,41 +331,42 @@ export default function Pricing({ onSignIn }) {
             ))}
           </div>
           <span className="pricing-social-text">
-            Trusted by CELPIP test-takers worldwide · <strong>7-day money-back guarantee</strong>
+            Trusted by CELPIP test-takers worldwide · <strong>Secure Stripe checkout and self-serve billing</strong>
           </span>
         </motion.div>
 
-        {/* FAQ */}
-        <motion.div
-          className="pricing-faq"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <h3 className="pricing-faq-title">Frequently Asked Questions</h3>
-          {FAQS.map((faq, i) => (
-            <div key={i} className={`faq-item${openFaq === i ? ' open' : ''}`}>
-              <button className="faq-question" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                {faq.q}
-                <span className="faq-chevron">{openFaq === i ? '▲' : '▼'}</span>
-              </button>
-              <AnimatePresence>
-                {openFaq === i && (
-                  <motion.div
-                    className="faq-answer"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    <p>{faq.a}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </motion.div>
+        {showFaq && (
+          <motion.div
+            className="pricing-faq"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <h3 className="pricing-faq-title">Frequently Asked Questions</h3>
+            {FAQS.map((faq, i) => (
+              <div key={i} className={`faq-item${openFaq === i ? ' open' : ''}`}>
+                <button className="faq-question" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                  {faq.q}
+                  <span className="faq-chevron">{openFaq === i ? '▲' : '▼'}</span>
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      className="faq-answer"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <p>{faq.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   )

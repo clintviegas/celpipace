@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { BRAND_NAME, SUPPORT_EMAIL } from '../data/constants'
 import CelpipAceLogo from './CelpipAceLogo'
 
 export default function Footer() {
@@ -9,11 +10,12 @@ export default function Footer() {
     {
       heading: 'Practice Tests',
       links: [
-        { label: 'Mock Exams',          page: 'exam' },
-        { label: 'Listening Practice',  page: 'listening' },
-        { label: 'Reading Practice',    page: 'reading' },
-        { label: 'Writing Practice',    page: 'writing' },
-        { label: 'Speaking Practice',   page: 'speaking' },
+        { label: 'CELPIP Practice Test', page: 'celpip-practice-test' },
+        { label: 'CELPIP Mock Test',     page: 'celpip-mock-test' },
+        { label: 'Listening Practice',   page: 'listening' },
+        { label: 'Reading Practice',     page: 'reading' },
+        { label: 'Writing Practice',     page: 'celpip-writing-practice' },
+        { label: 'Speaking Practice',    page: 'celpip-speaking-practice' },
       ],
     },
     {
@@ -23,13 +25,13 @@ export default function Footer() {
         { label: 'Tips & Strategies',      page: 'tips' },
         { label: 'Vocabulary Builder',     page: 'tips' },
         { label: 'Score Tracker',          page: 'scores' },
-        { label: 'CLB to CRS Chart',       page: 'scores' },
+        { label: 'CLB to CRS Chart',       page: 'celpip-score-calculator' },
       ],
     },
     {
       heading: 'Resources',
       links: [
-        { label: 'CELPIP vs IELTS',           page: 'blog' },
+        { label: 'CELPIP vs IELTS',           page: 'celpip-vs-ielts' },
         { label: 'CELPIP for Immigration',    page: 'calculator' },
         { label: 'CRS Calculator',            page: 'calculator' },
         { label: 'Blog & Articles',           page: 'blog' },
@@ -40,10 +42,10 @@ export default function Footer() {
       heading: 'Company',
       links: [
         { label: 'About Us',         page: 'home' },
-        { label: 'Privacy Policy',   page: 'home' },
-        { label: 'Terms of Service', page: 'home' },
-        { label: 'Refund Policy',    page: 'home' },
-        { label: 'Contact',          page: 'home' },
+        { label: 'Privacy Policy',   page: 'privacy' },
+        { label: 'Terms of Service', page: 'terms' },
+        { label: 'Refund Policy',    page: 'refund' },
+        { label: 'Contact',          page: 'contact' },
       ],
     },
   ]
@@ -54,11 +56,12 @@ export default function Footer() {
         <div className="footer-top">
           <div className="footer-brand">
             <button onClick={() => navigate('/')} className="footer-logo-btn" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
-              <CelpipAceLogo height={38} showTagline />
+              <CelpipAceLogo height={52} light />
             </button>
             <p className="footer-tagline">
-              Your fastest path to a 10+ CELPIP score. Practice with instant scoring across all 4 skills.
+              Focused CELPIP practice with instant scoring across all 4 skills.
             </p>
+            <a className="footer-email" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
             <div className="footer-socials">
               <a href="https://www.youtube.com/@CELPIPiQ" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3.01 3.01 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3.01 3.01 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3.01 3.01 0 0 0 2.1 2.1C4.5 20.5 12 20.5 12 20.5s7.5 0 9.4-.5a3.01 3.01 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.75 15.5V8.5l6.5 3.5-6.5 3.5z"/></svg>
@@ -76,7 +79,7 @@ export default function Footer() {
                 {col.links.map(l => (
                   <li key={l.label}>
                     <button
-                      onClick={() => navigate('/' + (l.page === 'home' ? '' : l.page))}
+                      onClick={() => navigate(l.path || '/' + (l.page === 'home' ? '' : l.page))}
                       style={{background:'none',border:'none',cursor:'pointer',padding:0,font:'inherit',color:'inherit',textAlign:'left'}}
                     >
                       {l.label}
@@ -89,9 +92,9 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {year} celpipAce. All rights reserved.</p>
+          <p>© {year} {BRAND_NAME}. All rights reserved.</p>
           <p className="footer-disclaimer">
-            celpipAce is an independent practice tool and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
+            {BRAND_NAME} is an independent practice tool and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
           </p>
         </div>
       </div>

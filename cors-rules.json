@@ -2,7 +2,7 @@
   "rules": [
     {
       "allowed": {
-        "origins": ["https://celpipace.vercel.app", "http://localhost:5173"],
+        "origins": ["https://celpipace.ca", "https://www.celpipace.ca", "http://localhost:5173"],
         "methods": ["GET", "HEAD"],
         "headers": ["*"]
       },

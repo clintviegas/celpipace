@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { BRAND_NAME } from '../data/constants'
 
 export default function CTA() {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ export default function CTA() {
             </button>
           </div>
           <p className="hp-cta-disclaimer">
-            celpipAce is an independent preparation platform and is not affiliated with
+            {BRAND_NAME} is an independent preparation platform and is not affiliated with
             Paragon Testing Enterprises or the official CELPIP® test.
           </p>
         </motion.div>

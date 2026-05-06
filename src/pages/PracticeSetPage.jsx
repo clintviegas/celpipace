@@ -16,10 +16,10 @@ import ScoreTips, { getListeningTips, getWritingTips } from '../components/Score
    SECTION CONFIG — colours & icons per section
 ══════════════════════════════════════════════════════════════ */
 const SECTION_CONFIG = {
-  listening: { color: '#4A90D9', icon: '🎧', label: 'Listening', page: 'listening' },
-  reading:   { color: '#2D8A56', icon: '📖', label: 'Reading',   page: 'reading'   },
-  writing:   { color: '#C8972A', icon: '✍️',  label: 'Writing',  page: 'writing'   },
-  speaking:  { color: '#C8102E', icon: '🎙️', label: 'Speaking',  page: 'speaking'  },
+  listening: { color: '#4A90D9', icon: '🎧', label: 'Listening', page: 'celpip-listening-practice' },
+  reading:   { color: '#2D8A56', icon: '📖', label: 'Reading',   page: 'celpip-reading-practice'   },
+  writing:   { color: '#C8972A', icon: '✍️',  label: 'Writing',  page: 'celpip-writing-practice'   },
+  speaking:  { color: '#C8102E', icon: '🎙️', label: 'Speaking',  page: 'celpip-speaking-practice'  },
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1830,7 +1830,14 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
     setAiResult(result)
     setAiLoading(false)
     if (result && result.overall && onComplete) {
-      onComplete('writing', q.section, q.num, Math.round(result.overall), 12)
+      onComplete('writing', q.section, q.num, Math.round(result.overall), 12, {
+        source: 'writing-practice',
+        prompt: q.prompt,
+        criteria: q.criteria || null,
+        responseText: text,
+        wordCount,
+        aiResult: result,
+      })
     }
   }
 
@@ -2091,6 +2098,7 @@ function ListeningLayout({ color, partId, onComplete }) {
   const [audioError, setAudioError]       = useState(false)
   const audioRef           = useRef(null)
   const lineIdxRef         = useRef(-1)
+  const audioRetryRef      = useRef(null)
   const timerRef           = useRef(null)
   const otRef              = useRef(null)
   const transcriptBodyRef  = useRef(null)
@@ -2109,6 +2117,25 @@ function ListeningLayout({ color, partId, onComplete }) {
   const correctCnt = qs.filter((q, qi) => { const a = answers[aKey(qi)]; return a !== undefined && a === q.answer }).length
   const isSetDone  = doneCount === total
   const scorePct   = total > 0 ? Math.round((correctCnt / total) * 100) : 0
+
+  const buildListeningAttemptDetails = () => ({
+    source: 'listening-practice',
+    setTitle: set.title || set.setTitle || '',
+    scenario: set.scenario || '',
+    questions: qs.map((question, questionIndex) => {
+      const selectedAnswer = answers[aKey(questionIndex)]
+      return {
+        questionId: question.id ?? question.num ?? questionIndex + 1,
+        number: question.num ?? questionIndex + 1,
+        text: question.text,
+        selectedAnswer,
+        correctAnswer: question.answer,
+        isCorrect: selectedAnswer !== undefined && selectedAnswer === question.answer,
+        options: question.options || [],
+        skill: question.skill || question.questionType || null,
+      }
+    }),
+  })
 
   /* Per-set sidebar helpers — persisted progress + live-session fallback */
   const storedFor = (si) => part.sets[si] && getSetScore('listening', partId, part.sets[si].setNumber)
@@ -2136,6 +2163,15 @@ function ListeningLayout({ color, partId, onComplete }) {
     return asset(`/audio/${partId}/set-${sn}/line-${ln}.mp3`)
   }
 
+  const playAudioElement = (audio, idx, attempt = 0) => {
+    audio.play().catch(() => {
+      if (audio.error || lineIdxRef.current !== idx) return
+      if (audioRetryRef.current) clearTimeout(audioRetryRef.current)
+      const retryDelay = document.hidden ? 1000 : Math.min(1200, 250 + attempt * 250)
+      audioRetryRef.current = setTimeout(() => playAudioElement(audio, idx, attempt + 1), retryDelay)
+    })
+  }
+
   /* ── Play audio from a specific line ── */
   const playFromLine = (idx) => {
     const curSet = part.sets[activeSetRef.current]
@@ -2149,10 +2185,7 @@ function ListeningLayout({ color, partId, onComplete }) {
     setCurrentLineIdx(idx)
     const audio = audioRef.current
     audio.src = getAudioPath(curSet.setNumber, idx)
-    audio.play().catch(() => {
-      /* file may not exist — skip to next */
-      setTimeout(() => playFromLine(idx + 1), 250)
-    })
+    playAudioElement(audio, idx)
   }
 
   /* ── Audio event listeners ── */
@@ -2196,8 +2229,28 @@ function ListeningLayout({ color, partId, onComplete }) {
     playFromLine(0)
   }
 
+  const stopAudio = () => {
+    if (audioRetryRef.current) clearTimeout(audioRetryRef.current)
+    audioRetryRef.current = null
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.removeAttribute('src')
+      audioRef.current.load()
+    }
+  }
+
+  const skipAudio = () => {
+    stopAudio()
+    setAudioPhase('done')
+    setCurrentLineIdx(-1)
+    lineIdxRef.current = -1
+    setAudioError(false)
+    if (!started && startTimerRef.current) startTimerRef.current()
+  }
+
   /* ── Timer ── */
   const startTimer = () => {
+    if (started) return
     const mins = part.timeLimitMinutes
     setTimeLeft(mins * 60)
     setStarted(true)
@@ -2219,6 +2272,12 @@ function ListeningLayout({ color, partId, onComplete }) {
   }
   startTimerRef.current = startTimer
 
+  useEffect(() => () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (otRef.current) clearInterval(otRef.current)
+    stopAudio()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const fmtTime = (secs) => {
     if (secs === null) return '--:--'
     const m = Math.floor(Math.abs(secs) / 60)
@@ -2228,7 +2287,7 @@ function ListeningLayout({ color, partId, onComplete }) {
 
   /* ── Reset current set (reattempt) ── */
   const reattemptSet = () => {
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute('src') }
+    stopAudio()
     setAnswers(a => {
       const next = { ...a }
       qs.forEach((_, qi) => { delete next[aKey(qi)] })
@@ -2251,7 +2310,7 @@ function ListeningLayout({ color, partId, onComplete }) {
   /* ── Switch set ── */
   const switchSet = (si) => {
     if (!isPremium && si > 0) { setUpgradeFor(part.sets[si]?.setNumber || si + 1); return }
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.removeAttribute('src') }
+    stopAudio()
     setActiveSetIdx(si)
     setShowBanner(false)
     setShowCompletion(false)
@@ -2279,7 +2338,7 @@ function ListeningLayout({ color, partId, onComplete }) {
     if (isSetDone && !showCompletion) {
       if (timerRef.current) clearInterval(timerRef.current)
       if (otRef.current) clearInterval(otRef.current)
-      if (onComplete) onComplete('listening', partId, set.setNumber, correctCnt, total)
+      if (onComplete) onComplete('listening', partId, set.setNumber, correctCnt, total, buildListeningAttemptDetails())
       const t = setTimeout(() => setShowCompletion(true), 500)
       return () => clearTimeout(t)
     }
@@ -2328,7 +2387,7 @@ function ListeningLayout({ color, partId, onComplete }) {
     <>
     <div className="ll-shell">
       {/* Hidden audio element */}
-      <audio ref={audioRef} preload="none" />
+      <audio ref={audioRef} preload="auto" />
 
       {/* ── SIDEBAR — only this part's sets ── */}
       <aside className="ll-sidebar">
@@ -2429,9 +2488,12 @@ function ListeningLayout({ color, partId, onComplete }) {
                 {timeUp && <span className="ll-timer-up-label">overtime</span>}
               </div>
             ) : (
-              <button className="ll-start-btn" style={{ background: color }} onClick={startAudio}>
-                {'\u25B6'} Listen & Start ({part.timeLimitMinutes} min)
-              </button>
+              <div className="ll-audio-actions">
+                <button className="ll-start-btn" style={{ background: color }} onClick={startAudio}>
+                  {'\u25B6'} Listen & Start ({part.timeLimitMinutes} min)
+                </button>
+                <button className="ll-skip-audio-btn" onClick={skipAudio}>Skip Audio</button>
+              </div>
             )}
           </div>
         </div>
@@ -2480,6 +2542,7 @@ function ListeningLayout({ color, partId, onComplete }) {
           <div className="ll-audio-bar ll-audio-bar--playing" style={{ borderColor: color, background: `${color}0a` }}>
             <span className="ll-audio-pulse" style={{ background: color }} />
             <span className="ll-audio-bar-text">{'\uD83D\uDD0A'} Playing line {currentLineIdx + 1} of {set.transcript.length}…</span>
+            <button className="ll-audio-skip" onClick={skipAudio}>Skip Audio</button>
           </div>
         )}
 
@@ -2663,7 +2726,7 @@ function ListeningLayout({ color, partId, onComplete }) {
                     </button>
                   )}
                   <button className="ll-completion-reattempt" onClick={reattemptSet}>
-                    {'\uD83D\uDD04'} Reattempt
+                    {'\uD83D\uDD04'} Try Again
                   </button>
                   <button className="ll-completion-dismiss" onClick={() => setShowCompletion(false)}>
                     Review Answers
@@ -2681,7 +2744,7 @@ function ListeningLayout({ color, partId, onComplete }) {
             <span className="ll-score-text">
               You scored <strong style={{ color }}>{correctCnt}/{total}</strong> ({scorePct}%) — CLB {getCLB(scorePct).level}
             </span>
-            <button className="ll-score-reattempt-btn" onClick={reattemptSet}>{'\uD83D\uDD04'} Reattempt</button>
+            <button className="ll-score-reattempt-btn" onClick={reattemptSet}>{'\uD83D\uDD04'} Try Again</button>
             <button className="ll-score-details-btn" style={{ color }} onClick={() => setShowCompletion(true)}>View Details</button>
           </div>
         )}
@@ -2752,6 +2815,32 @@ function ReadingLayout({ color, partId, onComplete }) {
       return acc + (a === q.answer ? 1 : 0)
     }, 0)
   }
+
+  const buildReadingAttemptDetails = (partInfo, setInfo, partIndex, setIndex) => ({
+    source: 'reading-practice',
+    setTitle: setInfo.title || setInfo.setTitle || '',
+    partId: partInfo.partId,
+    questions: setInfo.questions.map((question, questionIndex) => {
+      const selectedAnswer = answers[aKey(partIndex, setIndex, questionIndex)]
+      const correctAnswer = question.type === 'drag_drop'
+        ? (question.matchItems || []).map(item => item.answer)
+        : question.answer
+      const isCorrect = question.type === 'drag_drop'
+        ? (question.matchItems || []).every((item, matchIndex) => (selectedAnswer?.[matchIndex] || '') === item.answer)
+        : selectedAnswer !== undefined && selectedAnswer === question.answer
+
+      return {
+        questionId: question.id ?? question.num ?? questionIndex + 1,
+        number: question.num ?? questionIndex + 1,
+        type: question.type || question.questionType || 'mcq',
+        text: question.text,
+        selectedAnswer,
+        correctAnswer,
+        isCorrect,
+        options: question.options || [],
+      }
+    }),
+  })
   const totalQs   = parts.reduce((acc, p) => acc + p.sets.reduce((a2, s) => a2 + s.questions.length, 0), 0)
   // Sidebar progress uses persisted completion (so it never "disappears" on navigation)
   const totalDone = parts.reduce((acc, p, pi) => acc + p.sets.reduce((a2, s, si) => {
@@ -3023,7 +3112,14 @@ function ReadingLayout({ color, partId, onComplete }) {
         recordedRef.current[rKey] = true
         const p = parts[activePartIdx]
         const s = p.sets[activeSetIdx]
-        onComplete('reading', p.partId, s.setNumber, setCorrectCount(activePartIdx, activeSetIdx), s.questions.length)
+        onComplete(
+          'reading',
+          p.partId,
+          s.setNumber,
+          setCorrectCount(activePartIdx, activeSetIdx),
+          s.questions.length,
+          buildReadingAttemptDetails(p, s, activePartIdx, activeSetIdx)
+        )
       }
     }
   }, [answers]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -4204,7 +4300,14 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setPhase('done')
     if (!completedSets[activeIdx]) {
       setCompleted(c => ({ ...c, [activeIdx]: true }))
-      if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1)
+      if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1, {
+        source: 'speaking-practice',
+        prompt: prompt.prompt,
+        taskType: meta.label,
+        topic: prompt.topic || prompt.topicName,
+        responseText: transcripts[activeIdx] || finalTranscriptRef.current || '',
+        completedBy: 'finish-button',
+      })
     }
   }
 
@@ -4223,7 +4326,14 @@ function SpeakingLayout({ color, partId, onComplete }) {
       setPhase('done')
       if (!completedSets[activeIdx]) {
         setCompleted(c => ({ ...c, [activeIdx]: true }))
-        if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1)
+        if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1, {
+          source: 'speaking-practice',
+          prompt: prompt.prompt,
+          taskType: meta.label,
+          topic: prompt.topic || prompt.topicName,
+          responseText: transcripts[activeIdx] || finalTranscriptRef.current || '',
+          completedBy: 'timer',
+        })
       }
     }
   }, [phase, elapsed, prompt.speak_time_seconds])
@@ -4256,7 +4366,15 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setAiResult(result)
     setAiLoading(false)
     if (result && result.overall && onComplete) {
-      onComplete('speaking', partId, prompt.setId, Math.round(result.overall), 12)
+      onComplete('speaking', partId, prompt.setId, Math.round(result.overall), 12, {
+        source: 'speaking-practice',
+        prompt: prompt.prompt,
+        taskType: meta.label,
+        topic: prompt.topic || prompt.topicName,
+        responseText: transcript,
+        wordCount,
+        aiResult: result,
+      })
     }
   }
 
@@ -5564,7 +5682,22 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
   useEffect(() => {
     if (allDone && onComplete && !recordedRef.current[activeSet]) {
       recordedRef.current[activeSet] = true
-      onComplete(section, partId, set.setNumber || activeSet + 1, correct, total)
+      onComplete(section, partId, set.setNumber || activeSet + 1, correct, total, {
+        source: 'practice-layout',
+        setTitle: set.setTitle || set.title || '',
+        questions: sortedQs.map((question, questionIndex) => {
+          const selectedAnswer = answers[ansKey(activeSet, questionIndex)]
+          return {
+            questionId: question.id ?? question.num ?? questionIndex + 1,
+            number: question.num ?? questionIndex + 1,
+            text: question.text,
+            selectedAnswer,
+            correctAnswer: question.answer,
+            isCorrect: selectedAnswer !== undefined && selectedAnswer === question.answer,
+            options: question.options || [],
+          }
+        }),
+      })
     }
   }, [allDone, activeSet]) // eslint-disable-line react-hooks/exhaustive-deps
 

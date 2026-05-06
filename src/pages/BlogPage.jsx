@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate, useParams } from 'react-router-dom'
 import { BLOG_ARTICLES, BLOG_CATEGORIES } from '../data/blogData'
 import SEO from '../components/SEO'
+import { BRAND_NAME } from '../data/constants'
 
 /* ── Reading progress bar ── */
 function ReadingProgress({ articleRef }) {
@@ -40,6 +42,11 @@ function ArticleView({ article, onBack, relatedArticles }) {
       transition={{ duration: 0.3 }}
       ref={bodyRef}
     >
+      <SEO
+        title={article.title}
+        description={article.excerpt}
+        canonical={`/blog/${article.slug}`}
+      />
       <ReadingProgress articleRef={bodyRef} />
 
       {/* Back button */}
@@ -90,7 +97,7 @@ function ArticleView({ article, onBack, relatedArticles }) {
           <div className="blog-art-cta">
             <div className="blog-art-cta-text">
               <strong>Practice makes the difference.</strong>
-              <span> Use celpipAce's instant-scored practice questions to put these strategies into action.</span>
+              <span> Use {BRAND_NAME}'s instant-scored practice questions to put these strategies into action.</span>
             </div>
             <a href="/exam" className="blog-art-cta-btn">Start Practising →</a>
           </div>
@@ -146,7 +153,6 @@ function ArticleCard({ article, onClick, index }) {
       tabIndex={0}
       onKeyDown={e => e.key === 'Enter' && onClick(article)}
     >
-      {/* Color band at top */}
       <div
         className="blog-card-band"
         style={{ background: `linear-gradient(135deg, ${article.tagColor}, ${article.tagColor}99)` }}
@@ -168,7 +174,7 @@ function ArticleCard({ article, onClick, index }) {
 
         <div className="blog-card-footer">
           <span className="blog-card-date">{article.date}</span>
-          <span className="blog-card-cta">Read article →</span>
+          <span className="blog-card-cta">Read article {'->'}</span>
         </div>
       </div>
     </motion.article>
@@ -177,9 +183,19 @@ function ArticleCard({ article, onClick, index }) {
 
 /* ── Main BlogPage ── */
 export default function BlogPage() {
+  const navigate = useNavigate()
+  const { slug } = useParams()
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeArticle, setActiveArticle]   = useState(null)
   const [search, setSearch]                 = useState('')
+
+  useEffect(() => {
+    if (!slug) {
+      setActiveArticle(null)
+      return
+    }
+    setActiveArticle(BLOG_ARTICLES.find(a => a.slug === slug) || null)
+  }, [slug])
 
   const filtered = BLOG_ARTICLES.filter(a => {
     const matchCat = activeCategory === 'all' || a.category === activeCategory
@@ -196,9 +212,9 @@ export default function BlogPage() {
 
   const handleBack = (articleOrNull) => {
     if (articleOrNull && articleOrNull.slug) {
-      setActiveArticle(articleOrNull)
+      navigate(`/blog/${articleOrNull.slug}`)
     } else {
-      setActiveArticle(null)
+      navigate('/blog')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
@@ -206,7 +222,7 @@ export default function BlogPage() {
   return (
     <div className="blog-page">
       <SEO
-        title="Blog & Articles – CELPIP Tips, Strategies & Immigration Guides"
+        title="Blog & Articles - CELPIP Tips, Strategies & Immigration Guides"
         description="Read expert CELPIP tips, section-by-section strategies, CLB scoring guides, and Express Entry immigration articles written by certified coaches."
         canonical="/blog"
       />
@@ -227,19 +243,18 @@ export default function BlogPage() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            {/* ── Blog Hero ── */}
             <div className="blog-hero">
               <div className="blog-hero-inner">
-                <span className="blog-hero-badge">celpipAce Blog</span>
+                <span className="blog-hero-badge">{BRAND_NAME} Blog</span>
                 <h1 className="blog-hero-title">
                   Expert Tips, Strategies &<br />
                   <span className="blog-hero-accent">Immigration Guides</span>
                 </h1>
                 <p className="blog-hero-sub">
-                  In-depth articles to help you score higher on CELPIP and strengthen your Express Entry application.
+                  In-depth articles to help you prepare for CELPIP and strengthen your Express Entry application.
                 </p>
                 <div className="blog-hero-search-wrap">
-                  <span className="blog-hero-search-icon">🔍</span>
+                  <span className="blog-hero-search-icon" aria-hidden="true">🔍</span>
                   <input
                     className="blog-hero-search"
                     placeholder="Search articles..."
@@ -250,7 +265,6 @@ export default function BlogPage() {
               </div>
             </div>
 
-            {/* ── Category tabs ── */}
             <div className="blog-cats-wrap">
               <div className="blog-cats">
                 {BLOG_CATEGORIES.map(cat => (
@@ -270,7 +284,6 @@ export default function BlogPage() {
               </div>
             </div>
 
-            {/* ── Article grid ── */}
             <div className="blog-content">
               {filtered.length === 0 ? (
                 <div className="blog-empty">
@@ -289,7 +302,7 @@ export default function BlogPage() {
                       <ArticleCard
                         key={article.slug}
                         article={article}
-                        onClick={setActiveArticle}
+                        onClick={(nextArticle) => navigate(`/blog/${nextArticle.slug}`)}
                         index={i}
                       />
                     ))}

@@ -141,16 +141,27 @@ function PartCard({ part, onStart }) {
   )
 }
 
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 export default function ReadingPage() {
   const navigate = useNavigate()
-  const handleStart = (part) => { navigate(`/reading/${part.id}`) }
+  const handleStart = (part) => { navigate(`/celpip-reading-practice/${part.id}`) }
 
   return (
     <div className="lp-root">
       <SEO
-        title="CELPIP Reading Practice – Correspondence, Diagrams & Viewpoints"
-        description="Practice all 4 CELPIP Reading parts with expert breakdowns, tips for inference questions, and strategies for apply-diagram and viewpoints tasks."
-        canonical="/reading"
+        title="CELPIP Reading Practice — Correspondence, Diagrams, Information & Viewpoints"
+        description="CELPIP Reading practice across all 4 parts: correspondence, apply-a-diagram, information, and viewpoints. Inference tips, timing strategy, and explanations."
+        canonical="/celpip-reading-practice"
+        jsonLd={FAQ_JSONLD}
       />
       <section className="lp-hero" style={{ background: 'linear-gradient(135deg, #0F1F3D 0%, #0f3324 60%, #1a4a35 100%)' }}>
         <div className="lp-hero-inner">

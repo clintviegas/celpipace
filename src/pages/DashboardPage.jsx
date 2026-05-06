@@ -59,8 +59,11 @@ function getCLB(pct) {
 const DashboardPage = () => {
   const navigate = useNavigate()
   const { user, isPremium } = useAuth()
-  const { stats, streak, activity } = useProgress()
+  const { stats, streak, activity, pendingSync, retryPendingSync } = useProgress()
+  const [retrying, setRetrying] = useState(false)
   const [motivIdx] = useState(() => Math.floor(Math.random() * MOTIVATIONAL.length))
+  const [activityPage, setActivityPage] = useState(1)
+  const ACTIVITY_PER_PAGE = 10
 
   // ── Active in-progress sessions (for Resume card) ────────────────────
   const [activeSessions, setActiveSessions] = useState([])
@@ -105,11 +108,16 @@ const DashboardPage = () => {
 
   // Next recommended action
   const getNextAction = () => {
-    if (stats.totalCompleted === 0) return { text: 'Start your first practice set', route: '/listening', icon: '🚀' }
-    if (weakest?.key) return { text: `Practice ${weakest.label} — your weakest section`, route: '/' + weakest.key, icon: '🎯' }
+    if (stats.totalCompleted === 0) return { text: 'Start your first practice set', route: '/celpip-listening-practice', icon: '🚀' }
+    if (weakest?.key) return { text: `Practice ${weakest.label} — your weakest section`, route: `/celpip-${weakest.key}-practice`, icon: '🎯' }
     return { text: 'Continue practising', route: '/exam', icon: '📝' }
   }
   const nextAction = getNextAction()
+
+  const handleRetrySync = async () => {
+    setRetrying(true)
+    try { await retryPendingSync?.() } finally { setRetrying(false) }
+  }
 
   return (
     <main className="db-page">
@@ -118,6 +126,35 @@ const DashboardPage = () => {
         description="Your CELPIP practice dashboard. Track your progress, resume practice sets, and see your CLB score improvements."
         noindex={true}
       />
+
+      {pendingSync > 0 && (
+        <div
+          role="status"
+          style={{
+            background: '#fef3c7', color: '#92400e',
+            border: '1px solid #fde68a', borderRadius: 12,
+            padding: '12px 16px', margin: '16px auto 0', maxWidth: 1200,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: 12, fontSize: 14, fontWeight: 500,
+          }}
+        >
+          <span>
+            {pendingSync} practice {pendingSync === 1 ? 'score' : 'scores'} not yet synced to your account.
+            Your progress is safe locally and will retry automatically.
+          </span>
+          <button
+            onClick={handleRetrySync}
+            disabled={retrying}
+            style={{
+              background: '#92400e', color: '#fff', border: 'none',
+              borderRadius: 8, padding: '6px 14px', fontSize: 13, fontWeight: 600,
+              cursor: retrying ? 'wait' : 'pointer',
+            }}
+          >
+            {retrying ? 'Retrying…' : 'Retry now'}
+          </button>
+        </div>
+      )}
 
       {/* ── Welcome Bar ── */}
       <div className="db-welcome-bar">
@@ -323,7 +360,9 @@ const DashboardPage = () => {
             </div>
           ) : (
             <div className="db-activity-feed">
-              {activity.slice(0, 10).map((a, i) => {
+              {activity
+                .slice((activityPage - 1) * ACTIVITY_PER_PAGE, activityPage * ACTIVITY_PER_PAGE)
+                .map((a, i) => {
                 const sec = SECTIONS.find(s => s.key === a.section)
                 const scoreColor = a.pct >= 70 ? '#2D8A56' : a.pct >= 50 ? '#C8972A' : '#C8102E'
                 return (
@@ -349,6 +388,37 @@ const DashboardPage = () => {
                   </motion.div>
                 )
               })}
+            </div>
+          )}
+          {activity.length > ACTIVITY_PER_PAGE && (
+            <div className="db-activity-pagination">
+              <button
+                className="db-activity-page-btn"
+                onClick={() => setActivityPage(p => Math.max(1, p - 1))}
+                disabled={activityPage === 1}
+                aria-label="Previous page"
+              >
+                ←
+              </button>
+              {Array.from({ length: Math.ceil(activity.length / ACTIVITY_PER_PAGE) }, (_, i) => i + 1).map(n => (
+                <button
+                  key={n}
+                  className={`db-activity-page-btn${n === activityPage ? ' active' : ''}`}
+                  onClick={() => setActivityPage(n)}
+                  aria-label={`Page ${n}`}
+                  aria-current={n === activityPage ? 'page' : undefined}
+                >
+                  {n}
+                </button>
+              ))}
+              <button
+                className="db-activity-page-btn"
+                onClick={() => setActivityPage(p => Math.min(Math.ceil(activity.length / ACTIVITY_PER_PAGE), p + 1))}
+                disabled={activityPage === Math.ceil(activity.length / ACTIVITY_PER_PAGE)}
+                aria-label="Next page"
+              >
+                →
+              </button>
             </div>
           )}
         </section>
