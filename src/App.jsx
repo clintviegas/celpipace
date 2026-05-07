@@ -264,7 +264,7 @@ export function AppInner() {
         <Routes>
           <Route path="/" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/practice" element={<RequireAuth reason="Sign in with Google to open practice questions and save your results."><PracticePage /></RequireAuth>} />
+          <Route path="/practice" element={<PracticePage />} />
           <Route path="/celpip-practice-test" element={<SEOLandingPage type="practice" />} />
           <Route path="/celpip-mock-test" element={<SEOLandingPage type="mock" />} />
           <Route path="/celpip-score-calculator" element={<SEOLandingPage type="score" />} />
@@ -277,13 +277,13 @@ export function AppInner() {
 
           {/* Canonical SEO routes — these are the real pages */}
           <Route path="/celpip-listening-practice" element={<ListeningPage />} />
-          <Route path="/celpip-listening-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this listening practice set."><PracticeSetPage section="listening" /></RequireAuth>} />
+          <Route path="/celpip-listening-practice/:partId" element={<PracticeSetPage section="listening" />} />
           <Route path="/celpip-reading-practice" element={<ReadingPage />} />
-          <Route path="/celpip-reading-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this reading practice set."><ReadingPracticePage /></RequireAuth>} />
+          <Route path="/celpip-reading-practice/:partId" element={<ReadingPracticePage />} />
           <Route path="/celpip-writing-practice" element={<WritingPage />} />
-          <Route path="/celpip-writing-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this writing practice set."><PracticeSetPage section="writing" /></RequireAuth>} />
+          <Route path="/celpip-writing-practice/:partId" element={<PracticeSetPage section="writing" />} />
           <Route path="/celpip-speaking-practice" element={<SpeakingPage />} />
-          <Route path="/celpip-speaking-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this speaking practice set."><PracticeSetPage section="speaking" /></RequireAuth>} />
+          <Route path="/celpip-speaking-practice/:partId" element={<PracticeSetPage section="speaking" />} />
 
           {/* Legacy short routes — SPA fallback redirects (server-level 301 in vercel.json is primary) */}
           <Route path="/listening" element={<Navigate to="/celpip-listening-practice" replace />} />
@@ -294,13 +294,13 @@ export function AppInner() {
           <Route path="/writing/:partId" element={<RedirectWithParam to="/celpip-writing-practice" />} />
           <Route path="/speaking" element={<Navigate to="/celpip-speaking-practice" replace />} />
           <Route path="/speaking/:partId" element={<RedirectWithParam to="/celpip-speaking-practice" />} />
-          <Route path="/practice-set" element={<RequireAuth reason="Sign in with Google to open practice questions and save your score."><PracticeSetPage /></RequireAuth>} />
+          <Route path="/practice-set" element={<PracticeSetPage />} />
           <Route path="/pricing" element={<PricingPage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/payment" element={<PaymentPage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/subscription" element={<ManageSubscriptionPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPage />} />
-          <Route path="/writing-practice" element={<RequireAuth reason="Sign in with Google to write responses and save your progress."><WritingPracticePage /></RequireAuth>} />
+          <Route path="/writing-practice" element={<WritingPracticePage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<LegalPage />} />
           <Route path="/terms" element={<LegalPage />} />
