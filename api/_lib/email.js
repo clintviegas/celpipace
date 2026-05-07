@@ -113,7 +113,7 @@ function shell({ heading, body, ctaUrl, ctaLabel }) {
         <tr><td><a href="${escapeAttr(ctaUrl)}" style="display:inline-block;background:#0f172a;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px">${escapeHtml(ctaLabel || 'Open CELPIPACE')}</a></td></tr>` : ''}
         <tr><td style="height:30px"></td></tr>
         <tr><td style="font-size:12px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:18px">
-          CELPIPACE · CELPIP practice and AI scoring · <a href="${SITE}" style="color:#94a3b8">${SITE.replace(/^https?:\/\//, '')}</a><br/>
+          CELPIPACE · CELPIP practice and real-time scoring · <a href="${SITE}" style="color:#94a3b8">${SITE.replace(/^https?:\/\//, '')}</a><br/>
           Need help? Reply to this email or visit <a href="${SITE}/contact" style="color:#94a3b8">${SITE.replace(/^https?:\/\//, '')}/contact</a>.
         </td></tr>
       </table>
@@ -142,7 +142,7 @@ export function renderWelcome({ name, plan }) {
   const subject = `Welcome to CELPIPACE Premium`
   const heading = `You're in. Let's get you to CLB 9.`
   const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
-    <p>Your <strong>${escapeHtml(plan || 'Premium')}</strong> subscription is active. You now have full access to mock exams, AI scoring, all practice sets, and saved CLB reports.</p>
+    <p>Your <strong>${escapeHtml(plan || 'Premium')}</strong> subscription is active. You now have full access to mock exams, real-time scoring, all practice sets, and saved CLB reports.</p>
     <p>Start with a diagnostic mock exam to see where you stand, then drill the lowest-scoring section.</p>`
   return { subject, html: shell({ heading, body, ctaUrl: `${SITE}/dashboard`, ctaLabel: 'Open Dashboard' }) }
 }

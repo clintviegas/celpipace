@@ -417,7 +417,7 @@ export function useProgress() {
     let totalCorrect = 0
     let totalQuestions = 0
 
-    // Writing & Speaking store the AI overall band (0-12 CLB scale) as "score" with total=12.
+    // Writing & Speaking store the real-time overall band (0-12 CLB scale) as "score" with total=12.
     // For these sections the average CLB is simply the mean of stored scores — NOT a pct mapping.
     const CLB_SECTIONS = new Set(['writing', 'speaking'])
 

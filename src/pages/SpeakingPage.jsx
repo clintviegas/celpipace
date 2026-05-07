@@ -202,8 +202,8 @@ export default function SpeakingPage() {
   return (
     <div className="lp-root">
       <SEO
-        title="CELPIP Speaking Practice for All 8 Tasks With AI Feedback"
-        description="Practice all 8 CELPIP Speaking tasks with timed prompts, recordings, transcripts, and AI feedback for fluency, vocabulary, and task fulfillment."
+        title="CELPIP Speaking Practice for All 8 Tasks With Real-Time Feedback"
+        description="Practice all 8 CELPIP Speaking tasks with timed prompts, recordings, transcripts, and real-time feedback for fluency, vocabulary, and task fulfillment."
         canonical="/celpip-speaking-practice"
         jsonLd={FAQ_JSONLD}
       />
@@ -213,7 +213,7 @@ export default function SpeakingPage() {
             🎙️ CELPIP Speaking
           </div>
           <h1 className="lp-hero-title">Speak with confidence, not a script.</h1>
-          <p className="lp-hero-subtitle">Eight tasks, real-time prep countdowns and AI feedback on fluency, range and clarity.<br/>8 tasks · 15–20 minutes · 30–90s per task · CLB 4–12</p>
+          <p className="lp-hero-subtitle">Eight tasks, real-time prep countdowns and feedback on fluency, range and clarity.<br/>8 tasks · 15–20 minutes · 30–90s per task · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>8</strong><span>Tasks</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>15–20 min</strong><span>Duration</span></div>

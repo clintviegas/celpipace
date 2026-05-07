@@ -444,8 +444,8 @@ function ScoreModal({ examNumber, session, attempts = [], onClose, onReview, onR
                         {s.objective
                           ? (s.hasData ? `${s.correct}/${s.total} correct` : 'Not attempted')
                           : (s.band != null
-                              ? `AI scored — average ${formatBandScore(s.band)}`
-                              : (s.hasData ? 'Submitted — no AI evaluation' : 'Not submitted'))
+                              ? `Real-time scored — average ${formatBandScore(s.band)}`
+                              : (s.hasData ? 'Submitted — no scoring yet' : 'Not submitted'))
                         }
                       </div>
                     </div>

@@ -1642,7 +1642,7 @@ const WRITING_SETS = {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   AI SCORING — STUB (replace with real API in next iteration)
+  REAL-TIME SCORING — STUB (replace with real API in next iteration)
 ══════════════════════════════════════════════════════════════ */
 async function scoreWithAI(responseText, prompt, criteria, taskType) {
   try {
@@ -1657,7 +1657,7 @@ async function scoreWithAI(responseText, prompt, criteria, taskType) {
     }
     return await res.json()
   } catch (err) {
-    console.error('AI scoring error:', err)
+    console.error('Real-time scoring error:', err)
     // Fallback: return error state so UI can handle it
     return {
       overall: 0,
@@ -1670,7 +1670,7 @@ async function scoreWithAI(responseText, prompt, criteria, taskType) {
   }
 }
 
-/* ── AI Feedback Panel ─────────────────────────────────────── */
+/* ── Real-time Feedback Panel ──────────────────────────────── */
 function AIFeedbackPanel({ result, color, onClose }) {
   if (!result) return null
   const CRITERIA_LABELS = {
@@ -2035,7 +2035,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
           </div>
         </div>
 
-        {/* AI Feedback */}
+        {/* Real-time Feedback */}
         <AnimatePresence>
           {aiResult && (
             <AIFeedbackPanel result={aiResult} color={color} onClose={() => setAiResult(null)} />
@@ -3905,7 +3905,7 @@ const SPEAKING_TASK_META = {
   8: { label: 'Unusual Situation',      icon: '\uD83C\uDF00', tips: ['Treat it like any structured response \u2014 don\'t panic', 'State what you would do, explain why', 'Describe the likely outcome', 'Show personality \u2014 examiners score communication, not the plan'] },
 }
 
-/* ── Speaking AI scoring ───────────────────────────────────── */
+/* ── Speaking real-time scoring ────────────────────────────── */
 async function scoreSpeakingWithAI(responseText, prompt, taskType, topic) {
   try {
     const res = await fetch('/api/score-speaking', {
@@ -3919,7 +3919,7 @@ async function scoreSpeakingWithAI(responseText, prompt, taskType, topic) {
     }
     return await res.json()
   } catch (err) {
-    console.error('Speaking AI scoring error:', err)
+    console.error('Speaking real-time scoring error:', err)
     return {
       overall: 0,
       clbBand: '\u2013',
@@ -5060,7 +5060,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
           </div>
         )}
 
-        {/* Transcript + AI scoring (visible after speaking ends) */}
+        {/* Transcript + real-time scoring (visible after speaking ends) */}
         {phase === 'done' && (
           <div className="sl-transcript-section">
             <div className="sl-transcript-label" style={{ color }}>{'\uD83C\uDF99\uFE0F'} Your Response Transcript</div>
@@ -5099,7 +5099,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
           </div>
         )}
 
-        {/* AI Feedback Panel */}
+        {/* Real-time Feedback Panel */}
         <AnimatePresence>
           {aiResult && (
             <SpeakingFeedbackPanel result={aiResult} color={color} onClose={() => setAiResult(null)} />

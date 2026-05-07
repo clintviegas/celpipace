@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'OpenAI API key not configured' });
+    return res.status(500).json({ error: 'Scoring service is not configured' });
   }
 
   const { responseText, prompt, criteria, taskType } = req.body;
@@ -106,14 +106,14 @@ Score this response. Return ONLY the JSON object.`;
     if (!response.ok) {
       const errBody = await response.text();
       console.error('OpenAI error:', response.status, errBody);
-      return res.status(502).json({ error: 'AI service error', detail: errBody });
+      return res.status(502).json({ error: 'Scoring service error', detail: errBody });
     }
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
 
     if (!content) {
-      return res.status(502).json({ error: 'Empty AI response' });
+      return res.status(502).json({ error: 'Empty scoring response' });
     }
 
     // Parse JSON from response (handle markdown code fences if present)

@@ -5,20 +5,23 @@ import { PUBLIC_SITE_URL } from '../data/constants'
 /* ─────────────────────────────────────────────────────────────
    AuthContext — global auth state
    Exposes: user, profile, isPremium, isAdmin, loading,
-            signInWithGoogle, signUpWithEmail, signInWithEmail,
-            resetPassword, signOut, refreshProfile
+            signInWithGoogle, signOut, refreshProfile
 ───────────────────────────────────────────────────────────── */
 const AuthContext = createContext(null)
 
 const ADMIN_EMAIL = 'sales@celpipace.com'
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-function normalizeEmail(email) {
-  return (email || '').trim().toLowerCase()
+function normalizeRedirectPath(redirectPath) {
+  if (typeof redirectPath !== 'string') return '/dashboard'
+  if (!redirectPath.startsWith('/') || redirectPath.startsWith('//')) return '/dashboard'
+  return redirectPath.slice(0, 512) || '/dashboard'
 }
 
-function normalizeDisplayName(displayName) {
-  return (displayName || '').trim().replace(/\s+/g, ' ')
+function getTrustedRedirectOrigin(fallbackOrigin) {
+  if (typeof window === 'undefined') return fallbackOrigin
+  const { hostname, origin } = window.location
+  const trustedHosts = new Set(['localhost', '127.0.0.1', 'celpipace.ca', 'www.celpipace.ca'])
+  return trustedHosts.has(hostname) ? origin : fallbackOrigin
 }
 
 export function AuthProvider({ children }) {
@@ -118,61 +121,15 @@ export function AuthProvider({ children }) {
   /* ── Google OAuth ── */
   const appBaseUrl = PUBLIC_SITE_URL
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (redirectPath = '/dashboard') => {
+    const safeRedirectPath = normalizeRedirectPath(redirectPath)
+    const redirectOrigin = getTrustedRedirectOrigin(appBaseUrl)
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${appBaseUrl}/dashboard` },
-    })
-    if (error) console.error('Google sign-in error:', error.message)
-  }
-
-  /* ── Email + Password Sign Up ── */
-  const signUpWithEmail = async (email, password, displayName) => {
-    const normalizedEmail = normalizeEmail(email)
-    const cleanName = normalizeDisplayName(displayName)
-
-    if (!EMAIL_RE.test(normalizedEmail)) {
-      return { error: 'Please enter a valid email address.' }
-    }
-    if (!password || password.length < 8) {
-      return { error: 'Password must be at least 8 characters.' }
-    }
-
-    const { data: signUpData, error } = await supabase.auth.signUp({
-      email: normalizedEmail,
-      password,
-      options: {
-        emailRedirectTo: `${appBaseUrl}/dashboard`,
-        data: cleanName ? { full_name: cleanName, name: cleanName } : undefined,
-      },
+      options: { redirectTo: `${redirectOrigin}${safeRedirectPath}` },
     })
     if (error) {
-      console.error('Sign-up error:', error.message)
-      return { error: error.message }
-    }
-    if (signUpData?.user?.identities?.length === 0) {
-      return { error: 'An account with this email already exists. Try signing in instead.' }
-    }
-    return { success: true, needsConfirmation: !signUpData.session }
-  }
-
-  /* ── Email + Password Sign In ── */
-  const signInWithEmail = async (email, password) => {
-    const { error } = await supabase.auth.signInWithPassword({ email: normalizeEmail(email), password })
-    if (error) {
-      console.error('Sign-in error:', error.message)
-      return { error: error.message }
-    }
-    return { success: true }
-  }
-
-  /* ── Forgot Password ── */
-  const resetPassword = async (email) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(normalizeEmail(email), {
-      redirectTo: `${appBaseUrl}/reset-password`,
-    })
-    if (error) {
-      console.error('Reset password error:', error.message)
+      console.error('Google sign-in error:', error.message)
       return { error: error.message }
     }
     return { success: true }
@@ -229,9 +186,6 @@ export function AuthProvider({ children }) {
         premiumExpiresAt,
         cancelAtPeriodEnd,
         signInWithGoogle,
-        signUpWithEmail,
-        signInWithEmail,
-        resetPassword,
         signOut,
         refreshProfile,
       }}

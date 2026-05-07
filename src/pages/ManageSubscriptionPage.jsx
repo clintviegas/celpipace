@@ -303,7 +303,7 @@ export default function ManageSubscriptionPage() {
             >
               <h3 style={{ marginBottom: 8 }}>Upgrade to Premium</h3>
               <p style={{ color: '#6b7280', marginBottom: 20 }}>
-                Unlock all {PRODUCT_STATS.mockExams} mock exams, {PRODUCT_STATS.questionItems} question items and prompts, AI scoring, and more.
+                Unlock all {PRODUCT_STATS.mockExams} mock exams, {PRODUCT_STATS.questionItems} question items and prompts, real-time scoring, and more.
               </p>
               <button className="btn" onClick={() => navigate('/#pricing')}>See Plans</button>
             </motion.div>

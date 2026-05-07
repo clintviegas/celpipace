@@ -324,7 +324,7 @@ export const PRICING_PLANS = [
       'Annual subscription',
       '8 full-length mock tests',
       'Instant writing feedback',
-      'AI speaking assessment',
+      'Real-time speaking assessment',
       'Personalised study plan',
       'Priority email support',
     ],

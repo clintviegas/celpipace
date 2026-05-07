@@ -177,7 +177,7 @@ function rdgSetDone(set, type, answers, pfx) {
   return count
 }
 
-/* ── AI scoring stubs (same API as practice pages) ── */
+/* ── Real-time scoring stubs (same API as practice pages) ── */
 async function scoreWritingAI(responseText, prompt, criteria, taskType) {
   try {
     const res = await fetch('/api/score-writing', {
@@ -1470,7 +1470,7 @@ function SectionResults({ section, color, scores, onContinue, isLast }) {
               transition={{ delay: 0.2 }}
             >
               <span className="mk-sr-aiPill-icon">{'⚡'}</span>
-              <span>Submit responses for AI scoring to generate a full band out of 12.</span>
+              <span>Submit responses for real-time scoring to generate a full band out of 12.</span>
             </motion.div>
           )
         )}
@@ -1529,7 +1529,7 @@ function SectionResults({ section, color, scores, onContinue, isLast }) {
                 </div>
               )}
 
-              {/* Writing: show response + AI score */}
+              {/* Writing: show response + real-time score */}
               {section === 'writing' && sc.text && (
                 <div className="mk-sr-writing">
                   <p className="mk-sr-writing-wc">{sc.wordCount} words</p>
@@ -1542,7 +1542,7 @@ function SectionResults({ section, color, scores, onContinue, isLast }) {
                 </div>
               )}
 
-              {/* Speaking: show transcript + AI score */}
+              {/* Speaking: show transcript + real-time score */}
               {section === 'speaking' && sc.transcript && (
                 <div className="mk-sr-speaking">
                   <p className="mk-sr-speaking-wc">{sc.wordCount} words spoken</p>
@@ -1663,12 +1663,12 @@ function FinalResults({ examNumber, scores, onTryAgain }) {
               <>
                 <div className="mk-final-bar"><div className="mk-final-bar-fill" style={{ width: `${Math.min(100, Math.round((s.band / 12) * 100))}%`, background: COLORS[s.section] }} /></div>
                 <p className="mk-final-detail">
-                  AI score {formatBandScore(s.band)} · {s.scoredParts}/{s.totalParts} scored
+                  Real-time score {formatBandScore(s.band)} · {s.scoredParts}/{s.totalParts} scored
                 </p>
               </>
             )}
             {!s.objective && s.band == null && (
-              <p className="mk-final-detail">Not AI-scored — submit responses for evaluation</p>
+              <p className="mk-final-detail">Not scored yet — submit responses for evaluation</p>
             )}
           </motion.div>
         ))}

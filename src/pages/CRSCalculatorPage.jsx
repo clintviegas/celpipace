@@ -261,7 +261,7 @@ function BoostCard({ currentCRS, lang1Min, nonLangCore, spouseTotal, additionalP
       </div>
 
       <button className="btn btn-primary boost-cta" onClick={() => navigate('/exam')}>
-        🎯 Start improving to CLB 9 — AI Practice
+        🎯 Start improving to CLB 9 — Real-Time Practice
       </button>
     </motion.div>
   )
@@ -767,7 +767,7 @@ export default function CRSCalculatorPage() {
                 style={{ width:'100%', marginTop:16, fontSize:14 }}
                 onClick={() => navigate('/exam')}
               >
-                🎯 Boost your score — Start AI practice
+                🎯 Boost your score — Start real-time practice
               </button>
             )}
           </div>
@@ -871,7 +871,7 @@ export default function CRSCalculatorPage() {
               CLB 9 unlocks near-maximum language points — often the single biggest CRS lever available.
             </p>
             <button className="btn btn-outline" style={{ width:'100%', fontSize:13 }} onClick={() => navigate('/exam')}>
-              📖 Practice CELPIP with AI — free
+              📖 Practice CELPIP with real-time scoring — free
             </button>
           </div>
 

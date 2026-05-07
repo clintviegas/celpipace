@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { BarChart3, ClipboardList, Gauge, LineChart, Table2 } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { SCORE_LEVELS } from '../data/constants'
 import { useProgress } from '../hooks/useProgress'
@@ -40,6 +41,13 @@ const CLB_DESCS = {
   7: 'Intermediate', 8: 'Strong', 9: 'Advanced',
   10: 'Exceptional', 11: 'Expert', 12: 'Mastery',
 }
+
+const SCORE_TABS = [
+  { id: 'practice', label: 'Practice Scores', Icon: LineChart },
+  { id: 'mocks', label: 'Mock Reports', Icon: ClipboardList },
+  { id: 'tracker', label: 'CLB Tracker', Icon: Gauge },
+  { id: 'levels', label: 'CLB Score Levels', Icon: Table2 },
+]
 
 function CLBSelector({ value, onChange, color }) {
   return (
@@ -146,32 +154,58 @@ export default function ScoresPage() {
         canonical="/scores"
       />
 
+      <section className="scores-hero" aria-labelledby="scores-title">
+        <div className="scores-hero-copy">
+          <span className="scores-kicker">CELPIP score center</span>
+          <h1 id="scores-title">Track scores, bands, and CRS impact in one place.</h1>
+          <p>
+            Review practice performance, saved mock reports, CLB targets, and Canadian PR language requirements without jumping between tools.
+          </p>
+          <div className="scores-hero-actions">
+            <button className="scores-hero-primary" onClick={() => setActiveTab('practice')}>
+              <LineChart size={17} strokeWidth={2.4} />
+              View progress
+            </button>
+            <button className="scores-hero-secondary" onClick={() => navigate('/calculator')}>
+              <Gauge size={17} strokeWidth={2.4} />
+              CRS calculator
+            </button>
+          </div>
+        </div>
+        <div className="scores-hero-panel" aria-label="Current score summary">
+          <div className="scores-hero-ring" style={{ '--score-ring-pct': `${crsBarPct}%` }}>
+            <span>{totalCRS}</span>
+            <small>CRS language pts</small>
+          </div>
+          <div className="scores-hero-metrics">
+            <div>
+              <strong>{stats.totalCompleted}</strong>
+              <span>sets done</span>
+            </div>
+            <div>
+              <strong>{mockReports.length}</strong>
+              <span>mock reports</span>
+            </div>
+            <div>
+              <strong>CLB {minClb}</strong>
+              <span>lowest target</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Tabs */}
       <div className="scores-tabs">
-        <button
-          className={`scores-tab${activeTab === 'practice' ? ' scores-tab--active' : ''}`}
-          onClick={() => setActiveTab('practice')}
-        >
-          📈 Practice Scores
-        </button>
-        <button
-          className={`scores-tab${activeTab === 'mocks' ? ' scores-tab--active' : ''}`}
-          onClick={() => setActiveTab('mocks')}
-        >
-          📋 Mock Reports
-        </button>
-        <button
-          className={`scores-tab${activeTab === 'tracker' ? ' scores-tab--active' : ''}`}
-          onClick={() => setActiveTab('tracker')}
-        >
-          🎯 CLB Tracker
-        </button>
-        <button
-          className={`scores-tab${activeTab === 'levels' ? ' scores-tab--active' : ''}`}
-          onClick={() => setActiveTab('levels')}
-        >
-          📊 CLB Score Levels
-        </button>
+        {SCORE_TABS.map(({ id, label, Icon }) => (
+          <button
+            key={id}
+            className={`scores-tab${activeTab === id ? ' scores-tab--active' : ''}`}
+            onClick={() => setActiveTab(id)}
+          >
+            <Icon size={16} strokeWidth={2.3} />
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* ── TAB 0: Practice Scores (LIVE) ── */}
@@ -330,7 +364,7 @@ export default function ScoresPage() {
                           : formatBandScore(section.band)
                         const detail = section.objective
                           ? (section.hasData ? `${section.correct}/${section.total}` : 'Not attempted')
-                          : (section.band != null ? `${section.scoredParts}/${section.totalParts} scored` : 'Not AI-scored')
+                          : (section.band != null ? `${section.scoredParts}/${section.totalParts} scored` : 'Not scored yet')
                         return (
                           <div className="mock-report-section" key={section.section} style={{ borderLeftColor: skill?.color || '#CBD5E1' }}>
                             <span className="mock-report-section-icon" style={{ background: skill?.colorLight || '#F3F4F6' }}>{skill?.icon}</span>
@@ -511,6 +545,7 @@ export default function ScoresPage() {
       {activeTab === 'levels' && (
         <div>
           <div className="page-header" style={{ paddingTop: 0 }}>
+            <div className="scores-level-heading-icon"><BarChart3 size={22} strokeWidth={2.4} /></div>
             <h2 className="page-title">CELPIP Score Levels & CLB</h2>
             <p className="page-sub">
               How CELPIP scores map to Canadian Language Benchmarks used in your PR application.

@@ -12,7 +12,7 @@ const PAGES = {
     sections: [
       ['Information We Collect', 'We collect account details, practice activity, payment status, and technical information needed to operate the learning platform. Payment card details are handled by Stripe and are not stored by us.'],
       ['How We Use Information', 'We use information to provide practice access, save progress, score responses, support accounts, prevent abuse, and improve the product.'],
-      ['Service Providers', 'We use providers such as Supabase, Stripe, Vercel, and AI scoring services to run the product. These providers process data only as needed to deliver their services.'],
+      ['Service Providers', 'We use providers such as Supabase, Stripe, Vercel, and scoring services to run the product. These providers process data only as needed to deliver their services.'],
       ['Your Choices', `You can request account support, data correction, or deletion by emailing ${SUPPORT_EMAIL}. Some records may need to be retained for security, legal, tax, or payment reasons.`],
     ],
   },
@@ -23,7 +23,7 @@ const PAGES = {
     updated: 'Last updated: April 27, 2026',
     sections: [
       ['Independent Practice Tool', `${BRAND_NAME} is an independent CELPIP preparation platform and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.`],
-      ['Educational Use', 'Practice content, scores, AI feedback, and study guidance are for preparation only. They do not guarantee an official CELPIP score, immigration result, invitation, or application outcome.'],
+      ['Educational Use', 'Practice content, scores, real-time feedback, and study guidance are for preparation only. They do not guarantee an official CELPIP score, immigration result, invitation, or application outcome.'],
       ['Accounts and Access', 'You are responsible for keeping your login secure. Paid access is for the purchased access period and may not be shared, resold, copied, or redistributed.'],
       ['Acceptable Use', 'Do not abuse the service, scrape content, attempt to bypass payment or access controls, or upload unlawful or harmful material.'],
     ],

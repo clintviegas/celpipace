@@ -160,7 +160,7 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
             setOpenId(null)
           }
         }}
-        onMouseEnter={() => setOpenId(item.id)}
+        onMouseEnter={() => { if (!mobileOpen) setOpenId(item.id) }}
       >
         {item.label}
         <span className="nav-chevron" style={{ transform: open ? 'rotate(180deg)' : 'none' }}>▾</span>
@@ -169,7 +169,7 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
       {open && (
         <div
           className="nav-dropdown"
-          onMouseLeave={() => setOpenId(null)}
+          onMouseLeave={() => { if (!mobileOpen) setOpenId(null) }}
           style={{ '--drop-color': item.color, '--drop-light': item.colorLight }}
         >
           <div className="nav-drop-header" style={{ background: item.colorLight, color: item.color }}>

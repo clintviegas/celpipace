@@ -71,7 +71,7 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.05 }}
         >
           CELPIP Practice Tests With{' '}
-          <span className="hp-hero-accent">AI Scoring</span>
+          <span className="hp-hero-accent">Real-Time Scoring</span>
         </motion.h1>
 
         <motion.p
@@ -80,7 +80,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {PRODUCT_STATS.questionItems} CELPIP-style question items, {PRODUCT_STATS.mockExams} full mock exams, writing and speaking AI feedback, and saved CLB reports for your target score.
+          {PRODUCT_STATS.questionItems} CELPIP-style question items, {PRODUCT_STATS.mockExams} full mock exams, real-time writing and speaking feedback, and saved CLB reports for your target score.
         </motion.p>
 
         <motion.div

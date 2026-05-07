@@ -33,7 +33,7 @@ A modern, full-stack practice app for the **CELPIP (Canadian English Language Pr
 - Listening section (L1–L2)
 - Writing section (W1–W2) with model answers
 - Speaking section (S1–S2)
-- AI writing feedback (GPT-4 integration)
+- Real-time writing feedback
 
 ---
 
@@ -212,7 +212,7 @@ Start with **QUICK_START.md**.
 - ⏳ Speaking section (S1–S2)
 
 ### Later (Next Month)
-- AI writing feedback (GPT-4 integration)
+- Real-time writing feedback
 - User progress tracking (Supabase Auth)
 - Mock test mode (timer + scoring)
 - SEO + blog content
@@ -220,7 +220,7 @@ Start with **QUICK_START.md**.
 
 ### Differentiation vs. PrepCelpeep
 - ✨ **CRS Calculator** (unique value)
-- ✨ **AI Writing Feedback** (coming soon)
+- ✨ **Real-Time Writing Feedback** (coming soon)
 - ✨ **Cleaner UX** (PrepCelpeep → cluttered)
 - ✨ **Open-source** (community contributions)
 

@@ -10,9 +10,9 @@ const FEATURES = [
     path: '/exam',
   },
   {
-    icon: '🤖',
-    title: 'AI-Powered Writing Scores',
-    desc: 'Submit your Writing responses and get instant CLB-level scoring. Our AI evaluates coherence, vocabulary, grammar, and task fulfillment.',
+    icon: '⚡',
+    title: 'Real-Time Writing Scores',
+    desc: 'Submit your Writing responses and get instant CLB-level scoring with feedback on coherence, vocabulary, grammar, and task fulfillment.',
     cta: 'Try Writing Practice',
     path: '/celpip-writing-practice',
   },

@@ -43,7 +43,7 @@ export const BILLING_PLANS = [
 export const PREMIUM_FEATURES = [
   'All 8 full Mock Exams',
   `All ${PRODUCT_STATS.questionItems} Question Items & Prompts`,
-  'Unlimited AI Scoring',
+  'Unlimited Real-Time Scoring',
   'CELPIP Courses & Study Guides',
   'CELPIP Vocabulary Bundles',
   'Score Tracker & Progress Dashboard',

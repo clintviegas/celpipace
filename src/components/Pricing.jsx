@@ -46,7 +46,7 @@ const FAQS = [
   },
   {
     q: 'Are there any limits on Premium?',
-    a: `No limits during your access window. Premium members get unlimited AI scoring, full access to all ${PRODUCT_STATS.mockExams} mock exams, ${PRODUCT_STATS.questionItems} question items and prompts, courses, vocabulary bundles, and the progress dashboard.`,
+    a: `No limits during your access window. Premium members get unlimited real-time scoring, full access to all ${PRODUCT_STATS.mockExams} mock exams, ${PRODUCT_STATS.questionItems} question items and prompts, courses, vocabulary bundles, and the progress dashboard.`,
   },
   {
     q: 'How do refunds work?',

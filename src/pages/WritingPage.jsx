@@ -132,8 +132,8 @@ export default function WritingPage() {
   return (
     <div className="lp-root">
       <SEO
-        title="CELPIP Writing Practice With AI Scoring — Task 1 & Task 2"
-        description="CELPIP Writing practice for Task 1 (email) and Task 2 (survey response) with AI CLB scoring, word-count tools, structure tips, and saved attempts."
+        title="CELPIP Writing Practice With Real-Time Scoring — Task 1 & Task 2"
+        description="CELPIP Writing practice for Task 1 (email) and Task 2 (survey response) with real-time CLB scoring, word-count tools, structure tips, and saved attempts."
         canonical="/celpip-writing-practice"
         jsonLd={FAQ_JSONLD}
       />
@@ -143,7 +143,7 @@ export default function WritingPage() {
             ✍️ CELPIP Writing
           </div>
           <h1 className="lp-hero-title">Write emails that actually sound like you.</h1>
-          <p className="lp-hero-subtitle">Real scenarios, grown-up prompts and AI feedback that tells you exactly what to fix.<br/>2 tasks · 53 minutes · 150–200 words each · CLB 4–12</p>
+          <p className="lp-hero-subtitle">Real scenarios, grown-up prompts and real-time feedback that tells you exactly what to fix.<br/>2 tasks · 53 minutes · 150–200 words each · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>2</strong><span>Tasks</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>53 min</strong><span>Total Time</span></div>

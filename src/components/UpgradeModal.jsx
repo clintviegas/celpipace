@@ -49,13 +49,13 @@ export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 
             </h2>
             <p className="upg-sub">
               You&rsquo;re on the free plan. Unlock every {sectionLabel.toLowerCase()} set, all 8 mock exams,
-              and unlimited AI scoring with {BRAND_NAME} Premium.
+              and unlimited real-time scoring with {BRAND_NAME} Premium.
             </p>
 
             <ul className="upg-perks">
               <li><Check size={16} /> Every set across Listening, Reading, Writing & Speaking</li>
               <li><Check size={16} /> All {PRODUCT_STATS.mockExams} full-length mock exams</li>
-              <li><Check size={16} /> Unlimited AI scoring &amp; detailed feedback</li>
+              <li><Check size={16} /> Unlimited real-time scoring &amp; detailed feedback</li>
               <li><Check size={16} /> Progress tracker &amp; model CLB responses</li>
             </ul>
 

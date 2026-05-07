@@ -7,8 +7,8 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom'
-import { BookOpen, ClipboardCheck, Gauge, Headphones, Mic, PenLine, Sparkles, Trophy } from 'lucide-react'
-import { AuthProvider } from './context/AuthContext'
+import { BookOpen, CheckCircle2, ClipboardCheck, Gauge, Headphones, LockKeyhole, Mic, PenLine, ShieldCheck, Sparkles, Trophy } from 'lucide-react'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
 import AuthModal from './components/AuthModal'
@@ -56,6 +56,65 @@ function RedirectWithParam({ to }) {
   const partId = location.pathname.split('/').filter(Boolean)[1] || ''
   const dest = partId ? `${to}/${partId}${location.search}` : `${to}${location.search}`
   return <Navigate to={dest} replace />
+}
+
+function GoogleIcon() {
+  return (
+    <svg className="auth-btn-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </svg>
+  )
+}
+
+function AuthRequiredPage({ reason = 'Sign in with Google to continue.' }) {
+  const { signInWithGoogle } = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [error, setError] = useState('')
+  const [sending, setSending] = useState(false)
+  const redirectPath = `${location.pathname}${location.search}`
+
+  const handleGoogle = async () => {
+    setError('')
+    setSending(true)
+    const result = await signInWithGoogle(redirectPath)
+    if (result?.error) {
+      setError(result.error)
+      setSending(false)
+    }
+  }
+
+  return (
+    <main className="auth-required-page">
+      <section className="auth-required-card" aria-labelledby="auth-required-title">
+        <div className="auth-required-icon"><LockKeyhole size={24} strokeWidth={2.4} /></div>
+        <span className="auth-required-kicker">Secure practice access</span>
+        <h1 id="auth-required-title">Sign in before starting this question.</h1>
+        <p>{reason}</p>
+        <button className="auth-required-google" onClick={handleGoogle} disabled={sending}>
+          <GoogleIcon />
+          {sending ? 'Opening Google...' : 'Continue with Google'}
+        </button>
+        {error && <div className="auth-required-error">{error}</div>}
+        <div className="auth-required-trust">
+          <span><ShieldCheck size={16} /> Google-only login</span>
+          <span><CheckCircle2 size={16} /> Saved attempts</span>
+          <span><Sparkles size={16} /> Return to this page after sign-in</span>
+        </div>
+        <button className="auth-required-back" onClick={() => navigate(-1)}>Back to practice options</button>
+      </section>
+    </main>
+  )
+}
+
+function RequireAuth({ children, reason }) {
+  const { user, loading } = useAuth()
+  if (loading) return <RouteLoader />
+  if (!user) return <AuthRequiredPage reason={reason} />
+  return children
 }
 
 const MOBILE_HOME_SECTIONS = [
@@ -125,8 +184,8 @@ function HomePage({ onSignIn }) {
   return (
     <main className="home-page">
       <SEO
-        title="CELPIP Practice Tests With AI Scoring & Mock Exams"
-        description={`Prepare for CELPIP with ${PRODUCT_STATS.questionItems} question items, ${PRODUCT_STATS.mockExams} full mock exams, AI writing and speaking feedback, and saved CLB score reports.`}
+        title="CELPIP Practice Tests With Real-Time Scoring & Mock Exams"
+        description={`Prepare for CELPIP with ${PRODUCT_STATS.questionItems} question items, ${PRODUCT_STATS.mockExams} full mock exams, real-time writing and speaking feedback, and saved CLB score reports.`}
         canonical="/"
       />
       <div className="home-mobile-only">
@@ -150,7 +209,7 @@ function PricingPage({ onSignIn }) {
     <main style={{ paddingTop: '80px' }}>
       <SEO
         title="Pricing"
-        description="Choose a CELPIPACE premium subscription for mock exams, AI scoring, study tools, and progress tracking. Manage or cancel any time through Stripe."
+        description="Choose a CELPIPACE premium subscription for mock exams, real-time scoring, study tools, and progress tracking. Manage or cancel any time through Stripe."
         canonical="/pricing"
       />
       <Pricing onSignIn={onSignIn} />
@@ -175,8 +234,8 @@ export function AppInner() {
 
   const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
-  // Show the dashboard navbar on all inner app pages (when user is likely logged in)
-  const innerPaths = ['/dashboard','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/tips','/scores','/calculator','/pricing','/blog','/writing-practice','/subscription']
+  // Keep public learning pages on the original site navbar so dropdown behavior stays consistent after navigation.
+  const innerPaths = ['/dashboard','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription']
   const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
   const isPaymentRoute = location.pathname === '/payment'
 
@@ -205,7 +264,7 @@ export function AppInner() {
         <Routes>
           <Route path="/" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/practice" element={<PracticePage />} />
+          <Route path="/practice" element={<RequireAuth reason="Sign in with Google to open practice questions and save your results."><PracticePage /></RequireAuth>} />
           <Route path="/celpip-practice-test" element={<SEOLandingPage type="practice" />} />
           <Route path="/celpip-mock-test" element={<SEOLandingPage type="mock" />} />
           <Route path="/celpip-score-calculator" element={<SEOLandingPage type="score" />} />
@@ -214,17 +273,17 @@ export function AppInner() {
           <Route path="/scores" element={<ScoresPage />} />
           <Route path="/calculator" element={<CRSCalculatorPage />} />
           <Route path="/exam" element={<ExamPage />} />
-          <Route path="/mock-test/:examId" element={<MockTestPage />} />
+          <Route path="/mock-test/:examId" element={<RequireAuth reason="Sign in with Google to start or review a mock exam."><MockTestPage /></RequireAuth>} />
 
           {/* Canonical SEO routes — these are the real pages */}
           <Route path="/celpip-listening-practice" element={<ListeningPage />} />
-          <Route path="/celpip-listening-practice/:partId" element={<PracticeSetPage section="listening" />} />
+          <Route path="/celpip-listening-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this listening practice set."><PracticeSetPage section="listening" /></RequireAuth>} />
           <Route path="/celpip-reading-practice" element={<ReadingPage />} />
-          <Route path="/celpip-reading-practice/:partId" element={<ReadingPracticePage />} />
+          <Route path="/celpip-reading-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this reading practice set."><ReadingPracticePage /></RequireAuth>} />
           <Route path="/celpip-writing-practice" element={<WritingPage />} />
-          <Route path="/celpip-writing-practice/:partId" element={<PracticeSetPage section="writing" />} />
+          <Route path="/celpip-writing-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this writing practice set."><PracticeSetPage section="writing" /></RequireAuth>} />
           <Route path="/celpip-speaking-practice" element={<SpeakingPage />} />
-          <Route path="/celpip-speaking-practice/:partId" element={<PracticeSetPage section="speaking" />} />
+          <Route path="/celpip-speaking-practice/:partId" element={<RequireAuth reason="Sign in with Google to start this speaking practice set."><PracticeSetPage section="speaking" /></RequireAuth>} />
 
           {/* Legacy short routes — SPA fallback redirects (server-level 301 in vercel.json is primary) */}
           <Route path="/listening" element={<Navigate to="/celpip-listening-practice" replace />} />
@@ -235,13 +294,13 @@ export function AppInner() {
           <Route path="/writing/:partId" element={<RedirectWithParam to="/celpip-writing-practice" />} />
           <Route path="/speaking" element={<Navigate to="/celpip-speaking-practice" replace />} />
           <Route path="/speaking/:partId" element={<RedirectWithParam to="/celpip-speaking-practice" />} />
-          <Route path="/practice-set" element={<PracticeSetPage />} />
+          <Route path="/practice-set" element={<RequireAuth reason="Sign in with Google to open practice questions and save your score."><PracticeSetPage /></RequireAuth>} />
           <Route path="/pricing" element={<PricingPage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/payment" element={<PaymentPage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/subscription" element={<ManageSubscriptionPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPage />} />
-          <Route path="/writing-practice" element={<WritingPracticePage />} />
+          <Route path="/writing-practice" element={<RequireAuth reason="Sign in with Google to write responses and save your progress."><WritingPracticePage /></RequireAuth>} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<LegalPage />} />
           <Route path="/terms" element={<LegalPage />} />
