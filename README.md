@@ -1,314 +1,204 @@
-# 🎓 CELPIP Ace — Comprehensive English Language Proficiency Test Practice Platform
+# CELPIPACE
 
-A modern, full-stack practice app for the **CELPIP (Canadian English Language Proficiency Index)** test, built with **React 19** + **Vite** + **Supabase**.
+CELPIPACE is a focused CELPIP preparation platform with real-time scoring, full mock exams, section drills, saved CLB reports, and CRS score tools.
 
----
+Live site: https://www.celpipace.ca/
 
-## 🚀 Quick Links
+CELPIPACE is an independent preparation platform and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.
 
-- **Live App**: (deploy to production)
-- **Question Setup**: `/docs/QUICK_START.md` (5 minutes to add questions)
-- **Full Setup Guide**: `/docs/QUESTION_BANK_SETUP.md` (detailed instructions)
-- **Automation Checklist**: `/docs/SETUP_CHECKLIST.md` (step-by-step)
-- **Integration Guide**: `/docs/INTEGRATION_GUIDE.md` (how it all works)
+## What It Offers
 
----
+- 1,190+ CELPIP-style question items and prompts
+- 220+ practice sets across Listening, Reading, Writing, and Speaking
+- 8 full mock exams with saved score reports
+- Real-time Writing and Speaking scoring with CLB-level feedback
+- Detailed explanations and score-boosting tips inside practice sets
+- Progress tracking across all four skills
+- CLB to CRS calculator for Express Entry planning
+- Stripe subscriptions with self-serve billing and cancellation
+- Google sign-in for account access and saved progress
 
-## ✨ Features
+## Practice Sections
 
-### ✅ Complete
-- **Reading Section** (R1–R4): 38 official questions with passages, MCQ + fill-blank formats
-- **3-Column Layout**: PrepCelpeep-style (question nav | passage | single question view)
-- **Deep Linking**: Navbar items (L1, R3, S2) → direct navigation to practice sets
-- **CRS Score Calculator**: Predict your Express Entry score
-- **Question Types**: gist, detail, inference, vocab_context, tone_purpose, speaker_view, mcq, paragraph_match, etc.
+| Section | Coverage | Highlights |
+| --- | --- | --- |
+| Listening | 6 parts, 120 practice sets | Timed listening simulations, transcript support, answer explanations |
+| Reading | 4 parts, 46 practice sets | CELPIP-style passages, diagrams, viewpoints, matching, MCQ, fill-in formats |
+| Writing | 2 tasks, 40 prompts | Email and survey responses with real-time CLB scoring |
+| Speaking | 8 tasks, 120 prompts | Prep and speaking timers, transcript support, real-time scoring |
 
-### 🔄 Question Bank Automation
-- **Google Sheets** → single source of truth
-- **Google Apps Script** → one-click sync to Supabase
-- **Backend Validation** → automatic error checking
-- **Zero Manual SQL** → content creators can add/update questions without coding
+## Platform Features
 
-### ⏳ In Progress
-- Listening section (L1–L2)
-- Writing section (W1–W2) with model answers
-- Speaking section (S1–S2)
-- Real-time writing feedback
+- Real test format: practice sets follow CELPIP-style timing, structure, and difficulty.
+- Real-time scoring: Writing and Speaking responses receive CLB-level feedback on coherence, vocabulary, grammar, task fulfillment, and delivery.
+- Detailed explanations: objective questions include answer explanations to help users understand mistakes.
+- Study support: tips, strategy pages, vocabulary resources, and blog articles support focused prep.
+- Canadian context: scenarios use Canadian workplace, community, education, housing, service, and everyday settings.
+- Progress dashboard: users can track practice history and CLB growth over time.
 
----
+## Pricing Model
 
-## 📁 Project Structure
+- Free access lets users explore the first question in each section.
+- Premium unlocks all mock exams, all question items and prompts, unlimited real-time scoring, progress tracking, study guides, vocabulary bundles, and priority email support.
+- Stripe handles checkout, subscriptions, billing portal access, cancellations, and refunds.
+- First-time subscribers can use `CELPIP25` for 25% off the first checkout.
 
-```
-celpip-ace/
-├── src/
-│   ├── pages/
-│   │   ├── PracticeSetPage.jsx       # 3-column layout (nav | passage | question)
-│   │   ├── SectionPage.jsx            # Section homepage (R, L, W, S)
-│   │   ├── CRSCalculatorPage.jsx       # CRS score calculator
-│   │   └── ...
-│   ├── components/
-│   │   ├── Navbar.jsx                 # Deep-link navbar with submenu
-│   │   ├── SingleQuestionPanel.jsx     # Question display + options
-│   │   ├── QuestionNavDots.jsx        # Q1 Q2 Q3... navigation
-│   │   ├── PassagePanel.jsx           # Passage/diagram viewer
-│   │   └── ...
-│   ├── hooks/
-│   │   ├── usePracticeSet.js          # Fetch questions from Supabase
-│   │   ├── useActivePart.js           # Track selected section/part
-│   │   └── ...
-│   ├── api/
-│   │   ├── questionSync.js            # Backend: question validation + DB update
-│   │   └── routes.js                  # Express route handler
-│   ├── lib/
-│   │   ├── supabaseClient.js          # Supabase SDK init
-│   │   └── constants.js               # Mock data, question types, etc.
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-├── docs/
-│   ├── QUICK_START.md                 # 5-step setup (start here!)
-│   ├── QUESTION_BANK_SETUP.md         # Full automation guide
-│   ├── SETUP_CHECKLIST.md             # Checkbox checklist
-│   ├── INTEGRATION_GUIDE.md           # How automation integrates with React
-│   ├── GoogleAppsScript.js            # Paste into Google Sheets
-│   ├── question-bank-template.csv     # Sample data
-│   └── schema_v4.sql                  # Database schema
-├── supabase/
-│   └── schema_v4.sql                  # Practice sets + questions tables
-├── vite.config.js
-├── package.json
-└── README.md
+## Tech Stack
+
+| Layer | Tech |
+| --- | --- |
+| Frontend | React 19, Vite 8, React Router |
+| Styling/UI | CSS, Framer Motion, Lucide React |
+| Auth | Supabase Auth with Google sign-in |
+| Database | Supabase PostgreSQL |
+| Payments | Stripe checkout, billing portal, webhooks |
+| Email | Resend transactional email |
+| Testing | Playwright |
+| Deployment | Vercel |
+
+## Project Structure
+
+```text
+api/                 Serverless API routes for scoring, payments, contact, webhooks
+docs/                Setup notes for auth, contact, payments, persistence, subscriptions
+public/              Static assets, logo, favicon, audio, images, training material
+scripts/             Audio/content conversion, SEO prerendering, asset upload tools
+src/components/      Shared UI, navigation, auth modal, pricing, SEO, footer
+src/context/         Auth provider and account state
+src/data/            Practice data, SEO pages, pricing plans, constants
+src/hooks/           Practice progress, auth gate, progress/session helpers
+src/lib/             Supabase clients and mock exam utilities
+src/pages/           Public pages, practice pages, dashboard, admin, payment, legal
+supabase/            SQL migrations and schema files
+tests/e2e/           Playwright smoke and subscription flow tests
 ```
 
----
+## Getting Started
 
-## 🛠 Tech Stack
+### Requirements
 
-| Layer | Tech | Notes |
-|-------|------|-------|
-| **Frontend** | React 19.2.4, Vite 8.0.0 | SPA with HMR, instant dev reload |
-| **Database** | Supabase (PostgreSQL) | `practice_sets` + `questions` tables |
-| **Auth** (future) | Supabase Auth | Google/email login for tracking progress |
-| **Backend** | Supabase Edge Functions OR Express.js | Webhook to sync questions from Google Sheets |
-| **Content** | Google Sheets + Google Apps Script | Non-technical question management |
-| **Deployment** | Vercel (recommended) | Fast, built-in preview deployments |
+- Node.js 20+
+- npm
+- Supabase project
+- Stripe account
+- Optional: Resend account for transactional email
 
----
+### Install
 
-## 🎯 Question Bank System
-
-### Traditional Approach ❌
-```
-Code (hardcoded questions)
-  ↓
-  Manual SQL edits
-  ↓
-  Deploy
-  (Error-prone, non-scalable)
-```
-
-### CELPIP Ace Automation ✅
-```
-Google Sheet (edit questions)
-  ↓
-  Google Apps Script (validate)
-  ↓
-  Webhook (sync automatically)
-  ↓
-  Supabase (store centrally)
-  ↓
-  React App (fetch + display)
-  (Non-technical, scalable, fast)
-```
-
-### Setup (TL;DR)
-1. Create Google Sheet with questions
-2. Paste Google Apps Script
-3. Click "Sync to Celpip"
-4. Done! Questions auto-update in app
-
-See `/docs/QUICK_START.md` for detailed steps.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
 ```bash
-- Node.js 18+
-- npm or yarn
-- Supabase project (free tier OK)
-- Google account (for Google Sheets)
+npm install
 ```
 
-### Installation
+### Environment
 
-1. **Clone repo**
-   ```bash
-   git clone https://github.com/clintviegas/celpipace.git
-   cd celpipace
-   ```
+Copy the example environment file and fill in the required values:
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment**
-   ```bash
-   cp .env.example .env.local
-   # Add your Supabase URL + anon key
-   ```
-
-4. **Run Supabase schema** (one-time)
-   - Go to Supabase Dashboard → SQL Editor
-   - Copy content from `supabase/schema_v4.sql`
-   - Paste and run
-
-5. **Start dev server**
-   ```bash
-   npm run dev
-   # Navigate to http://localhost:5173
-   ```
-
-### First Questions
-Follow `/docs/QUICK_START.md` to add your first questions via Google Sheets.
-
----
-
-## 📊 Reading Section — Complete
-
-| Part | Title | Questions | Status |
-|------|-------|-----------|--------|
-| **R1** | Email — Fitness Centre | 11 | ✅ Done |
-| **R2** | Community Centre Schedule | 8 | ✅ Done |
-| **R3** | Digital Literacy in Schools | 9 | ✅ Done |
-| **R4** | AI Regulation Debate | 10 | ✅ Done |
-| **Total** | | **38** | ✅ Complete |
-
----
-
-## 📚 Documentation
-
-| Doc | Purpose | Time |
-|-----|---------|------|
-| **QUICK_START.md** | 5-step setup + column reference | 5 min |
-| **QUESTION_BANK_SETUP.md** | Detailed guide + troubleshooting | 15 min |
-| **SETUP_CHECKLIST.md** | Checkbox checklist for setup | 60 min |
-| **INTEGRATION_GUIDE.md** | How automation integrates with React | 10 min |
-
-Start with **QUICK_START.md**.
-
----
-
-## 🤖 Future Roadmap
-
-### Next (This Month)
-- ✅ Reading R1–R4 (38 questions)
-- ✅ Google Sheets question automation
-- ⏳ Listening section (L1–L2)
-- ⏳ Writing section (W1–W2)
-- ⏳ Speaking section (S1–S2)
-
-### Later (Next Month)
-- Real-time writing feedback
-- User progress tracking (Supabase Auth)
-- Mock test mode (timer + scoring)
-- SEO + blog content
-- Admin dashboard
-
-### Differentiation vs. PrepCelpeep
-- ✨ **CRS Calculator** (unique value)
-- ✨ **Real-Time Writing Feedback** (coming soon)
-- ✨ **Cleaner UX** (PrepCelpeep → cluttered)
-- ✨ **Open-source** (community contributions)
-
----
-
-## 🔗 API Reference
-
-### Question Sync Endpoint
-
-**POST** `/api/question-sync`
-
-```json
-{
-  "section": "Reading",
-  "part": "R1",
-  "title": "Email — Fitness Centre",
-  "passage": "...",
-  "questions": [
-    {
-      "id": 1,
-      "text": "What is the gist?",
-      "questionType": "gist",
-      "options": ["A", "B", "C", "D"],
-      "answer": 0,
-      "explanation": "...",
-      "difficulty": "easy"
-    }
-  ]
-}
+```bash
+cp .env.example .env.local
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Synced Reading R1",
-  "practiceSetId": "550e8400...",
-  "questionsCount": 11
-}
+Common variables:
+
+```text
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+VITE_CDN_URL=
+OPENAI_API_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_PRICE_WEEKLY=
+STRIPE_PRICE_MONTHLY=
+STRIPE_PRICE_QUARTERLY=
+SUPABASE_SERVICE_ROLE_KEY=
+PUBLIC_SITE_URL=
+RESEND_API_KEY=
+EMAIL_FROM=
 ```
 
----
+Server-side secrets such as `STRIPE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, and `RESEND_API_KEY` must never be exposed with a `VITE_` prefix.
 
-## 🐛 Troubleshooting
+### Database Setup
 
-### App won't load
-- Check Supabase URL + key in `.env.local`
-- Run schema_v4.sql in Supabase Dashboard
+Run the SQL files in `supabase/` as needed for the feature set you are enabling. Important setup files include:
 
-### Questions don't appear
-- Verify Google Sheet synced to Supabase (check SQL Editor)
-- Check browser DevTools → Network tab for errors
-- See `/docs/QUESTION_BANK_SETUP.md` troubleshooting section
+- `supabase/admin_hardening.sql`
+- `supabase/auth_premium.sql`
+- `supabase/payments_schema.sql`
+- `supabase/subscriptions_schema.sql`
+- `supabase/progress_schema.sql`
+- `supabase/practice_attempts.sql`
+- `supabase/test_sessions_schema.sql`
+- `supabase/writing_schema.sql`
 
-### Google Apps Script sync fails
-- Verify webhook URL in script (no trailing slash)
-- Check API key Bearer token is correct
-- See `/docs/SETUP_CHECKLIST.md` Phase 4
+See the matching setup guides in `docs/` for auth domain, payments, persistence, subscriptions, contact, and test sessions.
 
----
+## Development
 
-## 📝 License
+```bash
+npm run dev
+```
 
-MIT — Use freely for learning/commercial projects
+Open http://localhost:5173.
 
----
+## Production Build
 
-## 🙋 Contributing
+```bash
+npm run build
+```
 
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Commit changes (`git commit -m "feat: add my feature"`)
-4. Push to branch (`git push origin feature/my-feature`)
-5. Open Pull Request
+The build runs Vite and then prerenders SEO routes with `scripts/prerender-seo.mjs`.
 
----
+## Testing
 
-## 👤 Author
+Install Playwright browsers once:
 
-**Clint Viegas**  
-GitHub: [@clintviegas](https://github.com/clintviegas)  
-Email: clint@celpipace.com
+```bash
+npm run e2e:install
+```
 
----
+Run smoke tests:
 
-## 🙏 Acknowledgments
+```bash
+npm run e2e:smoke
+```
 
-- [CELPIP](https://www.celpip.ca/) for official test format
-- [Supabase](https://supabase.com/) for database + auth
-- [Vite](https://vitejs.dev/) for lightning-fast dev experience
-- [React](https://react.dev/) for component framework
+Run all E2E tests:
+
+```bash
+npm run e2e
+```
+
+## Admin And Billing Notes
+
+- Admin dashboard: `/admin`
+- Admin auth is isolated from the public app session through `src/lib/adminSupabase.js`.
+- Admin password recovery is available from `/admin`.
+- Stripe remains the safest place to issue refunds.
+- Full Stripe refunds are handled by webhook events, which mark the payment as refunded and revoke premium access.
+- Refund requests should be reviewed for genuine billing or access issues; substantial premium usage does not automatically qualify.
+
+## Useful Scripts
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start local Vite dev server |
+| `npm run build` | Build production app and prerender SEO pages |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Run ESLint |
+| `npm run e2e:smoke` | Run Playwright smoke tests |
+| `npm run e2e` | Run all Playwright tests |
+
+## Documentation
+
+- `docs/AUTH_DOMAIN_SETUP.md`
+- `docs/CONTACT_SETUP.md`
+- `docs/PAYMENTS_SETUP.md`
+- `docs/PERSISTENCE_SETUP.md`
+- `docs/SUBSCRIPTIONS_SETUP.md`
+- `docs/TEST_SESSIONS_SETUP.md`
+
+## Contact
+
+Support: info@celpipace.ca
+
+Website: https://www.celpipace.ca/
