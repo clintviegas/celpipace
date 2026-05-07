@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle2, LockKeyhole, ShieldCheck, Sparkles } from 'lucide-react'
+import { CheckCircle2, LockKeyhole, Sparkles } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
+import { PRODUCT_STATS } from '../data/constants'
+import CelpipAceLogo from './CelpipAceLogo'
 
 /* ─────────────────────────────────────────────────────────────
    AuthModal — premium split-panel login modal
@@ -60,7 +61,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
           >
             {/* ── Left panel — branding ── */}
             <div className="auth-panel-left">
-              <div className="auth-panel-logo"><span aria-hidden="true">🍁</span> {BRAND_NAME}</div>
+              <div className="auth-panel-logo"><CelpipAceLogo height={34} light /></div>
               <div className="auth-panel-tagline">
                 Your fastest path to<br />
                 <span className="auth-panel-highlight">CLB 9+</span>
@@ -92,8 +93,8 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                   transition={{ duration: 0.22 }}>
 
                     {reason && <div className="auth-modal-reason"><LockKeyhole size={14} /> {reason}</div>}
-                    <h2 className="auth-modal-title">Sign in securely with Google</h2>
-                    <p className="auth-modal-sub">One tap creates your account, protects your progress, and brings you back to the practice page you opened.</p>
+                    <h2 className="auth-modal-title">Continue with Google</h2>
+                    <p className="auth-modal-sub">Google automatically creates your account or signs you in, then brings you back to this practice page.</p>
 
                     <button className="auth-btn auth-btn--google auth-btn--google-main" onClick={handleGoogle} disabled={sending}>
                       <svg className="auth-btn-icon" viewBox="0 0 24 24" width="20" height="20">
@@ -108,13 +109,12 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                     {authError && <div className="auth-email-error auth-error-box">{authError}</div>}
 
                     <div className="auth-trust-list">
-                      <span><ShieldCheck size={16} /> No password stored on {BRAND_NAME}</span>
                       <span><CheckCircle2 size={16} /> Saved scores sync to your account</span>
-                      <span><Sparkles size={16} /> Fast access to practice and mock reports</span>
+                      <span><Sparkles size={16} /> One account for practice, mock reports, and billing</span>
                     </div>
 
                     <p className="auth-modal-legal">
-                      By continuing you agree to our <a className="auth-link" href="/terms">Terms</a> &amp; <a className="auth-link" href="/privacy">Privacy Policy</a>.
+                      By continuing you agree to our <a className="auth-link" href="/terms">Terms &amp; Conditions</a>, <a className="auth-link" href="/privacy">Privacy Policy</a>, and <a className="auth-link" href="/refund">Refund Policy</a>.
                     </p>
 
                 </motion.div>

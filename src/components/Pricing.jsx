@@ -50,7 +50,7 @@ const FAQS = [
   },
   {
     q: 'How do refunds work?',
-    a: 'Refund requests are reviewed within 7 days of purchase. See the refund policy for details before checkout.',
+    a: 'Refund requests are reviewed within 7 days of purchase for genuine billing or access issues. Substantial premium use, completed practice, or score dissatisfaction does not automatically qualify.',
   },
   {
     q: 'Which payment methods do you accept?',
@@ -270,11 +270,11 @@ export default function Pricing({ onSignIn, showFaq = true }) {
               <span aria-hidden="true">🔒</span> Secure checkout by Stripe · Recurring subscription · Cancel any time
               <br />Access continues until the end of your paid billing period after cancellation.
               <br />
-              <button type="button" onClick={() => navigate('/terms')}>Terms</button>
+              <button type="button" onClick={() => navigate('/terms')}>Terms &amp; Conditions</button>
               {' · '}
-              <button type="button" onClick={() => navigate('/privacy')}>Privacy</button>
+              <button type="button" onClick={() => navigate('/privacy')}>Privacy Policy</button>
               {' · '}
-              <button type="button" onClick={() => navigate('/refund')}>Refund policy</button>
+              <button type="button" onClick={() => navigate('/refund')}>Refund Policy</button>
             </p>
 
             <ul className="pricing-features">

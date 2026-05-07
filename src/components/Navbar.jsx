@@ -314,8 +314,7 @@ export default function Navbar({ onSignIn }) {
           {/* Mobile-only auth buttons at bottom of dropdown */}
           {menuOpen && !user && (
             <li className="nav-mobile-auth">
-              <button className="btn btn-outline" onClick={() => { onSignIn(); setMenuOpen(false) }}>Log in</button>
-              <button className="btn btn-primary" onClick={() => { onSignIn(); setMenuOpen(false) }}>Sign up free</button>
+              <button className="btn btn-primary" onClick={() => { onSignIn(); setMenuOpen(false) }}>Continue with Google</button>
             </li>
           )}
           {menuOpen && user && (
@@ -338,10 +337,7 @@ export default function Navbar({ onSignIn }) {
           {user ? (
             <UserMenu user={user} signOut={signOut} />
           ) : (
-            <>
-              <button className="btn btn-outline" onClick={onSignIn}>Log in</button>
-              <button className="btn btn-primary" onClick={onSignIn}>Sign up free</button>
-            </>
+            <button className="btn btn-primary" onClick={onSignIn}>Continue with Google</button>
           )}
         </div>
 

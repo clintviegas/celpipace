@@ -246,12 +246,12 @@ export default function PaymentPage({ onSignIn }) {
 
             <button className="payment-pay-button" type="button" onClick={startCheckout} disabled={busy}>
               <LockKeyhole size={18} />
-              {busy ? 'Opening Stripe...' : user ? 'Continue to Stripe' : 'Sign in to continue'}
+              {busy ? 'Opening Stripe...' : user ? 'Continue to Stripe' : 'Continue with Google'}
             </button>
 
             <div className="payment-user-box">
               <span>Account</span>
-              <strong>{user?.email || 'Sign in required'}</strong>
+              <strong>{user?.email || 'Google account required'}</strong>
             </div>
 
             <div className="payment-trust-grid">
@@ -261,9 +261,9 @@ export default function PaymentPage({ onSignIn }) {
             </div>
 
             <div className="payment-policy-links">
-              <button type="button" onClick={() => navigate('/terms')}>Terms</button>
-              <button type="button" onClick={() => navigate('/privacy')}>Privacy</button>
-              <button type="button" onClick={() => navigate('/refund')}>Refund</button>
+              <button type="button" onClick={() => navigate('/terms')}>Terms &amp; Conditions</button>
+              <button type="button" onClick={() => navigate('/privacy')}>Privacy Policy</button>
+              <button type="button" onClick={() => navigate('/refund')}>Refund Policy</button>
             </div>
           </aside>
         </div>

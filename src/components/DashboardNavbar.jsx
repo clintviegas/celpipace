@@ -296,10 +296,7 @@ export default function DashboardNavbar({ onSignIn }) {
               </div>
             </>
           ) : (
-            <>
-              <button className="btn btn-outline btn-sm" onClick={onSignIn}>Log in</button>
-              <button className="btn btn-primary btn-sm" onClick={onSignIn}>Sign up free</button>
-            </>
+            <button className="btn btn-primary btn-sm" onClick={onSignIn}>Continue with Google</button>
           )}
         </div>
 

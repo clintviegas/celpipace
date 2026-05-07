@@ -6,6 +6,7 @@ import SEO from '../components/SEO'
 import ScoreTips, { getReadingTips } from '../components/ScoreTips'
 import UpgradeModal from '../components/UpgradeModal'
 import { useAuth } from '../context/AuthContext'
+import { useAuthGate } from '../hooks/useAuthGate'
 import { useProgress } from '../hooks/useProgress'
 import r1Data from '../data/reading/R1_correspondence.json'
 import r2Data from '../data/reading/R2_apply_diagram.json'
@@ -486,6 +487,7 @@ export default function ReadingPracticePage() {
   const { partId } = useParams()
   const navigate   = useNavigate()
   const { isPremium } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start the timer, answer questions, and save your reading progress.')
   const { recordCompletion, isCompleted, getSetScore, getPartStats } = useProgress()
   const [upgradeFor, setUpgradeFor] = useState(null)
   const meta       = PART_META[partId] || PART_META.R1
@@ -538,7 +540,13 @@ export default function ReadingPracticePage() {
     if (otRef.current)    clearInterval(otRef.current)
   }
 
+  const setAnswersWithAuth = (updater) => {
+    if (!requireAuth()) return
+    setAnswers(updater)
+  }
+
   const startTimer = () => {
+    if (!requireAuth()) return
     clearTimers()
     const secs = meta.timeMins * 60
     setTimeLeft(secs)
@@ -590,7 +598,7 @@ export default function ReadingPracticePage() {
               q={q}
               qKey={pfx + `r3_${q.question_number}`}
               answers={answers}
-              setAnswers={setAnswers}
+              setAnswers={setAnswersWithAuth}
               color={COLOR}
             />
           ))}
@@ -615,7 +623,7 @@ export default function ReadingPracticePage() {
               q={q}
               qKey={pfx + `mcq_${q.question_number}`}
               answers={answers}
-              setAnswers={setAnswers}
+              setAnswers={setAnswersWithAuth}
               color={COLOR}
             />
           ))}
@@ -625,7 +633,7 @@ export default function ReadingPracticePage() {
             fibData={fibData}
             pfx={pfx}
             answers={answers}
-            setAnswers={setAnswers}
+            setAnswers={setAnswersWithAuth}
             color={COLOR}
           />
         )}
@@ -885,6 +893,7 @@ export default function ReadingPracticePage() {
       </div>
       </div>
       <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Reading" />
+      {authGateModal}
     </div>
   )
 }

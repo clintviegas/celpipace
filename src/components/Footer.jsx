@@ -43,7 +43,7 @@ export default function Footer() {
       links: [
         { label: 'About Us',         page: 'home' },
         { label: 'Privacy Policy',   page: 'privacy' },
-        { label: 'Terms of Service', page: 'terms' },
+        { label: 'Terms & Conditions', page: 'terms' },
         { label: 'Refund Policy',    page: 'refund' },
         { label: 'Contact',          page: 'contact' },
       ],

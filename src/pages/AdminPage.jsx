@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { adminSupabase } from '../lib/adminSupabase'
+import { PUBLIC_SITE_URL } from '../data/constants'
 
 /* ─────────────────────────────────────────────────────────────
    Hidden admin dashboard — URL: /admin
@@ -8,17 +9,33 @@ import { adminSupabase } from '../lib/adminSupabase'
 const ADMIN_EMAIL = 'sales@celpipace.com'
 const PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at, last_seen_at'
 const LEGACY_PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at'
+const PAYMENT_COLUMNS = 'id, email, plan, amount_cents, currency, status, granted_days, stripe_session_id, stripe_payment_intent_id, stripe_customer_id, created_at'
 
 // Rough MRR estimate (monthly-equivalent ARPU per premium user in USD)
 const MRR_PER_PREMIUM = 24.99
 
+function getAdminRedirectUrl() {
+  if (typeof window === 'undefined') return `${PUBLIC_SITE_URL}/admin`
+  return `${window.location.origin}/admin`
+}
+
+function stripeSearchUrl(value) {
+  const query = encodeURIComponent(value || '')
+  return `https://dashboard.stripe.com/search?query=${query}`
+}
+
 export default function AdminPage() {
-  const { user, loading, signOut } = useAdminAuth()
+  const { user, loading, signOut, recoveryMode, clearRecoveryMode } = useAdminAuth()
   const isAdmin = !!user && user.email?.toLowerCase() === ADMIN_EMAIL
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [loginErr, setLoginErr] = useState('')
   const [sending, setSending]   = useState(false)
+  const [resetBusy, setResetBusy] = useState(false)
+  const [resetMsg, setResetMsg] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [passwordMsg, setPasswordMsg] = useState('')
+  const [passwordBusy, setPasswordBusy] = useState(false)
 
   const [tab, setTab] = useState('overview')
 
@@ -33,8 +50,60 @@ export default function AdminPage() {
     if (error) setLoginErr(error.message)
   }
 
+  const sendPasswordReset = async () => {
+    setLoginErr('')
+    setResetMsg('')
+    setResetBusy(true)
+    const { error } = await adminSupabase.auth.resetPasswordForEmail(ADMIN_EMAIL, {
+      redirectTo: getAdminRedirectUrl(),
+    })
+    setResetBusy(false)
+    if (error) {
+      setLoginErr(error.message)
+      return
+    }
+    setResetMsg(`Password reset email sent to ${ADMIN_EMAIL}.`)
+  }
+
+  const updateAdminPassword = async (e) => {
+    e.preventDefault()
+    setPasswordMsg('')
+    if (newPassword.length < 8) {
+      setPasswordMsg('Use at least 8 characters.')
+      return
+    }
+    setPasswordBusy(true)
+    const { error } = await adminSupabase.auth.updateUser({ password: newPassword })
+    setPasswordBusy(false)
+    if (error) {
+      setPasswordMsg(error.message)
+      return
+    }
+    setNewPassword('')
+    setPasswordMsg('Admin password updated. You can continue to the dashboard.')
+    clearRecoveryMode()
+  }
+
   if (loading) {
     return <div style={shellStyle}><div style={cardStyle}><p style={{ color: '#98a2b5' }}>Loading…</p></div></div>
+  }
+
+  if (user && isAdmin && recoveryMode) {
+    return (
+      <div style={shellStyle}>
+        <div style={cardStyle}>
+          <div style={{ fontSize: 12, letterSpacing: '.18em', color: '#ffd66a', marginBottom: 6 }}>PASSWORD RESET</div>
+          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#fff' }}>Set Admin Password</h1>
+          <p style={{ color: '#98a2b5', fontSize: 14, marginTop: 6, marginBottom: 20 }}>Create a new password for {ADMIN_EMAIL}.</p>
+          <form onSubmit={updateAdminPassword}>
+            <label style={labelStyle}>New Password</label>
+            <input type="password" autoComplete="new-password" value={newPassword} onChange={e => setNewPassword(e.target.value)} style={inputStyle} autoFocus />
+            {passwordMsg && <div style={{ color: passwordMsg.includes('updated') ? '#7dffb0' : '#ff9a9a', fontSize: 13, marginTop: 8 }}>{passwordMsg}</div>}
+            <button type="submit" disabled={passwordBusy} style={btnPrimaryStyle}>{passwordBusy ? 'Updating…' : 'Update Password'}</button>
+          </form>
+        </div>
+      </div>
+    )
   }
 
   if (!user || !isAdmin) {
@@ -50,6 +119,7 @@ export default function AdminPage() {
             <label style={labelStyle}>Password</label>
             <input type="password" autoComplete="current-password" value={password} onChange={e => { setPassword(e.target.value); setLoginErr('') }} style={inputStyle} />
             {loginErr && <div style={{ color: '#ff9a9a', fontSize: 13, marginTop: 6 }}>{loginErr}</div>}
+            {resetMsg && <div style={{ color: '#7dffb0', fontSize: 13, marginTop: 8 }}>{resetMsg}</div>}
             {user && !isAdmin && (
               <div style={{ color: '#ff9a9a', fontSize: 13, marginTop: 6 }}>
                 Signed in as {user.email}. Not an admin account.
@@ -57,6 +127,9 @@ export default function AdminPage() {
               </div>
             )}
             <button type="submit" disabled={sending} style={btnPrimaryStyle}>{sending ? 'Signing in…' : 'Sign In'}</button>
+            <button type="button" onClick={sendPasswordReset} disabled={resetBusy} style={{ ...btnGhostStyle, width: '100%', marginTop: 10 }}>
+              {resetBusy ? 'Sending reset email…' : 'Forgot admin password?'}
+            </button>
           </form>
         </div>
       </div>
@@ -126,6 +199,7 @@ export default function AdminPage() {
 function useAdminAuth() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [recoveryMode, setRecoveryMode] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -135,7 +209,8 @@ function useAdminAuth() {
       setLoading(false)
     })
 
-    const { data: { subscription } } = adminSupabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = adminSupabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true)
       setUser(session?.user ?? null)
       setLoading(false)
     })
@@ -145,10 +220,11 @@ function useAdminAuth() {
 
   const signOut = async () => {
     setUser(null)
+    setRecoveryMode(false)
     await adminSupabase.auth.signOut({ scope: 'local' }).catch(() => {})
   }
 
-  return { user, loading, signOut }
+  return { user, loading, signOut, recoveryMode, clearRecoveryMode: () => setRecoveryMode(false) }
 }
 
 /* ═══════════════════════════════════════════════════════════ */
@@ -617,7 +693,7 @@ function RevenueTab() {
     ;(async () => {
       const { data, error } = await adminSupabase
         .from('payments')
-        .select('id, email, plan, amount_cents, currency, status, granted_days, stripe_session_id, created_at')
+        .select(PAYMENT_COLUMNS)
         .order('created_at', { ascending: false })
         .limit(500)
       if (cancel) return
@@ -671,7 +747,7 @@ function RevenueTab() {
   }, {})
 
   const downloadCsv = () => {
-    const header = ['date','email','plan','amount','currency','status','granted_days','stripe_session_id']
+    const header = ['date','email','plan','amount','currency','status','granted_days','stripe_session_id','stripe_payment_intent_id','stripe_customer_id']
     const lines = [header.join(',')]
     for (const r of filtered) {
       lines.push([
@@ -683,6 +759,8 @@ function RevenueTab() {
         r.status,
         r.granted_days ?? '',
         r.stripe_session_id ?? '',
+        r.stripe_payment_intent_id ?? '',
+        r.stripe_customer_id ?? '',
       ].join(','))
     }
     const blob = new Blob([lines.join('\n')], { type: 'text/csv' })
@@ -743,9 +821,20 @@ function RevenueTab() {
         <button onClick={downloadCsv} style={btnPrimaryCompact}>⇣ Export CSV</button>
       </div>
 
+      <Panel title="Refund review workflow">
+        <div style={{ color: '#98a2b5', fontSize: 13, lineHeight: 1.65 }}>
+          <strong style={{ color: '#E6ECF5' }}>Recommended flow:</strong> verify the customer email, check usage/support context, open the Stripe record, then refund only genuine billing or access issues. Full Stripe refunds are tracked by the webhook and remove premium access on our side.
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 10, marginTop: 12 }}>
+          {['Duplicate charge or duplicate subscription', 'Technical access issue support cannot resolve', 'Payment/billing error within review window', 'Not eligible after substantial premium use'].map(item => (
+            <div key={item} style={{ background: '#0B1626', border: '1px solid #1d3152', borderRadius: 8, padding: '10px 12px', color: '#E6ECF5', fontSize: 12, fontWeight: 600 }}>{item}</div>
+          ))}
+        </div>
+      </Panel>
+
       <Panel title="Recent payments">
         <Table
-          cols={['Date', 'Email', 'Plan', 'Amount', 'Status', 'Stripe ID']}
+          cols={['Date', 'Email', 'Plan', 'Amount', 'Status', 'Stripe', 'Refund review']}
           rows={filtered.slice(0, 100).map(r => [
             new Date(r.created_at).toLocaleString(),
             r.email,
@@ -757,6 +846,14 @@ function RevenueTab() {
               ? <Chip color="#7dffb0" text="PAID" />
               : <Chip color="#ff9a9a" text={(r.status || '').toUpperCase()} />,
             <code style={{ color: '#98a2b5', fontSize: 11 }}>{(r.stripe_session_id || '').slice(0, 18)}…</code>,
+            <a
+              href={stripeSearchUrl(r.stripe_payment_intent_id || r.stripe_session_id || r.stripe_customer_id || r.email)}
+              target="_blank"
+              rel="noreferrer"
+              style={{ ...btnSmallStyle, display: 'inline-block', textDecoration: 'none' }}
+            >
+              Open Stripe
+            </a>,
           ])}
           empty="No payments yet."
         />

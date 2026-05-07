@@ -8,6 +8,7 @@ import { asset } from '../data/constants'
 import speakingQData from '../data/speakingQuestions.json'
 import { useProgress } from '../hooks/useProgress'
 import { useAuth } from '../context/AuthContext'
+import { useAuthGate } from '../hooks/useAuthGate'
 import UpgradeModal from '../components/UpgradeModal'
 import SEO from '../components/SEO'
 import ScoreTips, { getListeningTips, getWritingTips } from '../components/ScoreTips'
@@ -1752,6 +1753,7 @@ function AIFeedbackPanel({ result, color, onClose }) {
 ══════════════════════════════════════════════════════════════ */
 function WritingLayout({ questions, color, partId, partLabel, partIcon, onComplete }) {
   const { isPremium } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start the timer, write responses, and save your score.')
   const { isCompleted, getSetScore, getPartStats } = useProgress()
   const [upgradeFor, setUpgradeFor] = useState(null)
   const [activeIdx, setActiveIdx] = useState(0)
@@ -1795,6 +1797,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
   }
 
   const startTimer = () => {
+    if (!requireAuth()) return
     const mins = q.section === 'W1' ? 27 : 26
     setTimeLeft(mins * 60)
     setStarted(true)
@@ -1823,6 +1826,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
   }
 
   const handleAIScore = async () => {
+    if (!requireAuth()) return
     if (!text.trim() || aiLoading) return
     setAiLoading(true)
     setAiResult(null)
@@ -2010,7 +2014,11 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
           <textarea
             className="wl-textarea"
             value={text}
-            onChange={e => setResponses(r => ({ ...r, [activeIdx]: e.target.value }))}
+            onFocus={() => requireAuth()}
+            onChange={e => {
+              if (!requireAuth()) return
+              setResponses(r => ({ ...r, [activeIdx]: e.target.value }))
+            }}
             placeholder="Write your response here…"
             rows={14}
             style={{ borderColor: text ? color : undefined }}
@@ -2067,6 +2075,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
       </div>
     </div>
     <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Writing" />
+    {authGateModal}
     </>
   )
 }
@@ -2078,6 +2087,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
 ══════════════════════════════════════════════════════════════ */
 function ListeningLayout({ color, partId, onComplete }) {
   const { isPremium } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to listen, start the timer, answer questions, and save your progress.')
   const { isCompleted, getSetScore, getPartStats } = useProgress()
   const [upgradeFor, setUpgradeFor] = useState(null)
   const part = LISTENING_DATA[partId]
@@ -2224,6 +2234,7 @@ function ListeningLayout({ color, partId, onComplete }) {
 
   /* ── Start audio (timer starts after audio ends, like the real test) ── */
   const startAudio = () => {
+    if (!requireAuth()) return
     setAudioPhase('playing')
     setAudioError(false)
     playFromLine(0)
@@ -2240,6 +2251,7 @@ function ListeningLayout({ color, partId, onComplete }) {
   }
 
   const skipAudio = () => {
+    if (!requireAuth()) return
     stopAudio()
     setAudioPhase('done')
     setCurrentLineIdx(-1)
@@ -2250,6 +2262,7 @@ function ListeningLayout({ color, partId, onComplete }) {
 
   /* ── Timer ── */
   const startTimer = () => {
+    if (!requireAuth()) return
     if (started) return
     const mins = part.timeLimitMinutes
     setTimeLeft(mins * 60)
@@ -2328,6 +2341,7 @@ function ListeningLayout({ color, partId, onComplete }) {
 
   /* ── Answer handler ── */
   const handleAnswer = (qi, optIdx) => {
+    if (!requireAuth()) return
     const key = aKey(qi)
     if (answers[key] !== undefined) return
     setAnswers(a => ({ ...a, [key]: optIdx }))
@@ -2769,6 +2783,7 @@ function ListeningLayout({ color, partId, onComplete }) {
       </div>
     </div>
     <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Listening" />
+    {authGateModal}
     </>
   )
 }
@@ -2779,6 +2794,7 @@ function ListeningLayout({ color, partId, onComplete }) {
 ══════════════════════════════════════════════════════════════ */
 function ReadingLayout({ color, partId, onComplete }) {
   const { isPremium } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start the timer, answer questions, and save your reading progress.')
   const { isCompleted, getSetScore } = useProgress()
   const [upgradeFor, setUpgradeFor] = useState(null)
   const PARTS_ORDER = ['R1', 'R2', 'R3', 'R4']
@@ -2866,6 +2882,7 @@ function ReadingLayout({ color, partId, onComplete }) {
 
   /* timer */
   const startTimer = () => {
+    if (!requireAuth()) return
     const mins = part.timeLimitMinutes
     setTimeLeft(mins * 60)
     setStarted(true)
@@ -2900,12 +2917,14 @@ function ReadingLayout({ color, partId, onComplete }) {
 
   /* answer handlers */
   const handleMCQ = (qi, optIdx) => {
+    if (!requireAuth()) return
     const key = aKey(activePartIdx, activeSetIdx, qi)
     if (answers[key] !== undefined) return
     setAnswers(a => ({ ...a, [key]: optIdx }))
   }
 
   const handleDropdown = (qi, val) => {
+    if (!requireAuth()) return
     const key = aKey(activePartIdx, activeSetIdx, qi)
     if (answers[key] !== undefined) return
     const idx = parseInt(val, 10)
@@ -2914,6 +2933,7 @@ function ReadingLayout({ color, partId, onComplete }) {
   }
 
   const handleDragDrop = (qi, matchIdx, val) => {
+    if (!requireAuth()) return
     const key = aKey(activePartIdx, activeSetIdx, qi)
     const prev = answers[key] || {}
     const q = qs[qi]
@@ -3311,6 +3331,7 @@ function ReadingLayout({ color, partId, onComplete }) {
       </div>
     </div>
     <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Reading" />
+    {authGateModal}
     </>
   )
 }
@@ -3799,7 +3820,7 @@ function SpeakingPractice({ data, started, onStart, color }) {
   const [showNotes, setShowNotes] = useState(false)
 
   const startPrep = () => {
-    onStart()
+    if (onStart?.() === false) return
     setPhase('prep')
     setElapsed(0)
     const id = setInterval(() => setElapsed(e => e + 1), 1000)
@@ -4051,6 +4072,7 @@ function ComparingPrompt({ text, color }) {
 
 function SpeakingLayout({ color, partId, onComplete }) {
   const { isPremium } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start speaking practice, record responses, and save your score.')
   const [upgradeFor, setUpgradeFor] = useState(null)
   const taskNum = parseInt(partId.replace('S', ''), 10)
   const meta = SPEAKING_TASK_META[taskNum] || SPEAKING_TASK_META[1]
@@ -4278,6 +4300,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
   }
 
   const startPrep = () => {
+    if (!requireAuth()) return
     setPhase('prep')
     setElapsed(0)
     if (timerRef.current) clearInterval(timerRef.current)
@@ -4285,6 +4308,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
   }
 
   const startSpeak = () => {
+    if (!requireAuth()) return
     if (timerRef.current) clearInterval(timerRef.current)
     setPhase('speak')
     setElapsed(0)
@@ -4359,6 +4383,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const wordCount = transcript.trim() ? transcript.trim().split(/\s+/).length : 0
 
   const handleAIScore = async () => {
+    if (!requireAuth()) return
     if (!transcript.trim() || aiLoading) return
     setAiLoading(true)
     setAiResult(null)
@@ -5075,7 +5100,11 @@ function SpeakingLayout({ color, partId, onComplete }) {
               <textarea
                 className="sl-textarea"
                 value={transcript}
-                onChange={e => setTranscripts(r => ({ ...r, [activeIdx]: e.target.value }))}
+                onFocus={() => requireAuth()}
+                onChange={e => {
+                  if (!requireAuth()) return
+                  setTranscripts(r => ({ ...r, [activeIdx]: e.target.value }))
+                }}
                 placeholder="Type what you said here..."
                 rows={8}
                 style={{ borderColor: transcript ? color : undefined }}
@@ -5143,6 +5172,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
       </div>
     </div>
     <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Speaking" />
+    {authGateModal}
     </>
   )
 }
@@ -5619,6 +5649,7 @@ function SingleQuestionPanel({ q, qIndex, total, color, onPrev, onNext, answer, 
 ══════════════════════════════════════════════════════════════ */
 function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet, onComplete }) {
   const { isPremium } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start the timer, answer questions, and save your practice progress.')
   const [upgradeFor, setUpgradeFor] = useState(null)
   const [activeSet, setActiveSet] = useState(0)
   const [timeLeft,  setTimeLeft]  = useState(null)
@@ -5640,6 +5671,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
   const curAns = answers[ansKey(activeSet, qIndex)]
 
   const handleAnswer = (optIdx) => {
+    if (!requireAuth()) return
     setAnswers(a => ({ ...a, [ansKey(activeSet, qIndex)]: optIdx }))
   }
 
@@ -5652,6 +5684,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
   }
 
   const startTimer = () => {
+    if (!requireAuth()) return false
     const mins = section === 'reading' ? 11 : section === 'listening' ? 8 : 27
     setTimeLeft(mins * 60)
     onStartSet(activeSet)
@@ -5662,6 +5695,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
         return t - 1
       })
     }, 1000)
+    return true
   }
 
   const fmtTime = (secs) => {
@@ -5886,6 +5920,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
       </div>
     </div>
     <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel={section} />
+    {authGateModal}
     </>
   )
 }

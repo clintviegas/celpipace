@@ -10,7 +10,7 @@
 //   customer.subscription.deleted       → final cancellation → mark expired
 //   invoice.paid                        → renewal extends premium_expires_at
 //   invoice.payment_failed              → flag past_due
-//   charge.refunded                     → mark payment refunded
+//   charge.refunded                     → mark payment refunded and revoke premium on full refund
 //
 // Env required:
 //   STRIPE_SECRET_KEY
@@ -427,6 +427,17 @@ export default async function handler(req, res) {
           if (refundErr) console.error('[stripe-webhook] payments refund update error:', refundErr.message)
         }
         const profile = customerId ? await findProfile(supabase, { customerId }) : null
+        if (profile && c.refunded) {
+          const { error: revokeErr } = await supabase.from('profiles').update({
+            is_premium: false,
+            subscription_status: 'refunded',
+            current_plan: 'free',
+            premium_source: 'refund',
+            premium_expires_at: new Date().toISOString(),
+            cancel_at_period_end: true,
+          }).eq('id', profile.id)
+          if (revokeErr) console.error('[stripe-webhook] profile refund revoke error:', revokeErr.message)
+        }
         await logSubEvent({
           user_id:                profile?.id || null,
           email:                  profile?.email || null,

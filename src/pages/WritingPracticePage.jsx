@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { useAuthGate } from '../hooks/useAuthGate'
 import { supabase } from '../lib/supabase'
 import { WRITING_SETS, DIFF_STYLE } from '../data/writingData'
 import SEO from '../components/SEO'
@@ -236,6 +237,7 @@ function OvertimeBanner({ onDismiss }) {
 // ─── WritingTaskView ──────────────────────────────────────────────────────────
 function WritingTaskView({ set, taskNumber, onBack, onComplete }) {
   const { user } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to write responses and save your progress.')
   const task = set.tasks[taskNumber - 1]
   const [text, setText] = useState('')
   const [showOvertimeBanner, setShowOvertimeBanner] = useState(false)
@@ -252,6 +254,7 @@ function WritingTaskView({ set, taskNumber, onBack, onComplete }) {
 
   async function handleSubmit() {
     if (saving) return
+    if (!requireAuth()) return
     setSaving(true)
     setSaveError(null)
 
@@ -382,7 +385,10 @@ function WritingTaskView({ set, taskNumber, onBack, onComplete }) {
             <div className="wp-option-cards">
               <button
                 className={`wp-option-card${selectedOption === 'A' ? ' wp-option-card--selected' : ''}`}
-                onClick={() => setSelectedOption('A')}
+                onClick={() => {
+                  if (!requireAuth()) return
+                  setSelectedOption('A')
+                }}
                 style={selectedOption === 'A' ? { borderColor: COLOR, background: '#FEF8EE' } : {}}
               >
                 <span className="wp-option-letter">A</span>
@@ -390,7 +396,10 @@ function WritingTaskView({ set, taskNumber, onBack, onComplete }) {
               </button>
               <button
                 className={`wp-option-card${selectedOption === 'B' ? ' wp-option-card--selected' : ''}`}
-                onClick={() => setSelectedOption('B')}
+                onClick={() => {
+                  if (!requireAuth()) return
+                  setSelectedOption('B')
+                }}
                 style={selectedOption === 'B' ? { borderColor: COLOR, background: '#FEF8EE' } : {}}
               >
                 <span className="wp-option-letter">B</span>
@@ -411,7 +420,11 @@ function WritingTaskView({ set, taskNumber, onBack, onComplete }) {
         <textarea
           className="wp-textarea"
           value={text}
-          onChange={e => setText(e.target.value)}
+          onFocus={() => requireAuth()}
+          onChange={e => {
+            if (!requireAuth()) return
+            setText(e.target.value)
+          }}
           placeholder="Start writing your response here…"
           rows={14}
           spellCheck
@@ -433,6 +446,7 @@ function WritingTaskView({ set, taskNumber, onBack, onComplete }) {
         </div>
         {saveError && <p className="wp-save-error">{saveError}</p>}
       </div>
+      {authGateModal}
     </div>
   )
 }
@@ -441,6 +455,7 @@ function WritingTaskView({ set, taskNumber, onBack, onComplete }) {
 export default function WritingPracticePage() {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start timed writing practice and save your progress.')
 
   // view: 'selector' | 'task'
   const [view, setView] = useState('selector')
@@ -479,6 +494,7 @@ export default function WritingPracticePage() {
   }, [user])
 
   function handleSelectTask(set, taskNum) {
+    if (!requireAuth()) return
     setActiveSet(set)
     setActiveTask(taskNum)
     setView('task')
@@ -547,6 +563,7 @@ export default function WritingPracticePage() {
           )}
         </AnimatePresence>
       </div>
+      {authGateModal}
     </>
   )
 }

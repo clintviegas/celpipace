@@ -4295,12 +4295,14 @@ img { display: block; max-width: 100%; }
   pointer-events: none;
 }
 .auth-panel-logo {
-  font-size: 17px;
-  font-weight: 800;
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
   margin-bottom: 28px;
-  letter-spacing: -.01em;
+  position: relative;
+  z-index: 1;
 }
+.auth-panel-logo img { max-width: 190px; }
 .auth-panel-tagline {
   font-size: 24px;
   font-weight: 800;
