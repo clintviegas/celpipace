@@ -65,6 +65,7 @@ const NAV_ITEMS = [
   {
     id: 'learn',
     label: 'Learn',
+    link: 'blog',
     color: '#6B4FAF',
     colorLight: '#F3EFFF',
     parts: [
@@ -156,7 +157,7 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
           if (mobileOpen) {
             setOpenId(open ? null : item.id)
           } else {
-            navigate('/' + item.id)
+            navigate('/' + (item.link || item.id))
             setOpenId(null)
           }
         }}

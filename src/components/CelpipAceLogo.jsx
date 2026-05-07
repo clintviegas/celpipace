@@ -2,13 +2,12 @@ export default function CelpipAceLogo({ height = 36, showTagline = false, light 
   const tagSize  = Math.round(height * 0.185)
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, lineHeight: 1 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: showTagline ? 3 : 0 }}>
+    <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: showTagline ? 3 : 0 }}>
         <img
           src="/Logo.svg"
           alt="CELPIPACE"
           height={height}
-          style={{ display: 'block', width: 'auto', maxWidth: Math.round(height * 6.8), objectFit: 'contain', filter: light ? 'brightness(0) invert(1)' : undefined }}
+          style={{ display: 'block', width: 'auto', filter: light ? 'brightness(0) invert(1)' : undefined }}
         />
 
         {showTagline && (
@@ -26,7 +25,6 @@ export default function CelpipAceLogo({ height = 36, showTagline = false, light 
             <span style={{ color: '#D91B1B' }}>&nbsp;—</span>
           </div>
         )}
-      </div>
     </div>
   )
 }

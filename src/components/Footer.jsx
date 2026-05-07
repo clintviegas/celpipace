@@ -56,7 +56,7 @@ export default function Footer() {
         <div className="footer-top">
           <div className="footer-brand">
             <button onClick={() => navigate('/')} className="footer-logo-btn" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
-              <CelpipAceLogo height={52} light />
+              <CelpipAceLogo height={52} />
             </button>
             <p className="footer-tagline">
               Focused CELPIP practice with instant scoring across all 4 skills.
