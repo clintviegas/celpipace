@@ -33,6 +33,6 @@
     { "source": "/contact", "destination": "/contact/index.html" },
     { "source": "/blog", "destination": "/blog/index.html" },
     { "source": "/blog/:slug", "destination": "/blog/:slug/index.html" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/((?!api/)(?!.*\\.[a-zA-Z0-9]{1,5}$).*)", "destination": "/index.html" }
   ]
 }
