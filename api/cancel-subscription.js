@@ -3,8 +3,10 @@
 
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
-import { sendEmail, renderCancelScheduled } from './_lib/email.js'
+import { sendEmail, renderCancelScheduled, renderCancellationFeedbackNotice } from './_lib/email.js'
 import { checkRateLimit } from './_lib/rateLimit.js'
+
+const SUPPORT_EMAIL = process.env.CONTACT_TO_EMAIL || 'hello@celpipace.ca'
 
 function getBearerToken(req) {
   const header = req.headers.authorization || req.headers.Authorization || ''
@@ -59,6 +61,7 @@ export default async function handler(req, res) {
   const reason       = typeof body?.reason === 'string' ? body.reason.slice(0, 80) : null
   const freeText     = typeof body?.feedback === 'string' ? body.feedback.slice(0, 2000) : null
   const wouldReturn  = typeof body?.wouldReturn === 'boolean' ? body.wouldReturn : null
+  const refundReview = body?.refundReview === true
 
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
@@ -109,6 +112,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to update subscription state', details: updateErr.message })
     }
 
+    let feedbackInserted = false
     if (reason) {
       // Idempotency: if the same user submitted cancellation feedback in the
       // last 60s, skip the duplicate insert. Stripe's subscription update is
@@ -132,6 +136,7 @@ export default async function handler(req, res) {
           current_period_end:     periodEnd,
         })
         if (fbErr) console.error('[cancel-subscription] cancellation_feedback insert error:', fbErr.message)
+        else feedbackInserted = true
       }
     }
 
@@ -146,9 +151,33 @@ export default async function handler(req, res) {
       stripe_subscription_id: subscriptionId,
       stripe_customer_id:     profile.stripe_customer_id,
       reason,
-      metadata:               { free_text: freeText, would_return: wouldReturn, source: 'self_serve_cancel_endpoint' },
+      metadata:               { free_text: freeText, would_return: wouldReturn, refund_review_requested: refundReview, source: 'self_serve_cancel_endpoint' },
     })
     if (evErr) console.error('[cancel-subscription] subscription_events insert error:', evErr.message)
+
+    if (reason && feedbackInserted && SUPPORT_EMAIL) {
+      const { subject, html } = renderCancellationFeedbackNotice({
+        name: authData.user.user_metadata?.full_name || null,
+        email: profile.email,
+        userId,
+        plan: profile.current_plan,
+        periodEnd,
+        reason,
+        feedback: freeText,
+        wouldReturn,
+        refundReview,
+        stripeSubscriptionId: subscriptionId,
+      })
+      sendEmail({
+        supabase,
+        userId,
+        toEmail: SUPPORT_EMAIL,
+        kind: 'cancellation_feedback_admin',
+        subject,
+        html,
+        metadata: { reason, refund_review_requested: refundReview, stripe_subscription_id: subscriptionId },
+      }).catch(err => console.error('[cancel-subscription] support feedback email error:', err?.message || err))
+    }
 
     if (profile.email) {
       const { subject, html } = renderCancelScheduled({
@@ -163,16 +192,20 @@ export default async function handler(req, res) {
         kind:     'cancel_scheduled',
         subject,
         html,
-        metadata: { reason, would_return: wouldReturn, stripe_subscription_id: subscriptionId },
+        metadata: { reason, would_return: wouldReturn, refund_review_requested: refundReview, stripe_subscription_id: subscriptionId },
       }).catch(err => console.error('[cancel-subscription] sendEmail error:', err?.message || err))
     }
+
+    const refundMessage = refundReview
+      ? ' Your refund review request was sent to support. Approved refunds usually appear within 3-4 business days.'
+      : ''
 
     return res.status(200).json({
       success: true,
       currentPeriodEnd: periodEnd,
       message: periodEnd
-        ? `Cancellation scheduled. Your Premium access remains active until ${new Date(periodEnd).toLocaleDateString('en-CA')}.`
-        : 'Cancellation scheduled. Your Premium access remains active until the end of the paid billing period.',
+        ? `Cancellation scheduled. Your Premium access remains active until ${new Date(periodEnd).toLocaleDateString('en-CA')}.${refundMessage}`
+        : `Cancellation scheduled. Your Premium access remains active until the end of the paid billing period.${refundMessage}`,
     })
   } catch (err) {
     console.error('[cancel-subscription] error:', err)

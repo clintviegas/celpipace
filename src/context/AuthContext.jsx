@@ -1,6 +1,77 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
-import { PUBLIC_SITE_URL } from '../data/constants'
+import { AUTH_CONSENT_STORAGE_KEY, PUBLIC_SITE_URL, TERMS_VERSION } from '../data/constants'
+
+// Fire once per session for brand-new accounts (created_at within last 2 min).
+// Uses sessionStorage so it doesn't repeat on tab focus within the same session.
+async function maybeSyncNewUser(profile) {
+  if (!profile?.created_at) return
+  const isNew = Date.now() - new Date(profile.created_at).getTime() < 2 * 60 * 1000
+  if (!isNew) return
+  const flag = `loops_signup_fired_${profile.id}`
+  if (sessionStorage.getItem(flag)) return
+  sessionStorage.setItem(flag, '1')
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return
+    await fetch('/api/on-signup', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+  } catch { /* non-blocking */ }
+}
+
+function readPendingAuthConsent() {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = window.localStorage.getItem(AUTH_CONSENT_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
+function clearPendingAuthConsent() {
+  if (typeof window === 'undefined') return
+  try { window.localStorage.removeItem(AUTH_CONSENT_STORAGE_KEY) } catch { void 0 }
+}
+
+async function syncPendingAuthConsent(profile) {
+  if (!profile?.id) return profile
+  const pending = readPendingAuthConsent()
+  if (!pending?.termsAccepted) return profile
+
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) return profile
+
+    const res = await fetch('/api/auth-consent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({
+        termsAccepted: true,
+        termsVersion: pending.termsVersion || TERMS_VERSION,
+        marketingConsent: pending.marketingConsent === true,
+      }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(data.error || 'Could not save sign-in consent.')
+    clearPendingAuthConsent()
+    return {
+      ...profile,
+      terms_accepted_at: data.termsAcceptedAt || profile.terms_accepted_at,
+      terms_version: data.termsVersion || profile.terms_version,
+      marketing_consent: typeof data.marketingConsent === 'boolean' ? data.marketingConsent : profile.marketing_consent,
+      marketing_consent_at: data.marketingConsentAt || profile.marketing_consent_at,
+    }
+  } catch (error) {
+    console.warn('[auth] consent sync failed:', error?.message || error)
+    return profile
+  }
+}
 
 /* ─────────────────────────────────────────────────────────────
    AuthContext — global auth state
@@ -9,7 +80,7 @@ import { PUBLIC_SITE_URL } from '../data/constants'
 ───────────────────────────────────────────────────────────── */
 const AuthContext = createContext(null)
 
-const ADMIN_EMAIL = 'sales@celpipace.com'
+const ADMIN_EMAIL = 'clint.viegas@gmail.com'
 
 function normalizeRedirectPath(redirectPath) {
   if (typeof redirectPath !== 'string') return '/dashboard'
@@ -81,10 +152,14 @@ export function AuthProvider({ children }) {
         }, { onConflict: 'id' }).catch(() => {})
         const { data: created } = await supabase
           .from('profiles').select('*').eq('id', currentUser.id).maybeSingle()
-        setProfile(created || null)
+        const syncedCreated = await syncPendingAuthConsent(created)
+        setProfile(syncedCreated || null)
+        maybeSyncNewUser(syncedCreated)
         return
       }
-      setProfile(data)
+      const syncedProfile = await syncPendingAuthConsent(data)
+      setProfile(syncedProfile)
+      maybeSyncNewUser(syncedProfile)
     } catch (e) {
       console.warn('[auth] profile load exception:', e?.message)
       setProfile(null)

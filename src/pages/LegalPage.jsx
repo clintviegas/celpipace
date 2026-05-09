@@ -25,7 +25,7 @@ const PAGES = {
       ['Independent Practice Tool', `${BRAND_NAME} is an independent CELPIP preparation platform and is not affiliated with, endorsed by, sponsored by, or approved by CELPIP or Paragon Testing Enterprises.`],
       ['Educational Use', 'Practice content, scores, real-time feedback, and study guidance are for preparation only. They do not guarantee an official CELPIP score, immigration result, invitation, or application outcome.'],
       ['Accounts and Access', 'Google sign-in creates or opens your account automatically. Paid access is for the purchased access period and may not be shared, resold, copied, redistributed, or used to bypass access controls.'],
-      ['Subscriptions and Cancellation', 'Premium plans are recurring subscriptions processed by Stripe. You can cancel through the billing portal. Cancellation stops future renewals, and access normally continues until the end of the paid billing period unless a refund or access reversal is approved.'],
+      ['Subscriptions and Cancellation', 'Premium plans are recurring subscriptions processed by Stripe. You can cancel through the billing portal. Cancellation stops future renewals, and access normally continues until the end of the paid billing period unless a refund or access reversal is approved. Approved refund credits usually appear on the original payment method within 3-4 business days, depending on the bank or card issuer.'],
       ['Acceptable Use', 'Do not abuse the service, scrape content, copy or redistribute practice materials, attempt to bypass payment or access controls, or upload unlawful, harmful, or infringing material.'],
       ['Refund Policy', 'Refund requests are handled under the Refund Policy. Completing practice content, using scoring, or changing your mind after substantial use does not automatically qualify for a refund.'],
     ],
@@ -41,7 +41,7 @@ const PAGES = {
       ['Non-Eligible Cases', 'Refunds are not normally approved after substantial use of premium access, completion of practice sets or mock exams, repeated use of scoring tools, account sharing, policy abuse, or dissatisfaction with a predicted score or immigration outcome.'],
       ['Review Window', 'Refund requests should be submitted within 7 days of purchase. We may review account activity, scoring usage, mock exam usage, payment records, and support history before making a decision.'],
       ['How to Request Help', `Email ${SUPPORT_EMAIL} with the account email, purchase date, Stripe receipt if available, and a short description of the issue so the payment can be located and reviewed.`],
-      ['Approved Refunds', 'Approved refunds are processed through Stripe and may result in premium access being revoked or the related subscription being cancelled. Bank/card processing times are controlled by Stripe and the card issuer.'],
+      ['Approved Refunds', 'Approved refunds are processed through Stripe and may result in premium access being revoked or the related subscription being cancelled. Approved credits usually appear on the original payment method within 3-4 business days, depending on the bank or card issuer.'],
     ],
   },
 }

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { Crown, ExternalLink, Calendar, CreditCard, Shield, AlertCircle, CheckCircle2, HelpCircle, Receipt, XCircle } from 'lucide-react'
+import { motion as Motion } from 'framer-motion'
+import { Crown, ExternalLink, Calendar, CreditCard, Shield, AlertCircle, CheckCircle2, HelpCircle, Receipt, XCircle, Mail } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
 import { supabase } from '../lib/supabase'
+import { authedFetch } from '../lib/apiClient'
 
 /* ─────────────────────────────────────────────────────────────
    Manage Subscription
@@ -56,6 +57,7 @@ export default function ManageSubscriptionPage() {
   const [cancelReason, setCancelReason] = useState('')
   const [cancelFeedback, setCancelFeedback] = useState('')
   const [cancelWouldReturn, setCancelWouldReturn] = useState(null)
+  const [cancelRefundReview, setCancelRefundReview] = useState(false)
   const [error, setError] = useState('')
   const [banner, setBanner] = useState('')
 
@@ -105,6 +107,7 @@ export default function ManageSubscriptionPage() {
     setCancelReason('')
     setCancelFeedback('')
     setCancelWouldReturn(null)
+    setCancelRefundReview(false)
     setError('')
     setCancelOpen(true)
   }
@@ -133,6 +136,7 @@ export default function ManageSubscriptionPage() {
           reason: cancelReason,
           feedback: cancelFeedback || null,
           wouldReturn: cancelWouldReturn,
+          refundReview: cancelRefundReview,
         }),
       })
       const data = await readApiJson(res)
@@ -160,12 +164,12 @@ export default function ManageSubscriptionPage() {
   return (
     <main style={{ minHeight: '70vh', padding: '120px 24px 80px', background: '#fafafa' }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          <Motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
             <h1 style={{ fontSize: 32, marginBottom: 8 }}>Manage Subscription</h1>
             <p style={{ color: '#6b7280', marginBottom: 32 }}>
-              View your plan, update payment details, download invoices, or cancel securely through Stripe.
+              View your plan, update payment details, download invoices, or cancel securely. Approved refund credits usually appear within 3-4 business days.
             </p>
-          </motion.div>
+          </Motion.div>
 
           {banner && (
             <div style={{
@@ -181,7 +185,7 @@ export default function ManageSubscriptionPage() {
           )}
 
           {/* ── Status card ── */}
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
             style={{
               background: '#fff', borderRadius: 20, padding: 32,
@@ -240,7 +244,13 @@ export default function ManageSubscriptionPage() {
                 You'll keep full access until then.
               </div>
             )}
-          </motion.div>
+          </Motion.div>
+
+          {/* ── Email preferences ── */}
+          <EmailPreferencesCard
+            initialConsent={!!profile?.marketing_consent}
+            onChanged={refreshProfile}
+          />
 
           {/* ── Actions ── */}
           {isAdmin || isLifetimeAccess ? (
@@ -261,13 +271,13 @@ export default function ManageSubscriptionPage() {
               )}
             </div>
           ) : canOpenPortal ? (
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
               style={{ background: '#fff', borderRadius: 20, padding: 32, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}
             >
               <h3 style={{ marginBottom: 8 }}>Manage your billing</h3>
               <p style={{ color: '#6b7280', marginBottom: 20 }}>
-                Stripe handles cancellation, card updates, plan changes, and invoices. If you cancel, access continues until the end of the paid billing period.
+                Stripe handles card updates, plan changes, and invoices. If you cancel, access continues until the end of the paid billing period; refund reviews are sent to support.
               </p>
               <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
                 <BillingAction
@@ -295,9 +305,9 @@ export default function ManageSubscriptionPage() {
               >
                 Ask a Question <HelpCircle size={16} />
               </button>
-            </motion.div>
+            </Motion.div>
           ) : (
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
               style={{ background: '#fff', borderRadius: 20, padding: 32, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}
             >
@@ -306,7 +316,7 @@ export default function ManageSubscriptionPage() {
                 Unlock all {PRODUCT_STATS.mockExams} mock exams, {PRODUCT_STATS.questionItems} question items and prompts, real-time scoring, and more.
               </p>
               <button className="btn" onClick={() => navigate('/#pricing')}>See Plans</button>
-            </motion.div>
+            </Motion.div>
           )}
       </div>
 
@@ -319,6 +329,8 @@ export default function ManageSubscriptionPage() {
           setFeedback={setCancelFeedback}
           wouldReturn={cancelWouldReturn}
           setWouldReturn={setCancelWouldReturn}
+          refundReview={cancelRefundReview}
+          setRefundReview={setCancelRefundReview}
           periodEnd={premiumExpiresAt}
           onClose={() => setCancelOpen(false)}
           onSubmit={submitCancellation}
@@ -339,7 +351,7 @@ const CANCEL_REASONS = [
   { value: 'other',             label: 'Other' },
 ]
 
-function CancelModal({ busy, reason, setReason, feedback, setFeedback, wouldReturn, setWouldReturn, periodEnd, onClose, onSubmit }) {
+function CancelModal({ busy, reason, setReason, feedback, setFeedback, wouldReturn, setWouldReturn, refundReview, setRefundReview, periodEnd, onClose, onSubmit }) {
   return (
     <div
       onClick={onClose}
@@ -349,14 +361,14 @@ function CancelModal({ busy, reason, setReason, feedback, setFeedback, wouldRetu
         padding: 20, zIndex: 50,
       }}
     >
-      <motion.div
+      <Motion.div
         onClick={(e) => e.stopPropagation()}
         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-        style={{ background: '#fff', borderRadius: 18, maxWidth: 520, width: '100%', padding: 28, boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}
+        style={{ background: '#fff', borderRadius: 18, maxWidth: 520, width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: 28, boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}
       >
         <h2 style={{ fontSize: 20, marginBottom: 6 }}>Cancel your subscription</h2>
         <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>
-          We're sorry to see you go. Your Premium access will continue until {periodEnd ? new Date(periodEnd).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'the end of your current billing period'}. A short reason helps us improve.
+          We're sorry to see you go. Your Premium access will continue until {periodEnd ? new Date(periodEnd).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'the end of your current billing period'}. Your feedback is emailed to support.
         </p>
 
         <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 8, color: '#374151' }}>
@@ -397,9 +409,28 @@ function CancelModal({ busy, reason, setReason, feedback, setFeedback, wouldRetu
           placeholder="What could we have done better?"
           style={{
             width: '100%', padding: 12, fontSize: 14, borderRadius: 10,
-            border: '1px solid #e5e7eb', resize: 'vertical', marginBottom: 18, fontFamily: 'inherit',
+            border: '1px solid #e5e7eb', resize: 'vertical', marginBottom: 12, fontFamily: 'inherit',
           }}
         />
+
+        <label
+          style={{
+            display: 'flex', alignItems: 'flex-start', gap: 10, padding: 12,
+            borderRadius: 10, background: refundReview ? '#fff7ed' : '#f9fafb',
+            border: `1px solid ${refundReview ? '#fed7aa' : '#e5e7eb'}`,
+            color: '#374151', fontSize: 13, lineHeight: 1.45, marginBottom: 18, cursor: 'pointer',
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={refundReview}
+            onChange={(e) => setRefundReview(e.target.checked)}
+            style={{ width: 17, height: 17, marginTop: 1, flexShrink: 0 }}
+          />
+          <span>
+            Request a refund review. Approved refunds are credited to the original payment method and usually appear within 3-4 business days.
+          </span>
+        </label>
 
         <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 8, color: '#374151' }}>
           Would you consider coming back later?
@@ -452,8 +483,68 @@ function CancelModal({ busy, reason, setReason, feedback, setFeedback, wouldRetu
             {busy ? 'Cancelling…' : 'Confirm cancellation'}
           </button>
         </div>
-      </motion.div>
+      </Motion.div>
     </div>
+  )
+}
+
+function EmailPreferencesCard({ initialConsent, onChanged }) {
+  const [consent, setConsent] = useState(!!initialConsent)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState('')
+  const [err, setErr] = useState('')
+
+  useEffect(() => { setConsent(!!initialConsent) }, [initialConsent])
+
+  const toggle = async (next) => {
+    setBusy(true); setMsg(''); setErr('')
+    try {
+      const res = await authedFetch('/api/marketing-consent', { body: { consent: next } })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || 'Could not update preference.')
+      setConsent(!!data.consent)
+      setMsg(next ? 'Subscribed to study tips.' : 'Unsubscribed from marketing emails.')
+      onChanged?.()
+    } catch (e) {
+      setErr(e.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Motion.div
+      initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
+      style={{ background: '#fff', borderRadius: 20, padding: 28, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', marginBottom: 20 }}
+    >
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 10, background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Mail size={20} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+            <h3 style={{ margin: 0, fontSize: 18 }}>Email preferences</h3>
+            <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, cursor: busy ? 'wait' : 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={consent}
+                disabled={busy}
+                onChange={(e) => toggle(e.target.checked)}
+                style={{ width: 18, height: 18, cursor: 'inherit' }}
+              />
+              <span style={{ fontSize: 14, fontWeight: 600, color: consent ? '#16a34a' : '#6b7280' }}>
+                {consent ? 'On' : 'Off'}
+              </span>
+            </label>
+          </div>
+          <p style={{ color: '#6b7280', fontSize: 14, margin: '6px 0 0', lineHeight: 1.5 }}>
+            Receive CELPIP study tips, mock-test reminders, and occasional product updates from CELPIPACE. You can unsubscribe at any time from any email or here. Transactional messages (receipts, password resets) are sent regardless.
+          </p>
+          {msg && <div style={{ marginTop: 10, fontSize: 13, color: '#16a34a' }}>{msg}</div>}
+          {err && <div style={{ marginTop: 10, fontSize: 13, color: '#dc2626' }}>{err}</div>}
+        </div>
+      </div>
+    </Motion.div>
   )
 }
 

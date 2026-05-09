@@ -155,7 +155,7 @@ export default function DashboardNavbar({ onSignIn }) {
 
         {/* Logo */}
         <button className="dbn-logo" onClick={() => navigate('/')}>
-          <CelpipAceLogo height={44} />
+          <CelpipAceLogo height={34} />
         </button>
 
         {/* Nav links */}

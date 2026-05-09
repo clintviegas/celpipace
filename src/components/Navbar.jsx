@@ -295,7 +295,7 @@ export default function Navbar({ onSignIn }) {
       <div className="nav-inner">
         {/* Logo */}
         <button className="nav-logo" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-          <CelpipAceLogo height={44} />
+          <CelpipAceLogo height={34} />
         </button>
 
         {/* Desktop nav */}

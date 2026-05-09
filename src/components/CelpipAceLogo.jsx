@@ -4,7 +4,7 @@ export default function CelpipAceLogo({ height = 36, showTagline = false, light 
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: showTagline ? 3 : 0 }}>
         <img
-          src="/Logo.svg"
+          src="/logo.svg"
           alt="CELPIPACE"
           height={height}
           style={{ display: 'block', width: 'auto', filter: light ? 'brightness(0) invert(1)' : undefined }}
