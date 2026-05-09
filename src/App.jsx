@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom'
 import { BookOpen, CheckCircle2, ClipboardCheck, Gauge, Headphones, LockKeyhole, Mic, PenLine, ShieldCheck, Sparkles, Trophy } from 'lucide-react'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { initClickAnalytics, trackPageView } from './lib/analytics'
 import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
 import AuthModal from './components/AuthModal'
@@ -21,7 +22,7 @@ import Pricing from './components/Pricing'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
 import SEO from './components/SEO'
-import ChatWidget from './components/ChatWidget'
+const ChatWidget = lazy(() => import('./components/ChatWidget'))
 import { BRAND_NAME, PRODUCT_STATS, SECTION_LIBRARY } from './data/constants'
 import './App.css'
 
@@ -114,6 +115,33 @@ function RequireAuth({ children, reason }) {
   const { user, loading } = useAuth()
   if (loading) return <RouteLoader />
   if (!user) return <AuthRequiredPage reason={reason} />
+  return children
+}
+
+function PremiumRequiredPage() {
+  const navigate = useNavigate()
+  return (
+    <main className="auth-required-page">
+      <section className="auth-required-card" aria-labelledby="premium-required-title">
+        <div className="auth-required-icon"><LockKeyhole size={24} strokeWidth={2.4} /></div>
+        <span className="auth-required-kicker">Premium required</span>
+        <h1 id="premium-required-title">This mock exam is part of Premium.</h1>
+        <p>Full mock exams with AI scoring are available on any active subscription. You can review pricing and start a plan in under a minute.</p>
+        <button className="auth-required-google" onClick={() => navigate('/pricing')}>
+          See pricing
+        </button>
+        <button className="auth-required-back" onClick={() => navigate(-1)}>Back</button>
+      </section>
+    </main>
+  )
+}
+
+function RequirePremium({ children, reason }) {
+  const { user, isPremium, loading, profileLoaded } = useAuth()
+  if (loading) return <RouteLoader />
+  if (!user) return <AuthRequiredPage reason={reason} />
+  if (!profileLoaded) return <RouteLoader />
+  if (!isPremium) return <PremiumRequiredPage />
   return children
 }
 
@@ -219,18 +247,27 @@ function PricingPage({ onSignIn }) {
 
 export function AppInner() {
   const [authOpen, setAuthOpen] = useState(false)
+  const [chatReady, setChatReady] = useState(false)
   const location = useLocation()
+  const { user } = useAuth()
 
-  // Load Google Fonts
+  // Defer ChatWidget mount until the browser is idle to keep it off the critical path
   useEffect(() => {
-    const link = document.createElement('link')
-    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
-    link.rel = 'stylesheet'
-    document.head.appendChild(link)
+    if (typeof window === 'undefined') return
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 2500))
+    const cancelIdle = window.cancelIdleCallback || clearTimeout
+    const handle = idle(() => setChatReady(true))
+    return () => cancelIdle(handle)
   }, [])
 
   // Scroll to top on route change
   useEffect(() => { window.scrollTo(0, 0) }, [location.pathname])
+
+  useEffect(() => {
+    trackPageView(user?.id)
+  }, [location.pathname, location.search, user?.id])
+
+  useEffect(() => initClickAnalytics(() => user?.id), [user?.id])
 
   const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
@@ -273,7 +310,7 @@ export function AppInner() {
           <Route path="/scores" element={<ScoresPage />} />
           <Route path="/calculator" element={<CRSCalculatorPage />} />
           <Route path="/exam" element={<ExamPage />} />
-          <Route path="/mock-test/:examId" element={<RequireAuth reason="Sign in with Google to start or review a mock exam."><MockTestPage /></RequireAuth>} />
+          <Route path="/mock-test/:examId" element={<RequirePremium reason="Sign in with Google to start or review a mock exam."><MockTestPage /></RequirePremium>} />
 
           {/* Canonical SEO routes — these are the real pages */}
           <Route path="/celpip-listening-practice" element={<ListeningPage />} />
@@ -311,7 +348,11 @@ export function AppInner() {
       </Suspense>
 
       {!isInnerPage && <Footer />}
-      {!isPaymentRoute && <ChatWidget />}
+      {!isPaymentRoute && chatReady && (
+        <Suspense fallback={null}>
+          <ChatWidget />
+        </Suspense>
+      )}
     </>
   )
 }

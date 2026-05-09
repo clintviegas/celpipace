@@ -64,24 +64,14 @@ export default function Hero() {
           </motion.button>
         )}
 
-        <motion.h1
-          className="hp-hero-title"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-        >
+        <h1 className="hp-hero-title">
           CELPIP Practice Tests With{' '}
           <span className="hp-hero-accent">Real-Time Scoring</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          className="hp-hero-desc"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
+        <p className="hp-hero-desc">
           {PRODUCT_STATS.questionItems} CELPIP-style question items, {PRODUCT_STATS.mockExams} full mock exams, real-time writing and speaking feedback, and saved CLB reports for your target score.
-        </motion.p>
+        </p>
 
         <motion.div
           className="hp-hero-ctas"
