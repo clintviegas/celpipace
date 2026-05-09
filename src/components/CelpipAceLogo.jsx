@@ -1,5 +1,9 @@
+// Logo viewBox is 782×182 → aspect ratio ≈ 4.297
+const LOGO_ASPECT = 782 / 182
+
 export default function CelpipAceLogo({ height = 36, showTagline = false, light = false }) {
   const tagSize  = Math.round(height * 0.185)
+  const width    = Math.round(height * LOGO_ASPECT)
 
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: showTagline ? 3 : 0 }}>
@@ -7,7 +11,8 @@ export default function CelpipAceLogo({ height = 36, showTagline = false, light 
           src="/logo.svg"
           alt="CELPIPACE"
           height={height}
-          style={{ display: 'block', width: 'auto', filter: light ? 'brightness(0) invert(1)' : undefined }}
+          width={width}
+          style={{ display: 'block', filter: light ? 'brightness(0) invert(1)' : undefined }}
         />
 
         {showTagline && (

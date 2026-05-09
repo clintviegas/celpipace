@@ -12,6 +12,8 @@ export default defineConfig({
           if (id.includes('framer-motion')) return 'motion'
           if (id.includes('lucide-react')) return 'icons'
           if (id.includes('@supabase')) return 'supabase'
+          if (id.includes('react-helmet-async') || id.includes('react-helmet')) return 'helmet'
+          if (id.includes('stripe')) return 'stripe'
           if (
             id.includes('react-router') ||
             id.includes('/react-dom/') ||
