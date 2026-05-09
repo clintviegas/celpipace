@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
-import { supabase } from '../lib/supabase'
 import { AUTH_CONSENT_STORAGE_KEY, PUBLIC_SITE_URL, TERMS_VERSION } from '../data/constants'
+
+let supabaseClientPromise
+
+function getSupabaseClient() {
+  if (!supabaseClientPromise) {
+    supabaseClientPromise = import('../lib/supabase').then(({ supabase }) => supabase)
+  }
+  return supabaseClientPromise
+}
 
 // Fire once per session for brand-new accounts (created_at within last 2 min).
 // Uses sessionStorage so it doesn't repeat on tab focus within the same session.
@@ -12,6 +20,7 @@ async function maybeSyncNewUser(profile) {
   if (sessionStorage.getItem(flag)) return
   sessionStorage.setItem(flag, '1')
   try {
+    const supabase = await getSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return
     await fetch('/api/on-signup', {
@@ -42,6 +51,7 @@ async function syncPendingAuthConsent(profile) {
   if (!pending?.termsAccepted) return profile
 
   try {
+    const supabase = await getSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return profile
 
@@ -108,6 +118,7 @@ export function AuthProvider({ children }) {
     if (now - lastSeenTouchRef.current < 5 * 60 * 1000) return
     lastSeenTouchRef.current = now
     try {
+      const supabase = await getSupabaseClient()
       const { error } = await supabase.rpc('touch_user_activity')
       if (!error) return
       await supabase
@@ -129,6 +140,7 @@ export function AuthProvider({ children }) {
     // guard trigger if something goes wrong. Use `select('*')` so we don't
     // crash if the subscriptions_schema migration hasn't been run yet.
     try {
+      const supabase = await getSupabaseClient()
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -171,26 +183,36 @@ export function AuthProvider({ children }) {
   /* ── Session bootstrap + subscribe ── */
   useEffect(() => {
     let mounted = true
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return
-      const currentUser = session?.user ?? null
-      setUser(currentUser)
-      setLoading(false)            // unblock UI immediately
-      touchUserActivity(currentUser)
-      loadProfile(currentUser)     // hydrate profile in background
-    })
+    let subscription = null
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+    getSupabaseClient().then((supabase) => {
+      if (!mounted) return
+
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!mounted) return
         const currentUser = session?.user ?? null
         setUser(currentUser)
         setLoading(false)
         touchUserActivity(currentUser)
         loadProfile(currentUser)
-      }
-    )
+      })
 
-    return () => { mounted = false; subscription.unsubscribe() }
+      const { data } = supabase.auth.onAuthStateChange(
+        (_event, session) => {
+          const currentUser = session?.user ?? null
+          setUser(currentUser)
+          setLoading(false)
+          touchUserActivity(currentUser)
+          loadProfile(currentUser)
+        }
+      )
+      subscription = data.subscription
+    }).catch((error) => {
+      console.warn('[auth] bootstrap failed:', error?.message || error)
+      if (mounted) setLoading(false)
+    })
+
+    return () => { mounted = false; subscription?.unsubscribe() }
   }, [loadProfile, touchUserActivity])
 
   /* ── Google OAuth ── */
@@ -199,6 +221,7 @@ export function AuthProvider({ children }) {
   const signInWithGoogle = async (redirectPath = '/dashboard') => {
     const safeRedirectPath = normalizeRedirectPath(redirectPath)
     const redirectOrigin = getTrustedRedirectOrigin(appBaseUrl)
+    const supabase = await getSupabaseClient()
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${redirectOrigin}${safeRedirectPath}` },
@@ -213,6 +236,7 @@ export function AuthProvider({ children }) {
   /* ── Sign out ── */
   const signOut = async () => {
     try {
+      const supabase = await getSupabaseClient()
       const { error } = await supabase.auth.signOut({ scope: 'local' })
       if (error) {
         console.warn('[auth] sign out failed:', error.message)

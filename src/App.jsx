@@ -9,20 +9,15 @@ import {
 } from 'react-router-dom'
 import { BookOpen, CheckCircle2, ClipboardCheck, Gauge, Headphones, LockKeyhole, Mic, PenLine, ShieldCheck, Sparkles, Trophy } from 'lucide-react'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import { initClickAnalytics, trackPageView } from './lib/analytics'
 import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
-import AuthModal from './components/AuthModal'
 import Hero from './components/Hero'
-import FeatureShowcase from './components/FeatureShowcase'
-import AIFeatures from './components/AIFeatures'
-import CRSBooster from './components/CRSBooster'
-import HowItWorks from './components/HowItWorks'
-import Pricing from './components/Pricing'
-import CTA from './components/CTA'
 import Footer from './components/Footer'
 import SEO from './components/SEO'
+const AuthModal = lazy(() => import('./components/AuthModal'))
 const ChatWidget = lazy(() => import('./components/ChatWidget'))
+const HomeDesktopSections = lazy(() => import('./components/HomeDesktopSections'))
+const Pricing = lazy(() => import('./components/Pricing'))
 import { BRAND_NAME, PRODUCT_STATS, SECTION_LIBRARY } from './data/constants'
 import './App.css'
 
@@ -158,6 +153,26 @@ const MOBILE_HOME_LINKS = [
   { label: 'Premium', path: '/pricing', Icon: Trophy },
 ]
 
+function getInitialMobileViewport() {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(max-width: 767px)').matches
+}
+
+function useIsMobileViewport() {
+  const [isMobile, setIsMobile] = useState(getInitialMobileViewport)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined
+    const query = window.matchMedia('(max-width: 767px)')
+    const handleChange = () => setIsMobile(query.matches)
+    handleChange()
+    query.addEventListener?.('change', handleChange)
+    return () => query.removeEventListener?.('change', handleChange)
+  }, [])
+
+  return isMobile
+}
+
 function MobileHomeApp({ onSignIn }) {
   const navigate = useNavigate()
 
@@ -209,6 +224,21 @@ function MobileHomeApp({ onSignIn }) {
 }
 
 function HomePage({ onSignIn }) {
+  const isMobile = useIsMobileViewport()
+  const [showDesktopSections, setShowDesktopSections] = useState(false)
+
+  useEffect(() => {
+    if (isMobile) {
+      setShowDesktopSections(false)
+      return undefined
+    }
+
+    const idle = window.requestIdleCallback || ((callback) => setTimeout(callback, 1000))
+    const cancelIdle = window.cancelIdleCallback || clearTimeout
+    const handle = idle(() => setShowDesktopSections(true), { timeout: 1800 })
+    return () => cancelIdle(handle)
+  }, [isMobile])
+
   return (
     <main className="home-page">
       <SEO
@@ -216,18 +246,20 @@ function HomePage({ onSignIn }) {
         description={`Prepare for CELPIP with ${PRODUCT_STATS.questionItems} question items, ${PRODUCT_STATS.mockExams} full mock exams, real-time writing and speaking feedback, and saved CLB score reports.`}
         canonical="/"
       />
-      <div className="home-mobile-only">
-        <MobileHomeApp onSignIn={onSignIn} />
-      </div>
-      <div className="home-desktop-flow">
-        <Hero />
-        <FeatureShowcase />
-        <AIFeatures />
-        <HowItWorks />
-        <CRSBooster />
-        <Pricing onSignIn={onSignIn} showFaq={false} />
-        <CTA />
-      </div>
+      {isMobile ? (
+        <div className="home-mobile-only">
+          <MobileHomeApp onSignIn={onSignIn} />
+        </div>
+      ) : (
+        <div className="home-desktop-flow">
+          <Hero />
+          {showDesktopSections && (
+            <Suspense fallback={null}>
+              <HomeDesktopSections onSignIn={onSignIn} />
+            </Suspense>
+          )}
+        </div>
+      )}
     </main>
   )
 }
@@ -264,10 +296,36 @@ export function AppInner() {
   useEffect(() => { window.scrollTo(0, 0) }, [location.pathname])
 
   useEffect(() => {
-    trackPageView(user?.id)
+    if (typeof window === 'undefined') return undefined
+    let cancelled = false
+    const idle = window.requestIdleCallback || ((callback) => setTimeout(callback, 1200))
+    const cancelIdle = window.cancelIdleCallback || clearTimeout
+    const handle = idle(() => {
+      import('./lib/analytics').then(({ trackPageView }) => {
+        if (!cancelled) trackPageView(user?.id)
+      }).catch(() => {})
+    }, { timeout: 2200 })
+    return () => { cancelled = true; cancelIdle(handle) }
   }, [location.pathname, location.search, user?.id])
 
-  useEffect(() => initClickAnalytics(() => user?.id), [user?.id])
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined
+    let cleanup = null
+    let cancelled = false
+    const idle = window.requestIdleCallback || ((callback) => setTimeout(callback, 1600))
+    const cancelIdle = window.cancelIdleCallback || clearTimeout
+    const handle = idle(() => {
+      import('./lib/analytics').then(({ initClickAnalytics }) => {
+        if (cancelled) return
+        cleanup = initClickAnalytics(() => user?.id)
+      }).catch(() => {})
+    }, { timeout: 2600 })
+    return () => {
+      cancelled = true
+      cancelIdle(handle)
+      cleanup?.()
+    }
+  }, [user?.id])
 
   const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
@@ -289,7 +347,11 @@ export function AppInner() {
 
   return (
     <>
-      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+      {authOpen && (
+        <Suspense fallback={null}>
+          <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+        </Suspense>
+      )}
 
       {isInnerPage ? (
         <DashboardNavbar onSignIn={() => setAuthOpen(true)} />

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { PRODUCT_STATS, SECTION_LIBRARY } from '../data/constants'
@@ -41,27 +40,19 @@ export default function Hero() {
     <section className="hp-hero" id="hero">
       <div className="hp-hero-glow" />
       <div className="hp-hero-inner">
-        <motion.div
-          className="hp-hero-badge"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
+        <div className="hp-hero-badge">
           <span aria-hidden="true">🍁</span> Practice smarter for CELPIP
-        </motion.div>
+        </div>
 
         {!isPremium && (
-          <motion.button
+          <button
             type="button"
             className="hp-hero-offer"
             onClick={() => navigate('/pricing?coupon=CELPIP25')}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.03 }}
           >
             <span className="hp-hero-offer-code">CELPIP25</span>
             <span>25% off for first-time subscribers</span>
-          </motion.button>
+          </button>
         )}
 
         <h1 className="hp-hero-title">
@@ -73,26 +64,16 @@ export default function Hero() {
           {PRODUCT_STATS.questionItems} CELPIP-style question items, {PRODUCT_STATS.mockExams} full mock exams, real-time writing and speaking feedback, and saved CLB reports for your target score.
         </p>
 
-        <motion.div
-          className="hp-hero-ctas"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
+        <div className="hp-hero-ctas">
           <button className="btn btn-white btn-lg" onClick={() => navigate('/calculator')}>
             Calculate CRS Score
           </button>
           <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/celpip-mock-test')}>
             See Mock Tests →
           </button>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="hp-hero-sections"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
+        <div className="hp-hero-sections">
           {SECTIONS.map((s) => (
             <button
               key={s.label}
@@ -105,21 +86,16 @@ export default function Hero() {
               <span className="hp-section-desc">{s.desc}</span>
             </button>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="hp-hero-stats"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-        >
+        <div className="hp-hero-stats">
           {STATS.map((stat) => (
             <div key={stat.label} className="hp-stat">
               <strong>{stat.value}</strong>
               <span>{stat.label}</span>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   )
