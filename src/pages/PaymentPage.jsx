@@ -246,7 +246,7 @@ export default function PaymentPage({ onSignIn }) {
 
             <button className="payment-pay-button" type="button" onClick={startCheckout} disabled={busy}>
               <LockKeyhole size={18} />
-              {busy ? 'Opening Stripe...' : user ? 'Continue to Stripe' : 'Continue with Google'}
+              {busy ? 'Opening Stripe...' : user ? 'Continue to Stripe' : 'Log in'}
             </button>
 
             <div className="payment-user-box">

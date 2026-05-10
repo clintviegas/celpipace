@@ -114,7 +114,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                   transition={{ duration: 0.22 }}>
 
                     {reason && <div className="auth-modal-reason"><LockKeyhole size={14} /> {reason}</div>}
-                    <h2 className="auth-modal-title">Continue with Google</h2>
+                    <h2 className="auth-modal-title">Log in</h2>
                     <p className="auth-modal-sub">Google automatically creates your account or signs you in, then brings you back to this practice page.</p>
 
                     <div className="auth-consent-options">
@@ -150,7 +150,7 @@ export default function AuthModal({ isOpen, onClose, reason }) {
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                       </svg>
-                      {sending ? 'Opening Google...' : termsAccepted ? 'Continue with Google' : 'Accept terms to continue'}
+                      {sending ? 'Opening Google...' : termsAccepted ? 'Log in' : 'Accept terms to continue'}
                     </button>
 
                     {authError && <div className="auth-email-error auth-error-box">{authError}</div>}

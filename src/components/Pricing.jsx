@@ -185,7 +185,7 @@ export default function Pricing({ onSignIn, showFaq = true }) {
             <div className="pricing-name">Free</div>
             <div className="pricing-price">$0<span className="pricing-period"> forever</span></div>
             <p className="pricing-desc">Explore each section with the first question free.</p>
-            <button className="btn btn-outline pricing-cta" onClick={onSignIn}>Get Started Free</button>
+            <button className="btn btn-outline pricing-cta" onClick={() => user ? navigate('/listening') : onSignIn?.()}>Get Started Free</button>
 
             <div className="pricing-free-sections">
               {FREE_SECTIONS.map(s => (

@@ -92,7 +92,7 @@ function AuthRequiredPage({ reason = 'Sign in with Google to continue.' }) {
         <p>{reason}</p>
         <button className="auth-required-google" onClick={handleGoogle} disabled={sending}>
           <GoogleIcon />
-          {sending ? 'Opening Google...' : 'Continue with Google'}
+          {sending ? 'Opening Google...' : 'Log in'}
         </button>
         {error && <div className="auth-required-error">{error}</div>}
         <div className="auth-required-trust">

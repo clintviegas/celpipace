@@ -156,6 +156,9 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
         onClick={() => {
           if (mobileOpen) {
             setOpenId(open ? null : item.id)
+          } else if (item.id === 'learn') {
+            window.open('https://www.celpipace.ca/blog', '_self')
+            setOpenId(null)
           } else {
             navigate('/' + (item.link || item.id))
             setOpenId(null)
@@ -314,7 +317,7 @@ export default function Navbar({ onSignIn }) {
           {/* Mobile-only auth buttons at bottom of dropdown */}
           {menuOpen && !user && (
             <li className="nav-mobile-auth">
-              <button className="btn btn-primary" onClick={() => { onSignIn(); setMenuOpen(false) }}>Continue with Google</button>
+              <button className="btn btn-primary" onClick={() => { onSignIn(); setMenuOpen(false) }}>Log in</button>
             </li>
           )}
           {menuOpen && user && (
@@ -337,7 +340,7 @@ export default function Navbar({ onSignIn }) {
           {user ? (
             <UserMenu user={user} signOut={signOut} />
           ) : (
-            <button className="btn btn-primary" onClick={onSignIn}>Continue with Google</button>
+            <button className="btn btn-primary" onClick={onSignIn}>Log in</button>
           )}
         </div>
 
