@@ -275,7 +275,7 @@ export const CRS_SPOUSE_CAN_EXP = { 0:0, 1:5, 2:7, 3:8, 4:9, 5:10 }
 // ─── Free-tier part access ────────────────────────────────────────
 // Parts listed here give free users access to Set 1 only.
 // All other parts require premium for any set (including Set 1).
-export const FREE_PARTS = new Set(['L1', 'L2', 'R1', 'R2', 'W1', 'S1', 'S2', 'S3'])
+export const FREE_PARTS = new Set(['L1', 'L2', 'L3', 'R1', 'R2', 'W1', 'S1'])
 
 // ─── Pricing ─────────────────────────────────────────────────────
 export const PRICING_PLANS = [

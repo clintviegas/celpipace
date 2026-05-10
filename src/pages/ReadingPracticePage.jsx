@@ -535,6 +535,8 @@ export default function ReadingPracticePage() {
     mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const currentSetLocked = !isPremium && (!FREE_PARTS.has(partId) || activeIdx > 0)
+
   const clearTimers = () => {
     if (timerRef.current) clearInterval(timerRef.current)
     if (otRef.current)    clearInterval(otRef.current)
@@ -546,6 +548,7 @@ export default function ReadingPracticePage() {
   }
 
   const startTimer = () => {
+    if (currentSetLocked) { setUpgradeFor(set?.set_number || activeIdx + 1); return }
     if (!requireAuth()) return
     clearTimers()
     const secs = meta.timeMins * 60
@@ -810,63 +813,90 @@ export default function ReadingPracticePage() {
           )}
 
           {/* ── Split Pane: Passage left, Questions right ── */}
-          <div className="rdg-split">
-            {/* Left pane — passage */}
-            <div className="rdg-split-passage">
-              <div className="rdg-passage-box">
-                <div className="rdg-passage-header">
-                  <span className="rdg-passage-icon" style={{ color: COLOR }}>{meta.icon}</span>
-                  <span className="rdg-passage-label" style={{ color: COLOR }}>{meta.label}</span>
-                  {type === 'information' && (
-                    <span className="rdg-passage-tip">Refer back to the paragraphs as you answer each question</span>
-                  )}
+          <div className={`rdg-split${currentSetLocked ? ' practice-content--locked' : ''}`}>
+            {currentSetLocked ? (
+              <div className="practice-locked-preview-card">
+                <div className="practice-preview-line practice-preview-line--wide" />
+                <div className="practice-preview-line" />
+                <div className="practice-preview-line practice-preview-line--short" />
+                <div className="practice-preview-grid">
+                  <span />
+                  <span />
+                  <span />
+                  <span />
                 </div>
-                {renderPassage()}
               </div>
-            </div>
-
-            {/* Right pane — questions */}
-            <div className="rdg-split-questions">
-              {renderQuestions()}
-
-              {/* Score tips */}
-              <ScoreTips tips={getReadingTips(type)} color={COLOR} />
-
-              {/* Score summary */}
-              <AnimatePresence>
-                {isSetDone && (
-                  <motion.div
-                    className="rdg-score-card"
-                    style={{ borderColor: COLOR }}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <div className="rdg-score-top">
-                      <span className="rdg-score-icon">🎯</span>
-                      <div className="rdg-score-text">
-                        <strong style={{ color: COLOR, fontSize: 22 }}>{score}</strong>
-                        <span style={{ color: '#9ca3af', fontSize: 16 }}>/{total}</span>
-                        <span style={{ marginLeft: 12, color: score / total >= 0.8 ? COLOR : score / total >= 0.6 ? '#C8972A' : '#C8102E', fontWeight: 700 }}>
-                          {score / total >= 0.8 ? 'Excellent!' : score / total >= 0.6 ? 'Good effort!' : 'Keep practising!'}
-                        </span>
-                      </div>
+            ) : (
+              <>
+                {/* Left pane — passage */}
+                <div className="rdg-split-passage">
+                  <div className="rdg-passage-box">
+                    <div className="rdg-passage-header">
+                      <span className="rdg-passage-icon" style={{ color: COLOR }}>{meta.icon}</span>
+                      <span className="rdg-passage-label" style={{ color: COLOR }}>{meta.label}</span>
+                      {type === 'information' && (
+                        <span className="rdg-passage-tip">Refer back to the paragraphs as you answer each question</span>
+                      )}
                     </div>
-                    <p className="rdg-score-title">{partId} — {set.title}</p>
-                    <div className="rdg-score-bar-wrap">
-                      <div className="rdg-score-bar">
-                        <div
-                          className="rdg-score-fill"
-                          style={{ width: `${(score / total) * 100}%`, background: score / total >= 0.8 ? COLOR : score / total >= 0.6 ? '#C8972A' : '#C8102E' }}
-                        />
-                      </div>
-                      <span className="rdg-score-pct">{Math.round((score / total) * 100)}%</span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                    {renderPassage()}
+                  </div>
+                </div>
+
+                {/* Right pane — questions */}
+                <div className="rdg-split-questions">
+                  {renderQuestions()}
+
+                  {/* Score tips */}
+                  <ScoreTips tips={getReadingTips(type)} color={COLOR} />
+
+                  {/* Score summary */}
+                  <AnimatePresence>
+                    {isSetDone && (
+                      <motion.div
+                        className="rdg-score-card"
+                        style={{ borderColor: COLOR }}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <div className="rdg-score-top">
+                          <span className="rdg-score-icon">🎯</span>
+                          <div className="rdg-score-text">
+                            <strong style={{ color: COLOR, fontSize: 22 }}>{score}</strong>
+                            <span style={{ color: '#9ca3af', fontSize: 16 }}>/{total}</span>
+                            <span style={{ marginLeft: 12, color: score / total >= 0.8 ? COLOR : score / total >= 0.6 ? '#C8972A' : '#C8102E', fontWeight: 700 }}>
+                              {score / total >= 0.8 ? 'Excellent!' : score / total >= 0.6 ? 'Good effort!' : 'Keep practising!'}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="rdg-score-title">{partId} — {set.title}</p>
+                        <div className="rdg-score-bar-wrap">
+                          <div className="rdg-score-bar">
+                            <div
+                              className="rdg-score-fill"
+                              style={{ width: `${(score / total) * 100}%`, background: score / total >= 0.8 ? COLOR : score / total >= 0.6 ? '#C8972A' : '#C8102E' }}
+                            />
+                          </div>
+                          <span className="rdg-score-pct">{Math.round((score / total) * 100)}%</span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </>
+            )}
           </div>
+
+          {currentSetLocked && (
+            <div className="practice-lock-panel" style={{ borderColor: COLOR }}>
+              <div className="practice-lock-icon">🔒</div>
+              <h3>{partId} is a Premium practice part</h3>
+              <p>Upgrade to unlock this set and the rest of the advanced practice library.</p>
+              <button className="practice-lock-btn" style={{ background: COLOR }} onClick={() => setUpgradeFor(set?.set_number || activeIdx + 1)}>
+                Unlock Premium Practice
+              </button>
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="rdg-nav">

@@ -111,32 +111,34 @@ function FAQItem({ q, a }) {
 
 function PartCard({ part, onStart, locked }) {
   return (
-    <motion.div className="lp-part-card lp-part-card--reading" whileHover={{ y: -4 }} transition={{ duration: 0.18 }}>
+    <motion.div className={`lp-part-card lp-part-card--reading${locked ? ' lp-part-card--locked' : ''}`} whileHover={{ y: -4 }} transition={{ duration: 0.18 }}>
       <div className="lp-part-card-header">
         <span className="lp-part-num" style={{ background: '#E6F4EE', color: COLOR }}>{part.num}</span>
         <span className="lp-part-icon">{part.icon}</span>
         {locked
-          ? <span style={{ fontSize: 11, fontWeight: 700, background: '#0f172a', color: '#fff', padding: '2px 8px', borderRadius: 6, letterSpacing: '.06em' }}>PRO</span>
+          ? <span className="lp-part-lock-chip">PRO</span>
           : <span className={`lp-part-diff lp-diff-${part.difficulty.toLowerCase().replace(' ', '-')}`}>{part.difficulty}</span>}
       </div>
       <h3 className="lp-part-name">{part.label}</h3>
       <p className="lp-part-desc">{part.description}</p>
-      <div className="lp-part-skills">
-        {part.skills.map(s => (
-          <span key={s} className="lp-part-skill-tag" style={{ background: '#E6F4EE', color: COLOR }}>{s}</span>
-        ))}
-      </div>
-      <div className="lp-part-meta">
-        <span className="lp-part-meta-item">❓ {part.questions} questions</span>
-        <span className="lp-part-meta-item">⏱ {part.duration}</span>
-      </div>
-      <div className="lp-part-tip" style={{ borderLeftColor: COLOR, background: '#f2fbf6' }}>
-        <span className="lp-part-tip-icon">💡</span>
-        <span>{part.tip}</span>
+      <div className={locked ? 'lp-part-locked-preview' : undefined}>
+        <div className="lp-part-skills">
+          {part.skills.map(s => (
+            <span key={s} className="lp-part-skill-tag" style={{ background: '#E6F4EE', color: COLOR }}>{s}</span>
+          ))}
+        </div>
+        <div className="lp-part-meta">
+          <span className="lp-part-meta-item">❓ {part.questions} questions</span>
+          <span className="lp-part-meta-item">⏱ {part.duration}</span>
+        </div>
+        <div className="lp-part-tip" style={{ borderLeftColor: COLOR, background: '#f2fbf6' }}>
+          <span className="lp-part-tip-icon">💡</span>
+          <span>{part.tip}</span>
+        </div>
       </div>
       <button
-        className="lp-part-cta"
-        style={{ background: locked ? '#64748b' : COLOR }}
+        className={`lp-part-cta${locked ? ' lp-part-cta--locked' : ''}`}
+        style={locked ? undefined : { background: COLOR }}
         onClick={() => onStart(part)}
       >
         {locked ? '🔒 Premium Only' : `Practice ${part.num} →`}

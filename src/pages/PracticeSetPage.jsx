@@ -5683,7 +5683,7 @@ function PracticeLayout({ sets, color, partId, section, startedSets, onStartSet,
   }
 
   const switchSet = (i) => {
-    if (!isPremium && i > 0) { setUpgradeFor(sets[i]?.setNumber || i + 1); return }
+    if (!isPremium && (!FREE_PARTS.has(partId) || i > 0)) { setUpgradeFor(sets[i]?.setNumber || i + 1); return }
     if (timerRef.current) clearInterval(timerRef.current)
     setTimeLeft(null)
     setActiveSet(i)
@@ -5941,6 +5941,8 @@ export default function PracticeSetPage({ section: propSection }) {
   const { partId: urlPartId } = useParams()
   const part = location.state?.part || null
   const { recordCompletion } = useProgress()
+  const { isPremium } = useAuth()
+  const [upgradeOpen, setUpgradeOpen] = useState(false)
 
   const section = propSection || part?.section || 'listening'
   const partId  = urlPartId || part?.id || 'L1'
@@ -5972,6 +5974,11 @@ export default function PracticeSetPage({ section: propSection }) {
   const speakingSetCount = isSpeaking ? speakingQData.sets.length : 0
 
   const pageTitle = `${partId} · ${partLabel}`
+  const partLocked = !isPremium && !FREE_PARTS.has(partId)
+
+  useEffect(() => {
+    if (partLocked) setUpgradeOpen(true)
+  }, [partLocked, partId])
 
   const scenarioText = isListening || isReading
     ? `${partSetsCount} sets · ${partTotalQs} questions · ${activePartData?.timeLimitMinutes || 8} min each`
@@ -6000,22 +6007,36 @@ export default function PracticeSetPage({ section: propSection }) {
         <button className="ps-arrow-btn" onClick={() => navigate('/' + cfg.page)}>← Back to {cfg.label}</button>
       </div>
 
+      {partLocked && (
+        <div className="ps-layout-wrap ps-layout-wrap--wide">
+          <div className="practice-lock-panel" style={{ borderColor: cfg.color }}>
+            <div className="practice-lock-icon">🔒</div>
+            <h3>{partId} is a Premium practice part</h3>
+            <p>Upgrade to unlock this part and the rest of the advanced CELPIP practice library.</p>
+            <button className="practice-lock-btn" style={{ background: cfg.color }} onClick={() => setUpgradeOpen(true)}>
+              Unlock Premium Practice
+            </button>
+          </div>
+          <UpgradeModal open={upgradeOpen} onClose={() => setUpgradeOpen(false)} setNumber={1} sectionLabel={cfg.label} />
+        </div>
+      )}
+
       {/* ── LISTENING: Use ListeningLayout ── */}
-      {isListening && (
+      {!partLocked && isListening && (
         <div className="ps-layout-wrap ps-layout-wrap--wide">
           <ListeningLayout color={cfg.color} partId={partId} onComplete={recordCompletion} />
         </div>
       )}
 
       {/* ── READING: Use ReadingLayout ── */}
-      {isReading && (
+      {!partLocked && isReading && (
         <div className="ps-layout-wrap ps-layout-wrap--wide">
           <ReadingLayout color={cfg.color} partId={partId} onComplete={recordCompletion} />
         </div>
       )}
 
       {/* ── WRITING: Use WritingLayout ── */}
-      {isWriting && writingQuestions.length > 0 && (
+      {!partLocked && isWriting && writingQuestions.length > 0 && (
         <div className="ps-layout-wrap ps-layout-wrap--wide">
           <WritingLayout
             questions={writingQuestions}
@@ -6029,7 +6050,7 @@ export default function PracticeSetPage({ section: propSection }) {
       )}
 
       {/* ── SPEAKING: Use SpeakingLayout ── */}
-      {isSpeaking && (
+      {!partLocked && isSpeaking && (
         <div className="ps-layout-wrap ps-layout-wrap--wide">
           <SpeakingLayout color={cfg.color} partId={partId} onComplete={recordCompletion} />
         </div>
