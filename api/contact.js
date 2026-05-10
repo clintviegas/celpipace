@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit } from './_lib/rateLimit.js'
+import { sendBrevoEmail } from './_lib/brevo.js'
 
 const SUPPORT_EMAIL = process.env.CONTACT_TO_EMAIL || 'hello@celpipace.ca'
 const MAX_MESSAGE_CHARS = 5000
@@ -23,12 +24,6 @@ function clean(value, max = 400) {
 }
 
 async function sendEmail(payload) {
-  const apiKey = process.env.RESEND_API_KEY
-  const from = process.env.CONTACT_FROM_EMAIL || process.env.EMAIL_FROM || 'CELPIPACE <hello@celpipace.ca>'
-  if (!apiKey) {
-    return { sent: false, error: 'email_provider_not_configured' }
-  }
-
   const subject = `CELPIPACE ${payload.type}: ${payload.section}`
   const text = [
     `Request type: ${payload.type}`,
@@ -42,26 +37,13 @@ async function sendEmail(payload) {
     payload.message,
   ].join('\n')
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from,
-      to: SUPPORT_EMAIL,
-      reply_to: payload.email || undefined,
-      subject,
-      text,
-    }),
+  const result = await sendBrevoEmail({
+    toEmail: SUPPORT_EMAIL,
+    subject,
+    html: `<pre style="font-family:monospace;white-space:pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>`,
+    text,
   })
-
-  const result = await response.json().catch(() => ({}))
-  if (!response.ok) {
-    return { sent: false, error: result.message || result.error || 'email_send_failed' }
-  }
-  return { sent: true, id: result.id || null }
+  return { sent: result.ok, id: result.messageId || null, error: result.error || null }
 }
 
 export default async function handler(req, res) {

@@ -17,6 +17,275 @@ export const BLOG_CATEGORIES = [
 export const BLOG_ARTICLES = [
   /* ── 1 ── */
   {
+    slug: 'express-entry-2026-language-scores',
+    title: 'Express Entry 2026: Why Language Scores Matter More Than Ever',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '6 min read',
+    date: 'May 10, 2026',
+    excerpt:
+      "Canada's Express Entry pool added only 897 profiles in a recent two-week window — a 60% slowdown. But competition among high-scoring candidates keeps intensifying. Here's why language scores have become the most important differentiator in 2026.",
+    sections: [
+      {
+        heading: 'Pool Growth Slows, But Competition Keeps Rising',
+        body: `Between April 12 and April 26, the Express Entry pool added only 897 profiles — a sharp 60% decline from the previous two-week increase of 2,193 profiles. On the surface, this sounds like good news for candidates.\n\nBut the data tells a different story. Despite slower pool growth, competition among high-scoring candidates continues to intensify. Recent draws have issued fewer Invitations to Apply with higher cut-offs, meaning the bar is rising even as fewer new candidates enter.`,
+      },
+      {
+        heading: 'Why the CRS Race Is Getting Harder',
+        body: `The latest Canadian Experience Class (CEC) draw issued only 2,000 ITAs with a cut-off of 514 — the third consecutive draw with reduced volumes. Several forces are compressing competition at the top:`,
+        list: [
+          'The 501–600 CRS range continues to grow as high-scoring candidates cluster near the cutoff',
+          'Provincial nominees receiving 600-point boosts are increasing, raising the apparent bar for everyone else',
+          'IRCC is continuing category-based selection draws throughout 2026, pulling strong candidates from targeted pools',
+          'More applicants are competing in the highest score bands than at any prior point',
+        ],
+        body2: `This means applicants can no longer rely on "average" scores to receive an invitation. Even marginal CRS improvements now matter significantly.`,
+      },
+      {
+        heading: 'The Fastest Way to Gain CRS Points: Language',
+        body: `Language proficiency is one of the few CRS factors fully within a candidate's control — and one of the highest-value areas available. Strong CELPIP scores improve:`,
+        list: [
+          'Core CRS language points (up to 136 for FSW, 160 for CEC)',
+          'Skill transferability points (additional bonus for CLB 7+ across all four skills)',
+          'Eligibility for French-language and other category-based draws',
+          'Provincial Nominee Program opportunities tied to language thresholds',
+        ],
+        body2: `In most cases, improving from CLB 8 to CLB 9 across all four skills adds +32 CRS points. For a candidate sitting at 490, that single improvement can push them above a recent draw cut-off.`,
+      },
+      {
+        heading: 'What to Expect in the Second Half of 2026',
+        body: `Current immigration trends point to four pressures that applicants should prepare for.\n\nHigher CRS cut-offs are likely to persist, especially for CEC candidates. Recent draws have remained above the 510 mark for competitive profiles.\n\nCategory-based selection will continue to expand. IRCC has signalled prioritization of French-language proficiency, healthcare workers, trades, and other targeted occupations — meaning candidates in these categories need language scores that meet eligibility thresholds, not just average requirements.\n\nExpress Entry reform consultations are underway, with Canada exploring changes that may prioritize higher-earning workers and update labour market needs. The direction of reforms suggests language performance will remain central.\n\nStronger language expectations across the board are emerging as the pool self-selects toward higher-scoring candidates. As lower-scoring profiles age out or withdraw, the effective competition floor rises.`,
+      },
+      {
+        heading: 'What to Focus on Now',
+        body: `If you are planning to immigrate through Express Entry in 2026, improving your language profile is the highest-return preparation you can do.`,
+        list: [
+          'Identify your weakest CELPIP skill and target it first — one weak skill can cost you 8–17 CRS points',
+          'Aim for CLB 9 across all four skills — the jump from CLB 8 to CLB 9 is worth 32 CRS points total',
+          'Use full-length mock exams to simulate real test conditions before booking your actual exam',
+          'Maximize speaking and writing scores — these two skills are where most candidates leave points on the table',
+          'Consider a second language test (TEF Canada) if French is part of your background — it can add up to 24 more CRS points',
+        ],
+      },
+      {
+        heading: 'Prepare Smarter with CELPIPACE',
+        body: `As Express Entry competition intensifies, better preparation matters more than ever. CELPIPACE offers full-length CELPIP mock exams, real-time scoring simulations, AI-evaluated speaking practice, writing feedback, and targeted CLB improvement drills — everything you need to maximize your score before test day.\n\nStart practicing today and see exactly where your CLB stands.`,
+      },
+    ],
+  },
+
+  /* ── 3 ── */
+  {
+    slug: 'celpip-8-week-study-plan',
+    title: 'CELPIP Study Plan: 8 Weeks to Your Target CLB Score',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0F7490',
+    tagColorLight: '#E0F7FA',
+    readTime: '8 min read',
+    date: 'May 8, 2026',
+    excerpt:
+      'Most CELPIP candidates prepare without a structured plan — and plateau weeks before their test date. This 8-week schedule takes you from baseline to test-ready, skill by skill.',
+    sections: [
+      {
+        heading: 'Before You Start: Take a Baseline Test',
+        body: `Before following any study plan, you need to know where you currently stand. Take one full-length CELPIP practice test under timed conditions — not a single section, the entire exam. Score every skill and identify your two weakest areas.\n\nThis baseline determines your starting point. A candidate starting at CLB 6–7 needs a different plan than one starting at CLB 8. The schedule below assumes you are starting around CLB 7–8 and targeting CLB 9+ across all skills.`,
+      },
+      {
+        heading: 'Weeks 1–2: Listening and Reading Foundation',
+        body: `Listening and Reading respond fastest to structured practice because both are input-based skills — comprehension improves quickly with volume and correct technique. Complete one Listening set and one Reading set every two days.`,
+        list: [
+          'Week 1: Learn the format of each part (L1–L6, R1–R4) — understand what each one tests before drilling',
+          'Week 2: Identify which parts you consistently miss and drill those specifically',
+          'Daily habit: 30 minutes of active Canadian English listening (CBC Radio, podcasts) without subtitles',
+          'Weekly benchmark: 80%+ accuracy on L1–L6 and R1–R4 within the time limit',
+        ],
+        body2: `Do not skip the timed format even in early weeks. Timing pressure is a real factor on test day, and your brain needs to adapt early rather than cramming it into Week 7.`,
+      },
+      {
+        heading: 'Weeks 3–4: Writing Skill Building',
+        body: `Writing requires output practice, not input. Write every two days, alternating between Task 1 (email) and Task 2 (survey response). Use CELPIPACE's instant scoring to get feedback on all four criteria — Content, Organization, Vocabulary, and Conventions — after each attempt.\n\nWeek 3 focus: Organization and Content. Every response must address the exact task requirements in a clear structure from the first sentence.`,
+        list: [
+          'Email format: state purpose → address three bullet points in order → appropriate closing',
+          'Survey format: clear position in sentence 1 → two supported reasons with examples → conclusion',
+          'Target word count: 150–200 words for both tasks — going under or over loses marks',
+        ],
+        body2: `Week 4 shift: Move focus to Vocabulary. Replace your most overused words with precise alternatives. Write each response twice — once naturally, once with upgraded vocabulary — and compare the two.`,
+      },
+      {
+        heading: 'Weeks 5–6: Speaking Development',
+        body: `Speaking is the most anxiety-producing skill for most candidates because it is recorded with no retry. The solution is volume: record yourself at least once a day so the recording environment stops feeling foreign.`,
+        list: [
+          'Days 1–3: Complete CELPIPACE speaking tasks, listen back, note hesitations and filler words',
+          'Days 4–5: Redo the same tasks without listening to your previous attempt — measure improvement',
+          'Days 6–7: Complete a new task set focusing exclusively on using the full Preparation Window every time',
+        ],
+        body2: `If you hear more than two filler words per 30 seconds of speech, that is your primary weakness. Slow down — most candidates speed up when nervous, which produces more errors, not fewer.`,
+      },
+      {
+        heading: 'Weeks 7–8: Full Mock Exams and Refinement',
+        body: `Two weeks before your test date, shift entirely to full-length mock exams. Complete one full exam per week under real test conditions: no pausing, no checking answers mid-section, all sections timed.\n\nAfter each mock exam:`,
+        list: [
+          'Review every wrong answer — understand not just the correct answer but why each wrong option was designed to mislead',
+          'Track your CLB per skill across both exams to see whether you are improving or plateauing',
+          'Flag any new weaknesses that appeared under full-exam pressure that did not appear in section drills',
+        ],
+        body2: `By the end of Week 8, you should have a clear picture of your realistic test-day range. If any skill is still below your target CLB, consider booking your test 2–4 weeks later rather than going in underprepared.`,
+      },
+      {
+        heading: 'The Week Before: Peak and Taper',
+        body: `The final week is for maintenance, not learning. Do not attempt new material or change your approach.`,
+        list: [
+          'Days 1–2: Review only your weakest sections from the Week 7 and 8 mock exams',
+          'Days 3–4: One short drilling session per skill — 20 minutes maximum',
+          'Day 5: Complete rest. No practice.',
+          'Day 6: Confirm test centre logistics, prepare your ID, sleep early',
+          'Day 7: Test day — arrive 30 minutes early',
+        ],
+        body2: `Fatigue on test day costs more CLB points than any last-minute review session can recover. Trust the eight weeks of structured work you have completed.`,
+      },
+    ],
+  },
+
+  /* ── 4 ── */
+  {
+    slug: 'celpip-score-requirements-citizenship-2026',
+    title: 'CELPIP Score Requirements: Permanent Residence vs. Canadian Citizenship',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '6 min read',
+    date: 'May 5, 2026',
+    excerpt:
+      'CELPIP requirements for PR and citizenship are not the same — and confusing the two is one of the most common (and costly) immigration mistakes. Here is exactly what you need for each pathway in 2026.',
+    sections: [
+      {
+        heading: 'Two Pathways, Two Different Standards',
+        body: `Most CELPIP guides focus entirely on Express Entry and permanent residence. But if your goal is Canadian citizenship, the requirements are different — different minimum CLB levels, different skills tested, and critically, a two-year validity window that can expire between your PR and citizenship applications.\n\nThis article breaks down the exact CELPIP requirements for each pathway, the mistakes that delay applications, and how to plan your test strategy around your specific goal.`,
+      },
+      {
+        heading: 'CELPIP Requirements for Permanent Residence',
+        body: `For Express Entry, CELPIP General is accepted by IRCC as official proof of English proficiency. Minimum scores vary by program:`,
+        list: [
+          'Federal Skilled Worker (FSW): CLB 7 minimum in all four skills (CELPIP 7 in each)',
+          'Canadian Experience Class (CEC): CLB 7 minimum in all four skills',
+          'Federal Skilled Trades (FST): CLB 5 in Reading and Writing, CLB 6 in Listening and Speaking',
+          'Competitive CRS score in current draws: CLB 9+ required (CELPIP 9 per skill)',
+        ],
+        body2: `Meeting the minimum gets your profile into the pool. Competitive scores that actually generate ITAs in the current Express Entry environment require CLB 9 or higher across all four skills.`,
+      },
+      {
+        heading: 'CELPIP Requirements for Canadian Citizenship',
+        body: `For citizenship, IRCC requires proof of English (or French) proficiency at CLB 4 or higher. CELPIP General is one of the accepted tests. For citizenship purposes, IRCC evaluates Reading and Listening only — Writing and Speaking are not required.\n\nRequired minimum: CLB 4 in both Reading and Listening (CELPIP 4 in each).\n\nThis is significantly lower than the CLB 7+ required for PR — but the result must come from an official test taken within the two-year validity window, and the correct test must be used.`,
+      },
+      {
+        heading: 'Score Validity: The Detail That Trips Up Applicants',
+        body: `CELPIP scores are valid for two years from the test date. This creates a timeline problem many applicants discover too late:`,
+        list: [
+          'If you took CELPIP for your PR application two or more years ago, that result cannot be used for citizenship',
+          'You will need to retest — even if your English has not changed at all',
+          'PR applications, residency requirements, and processing delays can easily push the citizenship timeline past the 24-month mark',
+        ],
+        body2: `If you are currently preparing for PR and also plan to apply for citizenship later, take your CELPIP as late as possible in the PR process to preserve maximum validity for the citizenship stage.`,
+      },
+      {
+        heading: 'Common Mistakes That Delay Applications',
+        body: `Three errors that appear regularly in IRCC submissions:`,
+        list: [
+          'Submitting an expired CELPIP result — IRCC will reject the application or request a new result, adding months to the timeline',
+          'Taking CELPIP General LS (Listening and Speaking only) for citizenship — citizenship requires Reading and Listening, which CELPIP General LS does not include',
+          'Confusing the citizenship CLB 4 minimum with the PR CLB 7 minimum and under-preparing, then failing to reach even the lower bar',
+        ],
+        body2: `The correct test for both PR and citizenship is CELPIP General (all four skills). CELPIP General LS is accepted for some employer and provincial purposes but is not suitable for citizenship proof.`,
+      },
+      {
+        heading: 'Planning Your Test Strategy for Both Goals',
+        body: `If you are preparing CELPIP for both pathways, the efficient approach is straightforward.\n\nTake CELPIP General and target CLB 9 across all four skills. This result satisfies both Express Entry requirements and the citizenship minimum in one test. Even if citizenship is years away, a strong score on file creates flexibility and may not need to be retaken.\n\nIf citizenship is your only current goal, you still need CLB 4 in Reading and Listening from CELPIP General — and the two-year validity window means you should time your test within 18 months of your planned citizenship application date.`,
+      },
+    ],
+  },
+
+  /* ── 5 ── */
+  {
+    slug: 'celpip-speaking-tasks-1-to-8-guide',
+    title: 'CELPIP Speaking Tasks 1 to 8: What Each Task Tests and How to Score Higher',
+    category: 'speaking',
+    tag: 'Speaking',
+    tagColor: '#C8102E',
+    tagColorLight: '#FEF2F2',
+    readTime: '9 min read',
+    date: 'May 3, 2026',
+    excerpt:
+      'The CELPIP Speaking section has 8 different tasks — and each one tests a different skill. Most candidates prepare with a one-size-fits-all approach. Here is what examiners actually look for in each task.',
+    sections: [
+      {
+        heading: 'The Format: 8 Tasks, One Recording Session',
+        body: `The CELPIP Speaking section contains 8 tasks delivered entirely by computer. You record your response into a microphone — there is no live examiner. Each task gives you a preparation window (30–60 seconds) followed by a response window (60–90 seconds). Your response is recorded once with no retakes.\n\nScoring uses four criteria across all tasks: Coherence, Vocabulary, Listenability, and Pronunciation. The weighting is equal — neglecting any one criterion costs you points across all 8 tasks.`,
+      },
+      {
+        heading: 'Tasks 1–2: Giving Advice',
+        body: `Task 1 asks you to give advice in an informal context — to a friend, family member, or colleague. Task 2 presents the same structure but in a formal relationship: an employee, a business contact, or a client.\n\nMost candidates give vague advice ("I think you should consider..."). High-scoring responses give specific, actionable recommendations with at least two supporting reasons.`,
+        list: [
+          'Structure: recommendation → reason 1 → reason 2 → brief closing statement',
+          'Task 1 register: natural, warm, direct ("Here is what I would do...")',
+          'Task 2 register: professional, measured, clear ("I would recommend that you...")',
+          'Avoid: hedging ("It depends..."), over-qualifying, or failing to take a clear position',
+        ],
+      },
+      {
+        heading: 'Tasks 3–4: Describing a Personal Experience',
+        body: `Tasks 3 and 4 ask you to describe a personal experience or a familiar situation. These tend to produce strong Vocabulary scores but weak Coherence scores — because candidates narrate a timeline of events without a clear point.\n\nExaminers score Coherence on whether your response has a clear development and resolution, not just a sequence of events.`,
+        list: [
+          'Opening: set the scene in one sentence ("A few years ago, I had to...")',
+          'Development: describe the key moment or challenge specifically — avoid vague references',
+          'Vocabulary: use cause-and-effect connectors ("As a result...", "This led to...", "Consequently...")',
+          'Closing: end with a reflection or insight ("Looking back, I realize that...")',
+        ],
+        body2: `Replace filler transitions like "and then... and then..." with connectors that show logical progression. This single change can raise your Coherence score by a full CLB level.`,
+      },
+      {
+        heading: 'Task 5: Comparing and Persuading',
+        body: `Task 5 presents two options and asks you to argue in favour of one. This is the highest-difficulty task for most candidates because it requires building a persuasive argument under time pressure rather than describing a situation.\n\nThe most common mistake: trying to be balanced. Hesitation and hedging ("both options have their advantages...") immediately lowers your Coherence score.`,
+        list: [
+          'State your preference clearly in the first sentence — do not build up to it',
+          'Give one strong reason with a concrete example rather than two weak reasons without support',
+          'Briefly acknowledge the alternative and then explain why your choice is stronger',
+          'Close with a forward-looking statement ("For these reasons, Option A is clearly the better choice for...")',
+        ],
+      },
+      {
+        heading: 'Tasks 6–7: Handling a Difficult Situation',
+        body: `Tasks 6 and 7 simulate real communication challenges: responding to a complaint, making a difficult request, or navigating an uncomfortable conversation. You see a scenario and must respond to an imagined listener.\n\nThese tasks test whether your language sounds natural under social pressure. What examiners listen for:`,
+        list: [
+          'Appropriate tone — empathetic for complaints, assertive for setting boundaries',
+          'Direct language — reach the point without over-apologizing or under-explaining',
+          'Practical resolution — state clearly what will happen next, not just acknowledgment of the problem',
+          'Vocabulary range — avoid repeating the same phrases ("I understand... I understand...")',
+        ],
+      },
+      {
+        heading: 'Task 8: Describing an Unusual Situation',
+        body: `Task 8 presents an unusual image or hypothetical scenario and asks you to describe or speculate about what is happening. This is the only task that explicitly rewards imaginative vocabulary and the natural use of modal verbs.\n\nHigh-scoring structure: Scene description → Possible explanation → Speculation → Personal reaction.\n\nExample: "This image appears to show a city street completely covered in sand. This could suggest a recent sandstorm or some kind of unusual environmental event. The expressions on people's faces seem surprised but calm, which makes me think this occurred recently. Personally, I would find this both alarming and fascinating..."\n\nThe key is sustained speculation — keep developing possibilities rather than stopping after one or two sentences.`,
+      },
+      {
+        heading: 'Preparation Habits That Work Across All 8 Tasks',
+        body: `These habits separate CLB 9 responses from CLB 7 responses regardless of the task type:`,
+        list: [
+          'Always use the full preparation window — even 30 seconds is enough to plan your opening and closing sentences',
+          'Never open with "Um" or "So" — start with a content word or direct statement',
+          'Vary your sentence openings — three consecutive sentences starting with "I" signals a limited range to the examiner',
+          'Speak at 90% of your natural speed — clarity matters more than pace, and nerves cause most people to rush',
+          'Record yourself doing all 8 tasks once per week and listen back — patterns you cannot hear in real time become obvious on playback',
+        ],
+      },
+    ],
+  },
+
+  /* ── 6 ── */
+  {
     slug: 'how-to-score-clb-10-writing',
     title: 'How to Score CLB 10+ on CELPIP Writing',
     category: 'writing',

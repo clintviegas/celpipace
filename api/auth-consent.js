@@ -1,10 +1,9 @@
 // /api/auth-consent.js
 // Records explicit terms acceptance captured before Google OAuth and, when the
-// user opted in, subscribes them to marketing emails.
+// user opted in, subscribes them to marketing emails via Brevo.
 
 import { requireUser } from './_lib/auth.js'
-import { upsertAudienceContact } from './_lib/audience.js'
-import { upsertLoopsContact } from './_lib/loops.js'
+import { upsertBrevoContact, addToBrevoList } from './_lib/brevo.js'
 
 const DEFAULT_TERMS_VERSION = '2026-05-07'
 
@@ -54,21 +53,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: updateErr.message })
   }
 
-  let syncedToResend = false
   if (marketingConsent && email) {
-    try {
-      const result = await upsertAudienceContact({ email, firstName, lastName, unsubscribed: false })
-      syncedToResend = !!result.ok
-      if (result.ok && result.contactId) {
-        await auth.supabase.from('profiles').update({ resend_contact_id: result.contactId }).eq('id', userId)
-      }
-    } catch (err) {
-      console.warn('[auth-consent] resend sync failed:', err.message)
+    const listId = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : null
+    upsertBrevoContact({ email, firstName, lastName, emailBlacklisted: false })
+      .catch(err => console.warn('[auth-consent] brevo upsert failed:', err.message))
+    if (listId) {
+      addToBrevoList({ email, listId })
+        .catch(err => console.warn('[auth-consent] brevo list add failed:', err.message))
     }
-
-    upsertLoopsContact({ email, firstName, lastName, subscribed: true }).catch((err) => {
-      console.warn('[auth-consent] loops sync failed:', err.message)
-    })
   }
 
   return res.status(200).json({
@@ -76,6 +68,5 @@ export default async function handler(req, res) {
     termsVersion: profile?.terms_version || termsVersion,
     marketingConsent: !!profile?.marketing_consent,
     marketingConsentAt: profile?.marketing_consent_at || null,
-    syncedToResend,
   })
 }
