@@ -3,16 +3,16 @@
 // CELPIP Speaking scoring — RAG-augmented mirror of score-writing.js.
 // See score-writing.js for the high-level pipeline notes.
 
-import { embed } from './_lib/embeddings.js';
+import { embed } from './embeddings.js';
 import {
   retrieveExemplars,
   retrieveWeaknessProfile,
   buildExemplarBlock,
   buildWeaknessBlock,
   persistScoredEssay,
-} from './_lib/rag.js';
-import { requireUser } from './_lib/auth.js';
-import { checkRateLimit } from './_lib/rateLimit.js';
+} from './rag.js';
+import { requireUser } from './auth.js';
+import { checkRateLimit } from './rateLimit.js';
 
 const MAX_RESPONSE_CHARS = 6000;  // transcripts run longer than written prose
 const MAX_PROMPT_CHARS   = 2000;

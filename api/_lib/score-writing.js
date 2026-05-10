@@ -15,16 +15,16 @@
 // degrades cleanly to the original rubric-only behaviour — the user always
 // gets a score back.
 
-import { embed } from './_lib/embeddings.js';
+import { embed } from './embeddings.js';
 import {
   retrieveExemplars,
   retrieveWeaknessProfile,
   buildExemplarBlock,
   buildWeaknessBlock,
   persistScoredEssay,
-} from './_lib/rag.js';
-import { requireUser } from './_lib/auth.js';
-import { checkRateLimit } from './_lib/rateLimit.js';
+} from './rag.js';
+import { requireUser } from './auth.js';
+import { checkRateLimit } from './rateLimit.js';
 
 const MAX_RESPONSE_CHARS = 4000;  // ~600 words — well above CELPIP 250-word ceiling
 const MAX_PROMPT_CHARS   = 2000;
