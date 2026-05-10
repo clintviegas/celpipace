@@ -1,15 +1,13 @@
 // /api/marketing-consent.js
 // Toggle the signed-in user's marketing-email consent. Source of truth lives
-// on profiles.marketing_consent + marketing_consent_at; we mirror to Resend
-// Audience so any broadcasts you send later automatically respect the same
-// opt-in state.
+// on profiles.marketing_consent + marketing_consent_at; mirrored to Brevo so
+// unsubscribes are respected in all automation scenarios.
 //
 // POST { consent: true | false }
-//   200 { consent, syncedToResend }
+//   200 { consent }
 
 import { requireUser } from './_lib/auth.js'
-import { upsertAudienceContact, unsubscribeAudienceContact } from './_lib/audience.js'
-import { upsertLoopsContact } from './_lib/loops.js'
+import { upsertBrevoContact, unsubscribeBrevoContact, addToBrevoList } from './_lib/brevo.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
@@ -26,7 +24,7 @@ export default async function handler(req, res) {
 
   const nowIso = new Date().toISOString()
   const patch = consent
-    ? { marketing_consent: true,  marketing_consent_at: nowIso, marketing_unsubscribed_at: null }
+    ? { marketing_consent: true, marketing_consent_at: nowIso, marketing_unsubscribed_at: null }
     : { marketing_consent: false, marketing_unsubscribed_at: nowIso }
 
   const { error: updateErr } = await auth.supabase
@@ -38,28 +36,18 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: updateErr.message })
   }
 
-  // Best-effort Resend sync. Failure here doesn't undo the DB consent — we'd
-  // rather honour the user's choice locally even if Resend is down.
-  let syncedToResend = false
+  // Sync consent state to Brevo — adding to the main list triggers welcome drip
   try {
     if (consent) {
-      const result = await upsertAudienceContact({ email, firstName, lastName, unsubscribed: false })
-      syncedToResend = !!result.ok
-      if (result.ok && result.contactId) {
-        await auth.supabase.from('profiles').update({ resend_contact_id: result.contactId }).eq('id', userId)
-      }
+      const listId = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : null
+      await upsertBrevoContact({ email, firstName, lastName, emailBlacklisted: false })
+      if (listId) await addToBrevoList({ email, listId })
     } else {
-      const result = await unsubscribeAudienceContact({ email })
-      syncedToResend = !!result.ok
+      await unsubscribeBrevoContact({ email })
     }
   } catch (err) {
-    console.warn('[marketing-consent] resend sync failed:', err.message)
+    console.warn('[marketing-consent] brevo sync failed:', err.message)
   }
 
-  // Best-effort Loops sync — keep subscribed flag in lockstep with consent
-  upsertLoopsContact({ email, firstName, lastName, subscribed: consent }).catch((err) => {
-    console.warn('[marketing-consent] loops sync failed:', err.message)
-  })
-
-  return res.status(200).json({ consent, syncedToResend })
+  return res.status(200).json({ consent })
 }
