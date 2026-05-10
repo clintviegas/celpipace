@@ -103,7 +103,9 @@ export default function ScoresPage() {
           .eq('is_completed', true)
           .order('completed_at', { ascending: false })
         if (error) throw error
-        if (!cancelled) setMockReports(data || [])
+        // Filter ghost rows that were marked complete with no scores recorded.
+        const real = (data || []).filter(r => r.scores && Object.keys(r.scores).length > 0)
+        if (!cancelled) setMockReports(real)
       } catch {
         if (!cancelled) setMockReports([])
       } finally {

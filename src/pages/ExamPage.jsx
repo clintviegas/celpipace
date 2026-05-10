@@ -53,6 +53,11 @@ export default function ExamPage() {
         const map = {}
         const attemptsMap = {}
         for (const row of data || []) {
+          // Skip ghost rows: marked complete but with no scores recorded.
+          // Defensive — the new RPC writes scores atomically, but legacy rows
+          // (or any future quirk) shouldn't appear as legitimate attempts.
+          const hasScores = row.scores && Object.keys(row.scores).length > 0
+          if (!hasScores) continue
           if (row.exam_number != null && !map[row.exam_number]) map[row.exam_number] = row
           if (row.exam_number != null) {
             attemptsMap[row.exam_number] = [...(attemptsMap[row.exam_number] || []), row]

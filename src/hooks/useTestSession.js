@@ -240,21 +240,20 @@ export function useTestSession({
     // current state is durable even if the page is closed mid-flush.
     writeLocalBackup()
     try {
-      const { error } = await supabase
-        .from('test_sessions')
-        .update({
-          selected_answers: s.answers,
-          current_section: s.currentSection,
-          current_part: s.currentPart,
-          current_question_index: s.currentQuestionIndex,
-          completed_sections: s.completedSections,
-          scores: s.scores,
-          meta: s.meta,
-        })
-        .eq('id', sid)
+      // Use SECURITY DEFINER RPC to bypass RLS quirk where direct UPDATE on
+      // test_sessions silently affects 0 rows under some auth contexts.
+      const { error } = await supabase.rpc('save_test_session_progress', {
+        p_session_id: sid,
+        p_selected_answers: s.answers,
+        p_scores: s.scores,
+        p_meta: s.meta,
+        p_completed_sections: s.completedSections,
+        p_current_section: s.currentSection,
+        p_current_part: s.currentPart,
+        p_current_question_index: s.currentQuestionIndex,
+      })
       if (error) throw error
       setSaveError(null)
-      // Clear local backup once successfully synced
       try {
         const k = localKey()
         if (k) localStorage.removeItem(k)
@@ -365,13 +364,23 @@ export function useTestSession({
     queueSave()
   }, [queueSave])
 
-  const complete = useCallback(async () => {
+  const complete = useCallback(async (overrides = {}) => {
     const sid = idRef.current
     if (!sid) return null
     if (saveTimer.current) clearTimeout(saveTimer.current)
-    await flush()
+    const s = stateRef.current
     try {
-      const { data } = await supabase.rpc('complete_test_session', { p_session_id: sid })
+      // Atomic completion that writes scores+meta in the same SECURITY DEFINER
+      // call as the is_completed flip — guarantees the saved row has data.
+      const { data, error } = await supabase.rpc('complete_test_session', {
+        p_session_id: sid,
+        p_scores: overrides.scores ?? s.scores ?? {},
+        p_meta: overrides.meta ?? s.meta ?? {},
+        p_completed_sections: overrides.completedSections ?? s.completedSections ?? null,
+        p_current_section: overrides.currentSection ?? s.currentSection ?? null,
+        p_current_part: overrides.currentPart ?? s.currentPart ?? null,
+      })
+      if (error) throw error
       idRef.current = null
       setId(null)
       return Array.isArray(data) ? data[0] : data
@@ -379,7 +388,7 @@ export function useTestSession({
       console.warn('[useTestSession] complete failed', e?.message || e)
       return null
     }
-  }, [flush])
+  }, [])
 
   const reset = useCallback(async () => {
     await complete()

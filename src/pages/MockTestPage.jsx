@@ -181,8 +181,8 @@ function rdgSetDone(set, type, answers, pfx) {
 /* ── Real-time scoring stubs (same API as practice pages) ── */
 async function scoreWritingAI(responseText, prompt, criteria, taskType) {
   try {
-    const res = await authedFetch('/api/score-writing', {
-      body: { responseText, prompt, criteria, taskType },
+    const res = await authedFetch('/api/score', {
+      body: { section: 'writing', responseText, prompt, criteria, taskType },
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
@@ -195,8 +195,8 @@ async function scoreWritingAI(responseText, prompt, criteria, taskType) {
 }
 async function scoreSpeakingAI(responseText, prompt, taskType, topic) {
   try {
-    const res = await authedFetch('/api/score-speaking', {
-      body: { responseText, prompt, taskType, topic },
+    const res = await authedFetch('/api/score', {
+      body: { section: 'speaking', responseText, prompt, taskType, topic },
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
@@ -1825,7 +1825,7 @@ export default function MockTestPage() {
           .maybeSingle()
         if (error) throw error
         if (cancelled) return
-        if (data?.scores) {
+        if (data?.scores && Object.keys(data.scores).length > 0) {
           setScores(normalizeMockScores(data.scores || {}))
           setPhase('final')
         } else {
@@ -2067,34 +2067,24 @@ export default function MockTestPage() {
       Object.entries(finalScores).forEach(([partKey, result]) => session.setScores(partKey, result))
       session.setMeta({ ...finalMetaPatch })
 
-      // Single atomic write — scores + meta + completion in ONE update.
-      // Don't rely on the debounced flush + RPC sequence; that could race and leave
-      // the saved row with stale scores (or unflagged completion) so the Score modal
-      // either misses the row or shows blank Writing/Speaking bands.
+      // Atomic completion via SECURITY DEFINER RPC. Bypasses the RLS quirk
+      // where direct UPDATE on test_sessions silently affected 0 rows, leaving
+      // saved sessions with empty scores. The RPC writes scores+meta+is_completed
+      // in one call and refuses if the row isn't owned by the user.
       const sessionId = session.id
-      let saved = false
       if (sessionId) {
-        try {
-          const { error } = await supabase
-            .from('test_sessions')
-            .update({
-              scores: finalScores,
-              meta: finalMeta,
-              is_completed: true,
-              completed_at: completedAt,
-            })
-            .eq('id', sessionId)
-          if (error) throw error
-          saved = true
-        } catch (e) {
-          console.warn('[mock] final save failed', e?.message || e)
+        const result = await session.complete({
+          scores: finalScores,
+          meta: finalMeta,
+          completedSections: [...SECTION_ORDER],
+          currentSection: section,
+          currentPart: currentPartId,
+        })
+        if (!result) {
+          console.warn('[mock] final save returned null — scores may not be persisted')
         }
-      }
-      // If the direct update failed (e.g. network blip), fall back to the RPC
-      // path so at least is_completed gets flipped via the previously-flushed scores.
-      if (!saved) {
-        try { await session.flush() } catch { /* non-fatal */ }
-        try { await session.complete() } catch { /* non-fatal */ }
+      } else {
+        console.warn('[mock] no session id at completion — scores not persisted to cloud')
       }
       setPhase('final')
     }

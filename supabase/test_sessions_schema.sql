@@ -233,9 +233,18 @@ END $$;
 GRANT EXECUTE ON FUNCTION start_or_resume_mock_session(INT) TO authenticated;
 
 -- ============================================================================
--- RPC: complete_test_session  — marks session done so a new one can begin.
+-- RPC: complete_test_session  — atomically marks session done with scores+meta.
+-- SECURITY DEFINER bypasses RLS so the UPDATE always lands (the direct UPDATE
+-- through RLS was silently dropping rows in some auth contexts).
 -- ============================================================================
-CREATE OR REPLACE FUNCTION complete_test_session(p_session_id UUID)
+CREATE OR REPLACE FUNCTION complete_test_session(
+  p_session_id UUID,
+  p_scores JSONB DEFAULT NULL,
+  p_meta JSONB DEFAULT NULL,
+  p_completed_sections TEXT[] DEFAULT NULL,
+  p_current_section TEXT DEFAULT NULL,
+  p_current_part TEXT DEFAULT NULL
+)
 RETURNS test_sessions
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = public
 AS $$
@@ -245,11 +254,58 @@ DECLARE
 BEGIN
   IF v_uid IS NULL THEN RAISE EXCEPTION 'auth required'; END IF;
   UPDATE test_sessions
-     SET is_completed = TRUE, completed_at = now()
+     SET is_completed       = TRUE,
+         completed_at       = now(),
+         scores             = COALESCE(p_scores, scores),
+         meta               = COALESCE(p_meta, meta),
+         completed_sections = COALESCE(p_completed_sections, completed_sections),
+         current_section    = COALESCE(p_current_section, current_section),
+         current_part       = COALESCE(p_current_part, current_part)
    WHERE id = p_session_id AND user_id = v_uid
    RETURNING * INTO v_row;
   IF NOT FOUND THEN RAISE EXCEPTION 'session not found'; END IF;
   RETURN v_row;
 END $$;
 
-GRANT EXECUTE ON FUNCTION complete_test_session(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION complete_test_session(UUID, JSONB, JSONB, TEXT[], TEXT, TEXT) TO authenticated;
+REVOKE EXECUTE ON FUNCTION complete_test_session(UUID, JSONB, JSONB, TEXT[], TEXT, TEXT) FROM anon;
+
+-- ============================================================================
+-- RPC: save_test_session_progress  — autosave for live in-progress sessions.
+-- Used by useTestSession.flush(). SECURITY DEFINER for the same RLS reason.
+-- Refuses to write if session is already completed.
+-- ============================================================================
+CREATE OR REPLACE FUNCTION save_test_session_progress(
+  p_session_id UUID,
+  p_selected_answers JSONB DEFAULT NULL,
+  p_scores JSONB DEFAULT NULL,
+  p_meta JSONB DEFAULT NULL,
+  p_completed_sections TEXT[] DEFAULT NULL,
+  p_current_section TEXT DEFAULT NULL,
+  p_current_part TEXT DEFAULT NULL,
+  p_current_question_index INT DEFAULT NULL
+)
+RETURNS test_sessions
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public
+AS $$
+DECLARE
+  v_uid UUID := auth.uid();
+  v_row test_sessions;
+BEGIN
+  IF v_uid IS NULL THEN RAISE EXCEPTION 'auth required'; END IF;
+  UPDATE test_sessions
+     SET selected_answers       = COALESCE(p_selected_answers, selected_answers),
+         scores                 = COALESCE(p_scores, scores),
+         meta                   = COALESCE(p_meta, meta),
+         completed_sections     = COALESCE(p_completed_sections, completed_sections),
+         current_section        = COALESCE(p_current_section, current_section),
+         current_part           = COALESCE(p_current_part, current_part),
+         current_question_index = COALESCE(p_current_question_index, current_question_index)
+   WHERE id = p_session_id AND user_id = v_uid AND is_completed = FALSE
+   RETURNING * INTO v_row;
+  IF NOT FOUND THEN RAISE EXCEPTION 'session not found or already completed'; END IF;
+  RETURN v_row;
+END $$;
+
+GRANT EXECUTE ON FUNCTION save_test_session_progress(UUID, JSONB, JSONB, JSONB, TEXT[], TEXT, TEXT, INT) TO authenticated;
+REVOKE EXECUTE ON FUNCTION save_test_session_progress(UUID, JSONB, JSONB, JSONB, TEXT[], TEXT, TEXT, INT) FROM anon;

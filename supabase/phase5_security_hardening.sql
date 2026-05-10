@@ -46,7 +46,7 @@ CREATE POLICY "Public read practice_sets"
   USING (true);
 
 -- ── W3: revoke anon EXECUTE on SECURITY DEFINER RPCs ──────────
-REVOKE EXECUTE ON FUNCTION public.complete_test_session(uuid)            FROM anon;
+REVOKE EXECUTE ON FUNCTION public.complete_test_session(uuid, jsonb, jsonb, text[], text, text) FROM anon;
 REVOKE EXECUTE ON FUNCTION public.start_or_resume_mock_session(integer)  FROM anon;
 REVOKE EXECUTE ON FUNCTION public.start_or_resume_practice_session(text, text, integer, bigint) FROM anon;
 REVOKE EXECUTE ON FUNCTION public.redeem_coupon(text)                    FROM anon;
