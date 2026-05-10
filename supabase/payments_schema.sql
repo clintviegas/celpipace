@@ -47,7 +47,7 @@ CREATE POLICY "Users read own payments"
 
 CREATE POLICY "Admin reads all payments"
   ON public.payments FOR SELECT
-  USING (auth.jwt() ->> 'email' = 'sales@celpipace.com');
+  USING (auth.jwt() ->> 'email' = 'clint.viegas@gmail.com');
 
 -- NOTE: writes are performed by the Stripe webhook using the SERVICE ROLE key,
 -- which bypasses RLS. We deliberately do NOT add INSERT/UPDATE policies for

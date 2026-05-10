@@ -5,6 +5,7 @@ import SEO from '../components/SEO'
 import { useAuth } from '../context/AuthContext'
 import { useTestSession } from '../hooks/useTestSession'
 import { supabase } from '../lib/supabase'
+import { authedFetch } from '../lib/apiClient'
 import {
   buildMockReportCard,
   formatBandScore,
@@ -180,26 +181,30 @@ function rdgSetDone(set, type, answers, pfx) {
 /* ── Real-time scoring stubs (same API as practice pages) ── */
 async function scoreWritingAI(responseText, prompt, criteria, taskType) {
   try {
-    const res = await fetch('/api/score-writing', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ responseText, prompt, criteria, taskType }),
+    const res = await authedFetch('/api/score-writing', {
+      body: { responseText, prompt, criteria, taskType },
     })
-    if (!res.ok) throw new Error('Scoring failed')
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.message || err.error || 'Scoring failed')
+    }
     return normalizeAiResult(await res.json())
-  } catch {
-    return { overall: 0, clbBand: '-', scores: {}, feedback: 'Scoring unavailable.', suggestions: [], error: true }
+  } catch (err) {
+    return { overall: 0, clbBand: '-', scores: {}, feedback: `Scoring unavailable: ${err.message}`, suggestions: [], error: true }
   }
 }
 async function scoreSpeakingAI(responseText, prompt, taskType, topic) {
   try {
-    const res = await fetch('/api/score-speaking', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ responseText, prompt, taskType, topic }),
+    const res = await authedFetch('/api/score-speaking', {
+      body: { responseText, prompt, taskType, topic },
     })
-    if (!res.ok) throw new Error('Scoring failed')
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.message || err.error || 'Scoring failed')
+    }
     return normalizeAiResult(await res.json())
-  } catch {
-    return { overall: 0, clbBand: '-', scores: {}, feedback: 'Scoring unavailable.', suggestions: [], error: true }
+  } catch (err) {
+    return { overall: 0, clbBand: '-', scores: {}, feedback: `Scoring unavailable: ${err.message}`, suggestions: [], error: true }
   }
 }
 
@@ -1064,6 +1069,7 @@ function ReadingPart({ partId, setData, color, onDone, sectionTimer }) {
    WRITING PART — One task, same wl-* UI
 ═══════════════════════════════════════════════════════════════ */
 function WritingPart({ partId, taskData, color, onDone, onScore }) {
+  const { user } = useAuth()
   const [text, setText] = useState('')
   const [timeLeft, setTimeLeft] = useState(null)
   const [started, setStarted] = useState(false)
@@ -1203,6 +1209,7 @@ function WritingPart({ partId, taskData, color, onDone, onScore }) {
    SPEAKING PART — One prompt, same sl-* UI
 ═══════════════════════════════════════════════════════════════ */
 function SpeakingPart({ partId, promptData, color, meta, onDone, onScore }) {
+  const { user } = useAuth()
   const [phase, setPhase] = useState('idle')
   const [elapsed, setElapsed] = useState(0)
   const [transcript, setTranscript] = useState('')

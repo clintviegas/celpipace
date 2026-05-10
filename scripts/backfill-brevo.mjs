@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 // scripts/backfill-brevo.mjs
-// One-time backfill: push all consented Supabase users into Brevo CRM.
+// Backfill all Supabase users into Brevo CRM with correct list routing:
+//   - All users           → BREVO_LIST_ID        (main / free list)
+//   - Active premium      → BREVO_LIST_PREMIUM    (premium onboarding)
+//   - Cancelled/expired   → BREVO_LIST_CANCELLED  (win-back)
 //
 // Run once from the project root:
 //   node scripts/backfill-brevo.mjs
@@ -8,6 +11,7 @@
 // Reads from .env (or environment). Requires:
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 //   BREVO_API_KEY, BREVO_LIST_ID
+//   BREVO_LIST_PREMIUM, BREVO_LIST_CANCELLED
 //
 // Dry-run mode (no changes to Brevo, just logs what would be synced):
 //   DRY_RUN=1 node scripts/backfill-brevo.mjs
@@ -25,13 +29,15 @@ try {
   }
 } catch { /* .env optional */ }
 
-const SUPABASE_URL     = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
-const SERVICE_KEY      = process.env.SUPABASE_SERVICE_ROLE_KEY
-const BREVO_API_KEY    = process.env.BREVO_API_KEY
-const BREVO_LIST_ID    = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : null
-const DRY_RUN          = process.env.DRY_RUN === '1'
-const BATCH_SIZE       = 50   // rows per Supabase page
-const BREVO_DELAY_MS   = 150  // stay under Brevo rate limit (~7 req/s)
+const SUPABASE_URL      = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
+const SERVICE_KEY       = process.env.SUPABASE_SERVICE_ROLE_KEY
+const BREVO_API_KEY     = process.env.BREVO_API_KEY
+const BREVO_LIST_ID     = process.env.BREVO_LIST_ID       ? Number(process.env.BREVO_LIST_ID)       : null
+const BREVO_LIST_PREMIUM    = process.env.BREVO_LIST_PREMIUM  ? Number(process.env.BREVO_LIST_PREMIUM)  : null
+const BREVO_LIST_CANCELLED  = process.env.BREVO_LIST_CANCELLED? Number(process.env.BREVO_LIST_CANCELLED): null
+const DRY_RUN           = process.env.DRY_RUN === '1'
+const BATCH_SIZE        = 50   // rows per Supabase page
+const BREVO_DELAY_MS    = 150  // stay under Brevo rate limit (~7 req/s)
 
 if (!SUPABASE_URL || !SERVICE_KEY) {
   console.error('❌  SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required.')
@@ -51,8 +57,15 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
 })
 
 async function brevoUpsert(contact) {
+  // Determine which lists this contact belongs to
+  const listIds = []
+  if (BREVO_LIST_ID) listIds.push(BREVO_LIST_ID)
+  if (contact.isPremium && BREVO_LIST_PREMIUM)   listIds.push(BREVO_LIST_PREMIUM)
+  if (contact.isCancelled && BREVO_LIST_CANCELLED) listIds.push(BREVO_LIST_CANCELLED)
+
   if (DRY_RUN) {
-    console.log('  [dry-run] would upsert:', contact.email)
+    const tag = contact.isPremium ? ' [PREMIUM]' : contact.isCancelled ? ' [CANCELLED]' : ' [FREE]'
+    console.log(`  [dry-run] would upsert: ${contact.email}${tag} → lists [${listIds.join(', ')}]`)
     return
   }
   const res = await fetch('https://api.brevo.com/v3/contacts', {
@@ -69,8 +82,9 @@ async function brevoUpsert(contact) {
       attributes: {
         ...(contact.firstName ? { FIRSTNAME: contact.firstName } : {}),
         ...(contact.lastName  ? { LASTNAME:  contact.lastName  } : {}),
+        PLAN: contact.isPremium ? (contact.currentPlan || 'premium') : 'free',
       },
-      listIds: [BREVO_LIST_ID],
+      listIds,
     }),
   })
   if (!res.ok) {
@@ -82,8 +96,8 @@ async function brevoUpsert(contact) {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)) }
 
 async function main() {
-  console.log(`\n🔄  Brevo backfill ${DRY_RUN ? '(DRY RUN) ' : ''}— list ${BREVO_LIST_ID}`)
-  console.log(`    Fetching consented profiles from Supabase...\n`)
+  console.log(`\n🔄  Brevo backfill ${DRY_RUN ? '(DRY RUN) ' : ''}— lists: main=${BREVO_LIST_ID} premium=${BREVO_LIST_PREMIUM ?? 'n/a'} cancelled=${BREVO_LIST_CANCELLED ?? 'n/a'}`)
+  console.log(`    Fetching all profiles from Supabase...\n`)
 
   let offset = 0
   let total = 0
@@ -93,9 +107,7 @@ async function main() {
   while (true) {
     const { data: profiles, error } = await supabase
       .from('profiles')
-      .select('id, email, full_name, marketing_consent, marketing_unsubscribed_at, loops_synced_at')
-      .eq('marketing_consent', true)
-      .is('marketing_unsubscribed_at', null)
+      .select('id, email, full_name, is_premium, subscription_status, current_plan, premium_expires_at')
       .not('email', 'is', null)
       .range(offset, offset + BATCH_SIZE - 1)
       .order('created_at', { ascending: true })
@@ -112,10 +124,19 @@ async function main() {
     for (const profile of profiles) {
       const [firstName, ...lastParts] = String(profile.full_name || '').trim().split(/\s+/)
       const lastName = lastParts.join(' ')
+
+      // A premium user is active (is_premium=true and not yet expired)
+      const premiumExpiresAt = profile.premium_expires_at ? new Date(profile.premium_expires_at) : null
+      const isPremium = !!profile.is_premium && (!premiumExpiresAt || premiumExpiresAt > new Date())
+
+      // Cancelled/expired: had a subscription but it ended
+      const isCancelled = !isPremium && ['canceled', 'expired', 'past_due'].includes(profile.subscription_status)
+
       try {
-        await brevoUpsert({ email: profile.email, firstName, lastName })
+        await brevoUpsert({ email: profile.email, firstName, lastName, isPremium, isCancelled, currentPlan: profile.current_plan })
         synced++
-        process.stdout.write(`    ✓ ${profile.email}\n`)
+        const tag = isPremium ? ' [PREMIUM]' : isCancelled ? ' [CANCELLED]' : ' [FREE]'
+        process.stdout.write(`    ✓ ${profile.email}${tag}\n`)
       } catch (err) {
         failed++
         console.error(`    ✗ ${profile.email}: ${err.message}`)

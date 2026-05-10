@@ -12,7 +12,7 @@ import r1Data from '../data/reading/R1_correspondence.json'
 import r2Data from '../data/reading/R2_apply_diagram.json'
 import r3Data from '../data/reading/R3_information.json'
 import r4Data from '../data/reading/R4_viewpoints.json'
-import { asset } from '../data/constants'
+import { asset, FREE_PARTS } from '../data/constants'
 
 const COLOR = '#2D8A56'
 const DIFF_COLOR = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
@@ -525,7 +525,7 @@ export default function ReadingPracticePage() {
   const dc = DIFF_COLOR[set?.difficulty] || DIFF_COLOR.intermediate
 
   const switchSet = (idx) => {
-    if (!isPremium && idx > 0) { setUpgradeFor(sets[idx]?.set_number || idx + 1); return }
+    if (!isPremium && (!FREE_PARTS.has(partId) || idx > 0)) { setUpgradeFor(sets[idx]?.set_number || idx + 1); return }
     setActiveIdx(idx)
     clearTimers()
     setTimeLeft(null)
@@ -722,7 +722,7 @@ export default function ReadingPracticePage() {
               const sCorrect = stored ? stored.score : setScore(si, s, type, answers)
               const isComplete = !!stored || (sDone === sTotal && sTotal > 0)
               const sdiff = DIFF_COLOR[s.difficulty] || DIFF_COLOR.intermediate
-              const locked = !isPremium && si > 0
+              const locked = !isPremium && (!FREE_PARTS.has(partId) || si > 0)
               return (
                 <button
                   key={si}

@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit } from './_lib/rateLimit.js'
 
-const SUPPORT_EMAIL = process.env.CONTACT_TO_EMAIL || 'info@celpipace.ca'
+const SUPPORT_EMAIL = process.env.CONTACT_TO_EMAIL || 'hello@celpipace.ca'
 const MAX_MESSAGE_CHARS = 5000
 
 function getBearerToken(req) {
@@ -24,8 +24,8 @@ function clean(value, max = 400) {
 
 async function sendEmail(payload) {
   const apiKey = process.env.RESEND_API_KEY
-  const from = process.env.CONTACT_FROM_EMAIL
-  if (!apiKey || !from) {
+  const from = process.env.CONTACT_FROM_EMAIL || process.env.EMAIL_FROM || 'CELPIPACE <hello@celpipace.ca>'
+  if (!apiKey) {
     return { sent: false, error: 'email_provider_not_configured' }
   }
 

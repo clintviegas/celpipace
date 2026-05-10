@@ -21,6 +21,7 @@
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { sendEmail, renderWelcome, renderReceipt, renderCancelFinal, renderPastDue } from './_lib/email.js'
+import { upsertBrevoContact, addToBrevoList } from './_lib/brevo.js'
 
 export const config = { api: { bodyParser: false } }
 
@@ -129,6 +130,19 @@ export default async function handler(req, res) {
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
+  // Idempotency: if we've already processed this Stripe event, ack and skip.
+  // Stripe retries on 5xx, so a slow handler that times out at the platform
+  // level can deliver the same event twice — without this guard you'd send
+  // duplicate welcome emails / receipts and double-write subscription_events.
+  const { data: existing } = await supabase
+    .from('webhook_events')
+    .select('processed')
+    .eq('stripe_event_id', event.id)
+    .maybeSingle()
+  if (existing?.processed) {
+    return res.status(200).json({ received: true, idempotent: true })
+  }
+
   // Archive every event we receive (idempotent on stripe_event_id) so we can
   // replay or audit later. Failures here must not block processing.
   await supabase.from('webhook_events').upsert({
@@ -235,6 +249,14 @@ export default async function handler(req, res) {
           await sendEmail({ supabase, userId: profile.id, toEmail: email, kind: 'welcome', subject, html, metadata: { stripe_session_id: s.id } })
         }
 
+        // Brevo: add to premium list to trigger the premium onboarding automation
+        if (email) {
+          const [fn, ...lp] = String(profile.full_name || '').trim().split(/\s+/)
+          const premiumListId = process.env.BREVO_LIST_PREMIUM ? Number(process.env.BREVO_LIST_PREMIUM) : null
+          await upsertBrevoContact({ email, firstName: fn, lastName: lp.join(' ') })
+          if (premiumListId) await addToBrevoList({ email, listId: premiumListId })
+        }
+
         break
       }
 
@@ -304,6 +326,10 @@ export default async function handler(req, res) {
         if (profile.email) {
           const { subject, html } = renderCancelFinal({ name: profile.full_name })
           await sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'cancel_final', subject, html, metadata: { stripe_subscription_id: sub.id } })
+
+          // Brevo: add to cancelled list to trigger win-back automation
+          const cancelledListId = process.env.BREVO_LIST_CANCELLED ? Number(process.env.BREVO_LIST_CANCELLED) : null
+          if (cancelledListId) await addToBrevoList({ email: profile.email, listId: cancelledListId })
         }
         break
       }

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import SEO from '../components/SEO'
+import { useAuth } from '../context/AuthContext'
+import { FREE_PARTS } from '../data/constants'
 
 const COLOR = '#2D8A56'
 const COLOR_LIGHT = '#F0FDF4'
@@ -107,13 +109,15 @@ function FAQItem({ q, a }) {
   )
 }
 
-function PartCard({ part, onStart }) {
+function PartCard({ part, onStart, locked }) {
   return (
     <motion.div className="lp-part-card lp-part-card--reading" whileHover={{ y: -4 }} transition={{ duration: 0.18 }}>
       <div className="lp-part-card-header">
         <span className="lp-part-num" style={{ background: '#E6F4EE', color: COLOR }}>{part.num}</span>
         <span className="lp-part-icon">{part.icon}</span>
-        <span className={`lp-part-diff lp-diff-${part.difficulty.toLowerCase().replace(' ', '-')}`}>{part.difficulty}</span>
+        {locked
+          ? <span style={{ fontSize: 11, fontWeight: 700, background: '#0f172a', color: '#fff', padding: '2px 8px', borderRadius: 6, letterSpacing: '.06em' }}>PRO</span>
+          : <span className={`lp-part-diff lp-diff-${part.difficulty.toLowerCase().replace(' ', '-')}`}>{part.difficulty}</span>}
       </div>
       <h3 className="lp-part-name">{part.label}</h3>
       <p className="lp-part-desc">{part.description}</p>
@@ -132,10 +136,10 @@ function PartCard({ part, onStart }) {
       </div>
       <button
         className="lp-part-cta"
-        style={{ background: COLOR }}
+        style={{ background: locked ? '#64748b' : COLOR }}
         onClick={() => onStart(part)}
       >
-        Practice {part.num} →
+        {locked ? '🔒 Premium Only' : `Practice ${part.num} →`}
       </button>
     </motion.div>
   )
@@ -153,6 +157,7 @@ const FAQ_JSONLD = {
 
 export default function ReadingPage() {
   const navigate = useNavigate()
+  const { isPremium } = useAuth()
   const handleStart = (part) => { navigate(`/celpip-reading-practice/${part.id}`) }
 
   return (
@@ -185,7 +190,7 @@ export default function ReadingPage() {
           <h2 className="lp-section-title">Choose a Part to Practice</h2>
           <p className="lp-section-sub">Each part uses a different text type. Focus on the parts where you lose the most marks.</p>
           <div className="lp-parts-grid">
-            {PARTS.map(p => <PartCard key={p.id} part={p} onStart={handleStart} />)}
+            {PARTS.map(p => <PartCard key={p.id} part={p} onStart={handleStart} locked={!isPremium && !FREE_PARTS.has(p.id)} />)}
           </div>
         </section>
 

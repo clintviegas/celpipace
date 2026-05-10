@@ -22,8 +22,8 @@ CREATE POLICY "Public read questions"
 -- Only admin email can mutate. Service role bypasses RLS so seed scripts still work.
 CREATE POLICY "Admin writes questions"
   ON public.questions FOR ALL
-  USING (COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com')
-  WITH CHECK (COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com');
+  USING (COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com')
+  WITH CHECK (COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com');
 
 -- ── E2: revenue_daily view → SECURITY INVOKER ─────────────────
 DROP VIEW IF EXISTS public.revenue_daily;

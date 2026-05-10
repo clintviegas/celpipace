@@ -39,4 +39,4 @@ CREATE POLICY "Users insert own practice attempts"
 
 CREATE POLICY "Admin reads all practice attempts"
   ON public.practice_attempts FOR SELECT
-  USING (COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com');
+  USING (COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com');

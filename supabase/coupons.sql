@@ -93,7 +93,7 @@ alter table public.coupon_redemptions enable row level security;
 drop policy if exists "coupons_admin_all" on public.coupons;
 create policy "coupons_admin_all" on public.coupons
   for all using (
-    exists (select 1 from auth.users u where u.id = auth.uid() and u.email = 'sales@celpipace.com')
+    exists (select 1 from auth.users u where u.id = auth.uid() and u.email = 'clint.viegas@gmail.com')
   );
 
 -- Redemptions: user reads own; admin reads all
@@ -101,11 +101,11 @@ drop policy if exists "redemptions_self_read" on public.coupon_redemptions;
 create policy "redemptions_self_read" on public.coupon_redemptions
   for select using (
     user_id = auth.uid()
-    or exists (select 1 from auth.users u where u.id = auth.uid() and u.email = 'sales@celpipace.com')
+    or exists (select 1 from auth.users u where u.id = auth.uid() and u.email = 'clint.viegas@gmail.com')
   );
 
 drop policy if exists "redemptions_admin_write" on public.coupon_redemptions;
 create policy "redemptions_admin_write" on public.coupon_redemptions
   for insert with check (
-    exists (select 1 from auth.users u where u.id = auth.uid() and u.email = 'sales@celpipace.com')
+    exists (select 1 from auth.users u where u.id = auth.uid() and u.email = 'clint.viegas@gmail.com')
   );

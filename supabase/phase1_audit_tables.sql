@@ -40,7 +40,7 @@ CREATE POLICY "Users read own sub events"
   ON public.subscription_events FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Admin reads all sub events"
   ON public.subscription_events FOR SELECT
-  USING (COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com');
+  USING (COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com');
 
 -- ── webhook_events ──────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.webhook_events (
@@ -62,7 +62,7 @@ ALTER TABLE public.webhook_events ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Admin reads all webhook events" ON public.webhook_events;
 CREATE POLICY "Admin reads all webhook events"
   ON public.webhook_events FOR SELECT
-  USING (COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com');
+  USING (COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com');
 
 -- ── cancellation_feedback ───────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.cancellation_feedback (
@@ -90,7 +90,7 @@ CREATE POLICY "Users insert own cancel feedback"
   ON public.cancellation_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Admin reads all cancel feedback"
   ON public.cancellation_feedback FOR SELECT
-  USING (COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com');
+  USING (COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com');
 
 -- ── email_log ───────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.email_log (
@@ -119,4 +119,4 @@ CREATE POLICY "Users read own email log"
   ON public.email_log FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Admin reads all email log"
   ON public.email_log FOR SELECT
-  USING (COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com');
+  USING (COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com');

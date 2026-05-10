@@ -1,25 +1,24 @@
 /* global process, Buffer */
 // /api/_lib/email.js
-// Transactional email helper backed by Resend, with email_log audit.
+// Transactional email helper backed by Brevo, with email_log audit.
 //
 // All sends go through sendEmail() which:
 //   1. Inserts a row in public.email_log (status='queued') BEFORE attempting send.
-//   2. Calls Resend.
+//   2. Calls Brevo transactional API (same BREVO_API_KEY already used for contacts).
 //   3. Updates the row to status='sent' (with provider_id) or 'failed' (with error).
-// This guarantees every send attempt is auditable even if Resend errors out.
+// This guarantees every send attempt is auditable even if Brevo errors out.
 //
 // Env required:
-//   RESEND_API_KEY          — Resend secret API key
+//   BREVO_API_KEY           — Brevo API key (shared with contact/list sync)
 //   EMAIL_FROM              — verified sender, e.g. 'CELPIPACE <hello@celpipace.ca>'
 //   PUBLIC_SITE_URL         — used in email links (no trailing slash)
 //
 // Templates exported:
-//   renderWelcome, renderReceipt, renderCancelScheduled, renderCancelFinal, renderPastDue
+//   renderSignupWelcome, renderWelcome, renderReceipt, renderCancelScheduled, renderCancelFinal, renderPastDue
 
-import { Resend } from 'resend'
+import { sendBrevoEmail } from './brevo.js'
 import crypto from 'crypto'
 
-const FROM = process.env.EMAIL_FROM || 'CELPIPACE <hello@celpipace.ca>'
 const SITE = (process.env.PUBLIC_SITE_URL || 'https://www.celpipace.ca').replace(/\/$/, '')
 
 // Mailing address for CASL footer compliance. Override via env if you move.
@@ -73,15 +72,6 @@ function unsubscribeUrl(userId) {
   return token ? `${SITE}/api/email-unsubscribe?token=${token}` : `${SITE}/subscription`
 }
 
-let resendInstance = null
-function getResend() {
-  if (resendInstance) return resendInstance
-  const key = process.env.RESEND_API_KEY
-  if (!key) return null
-  resendInstance = new Resend(key)
-  return resendInstance
-}
-
 /**
  * Send a transactional email and log the attempt to public.email_log.
  *
@@ -107,7 +97,7 @@ export async function sendEmail({ supabase, userId, toEmail, kind, subject, html
       to_email: toEmail,
       kind,
       subject,
-      provider: 'resend',
+      provider: 'brevo',
       pdf_url:  pdfUrl || null,
       status:   'queued',
       metadata: metadata || {},
@@ -116,32 +106,19 @@ export async function sendEmail({ supabase, userId, toEmail, kind, subject, html
     .single()
 
   const logId = logRow?.id || null
-  const resend = getResend()
-
-  if (!resend) {
-    if (logId) await supabase.from('email_log').update({ status: 'failed', error: 'resend_not_configured' }).eq('id', logId)
-    console.warn('[email] RESEND_API_KEY missing — skipping send for', kind, '→', toEmail)
-    return { ok: false, error: 'resend_not_configured', logId }
-  }
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: FROM,
-      to:   toEmail,
-      subject,
-      html,
-      text,
-    })
-    if (error) throw new Error(error.message || JSON.stringify(error))
+    const result = await sendBrevoEmail({ toEmail, subject, html, text })
+    if (!result.ok) throw new Error(result.error || 'brevo_send_failed')
 
     if (logId) {
       await supabase.from('email_log').update({
         status:      'sent',
-        provider_id: data?.id || null,
+        provider_id: result.messageId || null,
         sent_at:     new Date().toISOString(),
       }).eq('id', logId)
     }
-    return { ok: true, providerId: data?.id, logId }
+    return { ok: true, providerId: result.messageId, logId }
   } catch (err) {
     const errMsg = err?.message || String(err)
     if (logId) await supabase.from('email_log').update({ status: 'failed', error: errMsg }).eq('id', logId)
@@ -189,6 +166,21 @@ function fmtMoney(amountCents, currency = 'cad') {
 function fmtDate(iso) {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+// Signup welcome — sent once to new free users right after Google OAuth signup.
+export function renderSignupWelcome({ name }) {
+  const subject = `Welcome to CELPIPACE — your CELPIP prep starts here`
+  const heading = `You're in. Let's get your score up.`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>Welcome to CELPIPACE. Your free account is ready — here's what you can do right now:</p>
+    <ul style="padding-left:20px;margin:8px 0 16px">
+      <li><strong>Practice sets</strong> — Reading, Writing, Speaking, Listening drills with answer explanations</li>
+      <li><strong>AI scoring</strong> — get instant CLB-band feedback on Writing and Speaking responses</li>
+      <li><strong>Mock exams</strong> — full-length timed tests that mirror the real CELPIP format</li>
+    </ul>
+    <p>Most people find their weakest section in the first 10-minute drill. Start there.</p>`
+  return { subject, html: shell({ heading, body, ctaUrl: `${SITE}/dashboard`, ctaLabel: 'Go to Dashboard' }) }
 }
 
 export function renderWelcome({ name, plan }) {

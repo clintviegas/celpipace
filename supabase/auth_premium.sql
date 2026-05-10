@@ -43,23 +43,23 @@ CREATE POLICY "Users update own profile"
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id);
 
--- Admin (sales@celpipace.com) can read every profile
+-- Admin (clint.viegas@gmail.com) can read every profile
 CREATE POLICY "Admin reads all profiles"
   ON public.profiles FOR SELECT
   USING (
-    auth.jwt() ->> 'email' = 'sales@celpipace.com'
+    auth.jwt() ->> 'email' = 'clint.viegas@gmail.com'
   );
 
--- 3. Flip sales@celpipace.com → premium + admin tag (runs only after account exists)
+-- 3. Flip clint.viegas@gmail.com → premium + admin tag (runs only after account exists)
 UPDATE public.profiles
    SET is_premium = true
- WHERE email = 'sales@celpipace.com';
+ WHERE email = 'clint.viegas@gmail.com';
 
 -- 4. Auto-set is_premium=true every time the sales account's profile is inserted/updated
 CREATE OR REPLACE FUNCTION public.ensure_admin_premium()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.email = 'sales@celpipace.com' THEN
+  IF NEW.email = 'clint.viegas@gmail.com' THEN
     NEW.is_premium := true;
   END IF;
   NEW.updated_at := now();
@@ -97,7 +97,7 @@ BEGIN
     lower(COALESCE(NEW.email, '')),
     v_full_name,
     v_avatar_url,
-    lower(COALESCE(NEW.email, '')) = 'sales@celpipace.com',
+    lower(COALESCE(NEW.email, '')) = 'clint.viegas@gmail.com',
     COALESCE(NEW.created_at, now()),
     now(),
     COALESCE(NEW.last_sign_in_at, NEW.created_at, now())
@@ -106,7 +106,7 @@ BEGIN
     email = EXCLUDED.email,
     full_name = COALESCE(EXCLUDED.full_name, public.profiles.full_name),
     avatar_url = COALESCE(EXCLUDED.avatar_url, public.profiles.avatar_url),
-    is_premium = CASE WHEN EXCLUDED.email = 'sales@celpipace.com' THEN TRUE ELSE public.profiles.is_premium END,
+    is_premium = CASE WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN TRUE ELSE public.profiles.is_premium END,
     last_seen_at = GREATEST(
       COALESCE(public.profiles.last_seen_at, '-infinity'::timestamptz),
       COALESCE(EXCLUDED.last_seen_at, '-infinity'::timestamptz)
@@ -137,7 +137,7 @@ SELECT
     ''
   ),
   NULLIF(COALESCE(u.raw_user_meta_data ->> 'avatar_url', u.raw_user_meta_data ->> 'picture'), ''),
-  lower(COALESCE(u.email, '')) = 'sales@celpipace.com',
+  lower(COALESCE(u.email, '')) = 'clint.viegas@gmail.com',
   COALESCE(u.created_at, now()),
   now(),
   COALESCE(u.last_sign_in_at, u.created_at, now())
@@ -146,7 +146,7 @@ ON CONFLICT (id) DO UPDATE SET
   email = EXCLUDED.email,
   full_name = COALESCE(public.profiles.full_name, EXCLUDED.full_name),
   avatar_url = COALESCE(public.profiles.avatar_url, EXCLUDED.avatar_url),
-  is_premium = CASE WHEN EXCLUDED.email = 'sales@celpipace.com' THEN TRUE ELSE public.profiles.is_premium END,
+  is_premium = CASE WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN TRUE ELSE public.profiles.is_premium END,
   last_seen_at = GREATEST(
     COALESCE(public.profiles.last_seen_at, '-infinity'::timestamptz),
     COALESCE(EXCLUDED.last_seen_at, '-infinity'::timestamptz)

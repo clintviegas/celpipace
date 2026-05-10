@@ -42,7 +42,7 @@ STABLE
 SECURITY DEFINER
 SET search_path = public, auth
 AS $$
-  SELECT COALESCE(auth.jwt() ->> 'email', '') = 'sales@celpipace.com';
+  SELECT COALESCE(auth.jwt() ->> 'email', '') = 'clint.viegas@gmail.com';
 $$;
 
 GRANT EXECUTE ON FUNCTION public.is_app_admin() TO anon, authenticated, service_role;
@@ -88,9 +88,9 @@ BEGIN
     lower(COALESCE(NEW.email, '')),
     v_full_name,
     v_avatar_url,
-    lower(COALESCE(NEW.email, '')) = 'sales@celpipace.com',
-    CASE WHEN lower(COALESCE(NEW.email, '')) = 'sales@celpipace.com' THEN 'active' ELSE 'none' END,
-    CASE WHEN lower(COALESCE(NEW.email, '')) = 'sales@celpipace.com' THEN 'admin' ELSE 'free' END,
+    lower(COALESCE(NEW.email, '')) = 'clint.viegas@gmail.com',
+    CASE WHEN lower(COALESCE(NEW.email, '')) = 'clint.viegas@gmail.com' THEN 'active' ELSE 'none' END,
+    CASE WHEN lower(COALESCE(NEW.email, '')) = 'clint.viegas@gmail.com' THEN 'admin' ELSE 'free' END,
     COALESCE(NEW.created_at, now()),
     now(),
     COALESCE(NEW.last_sign_in_at, NEW.created_at, now())
@@ -100,15 +100,15 @@ BEGIN
     full_name = COALESCE(EXCLUDED.full_name, public.profiles.full_name),
     avatar_url = COALESCE(EXCLUDED.avatar_url, public.profiles.avatar_url),
     is_premium = CASE
-      WHEN EXCLUDED.email = 'sales@celpipace.com' THEN TRUE
+      WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN TRUE
       ELSE public.profiles.is_premium
     END,
     subscription_status = CASE
-      WHEN EXCLUDED.email = 'sales@celpipace.com' THEN 'active'
+      WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN 'active'
       ELSE COALESCE(public.profiles.subscription_status, 'none')
     END,
     current_plan = CASE
-      WHEN EXCLUDED.email = 'sales@celpipace.com' THEN 'admin'
+      WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN 'admin'
       ELSE COALESCE(public.profiles.current_plan, 'free')
     END,
     last_seen_at = GREATEST(
@@ -151,9 +151,9 @@ SELECT
   email,
   full_name,
   avatar_url,
-  email = 'sales@celpipace.com',
-  CASE WHEN email = 'sales@celpipace.com' THEN 'active' ELSE 'none' END,
-  CASE WHEN email = 'sales@celpipace.com' THEN 'admin' ELSE 'free' END,
+  email = 'clint.viegas@gmail.com',
+  CASE WHEN email = 'clint.viegas@gmail.com' THEN 'active' ELSE 'none' END,
+  CASE WHEN email = 'clint.viegas@gmail.com' THEN 'admin' ELSE 'free' END,
   COALESCE(created_at, now()),
   now(),
   COALESCE(last_sign_in_at, created_at, now())
@@ -162,9 +162,9 @@ ON CONFLICT (id) DO UPDATE SET
   email = EXCLUDED.email,
   full_name = COALESCE(public.profiles.full_name, EXCLUDED.full_name),
   avatar_url = COALESCE(public.profiles.avatar_url, EXCLUDED.avatar_url),
-  is_premium = CASE WHEN EXCLUDED.email = 'sales@celpipace.com' THEN TRUE ELSE public.profiles.is_premium END,
-  subscription_status = CASE WHEN EXCLUDED.email = 'sales@celpipace.com' THEN 'active' ELSE COALESCE(public.profiles.subscription_status, 'none') END,
-  current_plan = CASE WHEN EXCLUDED.email = 'sales@celpipace.com' THEN 'admin' ELSE COALESCE(public.profiles.current_plan, 'free') END,
+  is_premium = CASE WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN TRUE ELSE public.profiles.is_premium END,
+  subscription_status = CASE WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN 'active' ELSE COALESCE(public.profiles.subscription_status, 'none') END,
+  current_plan = CASE WHEN EXCLUDED.email = 'clint.viegas@gmail.com' THEN 'admin' ELSE COALESCE(public.profiles.current_plan, 'free') END,
   last_seen_at = GREATEST(
     COALESCE(public.profiles.last_seen_at, '-infinity'::timestamptz),
     COALESCE(EXCLUDED.last_seen_at, '-infinity'::timestamptz)
@@ -413,6 +413,57 @@ $$;
 
 GRANT EXECUTE ON FUNCTION public.get_admin_user_activity() TO authenticated;
 
+-- ---------------------------------------------------------------------------
+-- Detailed click/page analytics used by /admin Analytics tab.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.analytics_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  session_id TEXT NOT NULL,
+  event_type TEXT NOT NULL CHECK (event_type IN ('page_view', 'click')),
+  page_path TEXT,
+  page_url TEXT,
+  page_title TEXT,
+  element_tag TEXT,
+  element_role TEXT,
+  element_label TEXT,
+  element_id TEXT,
+  element_classes TEXT,
+  href TEXT,
+  metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_analytics_events_created_at
+  ON public.analytics_events(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_user_created
+  ON public.analytics_events(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_type_created
+  ON public.analytics_events(event_type, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_page_created
+  ON public.analytics_events(page_path, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_session_created
+  ON public.analytics_events(session_id, created_at DESC);
+
+ALTER TABLE public.analytics_events ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Clients insert analytics events" ON public.analytics_events;
+DROP POLICY IF EXISTS "Admin reads all analytics events" ON public.analytics_events;
+
+CREATE POLICY "Clients insert analytics events"
+  ON public.analytics_events FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (user_id IS NULL OR auth.uid() = user_id);
+
+CREATE POLICY "Admin reads all analytics events"
+  ON public.analytics_events FOR SELECT
+  TO authenticated
+  USING (public.is_app_admin());
+
+GRANT INSERT ON public.analytics_events TO anon, authenticated;
+GRANT SELECT ON public.analytics_events TO authenticated;
+
 -- Keep the admin account premium/lifetime if it already exists.
 UPDATE public.profiles
    SET is_premium = TRUE,
@@ -420,4 +471,4 @@ UPDATE public.profiles
        current_plan = 'admin',
        premium_expires_at = NULL,
        updated_at = now()
- WHERE email = 'sales@celpipace.com';
+ WHERE email = 'clint.viegas@gmail.com';

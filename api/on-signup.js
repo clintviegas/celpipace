@@ -1,17 +1,18 @@
 /* global process */
 // /api/on-signup.js
-// Called once per new user to sync them into Loops and fire the 'signup' event.
+// Called once per new user to add them to Brevo and trigger the welcome drip.
 // The frontend calls this from AuthContext when it detects a fresh profile
-// (created_at within the last 2 minutes). We guard idempotency with
-// profiles.loops_synced_at — if already set we return 200 and skip.
+// (created_at within the last 2 minutes). Guarded by profiles.loops_synced_at
+// so it only ever fires once per user.
 //
 // POST (Bearer token required — no body needed)
-//   200 { synced: true }   — first sync, Loops updated
+//   200 { synced: true }   — first sync, Brevo updated
 //   200 { synced: false }  — already synced, no-op
 //   401                    — missing / invalid session
 
 import { requireUser } from './_lib/auth.js'
-import { upsertLoopsContact, sendLoopsEvent } from './_lib/loops.js'
+import { upsertBrevoContact } from './_lib/brevo.js'
+import { sendEmail, renderSignupWelcome } from './_lib/email.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
@@ -21,7 +22,6 @@ export default async function handler(req, res) {
 
   const userId = auth.user.id
 
-  // Load full profile to check loops_synced_at and get name/consent
   const { data: profile, error: profErr } = await auth.supabase
     .from('profiles')
     .select('id, email, full_name, marketing_consent, loops_synced_at')
@@ -45,9 +45,16 @@ export default async function handler(req, res) {
   const lastName = lastParts.join(' ')
   const subscribed = !!profile.marketing_consent
 
-  // Best-effort — never fail the response if Loops is down
-  await upsertLoopsContact({ email, firstName, lastName, subscribed, userGroup: 'free', plan: 'free', userId })
-  await sendLoopsEvent({ email, eventName: 'signup', userId, eventProperties: { plan: 'free' } })
+  const listId = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : null
+
+  // Add to Brevo — triggers the "contact added to list" automation scenario
+  await upsertBrevoContact({
+    email,
+    firstName,
+    lastName,
+    emailBlacklisted: !subscribed,
+    listIds: listId ? [listId] : [],
+  })
 
   // Mark synced so we never fire twice
   await auth.supabase
@@ -55,6 +62,17 @@ export default async function handler(req, res) {
     .update({ loops_synced_at: new Date().toISOString() })
     .eq('id', userId)
     .catch(() => {})
+
+  // Send signup welcome email (fire-and-forget — never block the response)
+  const { subject, html } = renderSignupWelcome({ name: firstName })
+  sendEmail({
+    supabase: auth.supabase,
+    userId,
+    toEmail: email,
+    kind: 'signup_welcome',
+    subject,
+    html,
+  }).catch(err => console.error('[on-signup] welcome email failed:', err))
 
   return res.status(200).json({ synced: true })
 }

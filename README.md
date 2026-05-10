@@ -199,6 +199,6 @@ npm run e2e
 
 ## Contact
 
-Support: info@celpipace.ca
+Support: hello@celpipace.ca
 
 Website: https://www.celpipace.ca/

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { MessageCircle, Send, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
 import { SUPPORT_EMAIL } from '../data/constants'
+import { authedFetch } from '../lib/apiClient'
 
 const STARTER_MESSAGE = {
   role: 'assistant',
@@ -24,7 +24,6 @@ export default function ChatWidget() {
   const [error, setError] = useState('')
   const messagesRef = useRef(null)
   const navigate = useNavigate()
-  const { user } = useAuth()
 
   useEffect(() => {
     if (!messagesRef.current) return
@@ -42,15 +41,11 @@ export default function ChatWidget() {
     setError('')
 
     try {
-      const res = await fetch('/api/chatbot', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user?.id || null,
-          messages: nextMessages.slice(-10),
-        }),
+      const res = await authedFetch('/api/chatbot', {
+        body: { messages: nextMessages.slice(-10) },
       })
       const data = await res.json()
+      if (res.status === 429) throw new Error(data.message || 'Too many messages — try again later.')
       if (!res.ok || !data.reply) throw new Error(data.error || 'Chat is unavailable right now.')
       setMessages([...nextMessages, { role: 'assistant', content: data.reply }])
     } catch (err) {

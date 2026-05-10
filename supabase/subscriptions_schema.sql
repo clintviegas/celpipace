@@ -123,15 +123,15 @@ CREATE POLICY "Users update own profile (safe columns)"
 
 CREATE POLICY "Admin updates all profiles"
   ON public.profiles FOR UPDATE
-  USING (auth.jwt() ->> 'email' = 'sales@celpipace.com')
-  WITH CHECK (auth.jwt() ->> 'email' = 'sales@celpipace.com');
+  USING (auth.jwt() ->> 'email' = 'clint.viegas@gmail.com')
+  WITH CHECK (auth.jwt() ->> 'email' = 'clint.viegas@gmail.com');
 
 -- Trigger guard: even with a permissive UPDATE policy, reject changes to billing fields
 CREATE OR REPLACE FUNCTION public.guard_profile_billing_columns()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
   -- Allow service role and the admin console account to bypass.
-  IF auth.role() = 'service_role' OR auth.jwt() ->> 'email' = 'sales@celpipace.com' THEN
+  IF auth.role() = 'service_role' OR auth.jwt() ->> 'email' = 'clint.viegas@gmail.com' THEN
     RETURN NEW;
   END IF;
 
@@ -180,10 +180,10 @@ WHERE p.id = auth.uid();
 
 GRANT SELECT ON public.my_subscription TO authenticated;
 
--- ── 7. Mark sales@celpipace.com (admin) as lifetime active ────────────────
+-- ── 7. Mark clint.viegas@gmail.com (admin) as lifetime active ────────────────
 UPDATE public.profiles
    SET is_premium = TRUE,
        subscription_status = 'active',
        current_plan = 'admin',
        premium_expires_at = NULL
- WHERE email = 'sales@celpipace.com';
+ WHERE email = 'clint.viegas@gmail.com';

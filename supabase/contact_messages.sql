@@ -38,6 +38,6 @@ CREATE POLICY "contact_admin_select" ON public.contact_messages
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM auth.users u
-      WHERE u.id = auth.uid() AND u.email = 'sales@celpipace.com'
+      WHERE u.id = auth.uid() AND u.email = 'clint.viegas@gmail.com'
     )
   );

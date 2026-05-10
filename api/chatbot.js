@@ -1,6 +1,10 @@
+/* global process */
+import { getServiceSupabase, getClientIp } from './_lib/auth.js'
+import { checkRateLimit } from './_lib/rateLimit.js'
+
 const MAX_MESSAGES = 12
 const MAX_MESSAGE_CHARS = 1200
-const SUPPORT_EMAIL = 'info@celpipace.ca'
+const SUPPORT_EMAIL = 'hello@celpipace.ca'
 
 function cleanMessages(messages) {
   if (!Array.isArray(messages)) return []
@@ -12,6 +16,20 @@ function cleanMessages(messages) {
       content: String(message?.content || '').trim().slice(0, MAX_MESSAGE_CHARS),
     }))
     .filter((message) => message.content)
+}
+
+async function getOptionalUserId(req) {
+  const header = req.headers.authorization || req.headers.Authorization || ''
+  const match = String(header).match(/^Bearer\s+(.+)$/i)
+  const token = match?.[1]
+  if (!token) return null
+  try {
+    const sb = getServiceSupabase()
+    const { data } = await sb.auth.getUser(token)
+    return data?.user?.id || null
+  } catch {
+    return null
+  }
 }
 
 export default async function handler(req, res) {
@@ -27,6 +45,17 @@ export default async function handler(req, res) {
   const messages = cleanMessages(req.body?.messages)
   if (!messages.length) {
     return res.status(400).json({ error: 'Message is required.' })
+  }
+
+  // Rate-limit: chat is open to guests on the marketing site, so key on user_id
+  // when present, IP otherwise. 30 chat turns per hour per actor.
+  let supabase
+  try { supabase = getServiceSupabase() } catch { /* fail-open if mis-configured */ }
+  if (supabase) {
+    const userId = await getOptionalUserId(req)
+    const rlKey = userId || getClientIp(req)
+    const rl = await checkRateLimit({ supabase, scope: 'chatbot', key: rlKey, limit: 30, windowSec: 3600 })
+    if (!rl.ok) return res.status(429).json({ error: 'too_many_requests', message: rl.message })
   }
 
   const systemPrompt = `You are the CELPIPACE live study assistant. Help users with CELPIP preparation, using the CELPIPACE platform, subscription questions, billing portal navigation, and study planning.

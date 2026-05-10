@@ -4,11 +4,12 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { Lock } from 'lucide-react'
 import { LISTENING_DATA } from '../data/listeningData'
 import { READING_DATA } from '../data/readingData'
-import { asset } from '../data/constants'
+import { asset, FREE_PARTS } from '../data/constants'
 import speakingQData from '../data/speakingQuestions.json'
 import { useProgress } from '../hooks/useProgress'
 import { useAuth } from '../context/AuthContext'
 import { useAuthGate } from '../hooks/useAuthGate'
+import { authedFetch } from '../lib/apiClient'
 import UpgradeModal from '../components/UpgradeModal'
 import SEO from '../components/SEO'
 import ScoreTips, { getListeningTips, getWritingTips } from '../components/ScoreTips'
@@ -1647,11 +1648,14 @@ const WRITING_SETS = {
 ══════════════════════════════════════════════════════════════ */
 async function scoreWithAI(responseText, prompt, criteria, taskType) {
   try {
-    const res = await fetch('/api/score-writing', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ responseText, prompt, criteria, taskType }),
+    const res = await authedFetch('/api/score-writing', {
+      body: { responseText, prompt, criteria, taskType },
     })
+    if (res.status === 401) throw new Error('Sign in to get AI scoring.')
+    if (res.status === 429) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.message || 'Too many scoring requests — try again later.')
+    }
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
       throw new Error(err.error || 'Scoring failed')
@@ -1659,7 +1663,6 @@ async function scoreWithAI(responseText, prompt, criteria, taskType) {
     return await res.json()
   } catch (err) {
     console.error('Real-time scoring error:', err)
-    // Fallback: return error state so UI can handle it
     return {
       overall: 0,
       clbBand: '–',
@@ -1752,7 +1755,7 @@ function AIFeedbackPanel({ result, color, onClose }) {
    └────────┴───────────────────────────┘
 ══════════════════════════════════════════════════════════════ */
 function WritingLayout({ questions, color, partId, partLabel, partIcon, onComplete }) {
-  const { isPremium } = useAuth()
+  const { user, isPremium } = useAuth()
   const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start the timer, write responses, and save your score.')
   const { isCompleted, getSetScore, getPartStats } = useProgress()
   const [upgradeFor, setUpgradeFor] = useState(null)
@@ -1784,7 +1787,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
   const partStats = getPartStats('writing', partId)
 
   const switchQ = (idx) => {
-    if (!isPremium && idx > 0) { setUpgradeFor(idx + 1); return }
+    if (!isPremium && (!FREE_PARTS.has(partId) || idx > 0)) { setUpgradeFor(idx + 1); return }
     setActiveIdx(idx)
     setAiResult(null)
     setShowModel(false)
@@ -1896,7 +1899,7 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
             const hasDraft = hasLocalDraft(idx)
             const isDone = !!stored || hasDraft
             const dc = DIFF_COLORS[item.difficulty] || DIFF_COLORS.easy
-            const locked = !isPremium && idx > 0
+            const locked = !isPremium && (!FREE_PARTS.has(partId) || idx > 0)
             return (
               <button
                 key={item.id}
@@ -2322,7 +2325,7 @@ function ListeningLayout({ color, partId, onComplete }) {
 
   /* ── Switch set ── */
   const switchSet = (si) => {
-    if (!isPremium && si > 0) { setUpgradeFor(part.sets[si]?.setNumber || si + 1); return }
+    if (!isPremium && (!FREE_PARTS.has(partId) || si > 0)) { setUpgradeFor(part.sets[si]?.setNumber || si + 1); return }
     stopAudio()
     setActiveSetIdx(si)
     setShowBanner(false)
@@ -2444,7 +2447,7 @@ function ListeningLayout({ color, partId, onComplete }) {
             const allDone = sidebarIsDone(si)
             const correct = sidebarCorrect(si)
             const dc = DIFF_COLORS[s.difficulty] || DIFF_COLORS.easy
-            const locked = !isPremium && si > 0
+            const locked = !isPremium && (!FREE_PARTS.has(partId) || si > 0)
             return (
               <button
                 key={si}
@@ -2869,7 +2872,8 @@ function ReadingLayout({ color, partId, onComplete }) {
 
   /* switch */
   const switchTo = (pi, si) => {
-    if (!isPremium && si > 0) { setUpgradeFor(parts[pi]?.sets[si]?.setNumber || si + 1); return }
+    const _pid = PARTS_ORDER[pi]
+    if (!isPremium && (!FREE_PARTS.has(_pid) || si > 0)) { setUpgradeFor(parts[pi]?.sets[si]?.setNumber || si + 1); return }
     setActivePartIdx(pi)
     setActiveSetIdx(si)
     setShowBanner(false)
@@ -3185,7 +3189,7 @@ function ReadingLayout({ color, partId, onComplete }) {
                       const allDone = !!stored || isCompleted('reading', p.partId, s.setNumber) || setDoneCount(pi, si) === s.questions.length
                       const correct = stored ? stored.score : setCorrectCount(pi, si)
                       const dc = DIFF_COLORS[s.difficulty] || DIFF_COLORS.easy
-                      const locked = !isPremium && si > 0
+                      const locked = !isPremium && (!FREE_PARTS.has(p.partId) || si > 0)
                       return (
                         <button
                           key={si}
@@ -3929,11 +3933,14 @@ const SPEAKING_TASK_META = {
 /* ── Speaking real-time scoring ────────────────────────────── */
 async function scoreSpeakingWithAI(responseText, prompt, taskType, topic) {
   try {
-    const res = await fetch('/api/score-speaking', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ responseText, prompt, taskType, topic }),
+    const res = await authedFetch('/api/score-speaking', {
+      body: { responseText, prompt, taskType, topic },
     })
+    if (res.status === 401) throw new Error('Sign in to get AI scoring.')
+    if (res.status === 429) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.message || 'Too many scoring requests — try again later.')
+    }
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
       throw new Error(err.error || 'Scoring failed')
@@ -4071,7 +4078,7 @@ function ComparingPrompt({ text, color }) {
 }
 
 function SpeakingLayout({ color, partId, onComplete }) {
-  const { isPremium } = useAuth()
+  const { user, isPremium } = useAuth()
   const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start speaking practice, record responses, and save your score.')
   const [upgradeFor, setUpgradeFor] = useState(null)
   const taskNum = parseInt(partId.replace('S', ''), 10)
@@ -4286,7 +4293,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const diffColor = { easy: '#2D8A56', intermediate: '#C8972A', advanced: '#C8102E' }
 
   const switchSet = (idx) => {
-    if (!isPremium && idx > 0) { setUpgradeFor(prompts[idx]?.setId || idx + 1); return }
+    if (!isPremium && (!FREE_PARTS.has(partId) || idx > 0)) { setUpgradeFor(prompts[idx]?.setId || idx + 1); return }
     if (timerRef.current) clearInterval(timerRef.current)
     stopRecognition()
     setActiveIdx(idx)
@@ -4891,7 +4898,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
             const stored = getSetScore('speaking', partId, p.setId)
             const isDone = !!stored || !!completedSets[idx]
             const dcc = diffColor[p.difficulty] || diffColor.intermediate
-            const locked = !isPremium && idx > 0
+            const locked = !isPremium && (!FREE_PARTS.has(partId) || idx > 0)
             return (
               <button
                 key={p.setId}

@@ -4,9 +4,9 @@ import { PUBLIC_SITE_URL } from '../data/constants'
 
 /* ─────────────────────────────────────────────────────────────
    Hidden admin dashboard — URL: /admin
-   Only accessible when signed in as sales@celpipace.com.
+   Only accessible when signed in as clint.viegas@gmail.com.
 ───────────────────────────────────────────────────────────── */
-const ADMIN_EMAIL = 'sales@celpipace.com'
+const ADMIN_EMAIL = 'clint.viegas@gmail.com'
 const PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at, last_seen_at'
 const LEGACY_PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at'
 const PAYMENT_COLUMNS = 'id, email, plan, amount_cents, currency, status, granted_days, stripe_session_id, stripe_payment_intent_id, stripe_customer_id, created_at'
@@ -623,59 +623,245 @@ function CouponsTab() {
 /*  ANALYTICS                                                   */
 /* ═══════════════════════════════════════════════════════════ */
 function AnalyticsTab() {
-  const { rows, err } = useProfiles()
-  if (err) return <Err msg={err} />
-  if (!rows) return <Loading />
+  const { rows: profiles, err: profilesErr } = useProfiles()
+  const [events, setEvents] = useState(null)
+  const [err, setErr] = useState('')
+  const [range, setRange] = useState('7')
+  const [eventFilter, setEventFilter] = useState('all')
+  const [query, setQuery] = useState('')
 
-  // Signups per day, last 30 days
-  const days = 30
+  useEffect(() => {
+    let cancel = false
+    const days = parseInt(range, 10)
+    const since = new Date(Date.now() - days * 864e5).toISOString()
+    ;(async () => {
+      const { data, error } = await adminSupabase
+        .from('analytics_events')
+        .select('id, user_id, session_id, event_type, page_path, page_url, page_title, element_tag, element_role, element_label, element_id, element_classes, href, metadata, user_agent, created_at')
+        .gte('created_at', since)
+        .order('created_at', { ascending: false })
+        .limit(1500)
+      if (cancel) return
+      if (error) setErr(error.message)
+      else setEvents(data ?? [])
+    })()
+    return () => { cancel = true }
+  }, [range])
+
+  if (profilesErr) return <Err msg={profilesErr} />
+  if (err) return <Err msg={`${err}. Run supabase/analytics_events.sql or rerun supabase/admin_hardening.sql, then deploy the app so events can be collected.`} />
+  if (!profiles || !events) return <Loading />
+
+  const profileById = new Map(profiles.map(profile => [profile.id, profile]))
+  const q = query.trim().toLowerCase()
+  const filtered = events.filter(event => {
+    if (eventFilter !== 'all' && event.event_type !== eventFilter) return false
+    if (!q) return true
+    const profile = profileById.get(event.user_id)
+    return [
+      profile?.email,
+      profile?.full_name,
+      event.page_path,
+      event.page_title,
+      event.element_label,
+      event.href,
+      event.session_id,
+    ].some(value => String(value || '').toLowerCase().includes(q))
+  })
+
+  const clicks = filtered.filter(event => event.event_type === 'click')
+  const pageViews = filtered.filter(event => event.event_type === 'page_view')
+  const uniqueSessions = new Set(filtered.map(event => event.session_id).filter(Boolean)).size
+  const uniqueUsers = new Set(filtered.map(event => event.user_id).filter(Boolean)).size
+  const anonymousEvents = filtered.filter(event => !event.user_id).length
+  const activeUserLabel = uniqueUsers ? uniqueUsers : '—'
+
+  const topClicks = topGroups(clicks, event => {
+    const label = event.element_label || event.href || event.element_id || event.element_tag || 'Unknown click'
+    return `${label}${event.page_path ? ` · ${event.page_path}` : ''}`
+  }, 10)
+  const topPages = topGroups(filtered, event => event.page_path || 'Unknown page', 10)
+  const topUsers = topGroups(filtered.filter(event => event.user_id), event => {
+    const profile = profileById.get(event.user_id)
+    return profile?.email || profile?.full_name || event.user_id
+  }, 10)
+
+  const days = parseInt(range, 10)
   const today = new Date(); today.setHours(0,0,0,0)
   const buckets = Array.from({ length: days }, (_, i) => {
-    const d = new Date(today); d.setDate(d.getDate() - (days - 1 - i))
-    return { date: d, label: d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }), signups: 0, premium: 0 }
+    const date = new Date(today); date.setDate(date.getDate() - (days - 1 - i))
+    return { date, label: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }), clicks: 0, pageViews: 0 }
   })
-  const startMs = buckets[0].date.getTime()
-  rows.forEach(r => {
-    if (!r.created_at) return
-    const t = new Date(r.created_at).getTime()
-    if (t < startMs) return
-    const idx = Math.floor((t - startMs) / 864e5)
-    if (idx >= 0 && idx < days) {
-      buckets[idx].signups += 1
-      if (r.is_premium) buckets[idx].premium += 1
+  const startMs = buckets[0]?.date.getTime() ?? today.getTime()
+  filtered.forEach(event => {
+    const time = new Date(event.created_at).getTime()
+    const idx = Math.floor((time - startMs) / 864e5)
+    if (idx < 0 || idx >= buckets.length) return
+    if (event.event_type === 'click') buckets[idx].clicks += 1
+    if (event.event_type === 'page_view') buckets[idx].pageViews += 1
+  })
+  const maxV = Math.max(1, ...buckets.map(bucket => bucket.clicks + bucket.pageViews))
+
+  const downloadCsv = () => {
+    const header = ['created_at','email','full_name','event_type','page_path','element_label','element_tag','href','session_id','metadata']
+    const lines = [header.join(',')]
+    for (const event of filtered) {
+      const profile = profileById.get(event.user_id)
+      lines.push([
+        event.created_at,
+        JSON.stringify(profile?.email || ''),
+        JSON.stringify(profile?.full_name || ''),
+        event.event_type,
+        JSON.stringify(event.page_path || ''),
+        JSON.stringify(event.element_label || ''),
+        JSON.stringify(event.element_tag || ''),
+        JSON.stringify(event.href || ''),
+        event.session_id || '',
+        JSON.stringify(event.metadata || {}),
+      ].join(','))
     }
-  })
-  const maxV = Math.max(1, ...buckets.map(b => b.signups))
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url; a.download = `celpipace-analytics-${new Date().toISOString().slice(0,10)}.csv`
+    document.body.appendChild(a); a.click(); a.remove()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <>
-      <Panel title={`Signups — last ${days} days`}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Detailed Analytics</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            Page views, click targets, sessions, and user-level activity from the live app.
+          </p>
+        </div>
+        <button onClick={downloadCsv} style={btnPrimaryCompact}>⇣ Export CSV</button>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Total events" value={filtered.length} />
+        <StatCard label="Clicks" value={clicks.length} accent="#ffd66a" />
+        <StatCard label="Page views" value={pageViews.length} accent="#7dc8ff" />
+        <StatCard label="Sessions" value={uniqueSessions} />
+        <StatCard label="Known users" value={activeUserLabel} accent="#7dffb0" />
+        <StatCard label="Anonymous events" value={anonymousEvents} />
+      </div>
+
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+        <select value={range} onChange={e => setRange(e.target.value)} style={{ ...inputStyle, margin: 0, width: 150 }}>
+          <option value="1">Last 24 hours</option>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
+        <select value={eventFilter} onChange={e => setEventFilter(e.target.value)} style={{ ...inputStyle, margin: 0, width: 150 }}>
+          <option value="all">All events</option>
+          <option value="click">Clicks</option>
+          <option value="page_view">Page views</option>
+        </select>
+        <input
+          placeholder="Search user, page, click, session…"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          style={{ ...inputStyle, flex: 1, minWidth: 260, margin: 0 }}
+        />
+      </div>
+
+      <Panel title={`Event volume — last ${days} day${days === 1 ? '' : 's'}`}>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 200, padding: '12px 4px', borderBottom: '1px solid #1d3152' }}>
-          {buckets.map((b, i) => (
-            <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }} title={`${b.label}: ${b.signups} signups (${b.premium} premium)`}>
-              <div style={{ fontSize: 10, color: '#98a2b5' }}>{b.signups || ''}</div>
-              <div style={{ width: '100%', background: '#1d3152', borderRadius: 3, position: 'relative', height: `${(b.signups / maxV) * 160}px`, minHeight: b.signups ? 3 : 0 }}>
-                {b.premium > 0 && (
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: '#ffd66a', borderRadius: 3, height: `${(b.premium / b.signups) * 100}%` }} />
-                )}
+          {buckets.map((bucket, i) => {
+            const total = bucket.clicks + bucket.pageViews
+            return (
+              <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }} title={`${bucket.label}: ${bucket.clicks} clicks, ${bucket.pageViews} page views`}>
+                <div style={{ fontSize: 10, color: '#98a2b5' }}>{total || ''}</div>
+                <div style={{ width: '100%', background: '#1d3152', borderRadius: 3, position: 'relative', height: `${(total / maxV) * 160}px`, minHeight: total ? 3 : 0 }}>
+                  {!!bucket.clicks && <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: '#ffd66a', borderRadius: 3, height: `${(bucket.clicks / total) * 100}%` }} />}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
         <div style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: 12, color: '#98a2b5' }}>
-          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#1d3152', borderRadius: 2, marginRight: 6 }} />Signups</span>
-          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#ffd66a', borderRadius: 2, marginRight: 6 }} />Premium</span>
+          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#1d3152', borderRadius: 2, marginRight: 6 }} />Page views</span>
+          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#ffd66a', borderRadius: 2, marginRight: 6 }} />Clicks</span>
         </div>
       </Panel>
 
-      <Panel title="Cumulative">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
-          <StatCard label="Total Signups (30d)" value={buckets.reduce((a, b) => a + b.signups, 0)} />
-          <StatCard label="Premium (30d)" value={buckets.reduce((a, b) => a + b.premium, 0)} accent="#ffd66a" />
-          <StatCard label="Avg / day" value={(buckets.reduce((a, b) => a + b.signups, 0) / days).toFixed(1)} />
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+        <Panel title="Top clicked items">
+          <RankedList rows={topClicks} empty="No click events in this view yet." />
+        </Panel>
+        <Panel title="Top pages">
+          <RankedList rows={topPages} empty="No page activity in this view yet." />
+        </Panel>
+        <Panel title="Most active users">
+          <RankedList rows={topUsers} empty="No signed-in user events in this view yet." />
+        </Panel>
+      </div>
+
+      <Panel title="Recent event stream">
+        <Table
+          cols={['When', 'User', 'Event', 'Page', 'Clicked / target', 'Session']}
+          rows={filtered.slice(0, 200).map(event => {
+            const profile = profileById.get(event.user_id)
+            const metadata = event.metadata || {}
+            return [
+              new Date(event.created_at).toLocaleString(),
+              profile
+                ? <div><strong>{profile.full_name || friendlyName(profile.email)}</strong><div style={{ color: '#98a2b5', fontSize: 12 }}>{profile.email}</div></div>
+                : <span style={{ color: '#98a2b5' }}>Anonymous</span>,
+              event.event_type === 'click' ? <Chip color="#ffd66a" text="CLICK" /> : <Chip color="#7dc8ff" text="PAGE" />,
+              <div><strong>{event.page_path || '—'}</strong><div style={{ color: '#98a2b5', fontSize: 12 }}>{event.page_title || '—'}</div></div>,
+              <div>
+                <strong>{event.element_label || (event.event_type === 'page_view' ? 'Page viewed' : 'Unlabeled target')}</strong>
+                <div style={{ color: '#98a2b5', fontSize: 12, marginTop: 2 }}>
+                  {[event.element_tag, event.element_id ? `#${event.element_id}` : '', event.href, metadata.x != null ? `x:${metadata.x} y:${metadata.y}` : ''].filter(Boolean).join(' · ') || '—'}
+                </div>
+              </div>,
+              <code style={{ color: '#98a2b5', fontSize: 11 }}>{event.session_id?.slice(0, 18) || '—'}</code>,
+            ]
+          })}
+          empty="No analytics events match this filter."
+        />
+        <p style={{ color: '#667', fontSize: 12, margin: '12px 0 0' }}>
+          Showing {Math.min(filtered.length, 200)} of {filtered.length} filtered events. Query limit is the most recent 1,500 events for the selected range.
+        </p>
       </Panel>
     </>
+  )
+}
+
+function topGroups(rows, keyFn, limit = 8) {
+  const counts = new Map()
+  rows.forEach(row => {
+    const key = keyFn(row) || 'Unknown'
+    counts.set(key, (counts.get(key) || 0) + 1)
+  })
+  return Array.from(counts.entries())
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit)
+}
+
+function RankedList({ rows, empty }) {
+  if (!rows.length) return <div style={{ color: '#98a2b5', fontSize: 14 }}>{empty}</div>
+  const max = Math.max(1, ...rows.map(row => row.count))
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      {rows.map(row => (
+        <div key={row.label}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 13, marginBottom: 4 }}>
+            <span style={{ color: '#E6ECF5', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.label}</span>
+            <strong style={{ color: '#ffd66a' }}>{row.count}</strong>
+          </div>
+          <div style={{ height: 6, background: '#0B1626', borderRadius: 999, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${(row.count / max) * 100}%`, background: '#ffd66a' }} />
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
 

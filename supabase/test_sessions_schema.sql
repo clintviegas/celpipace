@@ -112,7 +112,7 @@ DROP POLICY IF EXISTS "ts_admin_all" ON test_sessions;
 CREATE POLICY "ts_admin_all" ON test_sessions
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM auth.users u
-            WHERE u.id = auth.uid() AND u.email = 'sales@celpipace.com')
+            WHERE u.id = auth.uid() AND u.email = 'clint.viegas@gmail.com')
   );
 
 -- ============================================================================
