@@ -1648,8 +1648,8 @@ const WRITING_SETS = {
 ══════════════════════════════════════════════════════════════ */
 async function scoreWithAI(responseText, prompt, criteria, taskType) {
   try {
-    const res = await authedFetch('/api/score-writing', {
-      body: { responseText, prompt, criteria, taskType },
+    const res = await authedFetch('/api/score', {
+      body: { section: 'writing', responseText, prompt, criteria, taskType },
     })
     if (res.status === 401) throw new Error('Sign in to get AI scoring.')
     if (res.status === 429) {
@@ -3933,8 +3933,8 @@ const SPEAKING_TASK_META = {
 /* ── Speaking real-time scoring ────────────────────────────── */
 async function scoreSpeakingWithAI(responseText, prompt, taskType, topic) {
   try {
-    const res = await authedFetch('/api/score-speaking', {
-      body: { responseText, prompt, taskType, topic },
+    const res = await authedFetch('/api/score', {
+      body: { section: 'speaking', responseText, prompt, taskType, topic },
     })
     if (res.status === 401) throw new Error('Sign in to get AI scoring.')
     if (res.status === 429) {

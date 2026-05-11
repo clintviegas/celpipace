@@ -18,6 +18,7 @@ const AuthModal = lazy(() => import('./components/AuthModal'))
 const ChatWidget = lazy(() => import('./components/ChatWidget'))
 const HomeDesktopSections = lazy(() => import('./components/HomeDesktopSections'))
 const Pricing = lazy(() => import('./components/Pricing'))
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { BRAND_NAME, PRODUCT_STATS, SECTION_LIBRARY } from './data/constants'
 import './App.css'
 
@@ -425,6 +426,7 @@ export default function App() {
       <BrowserRouter>
         <AppInner />
       </BrowserRouter>
+      <SpeedInsights />
     </AuthProvider>
   )
 }
