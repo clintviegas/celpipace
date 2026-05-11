@@ -499,7 +499,7 @@ function EmailPreferencesCard({ initialConsent, onChanged }) {
   const toggle = async (next) => {
     setBusy(true); setMsg(''); setErr('')
     try {
-      const res = await authedFetch('/api/marketing-consent', { body: { consent: next } })
+      const res = await authedFetch('/api/auth-consent', { body: { consent: next } })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error || 'Could not update preference.')
       setConsent(!!data.consent)

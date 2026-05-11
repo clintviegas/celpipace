@@ -5,7 +5,7 @@
 //
 // All requests require:
 //   Authorization: Bearer <supabase access_token>
-//   Body: { action: 'refund' | 'sms_test' | ..., ...action-specific fields }
+//   Body: { action: 'refund' | ..., ...action-specific fields }
 //
 // Auth model: the bearer-token user must equal ADMIN_EMAIL.
 
@@ -26,36 +26,6 @@ function getBody(req) {
     try { return JSON.parse(req.body) } catch { return {} }
   }
   return req.body
-}
-
-// Best-effort admin SMS via Twilio. Silently skips if not configured so the
-// rest of the flow (refund issuance) still works without it.
-async function notifyAdminSms(message) {
-  const sid   = process.env.TWILIO_ACCOUNT_SID
-  const token = process.env.TWILIO_AUTH_TOKEN
-  const from  = process.env.TWILIO_FROM_PHONE
-  const to    = process.env.ADMIN_PHONE
-  if (!sid || !token || !from || !to) {
-    return { sent: false, reason: 'twilio_not_configured' }
-  }
-  try {
-    const auth = Buffer.from(`${sid}:${token}`).toString('base64')
-    const body = new URLSearchParams({ From: from, To: to, Body: message.slice(0, 300) })
-    const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
-      method: 'POST',
-      headers: { Authorization: `Basic ${auth}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-      body,
-    })
-    if (!res.ok) {
-      const text = await res.text()
-      console.error('[admin] twilio sms error:', res.status, text.slice(0, 200))
-      return { sent: false, reason: `http_${res.status}` }
-    }
-    return { sent: true }
-  } catch (err) {
-    console.error('[admin] twilio sms exception:', err?.message || err)
-    return { sent: false, reason: err?.message || 'sms_error' }
-  }
 }
 
 export default async function handler(req, res) {
@@ -101,12 +71,6 @@ export default async function handler(req, res) {
           metadata: { issued_by: authData.user.email, source: 'admin_panel' },
         })
 
-        // Fire admin SMS — non-blocking, never errors out the refund response.
-        notifyAdminSms(
-          `CELPIPACE refund issued: ${refund.amount / 100} ${(refund.currency || 'usd').toUpperCase()} ` +
-          `(${refund.id}) by ${authData.user.email}`
-        ).catch(() => {})
-
         return res.status(200).json({
           ok: true,
           refund_id: refund.id,
@@ -118,11 +82,6 @@ export default async function handler(req, res) {
         console.error('[admin/refund] stripe error:', err?.message || err)
         return res.status(400).json({ error: err?.message || 'Refund failed' })
       }
-    }
-
-    case 'sms_test': {
-      const result = await notifyAdminSms('CELPIPACE admin SMS test ✅')
-      return res.status(result.sent ? 200 : 503).json(result)
     }
 
     default:
