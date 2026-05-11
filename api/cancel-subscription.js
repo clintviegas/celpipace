@@ -155,6 +155,10 @@ export default async function handler(req, res) {
     })
     if (evErr) console.error('[cancel-subscription] subscription_events insert error:', evErr.message)
 
+    // IMPORTANT: must await these sendEmail calls. On Vercel serverless,
+    // returning the response triggers container teardown — any in-flight
+    // fire-and-forget promise gets killed before Brevo is reached, leaving
+    // the email_log row stuck at status='queued' forever.
     if (reason && feedbackInserted && SUPPORT_EMAIL) {
       const { subject, html } = renderCancellationFeedbackNotice({
         name: authData.user.user_metadata?.full_name || null,
@@ -168,15 +172,19 @@ export default async function handler(req, res) {
         refundReview,
         stripeSubscriptionId: subscriptionId,
       })
-      sendEmail({
-        supabase,
-        userId,
-        toEmail: SUPPORT_EMAIL,
-        kind: 'cancellation_feedback_admin',
-        subject,
-        html,
-        metadata: { reason, refund_review_requested: refundReview, stripe_subscription_id: subscriptionId },
-      }).catch(err => console.error('[cancel-subscription] support feedback email error:', err?.message || err))
+      try {
+        await sendEmail({
+          supabase,
+          userId,
+          toEmail: SUPPORT_EMAIL,
+          kind: 'cancellation_feedback_admin',
+          subject,
+          html,
+          metadata: { reason, refund_review_requested: refundReview, stripe_subscription_id: subscriptionId },
+        })
+      } catch (err) {
+        console.error('[cancel-subscription] support feedback email error:', err?.message || err)
+      }
     }
 
     if (profile.email) {
@@ -185,15 +193,19 @@ export default async function handler(req, res) {
         plan:      profile.current_plan,
         periodEnd,
       })
-      sendEmail({
-        supabase,
-        userId,
-        toEmail:  profile.email,
-        kind:     'cancel_scheduled',
-        subject,
-        html,
-        metadata: { reason, would_return: wouldReturn, refund_review_requested: refundReview, stripe_subscription_id: subscriptionId },
-      }).catch(err => console.error('[cancel-subscription] sendEmail error:', err?.message || err))
+      try {
+        await sendEmail({
+          supabase,
+          userId,
+          toEmail:  profile.email,
+          kind:     'cancel_scheduled',
+          subject,
+          html,
+          metadata: { reason, would_return: wouldReturn, refund_review_requested: refundReview, stripe_subscription_id: subscriptionId },
+        })
+      } catch (err) {
+        console.error('[cancel-subscription] sendEmail error:', err?.message || err)
+      }
     }
 
     const refundMessage = refundReview

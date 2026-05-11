@@ -243,14 +243,20 @@ export default async function handler(req, res) {
           metadata:               { mode: s.mode, payment_status: s.payment_status },
         })
 
-        // Welcome email + Brevo sync — fire-and-forget so Stripe still gets a
-        // fast 200 even if Brevo / email_log is misbehaving. Failures show up
-        // in email_log.status='failed' for inspection.
+        // Welcome email — await so the email_log row reaches 'sent' before
+        // Vercel terminates the container. Fire-and-forget here would leave
+        // rows stuck at status='queued' (Vercel kills in-flight promises after
+        // the function responds).
         if (!profile.is_premium && email) {
           const { subject, html } = renderWelcome({ name: profile.full_name, plan: patch.current_plan })
-          sendEmail({ supabase, userId: profile.id, toEmail: email, kind: 'welcome', subject, html, metadata: { stripe_session_id: s.id } })
-            .catch(err => console.error('[stripe-webhook] welcome email failed:', err?.message))
+          try {
+            await sendEmail({ supabase, userId: profile.id, toEmail: email, kind: 'welcome', subject, html, metadata: { stripe_session_id: s.id } })
+          } catch (err) {
+            console.error('[stripe-webhook] welcome email failed:', err?.message)
+          }
         }
+        // Brevo contact/list sync — keep fire-and-forget. These are CRM nice-
+        // to-haves; missing them never blocks the user's premium activation.
         if (email) {
           const [fn, ...lp] = String(profile.full_name || '').trim().split(/\s+/)
           const premiumListId = process.env.BREVO_LIST_PREMIUM ? Number(process.env.BREVO_LIST_PREMIUM) : null
@@ -330,8 +336,11 @@ export default async function handler(req, res) {
 
         if (profile.email) {
           const { subject, html } = renderCancelFinal({ name: profile.full_name })
-          sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'cancel_final', subject, html, metadata: { stripe_subscription_id: sub.id } })
-            .catch(err => console.error('[stripe-webhook] cancel_final email failed:', err?.message))
+          try {
+            await sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'cancel_final', subject, html, metadata: { stripe_subscription_id: sub.id } })
+          } catch (err) {
+            console.error('[stripe-webhook] cancel_final email failed:', err?.message)
+          }
           const cancelledListId = process.env.BREVO_LIST_CANCELLED ? Number(process.env.BREVO_LIST_CANCELLED) : null
           if (cancelledListId) {
             addToBrevoList({ email: profile.email, listId: cancelledListId })
@@ -400,16 +409,20 @@ export default async function handler(req, res) {
             hostedInvoiceUrl: inv.hosted_invoice_url || null,
             periodEnd:        patch.current_period_end,
           })
-          sendEmail({
-            supabase,
-            userId:   profile.id,
-            toEmail:  profile.email,
-            kind:     'receipt',
-            subject,
-            html,
-            pdfUrl:   inv.invoice_pdf || null,
-            metadata: { stripe_invoice_id: inv.id, invoice_number: inv.number || null },
-          }).catch(err => console.error('[stripe-webhook] receipt email failed:', err?.message))
+          try {
+            await sendEmail({
+              supabase,
+              userId:   profile.id,
+              toEmail:  profile.email,
+              kind:     'receipt',
+              subject,
+              html,
+              pdfUrl:   inv.invoice_pdf || null,
+              metadata: { stripe_invoice_id: inv.id, invoice_number: inv.number || null },
+            })
+          } catch (err) {
+            console.error('[stripe-webhook] receipt email failed:', err?.message)
+          }
         }
         break
       }
@@ -446,8 +459,11 @@ export default async function handler(req, res) {
             currency:         (inv.currency || 'usd').toLowerCase(),
             hostedInvoiceUrl: inv.hosted_invoice_url || null,
           })
-          sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'past_due', subject, html, metadata: { stripe_invoice_id: inv.id, attempt_count: inv.attempt_count } })
-            .catch(err => console.error('[stripe-webhook] past_due email failed:', err?.message))
+          try {
+            await sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'past_due', subject, html, metadata: { stripe_invoice_id: inv.id, attempt_count: inv.attempt_count } })
+          } catch (err) {
+            console.error('[stripe-webhook] past_due email failed:', err?.message)
+          }
         }
         break
       }
