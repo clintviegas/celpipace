@@ -20,8 +20,8 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "Urban hives can produce more honey than rural ones.",
-          "correct_answer": "B"
+          "question_text": "Honeybees may compete with wild pollinators for limited food.",
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
@@ -30,38 +30,38 @@
         },
         {
           "question_number": 3,
-          "question_text": "Honeybees may compete with wild pollinators for limited food.",
-          "correct_answer": "C"
+          "question_text": "Beekeeping classes are now offered for free in most universities.",
+          "correct_answer": "E"
         },
         {
           "question_number": 4,
+          "question_text": "Urban hives can produce more honey than rural ones.",
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
           "question_text": "Beekeeping can serve as a form of mental relaxation.",
           "correct_answer": "D"
         },
         {
-          "question_number": 5,
+          "question_number": 6,
           "question_text": "A specific study linked dense urban hives to declines in wild bees.",
           "correct_answer": "C"
         },
         {
-          "question_number": 6,
+          "question_number": 7,
           "question_text": "City beekeepers must usually register their hives with authorities.",
           "correct_answer": "A"
         },
         {
-          "question_number": 7,
+          "question_number": 8,
           "question_text": "Beekeeping groups bring together people from different backgrounds.",
           "correct_answer": "D"
         },
         {
-          "question_number": 8,
+          "question_number": 9,
           "question_text": "Rural farms often have shorter blooming seasons than city gardens.",
           "correct_answer": "B"
-        },
-        {
-          "question_number": 9,
-          "question_text": "Beekeeping classes are now offered for free in most universities.",
-          "correct_answer": "E"
         }
       ]
     },
@@ -81,28 +81,28 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "Washing machines can release plastic fibres into wastewater.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
-          "question_text": "Microplastics have been detected inside the human body.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 3,
           "question_text": "France has required filters on washing machines to catch fibres.",
           "correct_answer": "D"
         },
         {
+          "question_number": 2,
+          "question_text": "Washing machines can release plastic fibres into wastewater.",
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 3,
+          "question_text": "Microplastics have been detected inside the human body.",
+          "correct_answer": "C"
+        },
+        {
           "question_number": 4,
-          "question_text": "Small marine creatures eat microplastics before larger fish do.",
-          "correct_answer": "B"
+          "question_text": "Microplastic pollution has been completely eliminated in Northern Europe.",
+          "correct_answer": "E"
         },
         {
           "question_number": 5,
-          "question_text": "Scientists are not yet certain about the disease risk of microplastics.",
-          "correct_answer": "C"
+          "question_text": "Small marine creatures eat microplastics before larger fish do.",
+          "correct_answer": "B"
         },
         {
           "question_number": 6,
@@ -111,18 +111,18 @@
         },
         {
           "question_number": 7,
-          "question_text": "A person may consume around 50,000 microplastic particles each year.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 8,
           "question_text": "Microplastics are defined as plastic pieces smaller than five millimetres.",
           "correct_answer": "A"
         },
         {
+          "question_number": 8,
+          "question_text": "Scientists are not yet certain about the disease risk of microplastics.",
+          "correct_answer": "C"
+        },
+        {
           "question_number": 9,
-          "question_text": "Microplastic pollution has been completely eliminated in Northern Europe.",
-          "correct_answer": "E"
+          "question_text": "A person may consume around 50,000 microplastic particles each year.",
+          "correct_answer": "B"
         }
       ]
     },
@@ -147,23 +147,23 @@
         },
         {
           "question_number": 2,
-          "question_text": "British Columbia joined Confederation on the condition that the railway would be built.",
-          "correct_answer": "A"
+          "question_text": "The railway was privatized and sold to an American company in 1920.",
+          "correct_answer": "E"
         },
         {
           "question_number": 3,
-          "question_text": "The railway made western farming economically viable.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 4,
           "question_text": "The federal government apologized for the head tax in 2006.",
           "correct_answer": "D"
         },
         {
-          "question_number": 5,
-          "question_text": "The railway was approximately 4,700 kilometres long.",
+          "question_number": 4,
+          "question_text": "British Columbia joined Confederation on the condition that the railway would be built.",
           "correct_answer": "A"
+        },
+        {
+          "question_number": 5,
+          "question_text": "The railway made western farming economically viable.",
+          "correct_answer": "C"
         },
         {
           "question_number": 6,
@@ -172,18 +172,18 @@
         },
         {
           "question_number": 7,
-          "question_text": "The railway helped the federal government govern remote western regions.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 8,
           "question_text": "Indigenous communities were not always consulted about the railway route.",
           "correct_answer": "D"
         },
         {
+          "question_number": 8,
+          "question_text": "The railway was approximately 4,700 kilometres long.",
+          "correct_answer": "A"
+        },
+        {
           "question_number": 9,
-          "question_text": "The railway was privatized and sold to an American company in 1920.",
-          "correct_answer": "E"
+          "question_text": "The railway helped the federal government govern remote western regions.",
+          "correct_answer": "C"
         }
       ]
     },
@@ -203,48 +203,48 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "REM sleep is connected to memory and learning.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
-          "question_text": "People who sleep too little are more likely to catch colds.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 3,
           "question_text": "About one in three Canadian adults sleep fewer than seven hours.",
           "correct_answer": "C"
         },
         {
-          "question_number": 4,
+          "question_number": 2,
           "question_text": "Caffeine should be avoided in the afternoon for better sleep.",
           "correct_answer": "D"
         },
         {
+          "question_number": 3,
+          "question_text": "REM sleep is connected to memory and learning.",
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 4,
+          "question_text": "Napping for 20 minutes at noon boosts afternoon productivity.",
+          "correct_answer": "E"
+        },
+        {
           "question_number": 5,
+          "question_text": "People who sleep too little are more likely to catch colds.",
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 6,
           "question_text": "Young adults report the worst sleep quality among age groups.",
           "correct_answer": "C"
         },
         {
-          "question_number": 6,
-          "question_text": "Insufficient sleep increases the risk of heart disease and diabetes.",
-          "correct_answer": "B"
-        },
-        {
           "question_number": 7,
-          "question_text": "The brain goes through several different stages during sleep.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 8,
           "question_text": "CBT-I is often recommended over sleeping pills.",
           "correct_answer": "D"
         },
         {
+          "question_number": 8,
+          "question_text": "Insufficient sleep increases the risk of heart disease and diabetes.",
+          "correct_answer": "B"
+        },
+        {
           "question_number": 9,
-          "question_text": "Napping for 20 minutes at noon boosts afternoon productivity.",
-          "correct_answer": "E"
+          "question_text": "The brain goes through several different stages during sleep.",
+          "correct_answer": "A"
         }
       ]
     },
@@ -264,8 +264,8 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "EV sales have grown significantly in Canada since 2020.",
-          "correct_answer": "A"
+          "question_text": "Used electric vehicles are becoming more affordable.",
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -274,38 +274,38 @@
         },
         {
           "question_number": 3,
+          "question_text": "Canada has built more EV charging stations than any other G7 country.",
+          "correct_answer": "E"
+        },
+        {
+          "question_number": 4,
           "question_text": "EVs produce fewer emissions over their lifetime than gasoline cars.",
           "correct_answer": "C"
         },
         {
-          "question_number": 4,
-          "question_text": "Used electric vehicles are becoming more affordable.",
-          "correct_answer": "D"
-        },
-        {
           "question_number": 5,
-          "question_text": "Rural areas often lack adequate charging infrastructure.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 6,
-          "question_text": "Some provinces offer rebates in addition to the federal incentive.",
+          "question_text": "EV sales have grown significantly in Canada since 2020.",
           "correct_answer": "A"
         },
         {
-          "question_number": 7,
-          "question_text": "Battery production involves materials with environmental concerns.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 8,
+          "question_number": 6,
           "question_text": "Replacing an EV battery remains costly for used car buyers.",
           "correct_answer": "D"
         },
         {
+          "question_number": 7,
+          "question_text": "Rural areas often lack adequate charging infrastructure.",
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 8,
+          "question_text": "Battery production involves materials with environmental concerns.",
+          "correct_answer": "C"
+        },
+        {
           "question_number": 9,
-          "question_text": "Canada has built more EV charging stations than any other G7 country.",
-          "correct_answer": "E"
+          "question_text": "Some provinces offer rebates in addition to the federal incentive.",
+          "correct_answer": "A"
         }
       ]
     },
@@ -325,38 +325,38 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "It can take centuries for nature to create a few centimetres of topsoil.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
-          "question_text": "Healthy soil stores significantly more carbon than the atmosphere.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 3,
           "question_text": "Cover cropping and reduced tillage can help restore soil organic matter.",
           "correct_answer": "C"
         },
         {
-          "question_number": 4,
+          "question_number": 2,
+          "question_text": "It can take centuries for nature to create a few centimetres of topsoil.",
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 3,
           "question_text": "Canada does not have federal legislation focused specifically on soil conservation.",
           "correct_answer": "D"
         },
         {
-          "question_number": 5,
-          "question_text": "Canadian prairies have lost a large portion of their original soil carbon.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 6,
-          "question_text": "Degraded soil increases the risk of flooding.",
+          "question_number": 4,
+          "question_text": "Healthy soil stores significantly more carbon than the atmosphere.",
           "correct_answer": "B"
         },
         {
-          "question_number": 7,
+          "question_number": 5,
+          "question_text": "Canadian farmers receive automatic payments for adopting regenerative practices.",
+          "correct_answer": "E"
+        },
+        {
+          "question_number": 6,
           "question_text": "Regenerative farming matched conventional yields in a long-term study.",
           "correct_answer": "C"
+        },
+        {
+          "question_number": 7,
+          "question_text": "Canadian prairies have lost a large portion of their original soil carbon.",
+          "correct_answer": "A"
         },
         {
           "question_number": 8,
@@ -365,8 +365,8 @@
         },
         {
           "question_number": 9,
-          "question_text": "Canadian farmers receive automatic payments for adopting regenerative practices.",
-          "correct_answer": "E"
+          "question_text": "Degraded soil increases the risk of flooding.",
+          "correct_answer": "B"
         }
       ]
     },
@@ -386,33 +386,33 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "Only a small percentage of Canadians worked from home before 2020.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
-          "question_text": "Most remote workers say their productivity has been maintained or improved.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 3,
-          "question_text": "Some employers worry that remote work weakens collaboration and culture.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 4,
           "question_text": "Empty office buildings may be converted into housing.",
           "correct_answer": "D"
         },
         {
-          "question_number": 5,
-          "question_text": "Hybrid work, with two to three days in the office, is now the most common model.",
+          "question_number": 2,
+          "question_text": "Some employers worry that remote work weakens collaboration and culture.",
+          "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "question_text": "Only a small percentage of Canadians worked from home before 2020.",
           "correct_answer": "A"
         },
         {
-          "question_number": 6,
-          "question_text": "Remote work has helped rural workers access better-paying jobs.",
+          "question_number": 4,
+          "question_text": "Most remote workers say their productivity has been maintained or improved.",
           "correct_answer": "B"
+        },
+        {
+          "question_number": 5,
+          "question_text": "Remote workers who live alone may face mental health risks due to isolation.",
+          "correct_answer": "D"
+        },
+        {
+          "question_number": 6,
+          "question_text": "The Canadian government plans to make remote work mandatory for all federal employees.",
+          "correct_answer": "E"
         },
         {
           "question_number": 7,
@@ -421,13 +421,13 @@
         },
         {
           "question_number": 8,
-          "question_text": "Remote workers who live alone may face mental health risks due to isolation.",
-          "correct_answer": "D"
+          "question_text": "Hybrid work, with two to three days in the office, is now the most common model.",
+          "correct_answer": "A"
         },
         {
           "question_number": 9,
-          "question_text": "The Canadian government plans to make remote work mandatory for all federal employees.",
-          "correct_answer": "E"
+          "question_text": "Remote work has helped rural workers access better-paying jobs.",
+          "correct_answer": "B"
         }
       ]
     },
@@ -447,13 +447,13 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "Community garden plots are usually assigned to individual members.",
-          "correct_answer": "A"
+          "question_text": "Gardening provides physical activity similar to walking.",
+          "correct_answer": "B"
         },
         {
           "question_number": 2,
-          "question_text": "Gardening provides physical activity similar to walking.",
-          "correct_answer": "B"
+          "question_text": "Waiting lists for garden plots can last several years in some cities.",
+          "correct_answer": "D"
         },
         {
           "question_number": 3,
@@ -462,18 +462,18 @@
         },
         {
           "question_number": 4,
-          "question_text": "Waiting lists for garden plots can last several years in some cities.",
-          "correct_answer": "D"
+          "question_text": "Community garden plots are usually assigned to individual members.",
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
-          "question_text": "Children who garden are more likely to eat vegetables.",
-          "correct_answer": "B"
+          "question_text": "The federal government provides grants to all community gardens in Canada.",
+          "correct_answer": "E"
         },
         {
           "question_number": 6,
-          "question_text": "Annual fees for a garden plot are typically quite modest.",
-          "correct_answer": "A"
+          "question_text": "Children who garden are more likely to eat vegetables.",
+          "correct_answer": "B"
         },
         {
           "question_number": 7,
@@ -482,13 +482,13 @@
         },
         {
           "question_number": 8,
-          "question_text": "Community gardens help reduce isolation in large cities.",
-          "correct_answer": "C"
+          "question_text": "Annual fees for a garden plot are typically quite modest.",
+          "correct_answer": "A"
         },
         {
           "question_number": 9,
-          "question_text": "The federal government provides grants to all community gardens in Canada.",
-          "correct_answer": "E"
+          "question_text": "Community gardens help reduce isolation in large cities.",
+          "correct_answer": "C"
         }
       ]
     },
@@ -508,8 +508,8 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "AI can analyze medical images much faster than human specialists.",
-          "correct_answer": "A"
+          "question_text": "AI training data may not represent all patient populations equally.",
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
@@ -518,38 +518,38 @@
         },
         {
           "question_number": 3,
-          "question_text": "AI training data may not represent all patient populations equally.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 4,
           "question_text": "More than half of Canadians accept AI in diagnosis if a doctor is involved.",
           "correct_answer": "D"
         },
         {
+          "question_number": 4,
+          "question_text": "All Canadian provinces have passed legislation specifically governing AI in medicine.",
+          "correct_answer": "E"
+        },
+        {
           "question_number": 5,
-          "question_text": "An AI tool improved lung cancer detection rates in a Toronto pilot project.",
+          "question_text": "AI can analyze medical images much faster than human specialists.",
           "correct_answer": "A"
         },
         {
           "question_number": 6,
-          "question_text": "AI could help reduce emergency room overcrowding.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 7,
           "question_text": "Legal responsibility for AI misdiagnosis is unclear in Canada.",
           "correct_answer": "C"
         },
         {
+          "question_number": 7,
+          "question_text": "AI could help reduce emergency room overcrowding.",
+          "correct_answer": "B"
+        },
+        {
           "question_number": 8,
-          "question_text": "Older Canadians are less comfortable with AI in healthcare than younger adults.",
-          "correct_answer": "D"
+          "question_text": "An AI tool improved lung cancer detection rates in a Toronto pilot project.",
+          "correct_answer": "A"
         },
         {
           "question_number": 9,
-          "question_text": "All Canadian provinces have passed legislation specifically governing AI in medicine.",
-          "correct_answer": "E"
+          "question_text": "Older Canadians are less comfortable with AI in healthcare than younger adults.",
+          "correct_answer": "D"
         }
       ]
     },
@@ -569,48 +569,48 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "The Grand Banks cod fishery dates back to the 15th century.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
-          "question_text": "Scientists' early warnings about declining stocks were resisted for political reasons.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 3,
-          "question_text": "The moratorium caused the largest mass layoff in Canadian history.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 4,
           "question_text": "The cod stock has still not fully recovered after more than three decades.",
           "correct_answer": "D"
         },
         {
-          "question_number": 5,
-          "question_text": "Scientific surveys at the time overestimated how many fish remained.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 6,
-          "question_text": "The peak annual cod catch exceeded 800,000 tonnes.",
+          "question_number": 2,
+          "question_text": "The Grand Banks cod fishery dates back to the 15th century.",
           "correct_answer": "A"
         },
         {
-          "question_number": 7,
-          "question_text": "The federal government spent billions on aid for displaced fishing workers.",
+          "question_number": 3,
+          "question_text": "Scientists' early warnings about declining stocks were resisted for political reasons.",
+          "correct_answer": "B"
+        },
+        {
+          "question_number": 4,
+          "question_text": "The moratorium caused the largest mass layoff in Canadian history.",
           "correct_answer": "C"
         },
         {
-          "question_number": 8,
+          "question_number": 5,
+          "question_text": "Norway offered to share its cod management techniques with Canada in 1993.",
+          "correct_answer": "E"
+        },
+        {
+          "question_number": 6,
           "question_text": "Ocean warming and seal predation have slowed the stock's recovery.",
           "correct_answer": "D"
         },
         {
+          "question_number": 7,
+          "question_text": "The peak annual cod catch exceeded 800,000 tonnes.",
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 8,
+          "question_text": "The federal government spent billions on aid for displaced fishing workers.",
+          "correct_answer": "C"
+        },
+        {
           "question_number": 9,
-          "question_text": "Norway offered to share its cod management techniques with Canada in 1993.",
-          "correct_answer": "E"
+          "question_text": "Scientific surveys at the time overestimated how many fish remained.",
+          "correct_answer": "B"
         }
       ]
     },
@@ -630,18 +630,18 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "Global music revenue declined sharply between 2001 and 2014.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
           "question_text": "Streaming services give listeners access to millions of songs for a low monthly fee.",
           "correct_answer": "B"
         },
         {
-          "question_number": 3,
+          "question_number": 2,
           "question_text": "Most mid-level artists cannot live solely on streaming income.",
           "correct_answer": "C"
+        },
+        {
+          "question_number": 3,
+          "question_text": "Spotify pays artists a guaranteed minimum salary regardless of streams.",
+          "correct_answer": "E"
         },
         {
           "question_number": 4,
@@ -650,7 +650,7 @@
         },
         {
           "question_number": 5,
-          "question_text": "Streaming now accounts for the majority of global music revenue.",
+          "question_text": "Global music revenue declined sharply between 2001 and 2014.",
           "correct_answer": "A"
         },
         {
@@ -665,13 +665,13 @@
         },
         {
           "question_number": 8,
-          "question_text": "The traditional album format has become less dominant.",
-          "correct_answer": "D"
+          "question_text": "Streaming now accounts for the majority of global music revenue.",
+          "correct_answer": "A"
         },
         {
           "question_number": 9,
-          "question_text": "Spotify pays artists a guaranteed minimum salary regardless of streams.",
-          "correct_answer": "E"
+          "question_text": "The traditional album format has become less dominant.",
+          "correct_answer": "D"
         }
       ]
     },
@@ -691,48 +691,48 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "More than 180 non-native species have been found in the Great Lakes.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
-          "question_text": "Zebra and quagga mussels damage infrastructure and eliminate native food sources.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 3,
           "question_text": "Sea lampreys nearly destroyed the lake trout fishery by the 1950s.",
           "correct_answer": "C"
         },
         {
-          "question_number": 4,
+          "question_number": 2,
           "question_text": "Ships must now treat their ballast water before entering the Great Lakes.",
           "correct_answer": "D"
         },
         {
-          "question_number": 5,
-          "question_text": "Ballast water from cargo ships has been a major pathway for invasive species.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 6,
-          "question_text": "Managing mussel infestations costs hundreds of millions of dollars annually.",
+          "question_number": 3,
+          "question_text": "Zebra and quagga mussels damage infrastructure and eliminate native food sources.",
           "correct_answer": "B"
         },
         {
-          "question_number": 7,
+          "question_number": 4,
+          "question_text": "More than 180 non-native species have been found in the Great Lakes.",
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 5,
           "question_text": "A chemical called lampricide has been used to control sea lamprey populations.",
           "correct_answer": "C"
         },
         {
-          "question_number": 8,
+          "question_number": 6,
+          "question_text": "All invasive species in the Great Lakes have now been successfully eradicated.",
+          "correct_answer": "E"
+        },
+        {
+          "question_number": 7,
           "question_text": "Asian carp pose a future threat to the Great Lakes if they reach the basin.",
           "correct_answer": "D"
         },
         {
+          "question_number": 8,
+          "question_text": "Ballast water from cargo ships has been a major pathway for invasive species.",
+          "correct_answer": "A"
+        },
+        {
           "question_number": 9,
-          "question_text": "All invasive species in the Great Lakes have now been successfully eradicated.",
-          "correct_answer": "E"
+          "question_text": "Managing mussel infestations costs hundreds of millions of dollars annually.",
+          "correct_answer": "B"
         }
       ]
     },
@@ -752,8 +752,8 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "CRISPR allows scientists to target specific genes using an RNA guide.",
-          "correct_answer": "A"
+          "question_text": "Canada bans germline editing but allows somatic gene editing.",
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -762,18 +762,18 @@
         },
         {
           "question_number": 3,
+          "question_text": "CRISPR allows scientists to target specific genes using an RNA guide.",
+          "correct_answer": "A"
+        },
+        {
+          "question_number": 4,
           "question_text": "Gene editing could widen the gap between wealthy and disadvantaged families.",
           "correct_answer": "C"
         },
         {
-          "question_number": 4,
-          "question_text": "Canada bans germline editing but allows somatic gene editing.",
-          "correct_answer": "D"
-        },
-        {
           "question_number": 5,
-          "question_text": "CRISPR has been applied to both agriculture and medicine.",
-          "correct_answer": "A"
+          "question_text": "Changes to a patient's own body cells are not heritable.",
+          "correct_answer": "D"
         },
         {
           "question_number": 6,
@@ -782,18 +782,18 @@
         },
         {
           "question_number": 7,
-          "question_text": "Some argue that regulation is better than an outright ban on gene editing.",
-          "correct_answer": "C"
+          "question_text": "CRISPR has been used to completely eradicate malaria in Sub-Saharan Africa.",
+          "correct_answer": "E"
         },
         {
           "question_number": 8,
-          "question_text": "Changes to a patient's own body cells are not heritable.",
-          "correct_answer": "D"
+          "question_text": "CRISPR has been applied to both agriculture and medicine.",
+          "correct_answer": "A"
         },
         {
           "question_number": 9,
-          "question_text": "CRISPR has been used to completely eradicate malaria in Sub-Saharan Africa.",
-          "correct_answer": "E"
+          "question_text": "Some argue that regulation is better than an outright ban on gene editing.",
+          "correct_answer": "C"
         }
       ]
     },
@@ -818,28 +818,28 @@
         },
         {
           "question_number": 2,
-          "question_text": "People sometimes avoid important tasks because starting them triggers anxiety.",
-          "correct_answer": "B"
-        },
-        {
-          "question_number": 3,
           "question_text": "Chronic procrastinators tend to have worse grades and more health problems.",
           "correct_answer": "C"
         },
         {
-          "question_number": 4,
+          "question_number": 3,
           "question_text": "Self-compassion helps reduce the shame that follows procrastination.",
           "correct_answer": "D"
         },
         {
+          "question_number": 4,
+          "question_text": "People sometimes avoid important tasks because starting them triggers anxiety.",
+          "correct_answer": "B"
+        },
+        {
           "question_number": 5,
-          "question_text": "Over half of all students may procrastinate regularly.",
-          "correct_answer": "A"
+          "question_text": "A new medication has been approved to treat chronic procrastination.",
+          "correct_answer": "E"
         },
         {
           "question_number": 6,
-          "question_text": "Putting things off gives a temporary feeling of relief.",
-          "correct_answer": "B"
+          "question_text": "Over half of all students may procrastinate regularly.",
+          "correct_answer": "A"
         },
         {
           "question_number": 7,
@@ -848,13 +848,13 @@
         },
         {
           "question_number": 8,
-          "question_text": "The 'two-minute rule' prevents small tasks from building up.",
-          "correct_answer": "D"
+          "question_text": "Putting things off gives a temporary feeling of relief.",
+          "correct_answer": "B"
         },
         {
           "question_number": 9,
-          "question_text": "A new medication has been approved to treat chronic procrastination.",
-          "correct_answer": "E"
+          "question_text": "The 'two-minute rule' prevents small tasks from building up.",
+          "correct_answer": "D"
         }
       ]
     },
@@ -874,28 +874,28 @@
       "questions": [
         {
           "question_number": 1,
-          "question_text": "Permafrost covers roughly 40 percent of Canada's land.",
-          "correct_answer": "A"
-        },
-        {
-          "question_number": 2,
           "question_text": "Methane released from thawing permafrost is a very potent greenhouse gas.",
           "correct_answer": "B"
         },
         {
-          "question_number": 3,
-          "question_text": "Buildings in northern communities are sinking as the ground thaws.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 4,
+          "question_number": 2,
           "question_text": "Climate models disagree about how fast permafrost carbon will be released.",
           "correct_answer": "D"
         },
         {
-          "question_number": 5,
-          "question_text": "Permafrost holds about twice as much carbon as the atmosphere.",
+          "question_number": 3,
+          "question_text": "Permafrost covers roughly 40 percent of Canada's land.",
           "correct_answer": "A"
+        },
+        {
+          "question_number": 4,
+          "question_text": "Canadian scientists have found a way to refreeze thawed permafrost artificially.",
+          "correct_answer": "E"
+        },
+        {
+          "question_number": 5,
+          "question_text": "Buildings in northern communities are sinking as the ground thaws.",
+          "correct_answer": "C"
         },
         {
           "question_number": 6,
@@ -904,18 +904,18 @@
         },
         {
           "question_number": 7,
-          "question_text": "Some northern communities may need to be completely relocated.",
-          "correct_answer": "C"
-        },
-        {
-          "question_number": 8,
           "question_text": "Once triggered, permafrost emissions cannot be directly controlled by humans.",
           "correct_answer": "D"
         },
         {
+          "question_number": 8,
+          "question_text": "Some northern communities may need to be completely relocated.",
+          "correct_answer": "C"
+        },
+        {
           "question_number": 9,
-          "question_text": "Canadian scientists have found a way to refreeze thawed permafrost artificially.",
-          "correct_answer": "E"
+          "question_text": "Permafrost holds about twice as much carbon as the atmosphere.",
+          "correct_answer": "A"
         }
       ]
     }
