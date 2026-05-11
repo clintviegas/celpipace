@@ -31,11 +31,11 @@
           "question_text": "What concern does Elena raise despite her overall support?",
           "options": {
             "A": "That her customers will not visit",
-            "B": "That suppliers may not be able to deliver to her shop",
-            "C": "That rent will increase",
+            "B": "That rent will increase",
+            "C": "That suppliers may not be able to deliver to her shop",
             "D": "That the festival was a failure"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 3,
@@ -55,11 +55,11 @@
           "question_text": "According to Dr. Anand, what determines whether the ban will be fair?",
           "options": {
             "A": "How many shops close in the first year",
-            "B": "Whether the city invests in adequate public transit",
-            "C": "Whether property values rise quickly enough",
-            "D": "Whether European cities approve of the plan"
+            "B": "Whether property values rise quickly enough",
+            "C": "Whether European cities approve of the plan",
+            "D": "Whether the city invests in adequate public transit"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 5,
@@ -68,10 +68,10 @@
           "options": {
             "A": "All four speakers support the ban",
             "B": "All four speakers oppose the ban",
-            "C": "Two support with conditions, one opposes practically, one opposes outright",
-            "D": "Only the planner has any opinion"
+            "C": "Only the planner has any opinion",
+            "D": "Two support with conditions, one opposes practically, one opposes outright"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         }
       ],
       "fill_in_blank_comment": {
@@ -81,52 +81,52 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "permanent",
+              "A": "celebration",
               "B": "transition",
-              "C": "celebration",
-              "D": "construction"
+              "C": "construction",
+              "D": "permanent"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "decline",
-              "B": "increase",
-              "C": "delay",
-              "D": "shortage"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 8,
-            "options": {
-              "A": "celebrate",
-              "B": "dismiss",
-              "C": "compensate",
-              "D": "investigate"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 9,
-            "options": {
-              "A": "encouraged",
-              "B": "rewarded",
-              "C": "eliminated",
-              "D": "studied"
+              "A": "delay",
+              "B": "shortage",
+              "C": "increase",
+              "D": "decline"
             },
             "correct_answer": "C"
           },
           {
-            "blank_number": 10,
+            "blank_number": 8,
             "options": {
-              "A": "common",
-              "B": "conflict",
-              "C": "private",
-              "D": "secret"
+              "A": "dismiss",
+              "B": "compensate",
+              "C": "investigate",
+              "D": "celebrate"
             },
             "correct_answer": "A"
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "eliminated",
+              "B": "rewarded",
+              "C": "studied",
+              "D": "encouraged"
+            },
+            "correct_answer": "A"
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "private",
+              "B": "secret",
+              "C": "conflict",
+              "D": "common"
+            },
+            "correct_answer": "D"
           }
         ]
       }

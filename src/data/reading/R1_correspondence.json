@@ -21,12 +21,12 @@
           "skill": "writer_purpose",
           "question_text": "Why is Janet writing this email?",
           "options": {
-            "A": "To cancel her furniture order",
-            "B": "To complain about a delayed delivery and request action",
+            "A": "To complain about a delayed delivery and request action",
+            "B": "To cancel her furniture order",
             "C": "To compliment Mr. Davies on his service",
             "D": "To ask about new products at the showroom"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 2,
@@ -35,10 +35,10 @@
           "options": {
             "A": "Last weekend",
             "B": "Two weeks ago",
-            "C": "On March 3rd",
-            "D": "Over six weeks ago"
+            "C": "Over six weeks ago",
+            "D": "On March 3rd"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 3,
@@ -58,11 +58,11 @@
           "question_text": "What can be inferred about Janet's family gathering?",
           "options": {
             "A": "It has been cancelled because of the delay",
-            "B": "It will go ahead but with borrowed tables instead",
-            "C": "It will be hosted at a neighbour's home",
+            "B": "It will be hosted at a neighbour's home",
+            "C": "It will go ahead but with borrowed tables instead",
             "D": "It depends on whether the furniture arrives"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 5,
@@ -70,23 +70,23 @@
           "question_text": "What does Janet want from NorthPine within three business days?",
           "options": {
             "A": "A full refund",
-            "B": "A written delivery date",
-            "C": "A phone call from Mr. Davies",
+            "B": "A phone call from Mr. Davies",
+            "C": "A written delivery date",
             "D": "A replacement order"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 6,
           "skill": "tone_and_register",
           "question_text": "How would you best describe the tone of Janet's email?",
           "options": {
-            "A": "Casual and friendly",
-            "B": "Angry and threatening",
-            "C": "Firm but professional",
+            "A": "Firm but professional",
+            "B": "Casual and friendly",
+            "C": "Angry and threatening",
             "D": "Apologetic and uncertain"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -96,50 +96,50 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "apologizing",
+              "A": "requesting",
               "B": "complaining",
               "C": "celebrating",
-              "D": "requesting"
+              "D": "apologizing"
             },
-            "correct_answer": "A"
+            "correct_answer": "D"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "cancelled",
+              "A": "returned",
               "B": "scheduled",
-              "C": "delayed",
-              "D": "returned"
+              "C": "cancelled",
+              "D": "delayed"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "charging",
-              "B": "increasing",
-              "C": "waiving",
-              "D": "ignoring"
+              "A": "ignoring",
+              "B": "waiving",
+              "C": "charging",
+              "D": "increasing"
             },
-            "correct_answer": "C"
+            "correct_answer": "B"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "complaint",
-              "B": "loyalty",
-              "C": "payment",
-              "D": "delivery"
+              "A": "delivery",
+              "B": "complaint",
+              "C": "loyalty",
+              "D": "payment"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           },
           {
             "blank_number": 11,
             "options": {
               "A": "arise",
-              "B": "disappear",
-              "C": "succeed",
-              "D": "approve"
+              "B": "approve",
+              "C": "disappear",
+              "D": "succeed"
             },
             "correct_answer": "A"
           }
@@ -164,11 +164,11 @@
           "question_text": "Why is Daniel writing this email?",
           "options": {
             "A": "To complain about a late fee he was charged",
-            "B": "To request a longer borrowing period",
-            "C": "To apply for a new library card",
-            "D": "To ask about Korean-language novels"
+            "B": "To apply for a new library card",
+            "C": "To ask about Korean-language novels",
+            "D": "To request a longer borrowing period"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -177,10 +177,10 @@
           "options": {
             "A": "Toronto",
             "B": "Vancouver",
-            "C": "Hamilton",
-            "D": "Ottawa"
+            "C": "Ottawa",
+            "D": "Hamilton"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 3,
@@ -188,11 +188,11 @@
           "question_text": "Why does Daniel find the 14-day period difficult?",
           "options": {
             "A": "He reads very slowly",
-            "B": "He borrows too many books at once",
-            "C": "His rotating work schedule makes regular visits hard",
+            "B": "His rotating work schedule makes regular visits hard",
+            "C": "He borrows too many books at once",
             "D": "He lives far from the library"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 4,
@@ -200,35 +200,35 @@
           "question_text": "What happened when Daniel forgot to renew a book?",
           "options": {
             "A": "His card was suspended",
-            "B": "He was charged a late fee",
-            "C": "The book was considered lost",
+            "B": "The book was considered lost",
+            "C": "He was charged a late fee",
             "D": "He had to buy a replacement"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 5,
           "skill": "inference",
           "question_text": "What can be inferred about Daniel's attitude toward the library?",
           "options": {
-            "A": "He is frustrated and wants to cancel his membership",
-            "B": "He values the library and wants to keep using it",
+            "A": "He values the library and wants to keep using it",
+            "B": "He is frustrated and wants to cancel his membership",
             "C": "He thinks the library needs more books",
             "D": "He prefers buying books over borrowing"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 6,
           "skill": "tone_and_register",
           "question_text": "How would you describe the tone of Daniel's email?",
           "options": {
-            "A": "Demanding and impatient",
-            "B": "Casual and humorous",
-            "C": "Polite and reasonable",
+            "A": "Polite and reasonable",
+            "B": "Demanding and impatient",
+            "C": "Casual and humorous",
             "D": "Formal and legalistic"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -238,52 +238,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "collection",
+              "A": "parking",
               "B": "complaint",
               "C": "invoice",
-              "D": "parking"
+              "D": "collection"
             },
-            "correct_answer": "A"
+            "correct_answer": "D"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "pay",
-              "B": "compete",
-              "C": "register",
-              "D": "interview"
+              "A": "interview",
+              "B": "register",
+              "C": "pay",
+              "D": "compete"
             },
-            "correct_answer": "C"
+            "correct_answer": "B"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "cost",
+              "A": "risk",
               "B": "delay",
-              "C": "effort",
-              "D": "risk"
+              "C": "cost",
+              "D": "effort"
             },
-            "correct_answer": "A"
+            "correct_answer": "C"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "waiting",
-              "B": "storage",
+              "A": "return",
+              "B": "waiting",
               "C": "loan",
-              "D": "return"
+              "D": "storage"
             },
             "correct_answer": "C"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "teaching",
-              "B": "serving",
-              "C": "visiting",
-              "D": "charging"
+              "A": "serving",
+              "B": "charging",
+              "C": "teaching",
+              "D": "visiting"
             },
-            "correct_answer": "B"
+            "correct_answer": "A"
           }
         ]
       }
@@ -306,11 +306,11 @@
           "question_text": "What is the main purpose of Sarah's email?",
           "options": {
             "A": "To report a complaint about litter on the street",
-            "B": "To invite residents to a cleanup event and barbecue",
-            "C": "To sell tickets to a community fundraiser",
-            "D": "To ask neighbours to donate gardening tools"
+            "B": "To sell tickets to a community fundraiser",
+            "C": "To ask neighbours to donate gardening tools",
+            "D": "To invite residents to a cleanup event and barbecue"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -318,11 +318,11 @@
           "question_text": "How many bags of litter were collected last year?",
           "options": {
             "A": "Over 20",
-            "B": "Over 40",
-            "C": "Over 60",
+            "B": "Over 60",
+            "C": "Over 40",
             "D": "Over 80"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -330,11 +330,11 @@
           "question_text": "What time does the barbecue begin?",
           "options": {
             "A": "9:00 a.m.",
-            "B": "12:00 p.m.",
-            "C": "12:30 p.m.",
+            "B": "12:30 p.m.",
+            "C": "12:00 p.m.",
             "D": "1:00 p.m."
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 4,
@@ -353,12 +353,12 @@
           "skill": "inference",
           "question_text": "What can be inferred about the Elmwood Crescent community?",
           "options": {
-            "A": "Most residents are unhappy with the neighbourhood",
-            "B": "The cleanup is a well-established annual tradition",
+            "A": "The cleanup is a well-established annual tradition",
+            "B": "Most residents are unhappy with the neighbourhood",
             "C": "Sarah is being paid to organize the event",
             "D": "Only adults are expected to participate"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 6,
@@ -366,11 +366,11 @@
           "question_text": "What is the overall tone of Sarah's email?",
           "options": {
             "A": "Urgent and demanding",
-            "B": "Warm and encouraging",
-            "C": "Formal and businesslike",
-            "D": "Apologetic and cautious"
+            "B": "Formal and businesslike",
+            "C": "Apologetic and cautious",
+            "D": "Warm and encouraging"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         }
       ],
       "fill_in_blank_response": {
@@ -380,52 +380,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "backbone",
+              "A": "problem",
               "B": "stranger",
               "C": "critic",
-              "D": "problem"
+              "D": "backbone"
             },
-            "correct_answer": "A"
+            "correct_answer": "D"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "sells",
+              "A": "paints",
               "B": "forgets",
-              "C": "hides",
-              "D": "paints"
+              "C": "sells",
+              "D": "hides"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "avoid",
-              "B": "remove",
+              "A": "dismiss",
+              "B": "avoid",
               "C": "assign",
-              "D": "dismiss"
+              "D": "remove"
             },
             "correct_answer": "C"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "disaster",
-              "B": "secret",
-              "C": "hit",
-              "D": "chore"
+              "A": "hit",
+              "B": "chore",
+              "C": "disaster",
+              "D": "secret"
             },
-            "correct_answer": "C"
+            "correct_answer": "A"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "cancelled",
-              "B": "criticized",
-              "C": "ignored",
-              "D": "mentioned"
+              "A": "mentioned",
+              "B": "ignored",
+              "C": "cancelled",
+              "D": "criticized"
             },
-            "correct_answer": "D"
+            "correct_answer": "A"
           }
         ]
       }
@@ -448,11 +448,11 @@
           "question_text": "Why is Marco writing this email?",
           "options": {
             "A": "To promote a new menu item",
-            "B": "To apologize for a poor dining experience",
-            "C": "To respond to a job application",
-            "D": "To announce new restaurant hours"
+            "B": "To respond to a job application",
+            "C": "To announce new restaurant hours",
+            "D": "To apologize for a poor dining experience"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -460,11 +460,11 @@
           "question_text": "Which of the following was NOT a problem during Stephanie's visit?",
           "options": {
             "A": "Cold food",
-            "B": "A long wait",
-            "C": "A billing error",
-            "D": "A rude manager"
+            "B": "A rude manager",
+            "C": "A long wait",
+            "D": "A billing error"
           },
-          "correct_answer": "D"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -495,12 +495,12 @@
           "skill": "inference",
           "question_text": "Why does Marco mention that Saturday was unusually busy?",
           "options": {
-            "A": "To boast about the restaurant's popularity",
-            "B": "To explain, but not excuse, the poor service",
+            "A": "To explain, but not excuse, the poor service",
+            "B": "To boast about the restaurant's popularity",
             "C": "To suggest Stephanie visit on a quieter night",
             "D": "To blame the kitchen staff"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 6,
@@ -508,11 +508,11 @@
           "question_text": "How would you describe Marco's tone?",
           "options": {
             "A": "Defensive and dismissive",
-            "B": "Sincere and apologetic",
-            "C": "Casual and humorous",
-            "D": "Cold and impersonal"
+            "B": "Casual and humorous",
+            "C": "Cold and impersonal",
+            "D": "Sincere and apologetic"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         }
       ],
       "fill_in_blank_response": {
@@ -522,49 +522,49 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "complaint",
+              "A": "invoice",
               "B": "response",
-              "C": "menu",
-              "D": "invoice"
+              "C": "complaint",
+              "D": "menu"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "relieved",
-              "B": "excited",
-              "C": "disappointed",
-              "D": "confused"
-            },
-            "correct_answer": "C"
-          },
-          {
-            "blank_number": 9,
-            "options": {
-              "A": "decline",
-              "B": "accept",
-              "C": "ignore",
-              "D": "delay"
+              "A": "confused",
+              "B": "disappointed",
+              "C": "relieved",
+              "D": "excited"
             },
             "correct_answer": "B"
           },
           {
-            "blank_number": 10,
+            "blank_number": 9,
             "options": {
-              "A": "cancel",
-              "B": "forget",
-              "C": "arrange",
-              "D": "avoid"
+              "A": "delay",
+              "B": "decline",
+              "C": "accept",
+              "D": "ignore"
             },
             "correct_answer": "C"
           },
           {
+            "blank_number": 10,
+            "options": {
+              "A": "arrange",
+              "B": "avoid",
+              "C": "cancel",
+              "D": "forget"
+            },
+            "correct_answer": "A"
+          },
+          {
             "blank_number": 11,
             "options": {
-              "A": "expense",
-              "B": "problem",
-              "C": "secret",
+              "A": "secret",
+              "B": "expense",
+              "C": "problem",
               "D": "experience"
             },
             "correct_answer": "D"
@@ -591,10 +591,10 @@
           "options": {
             "A": "To register her daughter for camp immediately",
             "B": "To complain about incorrect information on the website",
-            "C": "To ask questions before enrolling her daughter",
-            "D": "To request a refund for last year's camp"
+            "C": "To request a refund for last year's camp",
+            "D": "To ask questions before enrolling her daughter"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -614,35 +614,35 @@
           "question_text": "What is Lisa's concern about Emma's personality?",
           "options": {
             "A": "Emma does not like outdoor activities",
-            "B": "Emma may struggle to adjust because she is shy",
-            "C": "Emma has trouble following instructions",
+            "B": "Emma has trouble following instructions",
+            "C": "Emma may struggle to adjust because she is shy",
             "D": "Emma does not get along with other children"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "detail_comprehension",
           "question_text": "What medical concern does Lisa raise?",
           "options": {
-            "A": "Emma needs daily medication",
-            "B": "Emma has asthma",
-            "C": "Emma has a severe peanut allergy",
+            "A": "Emma has a severe peanut allergy",
+            "B": "Emma needs daily medication",
+            "C": "Emma has asthma",
             "D": "Emma recently had surgery"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "inference",
           "question_text": "What can be inferred about Lisa's financial situation?",
           "options": {
-            "A": "She cannot afford the camp at all",
-            "B": "She can manage the cost but would prefer to split payments",
+            "A": "She can manage the cost but would prefer to split payments",
+            "B": "She cannot afford the camp at all",
             "C": "She is looking for a free program",
             "D": "She wants to negotiate a lower price"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 6,
@@ -651,10 +651,10 @@
           "options": {
             "A": "Anxious and demanding",
             "B": "Indifferent and rushed",
-            "C": "Thoughtful and concerned",
-            "D": "Angry and frustrated"
+            "C": "Angry and frustrated",
+            "D": "Thoughtful and concerned"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         }
       ],
       "fill_in_blank_response": {
@@ -664,52 +664,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "nervous",
+              "A": "curious",
               "B": "confident",
-              "C": "guilty",
-              "D": "curious"
+              "C": "nervous",
+              "D": "guilty"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "isolated",
-              "B": "bored",
+              "A": "pressured",
+              "B": "isolated",
               "C": "included",
-              "D": "pressured"
+              "D": "bored"
             },
             "correct_answer": "C"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "trained",
+              "A": "excused",
               "B": "interested",
-              "C": "worried",
-              "D": "excused"
-            },
-            "correct_answer": "A"
-          },
-          {
-            "blank_number": 10,
-            "options": {
-              "A": "refund",
-              "B": "penalty",
-              "C": "instalment",
-              "D": "discount"
+              "C": "trained",
+              "D": "worried"
             },
             "correct_answer": "C"
           },
           {
+            "blank_number": 10,
+            "options": {
+              "A": "instalment",
+              "B": "discount",
+              "C": "refund",
+              "D": "penalty"
+            },
+            "correct_answer": "A"
+          },
+          {
             "blank_number": 11,
             "options": {
-              "A": "plan",
-              "B": "hesitate",
+              "A": "promise",
+              "B": "plan",
               "C": "forget",
-              "D": "promise"
+              "D": "hesitate"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           }
         ]
       }
@@ -744,11 +744,11 @@
           "question_text": "What did Priya co-found at the university?",
           "options": {
             "A": "A political science journal",
-            "B": "A Model United Nations club",
-            "C": "A peer tutoring program for international students",
+            "B": "A peer tutoring program for international students",
+            "C": "A Model United Nations club",
             "D": "A student government association"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -767,12 +767,12 @@
           "skill": "inference",
           "question_text": "Why does Dr. Hayes mention that presenting at the conference is 'a rare achievement for an undergraduate'?",
           "options": {
-            "A": "To suggest Priya should switch to graduate studies",
-            "B": "To emphasize how exceptional Priya's work is",
+            "A": "To emphasize how exceptional Priya's work is",
+            "B": "To suggest Priya should switch to graduate studies",
             "C": "To criticize the conference's selection standards",
             "D": "To explain why she helped Priya with the paper"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
@@ -781,10 +781,10 @@
           "options": {
             "A": "She managed the clinic's budget",
             "B": "She trained other volunteers",
-            "C": "She helped newcomers with housing and interpretation",
-            "D": "She started a fundraising campaign"
+            "C": "She started a fundraising campaign",
+            "D": "She helped newcomers with housing and interpretation"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 6,
@@ -793,10 +793,10 @@
           "options": {
             "A": "Priya participates mainly to strengthen her applications",
             "B": "Priya is required to volunteer for her degree",
-            "C": "Priya is genuinely driven by a concern for fairness",
-            "D": "Priya prefers volunteering to studying"
+            "C": "Priya prefers volunteering to studying",
+            "D": "Priya is genuinely driven by a concern for fairness"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         }
       ],
       "fill_in_blank_response": {
@@ -806,52 +806,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "reluctant",
+              "A": "confusing",
               "B": "compelling",
-              "C": "brief",
-              "D": "confusing"
+              "C": "reluctant",
+              "D": "brief"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "elimination",
-              "B": "payment",
+              "A": "advertising",
+              "B": "elimination",
               "C": "evaluation",
-              "D": "advertising"
+              "D": "payment"
             },
             "correct_answer": "C"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "removes",
-              "B": "separates",
-              "C": "hides",
-              "D": "distinguishes"
+              "A": "distinguishes",
+              "B": "hides",
+              "C": "removes",
+              "D": "separates"
             },
-            "correct_answer": "D"
+            "correct_answer": "A"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "avoidance",
-              "B": "engagement",
-              "C": "isolation",
-              "D": "competition"
+              "A": "engagement",
+              "B": "competition",
+              "C": "avoidance",
+              "D": "isolation"
             },
-            "correct_answer": "B"
+            "correct_answer": "A"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "ignore",
-              "B": "replace",
-              "C": "contact",
-              "D": "criticize"
+              "A": "criticize",
+              "B": "ignore",
+              "C": "replace",
+              "D": "contact"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           }
         ]
       }
@@ -886,11 +886,11 @@
           "question_text": "How long has the heating problem been going on?",
           "options": {
             "A": "A few weeks",
-            "B": "About three months",
-            "C": "Since he moved in",
+            "B": "Since he moved in",
+            "C": "About three months",
             "D": "About a year"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 3,
@@ -909,12 +909,12 @@
           "skill": "detail_comprehension",
           "question_text": "What happened after each maintenance visit?",
           "options": {
-            "A": "The radiator was permanently fixed",
-            "B": "The radiator worked briefly and then stopped again",
+            "A": "The radiator worked briefly and then stopped again",
+            "B": "The radiator was permanently fixed",
             "C": "James received a rent credit",
             "D": "A new radiator was installed"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
@@ -922,11 +922,11 @@
           "question_text": "Why does James mention his daughter's health?",
           "options": {
             "A": "To ask the landlord to pay her medical bills",
-            "B": "To show that the heating problem is causing real harm to his family",
-            "C": "To explain why he cannot pay rent this month",
-            "D": "To request a transfer to a warmer unit"
+            "B": "To explain why he cannot pay rent this month",
+            "C": "To request a transfer to a warmer unit",
+            "D": "To show that the heating problem is causing real harm to his family"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 6,
@@ -934,11 +934,11 @@
           "question_text": "What is James implying by mentioning the Landlord and Tenant Board?",
           "options": {
             "A": "He plans to move out immediately",
-            "B": "He has already filed a complaint",
-            "C": "He will take formal action if the problem is not fixed soon",
+            "B": "He will take formal action if the problem is not fixed soon",
+            "C": "He has already filed a complaint",
             "D": "He wants to become a member of the board"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -948,39 +948,39 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "congratulations",
-              "B": "invoice",
-              "C": "apologies",
-              "D": "resignation"
-            },
-            "correct_answer": "C"
-          },
-          {
-            "blank_number": 8,
-            "options": {
-              "A": "expensive",
-              "B": "sufficient",
-              "C": "invisible",
-              "D": "popular"
+              "A": "resignation",
+              "B": "apologies",
+              "C": "congratulations",
+              "D": "invoice"
             },
             "correct_answer": "B"
           },
           {
-            "blank_number": 9,
+            "blank_number": 8,
             "options": {
-              "A": "permanent",
-              "B": "decorative",
-              "C": "portable",
-              "D": "industrial"
+              "A": "popular",
+              "B": "expensive",
+              "C": "sufficient",
+              "D": "invisible"
             },
             "correct_answer": "C"
           },
           {
+            "blank_number": 9,
+            "options": {
+              "A": "portable",
+              "B": "industrial",
+              "C": "permanent",
+              "D": "decorative"
+            },
+            "correct_answer": "A"
+          },
+          {
             "blank_number": 10,
             "options": {
-              "A": "demolish",
-              "B": "ignore",
-              "C": "photograph",
+              "A": "photograph",
+              "B": "demolish",
+              "C": "ignore",
               "D": "inspect"
             },
             "correct_answer": "D"
@@ -988,12 +988,12 @@
           {
             "blank_number": 11,
             "options": {
-              "A": "concerns",
+              "A": "recipes",
               "B": "payments",
               "C": "hobbies",
-              "D": "recipes"
+              "D": "concerns"
             },
-            "correct_answer": "A"
+            "correct_answer": "D"
           }
         ]
       }
@@ -1039,24 +1039,24 @@
           "skill": "detail_comprehension",
           "question_text": "How much does the set lunch cost per person?",
           "options": {
-            "A": "$10",
-            "B": "$15",
-            "C": "$22",
+            "A": "$22",
+            "B": "$10",
+            "C": "$15",
             "D": "$30"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 4,
           "skill": "detail_comprehension",
           "question_text": "What gift does Rachel plan to buy?",
           "options": {
-            "A": "A watch",
-            "B": "A gift card to an outdoor gear store",
+            "A": "A gift card to an outdoor gear store",
+            "B": "A watch",
             "C": "A book about Calgary",
             "D": "A framed team photo"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
@@ -1064,11 +1064,11 @@
           "question_text": "Why did Rachel book the back room?",
           "options": {
             "A": "It is cheaper than the main dining area",
-            "B": "So the group can celebrate privately",
-            "C": "Kevin requested it",
-            "D": "The restaurant requires it for large groups"
+            "B": "Kevin requested it",
+            "C": "The restaurant requires it for large groups",
+            "D": "So the group can celebrate privately"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 6,
@@ -1090,52 +1090,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "avoids",
-              "B": "deserves",
-              "C": "dislikes",
-              "D": "delays"
+              "A": "delays",
+              "B": "avoids",
+              "C": "deserves",
+              "D": "dislikes"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "business",
-              "B": "cooking",
+              "A": "reading",
+              "B": "business",
               "C": "camping",
-              "D": "reading"
+              "D": "cooking"
             },
             "correct_answer": "C"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "expense",
-              "B": "problem",
-              "C": "touch",
-              "D": "burden"
+              "A": "touch",
+              "B": "burden",
+              "C": "expense",
+              "D": "problem"
             },
-            "correct_answer": "C"
+            "correct_answer": "A"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "highway",
-              "B": "subway",
+              "A": "ferry",
+              "B": "highway",
               "C": "elevator",
-              "D": "ferry"
+              "D": "subway"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "challenge",
-              "B": "stranger",
-              "C": "colleague",
-              "D": "competitor"
+              "A": "competitor",
+              "B": "colleague",
+              "C": "challenge",
+              "D": "stranger"
             },
-            "correct_answer": "C"
+            "correct_answer": "B"
           }
         ]
       }
@@ -1181,12 +1181,12 @@
           "skill": "detail_comprehension",
           "question_text": "What schedule does Ahmed propose?",
           "options": {
-            "A": "8:00 a.m. to 4:00 p.m.",
-            "B": "8:30 a.m. to 4:30 p.m.",
+            "A": "8:30 a.m. to 4:30 p.m.",
+            "B": "8:00 a.m. to 4:00 p.m.",
             "C": "9:30 a.m. to 5:30 p.m.",
             "D": "10:00 a.m. to 6:00 p.m."
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 4,
@@ -1194,11 +1194,11 @@
           "question_text": "What has Ahmed's supervisor said about the request?",
           "options": {
             "A": "He has rejected it outright",
-            "B": "He supports it if HR approves",
-            "C": "He wants Ahmed to work from home instead",
-            "D": "He has not yet been told about it"
+            "B": "He wants Ahmed to work from home instead",
+            "C": "He has not yet been told about it",
+            "D": "He supports it if HR approves"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 5,
@@ -1206,11 +1206,11 @@
           "question_text": "Why does Ahmed mention that team meetings start at 10:00 a.m.?",
           "options": {
             "A": "To suggest the meetings should be rescheduled",
-            "B": "To show that his proposed schedule would not cause conflicts",
-            "C": "To complain that meetings are too early",
-            "D": "To ask for fewer meetings"
+            "B": "To complain that meetings are too early",
+            "C": "To ask for fewer meetings",
+            "D": "To show that his proposed schedule would not cause conflicts"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 6,
@@ -1218,11 +1218,11 @@
           "question_text": "Which word best describes Ahmed's approach in this email?",
           "options": {
             "A": "Apologetic",
-            "B": "Aggressive",
-            "C": "Professional",
+            "B": "Professional",
+            "C": "Aggressive",
             "D": "Indifferent"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -1232,52 +1232,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "hiding",
-              "B": "discussing",
-              "C": "ignoring",
-              "D": "denying"
+              "A": "denying",
+              "B": "hiding",
+              "C": "discussing",
+              "D": "ignoring"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "denied",
-              "B": "delayed",
-              "C": "approved",
-              "D": "cancelled"
+              "A": "approved",
+              "B": "cancelled",
+              "C": "denied",
+              "D": "delayed"
             },
-            "correct_answer": "C"
+            "correct_answer": "A"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "hiring",
-              "B": "trial",
-              "C": "vacation",
-              "D": "penalty"
+              "A": "trial",
+              "B": "penalty",
+              "C": "hiring",
+              "D": "vacation"
             },
-            "correct_answer": "B"
+            "correct_answer": "A"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "invisible",
-              "B": "absent",
-              "C": "reachable",
-              "D": "promoted"
+              "A": "promoted",
+              "B": "invisible",
+              "C": "absent",
+              "D": "reachable"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "accommodate",
-              "B": "overlook",
-              "C": "dismiss",
-              "D": "complicate"
+              "A": "complicate",
+              "B": "accommodate",
+              "C": "overlook",
+              "D": "dismiss"
             },
-            "correct_answer": "A"
+            "correct_answer": "B"
           }
         ]
       }
@@ -1300,11 +1300,11 @@
           "question_text": "What is the primary purpose of Catherine's email?",
           "options": {
             "A": "To request an extension to the renovation timeline",
-            "B": "To formally document deficiencies and demand corrections",
-            "C": "To compliment the foreman on his work",
+            "B": "To compliment the foreman on his work",
+            "C": "To formally document deficiencies and demand corrections",
             "D": "To cancel the renovation contract entirely"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
@@ -1312,23 +1312,23 @@
           "question_text": "How long was the renovation originally supposed to take?",
           "options": {
             "A": "Two weeks",
-            "B": "Four weeks",
-            "C": "Nine weeks",
+            "B": "Nine weeks",
+            "C": "Four weeks",
             "D": "Three months"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 3,
           "skill": "detail_comprehension",
           "question_text": "What did the independent contractor say about the tile work?",
           "options": {
-            "A": "It was acceptable",
-            "B": "It needed minor touch-ups",
-            "C": "The tiles would need to be removed and redone",
+            "A": "The tiles would need to be removed and redone",
+            "B": "It was acceptable",
+            "C": "It needed minor touch-ups",
             "D": "It was the best he had seen"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 4,
@@ -1336,11 +1336,11 @@
           "question_text": "Why was the countertop material changed?",
           "options": {
             "A": "Catherine requested a cheaper option",
-            "B": "The original material was backordered and GreenBuild substituted without approval",
-            "C": "Marble was higher quality than quartz",
-            "D": "The contract did not specify a material"
+            "B": "Marble was higher quality than quartz",
+            "C": "The contract did not specify a material",
+            "D": "The original material was backordered and GreenBuild substituted without approval"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 5,
@@ -1360,11 +1360,11 @@
           "question_text": "What can be inferred about Catherine's next steps if GreenBuild does not respond?",
           "options": {
             "A": "She will accept the current work as finished",
-            "B": "She will hire GreenBuild for future projects",
-            "C": "She will pursue government complaint channels and legal action",
+            "B": "She will pursue government complaint channels and legal action",
+            "C": "She will hire GreenBuild for future projects",
             "D": "She will renovate the kitchen herself"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -1374,10 +1374,10 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "lightly",
-              "B": "personally",
+              "A": "humorously",
+              "B": "lightly",
               "C": "seriously",
-              "D": "humorously"
+              "D": "personally"
             },
             "correct_answer": "C"
           },
@@ -1385,41 +1385,41 @@
             "blank_number": 8,
             "options": {
               "A": "standards",
-              "B": "discounts",
-              "C": "prices",
-              "D": "brochures"
+              "B": "brochures",
+              "C": "discounts",
+              "D": "prices"
             },
             "correct_answer": "A"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "payment",
-              "B": "approval",
+              "A": "address",
+              "B": "payment",
               "C": "complaint",
-              "D": "address"
+              "D": "approval"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "publicize",
-              "B": "improve",
-              "C": "compromise",
-              "D": "celebrate"
+              "A": "celebrate",
+              "B": "publicize",
+              "C": "improve",
+              "D": "compromise"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "amusement",
-              "B": "confusion",
-              "C": "schedule",
-              "D": "satisfaction"
+              "A": "schedule",
+              "B": "satisfaction",
+              "C": "amusement",
+              "D": "confusion"
             },
-            "correct_answer": "D"
+            "correct_answer": "B"
           }
         ]
       }
@@ -1442,35 +1442,35 @@
           "question_text": "What is the main purpose of Derek's email?",
           "options": {
             "A": "To announce the cancellation of the festival permanently",
-            "B": "To inform attendees that the festival has been moved to a new date",
-            "C": "To advertise a cooking demonstration",
+            "B": "To advertise a cooking demonstration",
+            "C": "To inform attendees that the festival has been moved to a new date",
             "D": "To request more volunteers for the event"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "detail_comprehension",
           "question_text": "What is the primary reason for the postponement?",
           "options": {
-            "A": "Low ticket sales",
-            "B": "A scheduling conflict with another event",
-            "C": "A severe weather warning from Environment Canada",
+            "A": "A severe weather warning from Environment Canada",
+            "B": "Low ticket sales",
+            "C": "A scheduling conflict with another event",
             "D": "The main stage collapsed during setup"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
           "skill": "detail_comprehension",
           "question_text": "What bonus attraction has been added to the rescheduled event?",
           "options": {
-            "A": "A fireworks display",
-            "B": "A farm-to-table cooking demonstration",
+            "A": "A farm-to-table cooking demonstration",
+            "B": "A fireworks display",
             "C": "Free cider for all attendees",
             "D": "An extra day of performances"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 4,
@@ -1478,11 +1478,11 @@
           "question_text": "By what date must refund requests be submitted?",
           "options": {
             "A": "October 26",
-            "B": "October 31",
-            "C": "November 1",
-            "D": "November 9"
+            "B": "November 1",
+            "C": "November 9",
+            "D": "October 31"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 5,
@@ -1516,52 +1516,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "refund",
-              "B": "update",
-              "C": "complaint",
-              "D": "invoice"
+              "A": "invoice",
+              "B": "refund",
+              "C": "update",
+              "D": "complaint"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           },
           {
             "blank_number": 8,
             "options": {
               "A": "doubt",
-              "B": "profit",
-              "C": "celebration",
-              "D": "error"
+              "B": "error",
+              "C": "profit",
+              "D": "celebration"
             },
             "correct_answer": "A"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "cancellation",
-              "B": "disaster",
-              "C": "demonstration",
-              "D": "experiment"
+              "A": "experiment",
+              "B": "cancellation",
+              "C": "disaster",
+              "D": "demonstration"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "edge",
+              "A": "floor",
               "B": "fence",
-              "C": "roof",
-              "D": "floor"
+              "C": "edge",
+              "D": "roof"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "secretly",
-              "B": "carelessly",
-              "C": "transparently",
-              "D": "reluctantly"
+              "A": "reluctantly",
+              "B": "transparently",
+              "C": "secretly",
+              "D": "carelessly"
             },
-            "correct_answer": "C"
+            "correct_answer": "B"
           }
         ]
       }
@@ -1584,23 +1584,23 @@
           "question_text": "Why is Maria writing this email?",
           "options": {
             "A": "To apply for a job at the settlement centre",
-            "B": "To ask about English classes for newcomers",
-            "C": "To register her children for school",
+            "B": "To register her children for school",
+            "C": "To ask about English classes for newcomers",
             "D": "To complain about a service she received"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "detail_comprehension",
           "question_text": "How long has Maria been in Canada?",
           "options": {
-            "A": "Two months",
-            "B": "Four months",
+            "A": "Four months",
+            "B": "Two months",
             "C": "One year",
             "D": "Two years"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -1609,10 +1609,10 @@
           "options": {
             "A": "Academic writing",
             "B": "Business English",
-            "C": "Practical, everyday conversation",
-            "D": "Legal terminology"
+            "C": "Legal terminology",
+            "D": "Practical, everyday conversation"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -1620,11 +1620,11 @@
           "question_text": "Why is Maria asking about childcare?",
           "options": {
             "A": "She wants a job as a childcare worker",
-            "B": "She needs someone to watch her two-year-old during class",
-            "C": "Her older child does not have a school",
-            "D": "She runs a home daycare"
+            "B": "Her older child does not have a school",
+            "C": "She runs a home daycare",
+            "D": "She needs someone to watch her two-year-old during class"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 5,
@@ -1658,29 +1658,29 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "exam",
-              "B": "bill",
-              "C": "program",
-              "D": "complaint"
+              "A": "program",
+              "B": "complaint",
+              "C": "exam",
+              "D": "bill"
             },
-            "correct_answer": "C"
+            "correct_answer": "A"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "problem",
-              "B": "fit",
-              "C": "risk",
-              "D": "burden"
+              "A": "fit",
+              "B": "burden",
+              "C": "problem",
+              "D": "risk"
             },
-            "correct_answer": "B"
+            "correct_answer": "A"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "enrolled",
-              "B": "ignored",
-              "C": "tested",
+              "A": "tested",
+              "B": "enrolled",
+              "C": "ignored",
               "D": "welcome"
             },
             "correct_answer": "D"
@@ -1688,20 +1688,20 @@
           {
             "blank_number": 10,
             "options": {
-              "A": "assessment",
-              "B": "vacation",
-              "C": "punishment",
-              "D": "rejection"
+              "A": "rejection",
+              "B": "assessment",
+              "C": "vacation",
+              "D": "punishment"
             },
-            "correct_answer": "A"
+            "correct_answer": "B"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "billing",
-              "B": "correcting",
+              "A": "declining",
+              "B": "billing",
               "C": "meeting",
-              "D": "declining"
+              "D": "correcting"
             },
             "correct_answer": "C"
           }
@@ -1725,24 +1725,24 @@
           "skill": "writer_purpose",
           "question_text": "What is the primary purpose of this email?",
           "options": {
-            "A": "To provide a professional reference for a job applicant",
-            "B": "To report a workplace incident",
-            "C": "To request a meeting with the hiring committee",
+            "A": "To report a workplace incident",
+            "B": "To request a meeting with the hiring committee",
+            "C": "To provide a professional reference for a job applicant",
             "D": "To announce a new safety protocol"
           },
-          "correct_answer": "A"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "detail_comprehension",
           "question_text": "How many clients did Karen typically manage at one time?",
           "options": {
-            "A": "10 to 15",
-            "B": "20 to 25",
-            "C": "35 to 40",
+            "A": "35 to 40",
+            "B": "10 to 15",
+            "C": "20 to 25",
             "D": "Over 50"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -1751,10 +1751,10 @@
           "options": {
             "A": "A training manual for new hires",
             "B": "A client intake questionnaire",
-            "C": "A revised safety protocol for the intake team",
-            "D": "A medication management guide"
+            "C": "A medication management guide",
+            "D": "A revised safety protocol for the intake team"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -1774,11 +1774,11 @@
           "question_text": "What is notable about Karen's ability with difficult clients?",
           "options": {
             "A": "She transferred them to other workers",
-            "B": "She avoided seeing clients with complex needs",
-            "C": "She built rapport quickly, even with disengaged clients",
+            "B": "She built rapport quickly, even with disengaged clients",
+            "C": "She avoided seeing clients with complex needs",
             "D": "She only worked with mild cases"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 6,
@@ -1786,11 +1786,11 @@
           "question_text": "What does 'unqualified endorsement' most likely mean in this context?",
           "options": {
             "A": "An endorsement written by someone without qualifications",
-            "B": "A complete and unreserved recommendation",
-            "C": "A recommendation with several conditions attached",
+            "B": "A recommendation with several conditions attached",
+            "C": "A complete and unreserved recommendation",
             "D": "A brief and informal opinion"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         }
       ],
       "fill_in_blank_response": {
@@ -1800,50 +1800,50 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "weaknesses",
-              "B": "conduct",
-              "C": "expenses",
-              "D": "vacations"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 8,
-            "options": {
-              "A": "avoidance",
-              "B": "creation",
-              "C": "management",
-              "D": "celebration"
-            },
-            "correct_answer": "C"
-          },
-          {
-            "blank_number": 9,
-            "options": {
-              "A": "reject",
-              "B": "invite",
-              "C": "warn",
-              "D": "dismiss"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 10,
-            "options": {
-              "A": "additional",
-              "B": "false",
-              "C": "irrelevant",
-              "D": "classified"
+              "A": "conduct",
+              "B": "vacations",
+              "C": "weaknesses",
+              "D": "expenses"
             },
             "correct_answer": "A"
           },
           {
+            "blank_number": 8,
+            "options": {
+              "A": "celebration",
+              "B": "avoidance",
+              "C": "creation",
+              "D": "management"
+            },
+            "correct_answer": "D"
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "dismiss",
+              "B": "reject",
+              "C": "warn",
+              "D": "invite"
+            },
+            "correct_answer": "D"
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "classified",
+              "B": "additional",
+              "C": "false",
+              "D": "irrelevant"
+            },
+            "correct_answer": "B"
+          },
+          {
             "blank_number": 11,
             "options": {
-              "A": "mess",
-              "B": "threat",
+              "A": "complaint",
+              "B": "mess",
               "C": "impression",
-              "D": "complaint"
+              "D": "threat"
             },
             "correct_answer": "C"
           }
@@ -1867,24 +1867,24 @@
           "skill": "writer_purpose",
           "question_text": "Why is Paul writing this email?",
           "options": {
-            "A": "To report a traffic accident",
-            "B": "To request traffic calming measures near a school",
+            "A": "To request traffic calming measures near a school",
+            "B": "To report a traffic accident",
             "C": "To object to a new road construction project",
             "D": "To apply for a crossing guard position"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 2,
           "skill": "detail_comprehension",
           "question_text": "What is the speed limit on Willow Street?",
           "options": {
-            "A": "30 km/h",
-            "B": "40 km/h",
+            "A": "40 km/h",
+            "B": "30 km/h",
             "C": "50 km/h",
             "D": "60 km/h"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -1892,11 +1892,11 @@
           "question_text": "What near-accident occurred recently?",
           "options": {
             "A": "A school bus ran a red light",
-            "B": "A child on a bicycle was nearly hit by a speeding van",
-            "C": "Two cars collided at the intersection",
-            "D": "A pedestrian fell on the sidewalk"
+            "B": "Two cars collided at the intersection",
+            "C": "A pedestrian fell on the sidewalk",
+            "D": "A child on a bicycle was nearly hit by a speeding van"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -1904,11 +1904,11 @@
           "question_text": "How many signatures did Paul collect?",
           "options": {
             "A": "15",
-            "B": "23",
-            "C": "34",
+            "B": "34",
+            "C": "23",
             "D": "50"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 5,
@@ -1916,11 +1916,11 @@
           "question_text": "Why does Paul say 'We are not asking for a major infrastructure project'?",
           "options": {
             "A": "To suggest that he does not care about the issue deeply",
-            "B": "To show the request is modest and reasonable",
-            "C": "To discourage the city from doing more than speed bumps",
+            "B": "To discourage the city from doing more than speed bumps",
+            "C": "To show the request is modest and reasonable",
             "D": "To imply that the city wastes money on large projects"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 6,
@@ -1942,52 +1942,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "lightly",
-              "B": "secretly",
-              "C": "seriously",
-              "D": "slowly"
+              "A": "seriously",
+              "B": "slowly",
+              "C": "lightly",
+              "D": "secretly"
             },
-            "correct_answer": "C"
+            "correct_answer": "A"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "accident",
-              "B": "study",
+              "A": "lane",
+              "B": "accident",
               "C": "violation",
-              "D": "lane"
+              "D": "study"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           },
           {
             "blank_number": 9,
             "options": {
-              "A": "removal",
-              "B": "criticism",
-              "C": "placement",
-              "D": "rejection"
+              "A": "rejection",
+              "B": "placement",
+              "C": "removal",
+              "D": "criticism"
             },
-            "correct_answer": "C"
+            "correct_answer": "B"
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "hide",
+              "A": "block",
               "B": "present",
-              "C": "withdraw",
-              "D": "block"
+              "C": "hide",
+              "D": "withdraw"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "rejected",
-              "B": "cancelled",
-              "C": "avoided",
-              "D": "suggested"
+              "A": "avoided",
+              "B": "rejected",
+              "C": "suggested",
+              "D": "cancelled"
             },
-            "correct_answer": "D"
+            "correct_answer": "C"
           }
         ]
       }
@@ -2009,12 +2009,12 @@
           "skill": "writer_purpose",
           "question_text": "What is Natasha's main purpose in writing this email?",
           "options": {
-            "A": "To volunteer for the renovation committee",
-            "B": "To object to a special assessment and request changes to the process",
+            "A": "To object to a special assessment and request changes to the process",
+            "B": "To volunteer for the renovation committee",
             "C": "To propose a completely different renovation plan",
             "D": "To resign from the condo board"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 2,
@@ -2023,10 +2023,10 @@
           "options": {
             "A": "$5,000",
             "B": "$10,000",
-            "C": "$15,000",
-            "D": "$20,000"
+            "C": "$20,000",
+            "D": "$15,000"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 3,
@@ -2034,11 +2034,11 @@
           "question_text": "What does Natasha say about the notice period for the meeting?",
           "options": {
             "A": "It was more than adequate",
-            "B": "It gave owners ten days, which she feels was not enough",
-            "C": "She received no notice at all",
-            "D": "The meeting was postponed twice"
+            "B": "She received no notice at all",
+            "C": "The meeting was postponed twice",
+            "D": "It gave owners ten days, which she feels was not enough"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -2058,23 +2058,23 @@
           "question_text": "Why does Natasha mention that many owners are retirees on fixed incomes?",
           "options": {
             "A": "To suggest they should be exempt from the assessment",
-            "B": "To argue that the payment timeline creates genuine financial hardship",
-            "C": "To recommend that only retirees vote on the resolution",
+            "B": "To recommend that only retirees vote on the resolution",
+            "C": "To argue that the payment timeline creates genuine financial hardship",
             "D": "To propose that the building should be sold"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 6,
           "skill": "inference",
           "question_text": "What does Natasha's mention of the Condominium Authority Tribunal imply?",
           "options": {
-            "A": "She has already lost a case before the tribunal",
-            "B": "She believes the tribunal will automatically side with her",
-            "C": "She is prepared to pursue legal remedies if the board does not respond",
+            "A": "She is prepared to pursue legal remedies if the board does not respond",
+            "B": "She has already lost a case before the tribunal",
+            "C": "She believes the tribunal will automatically side with her",
             "D": "She works at the tribunal"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -2084,52 +2084,52 @@
           {
             "blank_number": 7,
             "options": {
-              "A": "donation",
-              "B": "objections",
-              "C": "decorations",
-              "D": "payments"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 8,
-            "options": {
-              "A": "deny",
-              "B": "celebrate",
-              "C": "acknowledge",
-              "D": "exaggerate"
-            },
-            "correct_answer": "C"
-          },
-          {
-            "blank_number": 9,
-            "options": {
-              "A": "obtained",
-              "B": "inflated",
-              "C": "rejected",
-              "D": "invented"
+              "A": "objections",
+              "B": "payments",
+              "C": "donation",
+              "D": "decorations"
             },
             "correct_answer": "A"
           },
           {
+            "blank_number": 8,
+            "options": {
+              "A": "exaggerate",
+              "B": "deny",
+              "C": "celebrate",
+              "D": "acknowledge"
+            },
+            "correct_answer": "D"
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "invented",
+              "B": "obtained",
+              "C": "inflated",
+              "D": "rejected"
+            },
+            "correct_answer": "B"
+          },
+          {
             "blank_number": 10,
             "options": {
-              "A": "danger",
-              "B": "impossibility",
+              "A": "failure",
+              "B": "danger",
               "C": "feasibility",
-              "D": "failure"
+              "D": "impossibility"
             },
             "correct_answer": "C"
           },
           {
             "blank_number": 11,
             "options": {
-              "A": "humour",
-              "B": "faith",
-              "C": "timing",
-              "D": "fortune"
+              "A": "fortune",
+              "B": "humour",
+              "C": "faith",
+              "D": "timing"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           }
         ]
       }

@@ -45,10 +45,10 @@
           "options": {
             "A": "Family Hiking Club",
             "B": "Toddler Music",
-            "C": "Senior Yoga",
-            "D": "Beginner Swim"
+            "C": "Beginner Swim",
+            "D": "Senior Yoga"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -82,32 +82,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "needed",
+              "A": "refused",
               "B": "avoided",
-              "C": "forgot",
-              "D": "refused"
+              "C": "needed",
+              "D": "forgot"
             },
-            "correct_answer": "A"
+            "correct_answer": "C"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "unsuitable",
-              "B": "perfect",
-              "C": "boring",
-              "D": "optional"
+              "A": "perfect",
+              "B": "optional",
+              "C": "unsuitable",
+              "D": "boring"
             },
-            "correct_answer": "B"
+            "correct_answer": "A"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "refund",
-              "B": "discount",
-              "C": "membership",
-              "D": "schedule"
+              "A": "schedule",
+              "B": "refund",
+              "C": "discount",
+              "D": "membership"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           }
         ]
       }
@@ -128,11 +128,11 @@
           "question_text": "A parent with a 5-year-old wants to find picture books. Where should they go?",
           "options": {
             "A": "Adult Fiction on the upper floor",
-            "B": "Children's Section on the ground floor",
-            "C": "Non-Fiction & Reference",
-            "D": "The Café"
+            "B": "Non-Fiction & Reference",
+            "C": "The Café",
+            "D": "Children's Section on the ground floor"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -140,11 +140,11 @@
           "question_text": "Carlos needs to print a 20-page colour document. How much will it cost?",
           "options": {
             "A": "$2.00",
-            "B": "$3.00",
-            "C": "$5.00",
+            "B": "$5.00",
+            "C": "$3.00",
             "D": "$0.25"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -152,35 +152,35 @@
           "question_text": "A book club of 12 people wants to reserve a room. Which room should they book?",
           "options": {
             "A": "Quiet Study Room A",
-            "B": "Meeting Room B",
-            "C": "The Computer Lab",
+            "B": "The Computer Lab",
+            "C": "Meeting Room B",
             "D": "The Café"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "When is the Rooftop Reading Terrace open?",
           "options": {
-            "A": "Year-round",
-            "B": "January to April",
-            "C": "May to September",
+            "A": "May to September",
+            "B": "Year-round",
+            "C": "January to April",
             "D": "Only on weekends"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "cross_reference",
           "question_text": "Jenny arrives at 7:30 PM on a Sunday. Can she enter the library?",
           "options": {
-            "A": "Yes, it is open until 8 PM on Sundays",
-            "B": "No, it closes at 5 PM on Sundays",
+            "A": "No, it closes at 5 PM on Sundays",
+            "B": "Yes, it is open until 8 PM on Sundays",
             "C": "Yes, but only the Café is open",
             "D": "No, it is closed all day on Sundays"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -190,30 +190,30 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "expected",
+              "A": "hated",
               "B": "avoided",
               "C": "forgot",
-              "D": "hated"
+              "D": "expected"
             },
-            "correct_answer": "A"
+            "correct_answer": "D"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "later",
+              "A": "louder",
               "B": "earlier",
-              "C": "faster",
-              "D": "louder"
+              "C": "later",
+              "D": "faster"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "winter",
-              "B": "rainy",
+              "A": "coldest",
+              "B": "winter",
               "C": "summer",
-              "D": "coldest"
+              "D": "rainy"
             },
             "correct_answer": "C"
           }
@@ -247,12 +247,12 @@
           "skill": "data_extraction",
           "question_text": "How much would a non-member pay to drop in to Aqua Fit?",
           "options": {
-            "A": "$5",
-            "B": "$15",
-            "C": "$20",
+            "A": "$20",
+            "B": "$5",
+            "C": "$15",
             "D": "$89"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -261,10 +261,10 @@
           "options": {
             "A": "Spin Cycle",
             "B": "Senior Stretch",
-            "C": "HIIT Express on Saturday",
-            "D": "Aqua Fit"
+            "C": "Aqua Fit",
+            "D": "HIIT Express on Saturday"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -272,11 +272,11 @@
           "question_text": "Who teaches the most classes per week?",
           "options": {
             "A": "Raj P.",
-            "B": "Marcus T.",
-            "C": "Colleen D.",
-            "D": "Anya S."
+            "B": "Anya S.",
+            "C": "Marcus T.",
+            "D": "Colleen D."
           },
-          "correct_answer": "D"
+          "correct_answer": "B"
         },
         {
           "question_number": 5,
@@ -284,11 +284,11 @@
           "question_text": "Maria buys a monthly unlimited pass and attends 10 classes. Compared to drop-in pricing, how much does she save?",
           "options": {
             "A": "$11",
-            "B": "$41",
-            "C": "$61",
+            "B": "$61",
+            "C": "$41",
             "D": "$89"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -298,32 +298,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "sleeping",
-              "B": "flexibility",
-              "C": "cooking",
-              "D": "driving"
+              "A": "driving",
+              "B": "sleeping",
+              "C": "flexibility",
+              "D": "cooking"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "bored",
-              "B": "late",
-              "C": "ready",
-              "D": "registered"
+              "A": "ready",
+              "B": "registered",
+              "C": "bored",
+              "D": "late"
             },
-            "correct_answer": "C"
+            "correct_answer": "A"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "relaxing",
-              "B": "expensive",
-              "C": "intense",
-              "D": "crowded"
+              "A": "crowded",
+              "B": "relaxing",
+              "C": "expensive",
+              "D": "intense"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           }
         ]
       }
@@ -344,11 +344,11 @@
           "question_text": "A family arrives at 2:00 PM with a 7-year-old. What free activity is available for the child?",
           "options": {
             "A": "The Craft Market",
-            "B": "The Kids' Zone",
-            "C": "Live music only",
-            "D": "Parking at the Arena"
+            "B": "Live music only",
+            "C": "Parking at the Arena",
+            "D": "The Kids' Zone"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -356,11 +356,11 @@
           "question_text": "How many cultural dance performances are scheduled?",
           "options": {
             "A": "One",
-            "B": "Two",
-            "C": "Three",
+            "B": "Three",
+            "C": "Two",
             "D": "Four"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -368,35 +368,35 @@
           "question_text": "What happens if it rains on June 8?",
           "options": {
             "A": "The fair is cancelled",
-            "B": "The fair moves to the community centre gymnasium",
-            "C": "Only the food court stays open",
+            "B": "Only the food court stays open",
+            "C": "The fair moves to the community centre gymnasium",
             "D": "The fair is postponed to the next weekend"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "cross_reference",
           "question_text": "David wants to buy lunch at the food court but only has a credit card. Can he pay?",
           "options": {
-            "A": "Yes, all payment types are accepted",
-            "B": "No, only cash and debit are accepted",
+            "A": "No, only cash and debit are accepted",
+            "B": "Yes, all payment types are accepted",
             "C": "Yes, but only at certain vendors",
             "D": "No, the food court is cash only"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "data_extraction",
           "question_text": "Where is overflow parking located?",
           "options": {
-            "A": "Sunnydale Community Park",
-            "B": "Sunnydale Arena",
-            "C": "St. Mark's Church",
+            "A": "St. Mark's Church",
+            "B": "Sunnydale Community Park",
+            "C": "Sunnydale Arena",
             "D": "45 Lakeview Drive"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -406,32 +406,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "boring",
-              "B": "expensive",
-              "C": "fun",
-              "D": "private"
+              "A": "private",
+              "B": "boring",
+              "C": "expensive",
+              "D": "fun"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "late",
+              "A": "alone",
               "B": "early",
-              "C": "slowly",
-              "D": "alone"
+              "C": "late",
+              "D": "slowly"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "cancel",
-              "B": "complain",
-              "C": "compete",
-              "D": "come"
+              "A": "compete",
+              "B": "cancel",
+              "C": "come",
+              "D": "complain"
             },
-            "correct_answer": "D"
+            "correct_answer": "C"
           }
         ]
       }
@@ -452,23 +452,23 @@
           "question_text": "Rosa is a newcomer with CLB 5 English. She wants to take Workplace Communication. Can she enroll?",
           "options": {
             "A": "Yes, there are no prerequisites",
-            "B": "No, the course requires CLB 6 or higher",
-            "C": "Yes, but she must take a test first",
+            "B": "Yes, but she must take a test first",
+            "C": "No, the course requires CLB 6 or higher",
             "D": "No, the course is full"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "applied_comprehension",
           "question_text": "Ahmed, age 68, registers for Introduction to Bookkeeping on August 20. How much will he pay?",
           "options": {
-            "A": "$395.00",
-            "B": "$355.50",
-            "C": "$335.75",
-            "D": "$302.18"
+            "A": "$302.18",
+            "B": "$395.00",
+            "C": "$355.50",
+            "D": "$335.75"
           },
-          "correct_answer": "D"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -477,10 +477,10 @@
           "options": {
             "A": "Web Design Fundamentals",
             "B": "Advanced Excel",
-            "C": "Small Business Start-Up",
-            "D": "Workplace Communication"
+            "C": "Workplace Communication",
+            "D": "Small Business Start-Up"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -514,32 +514,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "summer",
-              "B": "fall",
-              "C": "spring",
-              "D": "winter"
+              "A": "winter",
+              "B": "summer",
+              "C": "fall",
+              "D": "spring"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "penalty",
-              "B": "increase",
-              "C": "discount",
-              "D": "refund"
+              "A": "discount",
+              "B": "refund",
+              "C": "penalty",
+              "D": "increase"
             },
-            "correct_answer": "C"
+            "correct_answer": "A"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "classrooms",
-              "B": "instructors",
-              "C": "prerequisites",
-              "D": "textbooks"
+              "A": "textbooks",
+              "B": "classrooms",
+              "C": "instructors",
+              "D": "prerequisites"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           }
         ]
       }
@@ -560,11 +560,11 @@
           "question_text": "Karim lives at Eastview and works at the University. Which lines must he take?",
           "options": {
             "A": "Green Line only",
-            "B": "Green Line to Downtown Central, then Blue Line",
-            "C": "Red Line to Downtown Central, then Blue Line",
-            "D": "Blue Line only"
+            "B": "Red Line to Downtown Central, then Blue Line",
+            "C": "Blue Line only",
+            "D": "Green Line to Downtown Central, then Blue Line"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -572,11 +572,11 @@
           "question_text": "A senior citizen taking a cross-zone trip pays how much?",
           "options": {
             "A": "$5.75",
-            "B": "$4.50",
-            "C": "$3.74",
+            "B": "$3.74",
+            "C": "$4.50",
             "D": "$3.25"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -584,35 +584,35 @@
           "question_text": "Julia wants to bring her bicycle from Riverside to Downtown Central at 8:15 AM on a Tuesday. Can she?",
           "options": {
             "A": "Yes, bikes are always allowed",
-            "B": "No, bikes are not allowed during peak hours",
-            "C": "Yes, but she must pay extra",
+            "B": "Yes, but she must pay extra",
+            "C": "No, bikes are not allowed during peak hours",
             "D": "No, bikes are only allowed on the Green Line"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "Which transit line operates the latest at night?",
           "options": {
-            "A": "Red Line",
-            "B": "Green Line",
-            "C": "Blue Line",
+            "A": "Blue Line",
+            "B": "Red Line",
+            "C": "Green Line",
             "D": "They all close at the same time"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "applied_comprehension",
           "question_text": "Chen makes two cross-zone round trips per day, five days a week. Would a monthly pass save him money?",
           "options": {
-            "A": "No, individual tickets would be cheaper",
-            "B": "Yes, he would save over $132 per month",
+            "A": "Yes, he would save over $132 per month",
+            "B": "No, individual tickets would be cheaper",
             "C": "They cost exactly the same",
             "D": "The monthly pass does not cover cross-zone travel"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -622,32 +622,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "walk",
-              "B": "transfer",
+              "A": "cancel",
+              "B": "walk",
               "C": "return",
-              "D": "cancel"
+              "D": "transfer"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "penalty",
-              "B": "surcharge",
-              "C": "discount",
-              "D": "upgrade"
+              "A": "upgrade",
+              "B": "discount",
+              "C": "penalty",
+              "D": "surcharge"
             },
-            "correct_answer": "C"
+            "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "waste",
-              "B": "bargain",
-              "C": "risk",
-              "D": "problem"
+              "A": "problem",
+              "B": "waste",
+              "C": "bargain",
+              "D": "risk"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           }
         ]
       }
@@ -668,11 +668,11 @@
           "question_text": "Amir wants to visit his grandmother in the ICU at 5:00 PM. Can he?",
           "options": {
             "A": "Yes, ICU visiting hours include 5:00 PM",
-            "B": "No, ICU afternoon visiting is 6 PM–7 PM only",
-            "C": "Yes, but only if he is her only visitor",
+            "B": "Yes, but only if he is her only visitor",
+            "C": "No, ICU afternoon visiting is 6 PM–7 PM only",
             "D": "No, ICU does not allow visitors in the afternoon"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
@@ -691,12 +691,12 @@
           "skill": "cross_reference",
           "question_text": "Tom wants to buy flowers for his wife who just had a baby. Where can he buy them and can he bring them to her room?",
           "options": {
-            "A": "Gift Shop, and yes — flowers are only banned in ICU",
-            "B": "Gift Shop, but flowers are banned everywhere",
-            "C": "Tim Hortons kiosk sells flowers",
-            "D": "The Cafeteria has a flower stand"
+            "A": "Gift Shop, but flowers are banned everywhere",
+            "B": "Tim Hortons kiosk sells flowers",
+            "C": "The Cafeteria has a flower stand",
+            "D": "Gift Shop, and yes — flowers are only banned in ICU"
           },
-          "correct_answer": "A"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -704,23 +704,23 @@
           "question_text": "During which months are masks required for visitors?",
           "options": {
             "A": "June to August",
-            "B": "September to December",
-            "C": "November to March",
+            "B": "November to March",
+            "C": "September to December",
             "D": "All year round"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 5,
           "skill": "cross_reference",
           "question_text": "Sophie arrives at Clearview GO Station at 9:45 PM. Can she take the shuttle to the hospital?",
           "options": {
-            "A": "Yes, the shuttle runs until 10 PM",
-            "B": "No, the shuttle ends at 9 PM",
+            "A": "No, the shuttle ends at 9 PM",
+            "B": "Yes, the shuttle runs until 10 PM",
             "C": "Yes, but only on weekdays",
             "D": "No, the shuttle runs only in the morning"
           },
-          "correct_answer": "A"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -730,32 +730,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "meals",
-              "B": "windows",
-              "C": "prices",
-              "D": "buildings"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 7,
-            "options": {
-              "A": "packed",
-              "B": "free",
-              "C": "closed",
-              "D": "moved"
+              "A": "buildings",
+              "B": "meals",
+              "C": "windows",
+              "D": "prices"
             },
             "correct_answer": "C"
           },
           {
+            "blank_number": 7,
+            "options": {
+              "A": "closed",
+              "B": "moved",
+              "C": "packed",
+              "D": "free"
+            },
+            "correct_answer": "A"
+          },
+          {
             "blank_number": 8,
             "options": {
-              "A": "gossip",
-              "B": "policy",
+              "A": "furniture",
+              "B": "gossip",
               "C": "fiction",
-              "D": "furniture"
+              "D": "policy"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           }
         ]
       }
@@ -776,11 +776,11 @@
           "question_text": "At what time does the swimming pool close?",
           "options": {
             "A": "8 PM",
-            "B": "9 PM",
-            "C": "10 PM",
-            "D": "11 PM"
+            "B": "10 PM",
+            "C": "11 PM",
+            "D": "9 PM"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -788,11 +788,11 @@
           "question_text": "Sara wants to throw a birthday party in the Party Room. How much deposit must she pay?",
           "options": {
             "A": "$25",
-            "B": "$50",
-            "C": "$75",
+            "B": "$75",
+            "C": "$50",
             "D": "$100"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -800,35 +800,35 @@
           "question_text": "A resident wants to pick up a package on Saturday afternoon at 2 PM. Can they?",
           "options": {
             "A": "Yes, the concierge is open until 6 PM on Saturdays",
-            "B": "No, Saturday pickup ends at 1 PM",
-            "C": "Yes, but only for registered residents",
+            "B": "Yes, but only for registered residents",
+            "C": "No, Saturday pickup ends at 1 PM",
             "D": "No, package pickup is weekdays only"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "How long can a guest park in visitor parking?",
           "options": {
-            "A": "12 hours",
-            "B": "24 hours",
-            "C": "48 hours",
+            "A": "48 hours",
+            "B": "12 hours",
+            "C": "24 hours",
             "D": "One week"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "applied_comprehension",
           "question_text": "A parent with an 11-year-old wants to use the pool at 7 AM. What rule applies?",
           "options": {
-            "A": "The child cannot use the pool at all",
-            "B": "The child must be accompanied by the adult",
+            "A": "The child must be accompanied by the adult",
+            "B": "The child cannot use the pool at all",
             "C": "The pool is closed at 7 AM",
             "D": "A lifeguard must be present"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -838,30 +838,30 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "rarely",
-              "B": "never",
-              "C": "24/7",
-              "D": "monthly"
+              "A": "monthly",
+              "B": "rarely",
+              "C": "never",
+              "D": "24/7"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "fold",
+              "A": "soak",
               "B": "dry",
-              "C": "press",
-              "D": "soak"
+              "C": "fold",
+              "D": "press"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "promoted",
-              "B": "rewarded",
+              "A": "hired",
+              "B": "promoted",
               "C": "towed",
-              "D": "hired"
+              "D": "rewarded"
             },
             "correct_answer": "C"
           }
@@ -884,23 +884,23 @@
           "question_text": "Mrs. Chow, age 72, has arthritis and prefers warm water. When can she swim?",
           "options": {
             "A": "Lane Swim at 6 AM",
-            "B": "Arthritis Aquatics at 11 AM Mon/Wed/Fri in the Leisure Pool",
-            "C": "Public Swim at 12 PM",
+            "B": "Public Swim at 12 PM",
+            "C": "Arthritis Aquatics at 11 AM Mon/Wed/Fri in the Leisure Pool",
             "D": "Family Swim on Saturday morning"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "applied_comprehension",
           "question_text": "A parent wants to bring their 3-year-old to Tot Splash on a Wednesday. Can they?",
           "options": {
-            "A": "Yes, Tot Splash is available every weekday",
-            "B": "No, Tot Splash is only on Tuesdays and Thursdays",
+            "A": "No, Tot Splash is only on Tuesdays and Thursdays",
+            "B": "Yes, Tot Splash is available every weekday",
             "C": "Yes, but they need a swim cap",
             "D": "No, children must be at least 4 years old"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -908,11 +908,11 @@
           "question_text": "Derek swims laps 4 times a week. Would a 10-visit pass or monthly unlimited be cheaper?",
           "options": {
             "A": "10-visit pass",
-            "B": "Monthly unlimited",
-            "C": "They cost the same per visit",
-            "D": "Drop-in each time"
+            "B": "They cost the same per visit",
+            "C": "Drop-in each time",
+            "D": "Monthly unlimited"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -932,11 +932,11 @@
           "question_text": "What equipment is required in the Lanes Pool?",
           "options": {
             "A": "Goggles",
-            "B": "Flippers",
-            "C": "Swim cap",
+            "B": "Swim cap",
+            "C": "Flippers",
             "D": "Life jacket"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -946,29 +946,29 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "crowded",
-              "B": "quiet",
-              "C": "expensive",
-              "D": "cold"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 7,
-            "options": {
-              "A": "membership",
-              "B": "parking",
-              "C": "drop-in",
-              "D": "lesson"
+              "A": "cold",
+              "B": "crowded",
+              "C": "quiet",
+              "D": "expensive"
             },
             "correct_answer": "C"
           },
           {
+            "blank_number": 7,
+            "options": {
+              "A": "drop-in",
+              "B": "lesson",
+              "C": "membership",
+              "D": "parking"
+            },
+            "correct_answer": "A"
+          },
+          {
             "blank_number": 8,
             "options": {
-              "A": "mornings",
-              "B": "nights",
-              "C": "weekends",
+              "A": "weekends",
+              "B": "mornings",
+              "C": "nights",
               "D": "evenings"
             },
             "correct_answer": "D"
@@ -992,11 +992,11 @@
           "question_text": "Nina flies into Pearson Airport on a Sunday and needs to reach Scarborough. What is her best route?",
           "options": {
             "A": "Midtown Crosslink to Danforth, then Lakeshore East to Scarborough",
-            "B": "She cannot reach Scarborough by train on Sunday because the Midtown Crosslink does not run",
-            "C": "Lakeshore West to Union Station, then Lakeshore East to Scarborough",
-            "D": "Midtown Crosslink directly to Scarborough"
+            "B": "Lakeshore West to Union Station, then Lakeshore East to Scarborough",
+            "C": "Midtown Crosslink directly to Scarborough",
+            "D": "She cannot reach Scarborough by train on Sunday because the Midtown Crosslink does not run"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -1004,47 +1004,47 @@
           "question_text": "A student travelling 3 zones on a single trip with a Presto card pays approximately how much?",
           "options": {
             "A": "$6.42",
-            "B": "$5.94",
-            "C": "$5.09",
+            "B": "$5.09",
+            "C": "$5.94",
             "D": "$3.54"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "Jamal commutes from Oakville to Danforth every weekday. What is his route?",
           "options": {
-            "A": "Lakeshore West to Union Station, then Lakeshore East to Danforth",
-            "B": "Midtown Crosslink direct",
-            "C": "Lakeshore East only",
+            "A": "Midtown Crosslink direct",
+            "B": "Lakeshore East only",
+            "C": "Lakeshore West to Union Station, then Lakeshore East to Danforth",
             "D": "Lakeshore West to Long Branch, then walk"
           },
-          "correct_answer": "A"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "applied_comprehension",
           "question_text": "A commuter takes 22 round trips per month across 2 zones. Is a monthly pass worth it?",
           "options": {
-            "A": "No, individual trips would be cheaper",
-            "B": "Yes, individual trips would cost about $190.52 vs. $172 for a pass",
+            "A": "Yes, individual trips would cost about $190.52 vs. $172 for a pass",
+            "B": "No, individual trips would be cheaper",
             "C": "They cost about the same",
             "D": "The monthly pass does not cover 2-zone travel"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "data_extraction",
           "question_text": "How many bicycles are allowed per train?",
           "options": {
-            "A": "Unlimited, in any car",
-            "B": "4, in the last car",
-            "C": "2, in the front car only",
+            "A": "2, in the front car only",
+            "B": "Unlimited, in any car",
+            "C": "4, in the last car",
             "D": "None — bikes are not allowed"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -1054,30 +1054,30 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "quiet",
-              "B": "peak",
+              "A": "holiday",
+              "B": "quiet",
               "C": "overnight",
-              "D": "holiday"
+              "D": "peak"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "surcharge",
-              "B": "penalty",
-              "C": "discount",
-              "D": "transfer"
+              "A": "transfer",
+              "B": "discount",
+              "C": "surcharge",
+              "D": "penalty"
             },
-            "correct_answer": "C"
+            "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "last",
-              "B": "middle",
+              "A": "rear",
+              "B": "last",
               "C": "front",
-              "D": "rear"
+              "D": "middle"
             },
             "correct_answer": "C"
           }
@@ -1100,23 +1100,23 @@
           "question_text": "Maria is a new warehouse employee. Which trainings must she complete during her first week?",
           "options": {
             "A": "Only WHMIS",
-            "B": "WHMIS, Fire Safety, Forklift Certification, Ergonomics & Lifting, and Workplace Violence Prevention",
-            "C": "First Aid & CPR and Forklift only",
+            "B": "First Aid & CPR and Forklift only",
+            "C": "WHMIS, Fire Safety, Forklift Certification, Ergonomics & Lifting, and Workplace Violence Prevention",
             "D": "None — training is optional for new hires"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "data_extraction",
           "question_text": "How long is the Forklift Certification course?",
           "options": {
-            "A": "2 hours",
-            "B": "4 hours",
-            "C": "8 hours",
+            "A": "8 hours",
+            "B": "2 hours",
+            "C": "4 hours",
             "D": "16 hours"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -1124,11 +1124,11 @@
           "question_text": "Jason is an office administrator, not a warehouse worker. Which trainings must he complete?",
           "options": {
             "A": "All six modules",
-            "B": "WHMIS, Fire Safety, and Workplace Violence Prevention only",
-            "C": "Forklift and Ergonomics only",
-            "D": "None — only warehouse staff need training"
+            "B": "Forklift and Ergonomics only",
+            "C": "None — only warehouse staff need training",
+            "D": "WHMIS, Fire Safety, and Workplace Violence Prevention only"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -1162,32 +1162,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "store",
-              "B": "portal",
-              "C": "cafeteria",
-              "D": "warehouse"
+              "A": "warehouse",
+              "B": "store",
+              "C": "portal",
+              "D": "cafeteria"
             },
-            "correct_answer": "B"
+            "correct_answer": "C"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "promoted",
-              "B": "reassigned",
-              "C": "rewarded",
-              "D": "transferred"
+              "A": "reassigned",
+              "B": "transferred",
+              "C": "promoted",
+              "D": "rewarded"
             },
-            "correct_answer": "B"
+            "correct_answer": "A"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "cancel",
-              "B": "avoid",
-              "C": "schedule",
-              "D": "refuse"
+              "A": "refuse",
+              "B": "cancel",
+              "C": "avoid",
+              "D": "schedule"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           }
         ]
       }
@@ -1208,11 +1208,11 @@
           "question_text": "Where would you go to buy freshly baked bread?",
           "options": {
             "A": "Stall A1",
-            "B": "Stall B1",
-            "C": "Stall C1",
-            "D": "Community Corner"
+            "B": "Stall C1",
+            "C": "Community Corner",
+            "D": "Stall B1"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -1220,11 +1220,11 @@
           "question_text": "When does the live music start?",
           "options": {
             "A": "8 AM",
-            "B": "9 AM",
-            "C": "10 AM",
+            "B": "10 AM",
+            "C": "9 AM",
             "D": "12 PM"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 3,
@@ -1232,35 +1232,35 @@
           "question_text": "Tanya only has a credit card. Will she be able to buy from all vendors?",
           "options": {
             "A": "Yes, all vendors accept credit cards",
-            "B": "No, vendors accept cash, e-transfer, and some accept debit only",
-            "C": "Yes, but she must pay a surcharge",
+            "B": "Yes, but she must pay a surcharge",
+            "C": "No, vendors accept cash, e-transfer, and some accept debit only",
             "D": "No, the market is cash only"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "During which months does the market operate?",
           "options": {
-            "A": "Year-round",
-            "B": "January to June",
-            "C": "May to October",
+            "A": "May to October",
+            "B": "Year-round",
+            "C": "January to June",
             "D": "June to December"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "applied_comprehension",
           "question_text": "Can a family bring their dog to the market?",
           "options": {
-            "A": "No, pets are not allowed",
-            "B": "Yes, but the dog must be on a leash",
+            "A": "Yes, but the dog must be on a leash",
+            "B": "No, pets are not allowed",
             "C": "Only service animals are permitted",
             "D": "Yes, dogs can roam freely"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -1270,30 +1270,30 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "food",
-              "B": "music",
-              "C": "parking",
-              "D": "entrance"
+              "A": "entrance",
+              "B": "food",
+              "C": "music",
+              "D": "parking"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "vendors",
-              "B": "trucks",
-              "C": "gardens",
-              "D": "offices"
+              "A": "offices",
+              "B": "vendors",
+              "C": "trucks",
+              "D": "gardens"
             },
-            "correct_answer": "A"
+            "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "December",
-              "B": "August",
+              "A": "March",
+              "B": "December",
               "C": "October",
-              "D": "March"
+              "D": "August"
             },
             "correct_answer": "C"
           }
@@ -1316,23 +1316,23 @@
           "question_text": "Ana is an international student who needs help with a study permit renewal on a Friday at 11 AM. Can she walk in to the International Student Office?",
           "options": {
             "A": "No, the office is closed on Fridays",
-            "B": "Yes, the office is open Mon–Fri 10 AM–4 PM",
-            "C": "Only by appointment on Fridays",
+            "B": "Only by appointment on Fridays",
+            "C": "Yes, the office is open Mon–Fri 10 AM–4 PM",
             "D": "Yes, but only during the conversation circle"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "applied_comprehension",
           "question_text": "Jason wants Financial Aid advice at 3:30 PM on a Monday. Can he be seen?",
           "options": {
-            "A": "Yes, Financial Aid is open until 4:30 PM",
-            "B": "No, regular hours end at 3 PM and after-hours appointments are only on Tue/Thu",
+            "A": "No, regular hours end at 3 PM and after-hours appointments are only on Tue/Thu",
+            "B": "Yes, Financial Aid is open until 4:30 PM",
             "C": "Yes, but only by phone",
             "D": "No, Financial Aid is closed on Mondays"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -1340,11 +1340,11 @@
           "question_text": "A student wants to swim on a Tuesday evening. Is the pool open?",
           "options": {
             "A": "Yes, the pool is open every evening",
-            "B": "No, the pool is only open Mon/Wed/Fri",
-            "C": "Yes, from 6–8 PM",
-            "D": "No, the gym closes before pool hours on Tuesdays"
+            "B": "Yes, from 6–8 PM",
+            "C": "No, the gym closes before pool hours on Tuesdays",
+            "D": "No, the pool is only open Mon/Wed/Fri"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -1352,11 +1352,11 @@
           "question_text": "When is the library open 24 hours?",
           "options": {
             "A": "Every weekend",
-            "B": "All of January",
-            "C": "During the exam period, April 5–25",
+            "B": "During the exam period, April 5–25",
+            "C": "All of January",
             "D": "Every Friday night"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 5,
@@ -1364,11 +1364,11 @@
           "question_text": "Priya needs both a resume review and academic advising on the same day without an appointment. Which day works?",
           "options": {
             "A": "Monday — advising drop-in but no resume review",
-            "B": "Tuesday — resume review drop-in but no advising drop-in",
-            "C": "Wednesday — advising drop-in but no resume review",
-            "D": "There is no single day when both are available as drop-in"
+            "B": "There is no single day when both are available as drop-in",
+            "C": "Tuesday — resume review drop-in but no advising drop-in",
+            "D": "Wednesday — advising drop-in but no resume review"
           },
-          "correct_answer": "D"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -1378,10 +1378,10 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "payment",
-              "B": "rejection",
+              "A": "complaint",
+              "B": "payment",
               "C": "review",
-              "D": "complaint"
+              "D": "rejection"
             },
             "correct_answer": "C"
           },
@@ -1389,21 +1389,21 @@
             "blank_number": 7,
             "options": {
               "A": "referral",
-              "B": "diploma",
-              "C": "prescription",
-              "D": "transfer"
+              "B": "transfer",
+              "C": "diploma",
+              "D": "prescription"
             },
             "correct_answer": "A"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "briefly",
-              "B": "rarely",
-              "C": "24 hours",
-              "D": "on weekends only"
+              "A": "on weekends only",
+              "B": "briefly",
+              "C": "rarely",
+              "D": "24 hours"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           }
         ]
       }
@@ -1425,10 +1425,10 @@
           "options": {
             "A": "Pine Ridge Trail",
             "B": "Summit Trail",
-            "C": "Lakeshore Loop",
-            "D": "Wetland Boardwalk"
+            "C": "Wetland Boardwalk",
+            "D": "Lakeshore Loop"
           },
-          "correct_answer": "C"
+          "correct_answer": "D"
         },
         {
           "question_number": 2,
@@ -1448,35 +1448,35 @@
           "question_text": "A family visits the park every other weekend from May to October. Would an annual pass save them money?",
           "options": {
             "A": "No, they would spend less paying the daily rate",
-            "B": "Yes, 13 visits at $15 each equals $195, much more than $120",
-            "C": "They cost exactly the same",
+            "B": "They cost exactly the same",
+            "C": "Yes, 13 visits at $15 each equals $195, much more than $120",
             "D": "The annual pass is not valid on weekends"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "When is the Visitor Centre open during winter months?",
           "options": {
-            "A": "Daily 9 AM–5 PM",
-            "B": "Weekends only 10 AM–3 PM",
+            "A": "Weekends only 10 AM–3 PM",
+            "B": "Daily 9 AM–5 PM",
             "C": "It is closed all winter",
             "D": "Weekdays only 10 AM–2 PM"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 5,
           "skill": "cross_reference",
           "question_text": "It rained heavily all morning. Which trail should visitors avoid?",
           "options": {
-            "A": "Lakeshore Loop",
-            "B": "Wetland Boardwalk",
-            "C": "Summit Trail",
+            "A": "Summit Trail",
+            "B": "Lakeshore Loop",
+            "C": "Wetland Boardwalk",
             "D": "All trails close in rain"
           },
-          "correct_answer": "C"
+          "correct_answer": "A"
         }
       ],
       "fill_in_blank_response": {
@@ -1486,32 +1486,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "athletes",
-              "B": "experts",
-              "C": "families",
-              "D": "dogs"
+              "A": "dogs",
+              "B": "athletes",
+              "C": "experts",
+              "D": "families"
             },
-            "correct_answer": "C"
+            "correct_answer": "D"
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "cage",
+              "A": "highway",
               "B": "platform",
-              "C": "restaurant",
-              "D": "highway"
+              "C": "cage",
+              "D": "restaurant"
             },
             "correct_answer": "B"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "protection",
+              "A": "trading",
               "B": "feeding",
-              "C": "hunting",
-              "D": "trading"
+              "C": "protection",
+              "D": "hunting"
             },
-            "correct_answer": "A"
+            "correct_answer": "C"
           }
         ]
       }
@@ -1532,23 +1532,23 @@
           "question_text": "Jana in Zone A had her Blue Box collected on January 8. When is her next Blue Box collection?",
           "options": {
             "A": "January 15",
-            "B": "January 22",
-            "C": "February 5",
+            "B": "February 5",
+            "C": "January 22",
             "D": "January 9"
           },
-          "correct_answer": "B"
+          "correct_answer": "C"
         },
         {
           "question_number": 2,
           "skill": "applied_comprehension",
           "question_text": "Tom wants to dispose of an old air conditioner and three cans of paint. How should he handle this?",
           "options": {
-            "A": "Put both out with regular garbage",
-            "B": "Book a bulky item pickup for the AC; take paint to the hazardous waste depot",
+            "A": "Book a bulky item pickup for the AC; take paint to the hazardous waste depot",
+            "B": "Put both out with regular garbage",
             "C": "Put both in the Blue Box",
             "D": "Take both to the hazardous waste depot"
           },
-          "correct_answer": "B"
+          "correct_answer": "A"
         },
         {
           "question_number": 3,
@@ -1556,11 +1556,11 @@
           "question_text": "A Zone B resident puts out 5 bags of yard waste on a Tuesday. What is the problem?",
           "options": {
             "A": "Yard waste is only collected in spring",
-            "B": "The maximum is 4 bags per collection",
-            "C": "Yard waste must go in the Blue Box",
-            "D": "Zone B does not have Green Bin collection"
+            "B": "Yard waste must go in the Blue Box",
+            "C": "Zone B does not have Green Bin collection",
+            "D": "The maximum is 4 bags per collection"
           },
-          "correct_answer": "B"
+          "correct_answer": "D"
         },
         {
           "question_number": 4,
@@ -1568,11 +1568,11 @@
           "question_text": "Monday is a statutory holiday. When will Zone A's Green Bin be collected?",
           "options": {
             "A": "It will not be collected that week",
-            "B": "The previous Friday",
-            "C": "Tuesday — the next business day",
+            "B": "Tuesday — the next business day",
+            "C": "The previous Friday",
             "D": "The following Monday"
           },
-          "correct_answer": "C"
+          "correct_answer": "B"
         },
         {
           "question_number": 5,
@@ -1580,11 +1580,11 @@
           "question_text": "Sarah puts a Styrofoam container and old batteries in her Blue Box. Which items will be accepted?",
           "options": {
             "A": "Both",
-            "B": "The Styrofoam only",
-            "C": "The batteries only",
-            "D": "Neither — Styrofoam and electronics/batteries are excluded from Blue Box"
+            "B": "Neither — Styrofoam and electronics/batteries are excluded from Blue Box",
+            "C": "The Styrofoam only",
+            "D": "The batteries only"
           },
-          "correct_answer": "D"
+          "correct_answer": "B"
         }
       ],
       "fill_in_blank_response": {
@@ -1594,32 +1594,32 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "simple",
-              "B": "detailed",
-              "C": "random",
-              "D": "outdated"
-            },
-            "correct_answer": "B"
-          },
-          {
-            "blank_number": 7,
-            "options": {
-              "A": "identical",
-              "B": "daily",
-              "C": "alternating",
-              "D": "holiday"
+              "A": "outdated",
+              "B": "simple",
+              "C": "detailed",
+              "D": "random"
             },
             "correct_answer": "C"
           },
           {
+            "blank_number": 7,
+            "options": {
+              "A": "alternating",
+              "B": "holiday",
+              "C": "identical",
+              "D": "daily"
+            },
+            "correct_answer": "A"
+          },
+          {
             "blank_number": 8,
             "options": {
-              "A": "factory",
-              "B": "depot",
+              "A": "landfill",
+              "B": "factory",
               "C": "office",
-              "D": "landfill"
+              "D": "depot"
             },
-            "correct_answer": "B"
+            "correct_answer": "D"
           }
         ]
       }
