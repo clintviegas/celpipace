@@ -243,18 +243,23 @@ export default async function handler(req, res) {
           metadata:               { mode: s.mode, payment_status: s.payment_status },
         })
 
-        // Welcome email — first activation only
+        // Welcome email + Brevo sync — fire-and-forget so Stripe still gets a
+        // fast 200 even if Brevo / email_log is misbehaving. Failures show up
+        // in email_log.status='failed' for inspection.
         if (!profile.is_premium && email) {
           const { subject, html } = renderWelcome({ name: profile.full_name, plan: patch.current_plan })
-          await sendEmail({ supabase, userId: profile.id, toEmail: email, kind: 'welcome', subject, html, metadata: { stripe_session_id: s.id } })
+          sendEmail({ supabase, userId: profile.id, toEmail: email, kind: 'welcome', subject, html, metadata: { stripe_session_id: s.id } })
+            .catch(err => console.error('[stripe-webhook] welcome email failed:', err?.message))
         }
-
-        // Brevo: add to premium list to trigger the premium onboarding automation
         if (email) {
           const [fn, ...lp] = String(profile.full_name || '').trim().split(/\s+/)
           const premiumListId = process.env.BREVO_LIST_PREMIUM ? Number(process.env.BREVO_LIST_PREMIUM) : null
-          await upsertBrevoContact({ email, firstName: fn, lastName: lp.join(' ') })
-          if (premiumListId) await addToBrevoList({ email, listId: premiumListId })
+          upsertBrevoContact({ email, firstName: fn, lastName: lp.join(' ') })
+            .catch(err => console.error('[stripe-webhook] brevo upsert failed:', err?.message))
+          if (premiumListId) {
+            addToBrevoList({ email, listId: premiumListId })
+              .catch(err => console.error('[stripe-webhook] brevo list add failed:', err?.message))
+          }
         }
 
         break
@@ -325,11 +330,13 @@ export default async function handler(req, res) {
 
         if (profile.email) {
           const { subject, html } = renderCancelFinal({ name: profile.full_name })
-          await sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'cancel_final', subject, html, metadata: { stripe_subscription_id: sub.id } })
-
-          // Brevo: add to cancelled list to trigger win-back automation
+          sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'cancel_final', subject, html, metadata: { stripe_subscription_id: sub.id } })
+            .catch(err => console.error('[stripe-webhook] cancel_final email failed:', err?.message))
           const cancelledListId = process.env.BREVO_LIST_CANCELLED ? Number(process.env.BREVO_LIST_CANCELLED) : null
-          if (cancelledListId) await addToBrevoList({ email: profile.email, listId: cancelledListId })
+          if (cancelledListId) {
+            addToBrevoList({ email: profile.email, listId: cancelledListId })
+              .catch(err => console.error('[stripe-webhook] brevo cancelled list add failed:', err?.message))
+          }
         }
         break
       }
@@ -393,7 +400,7 @@ export default async function handler(req, res) {
             hostedInvoiceUrl: inv.hosted_invoice_url || null,
             periodEnd:        patch.current_period_end,
           })
-          await sendEmail({
+          sendEmail({
             supabase,
             userId:   profile.id,
             toEmail:  profile.email,
@@ -402,7 +409,7 @@ export default async function handler(req, res) {
             html,
             pdfUrl:   inv.invoice_pdf || null,
             metadata: { stripe_invoice_id: inv.id, invoice_number: inv.number || null },
-          })
+          }).catch(err => console.error('[stripe-webhook] receipt email failed:', err?.message))
         }
         break
       }
@@ -439,7 +446,8 @@ export default async function handler(req, res) {
             currency:         (inv.currency || 'usd').toLowerCase(),
             hostedInvoiceUrl: inv.hosted_invoice_url || null,
           })
-          await sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'past_due', subject, html, metadata: { stripe_invoice_id: inv.id, attempt_count: inv.attempt_count } })
+          sendEmail({ supabase, userId: profile.id, toEmail: profile.email, kind: 'past_due', subject, html, metadata: { stripe_invoice_id: inv.id, attempt_count: inv.attempt_count } })
+            .catch(err => console.error('[stripe-webhook] past_due email failed:', err?.message))
         }
         break
       }
@@ -480,22 +488,31 @@ export default async function handler(req, res) {
         break
     }
 
-    // Backstop: sweep any stale rows whose period has elapsed but webhook
-    // didn't (e.g. delivery delay).
-    await supabase.rpc('expire_premium_users').catch(() => {})
-
+    // Mark processed BEFORE any non-critical side effects so a slow sweep
+    // can't cause Vercel to time the function out and trigger a Stripe retry.
     await supabase.from('webhook_events').update({
       processed:    true,
       processed_at: new Date().toISOString(),
     }).eq('stripe_event_id', event.id)
 
+    // Backstop sweep — fire-and-forget. No await so it can't delay the response.
+    supabase.rpc('expire_premium_users').then(() => {}, () => {})
+
     return res.status(200).json({ received: true })
   } catch (err) {
-    console.error('[stripe-webhook] handler error:', err)
-    await supabase.from('webhook_events').update({
-      processed:        false,
-      processing_error: String(err?.message || err),
-    }).eq('stripe_event_id', event.id).catch(() => {})
-    return res.status(500).json({ error: err.message || 'Handler error' })
+    const errMsg = String(err?.stack || err?.message || err)
+    console.error('[stripe-webhook] handler error:', errMsg)
+    try {
+      await supabase.from('webhook_events').update({
+        processed:        false,
+        processing_error: errMsg.slice(0, 1000),
+      }).eq('stripe_event_id', event.id)
+    } catch (logErr) {
+      console.error('[stripe-webhook] could not record processing_error:', logErr?.message)
+    }
+    // Return 200 to Stripe — the event payload is persisted in webhook_events
+    // so we can replay manually. This stops Stripe's retry storm while we
+    // diagnose; processing_error surfaces the real cause for debugging.
+    return res.status(200).json({ received: true, soft_error: errMsg.slice(0, 200) })
   }
 }
