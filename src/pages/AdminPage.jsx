@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { adminSupabase } from '../lib/adminSupabase'
 import { PUBLIC_SITE_URL } from '../data/constants'
 
@@ -159,6 +159,7 @@ export default function AdminPage() {
             ['users', 'Users'],
             ['activity', 'Activity'],
             ['subscriptions', 'Subscriptions'],
+            ['refunds', 'Refunds'],
             ['observability', 'Observability'],
             ['coupons', 'Coupons'],
             ['analytics', 'Analytics'],
@@ -188,6 +189,7 @@ export default function AdminPage() {
         {tab === 'users' && <UsersTab />}
         {tab === 'activity' && <ActivityTab />}
         {tab === 'subscriptions' && <SubscriptionsTab />}
+        {tab === 'refunds' && <RefundsTab />}
         {tab === 'observability' && <ObservabilityTab />}
         {tab === 'coupons' && <CouponsTab />}
         {tab === 'analytics' && <AnalyticsTab />}
@@ -1300,6 +1302,168 @@ const sectionTitleStyle = { margin: '0 0 6px', fontSize: 22, fontWeight: 700 }
 const subTitleStyle = { margin: '0 0 10px', fontSize: 15, fontWeight: 600, color: '#E6ECF5' }
 
 /* ── Styles ── */
+/* ═══════════════════════════════════════════════════════════ */
+/*  REFUNDS — one-click refund issuance + history               */
+/* ═══════════════════════════════════════════════════════════ */
+function RefundsTab() {
+  const [pendingRequests, setPendingRequests] = useState(null)
+  const [paidPayments, setPaidPayments] = useState(null)
+  const [refundedEvents, setRefundedEvents] = useState(null)
+  const [err, setErr] = useState(null)
+  const [busyId, setBusyId] = useState(null)
+  const [toast, setToast] = useState(null)
+
+  const load = useCallback(async () => {
+    setErr(null)
+    try {
+      // 1) Refund-review requests — cancellation_feedback joined with profile state
+      const { data: requests, error: reqErr } = await adminSupabase
+        .from('cancellation_feedback')
+        .select('id, user_id, email, reason, free_text, plan_at_cancel, stripe_subscription_id, created_at')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      if (reqErr) throw reqErr
+
+      // 2) Paid payments — what we could refund
+      const { data: paid, error: paidErr } = await adminSupabase
+        .from('payments')
+        .select('id, user_id, email, plan, amount_cents, currency, status, stripe_payment_intent_id, stripe_session_id, stripe_customer_id, created_at')
+        .eq('status', 'paid')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      if (paidErr) throw paidErr
+
+      // 3) Refund history — subscription_events of refunds
+      const { data: refunds, error: refErr } = await adminSupabase
+        .from('subscription_events')
+        .select('id, user_id, email, amount_cents, currency, stripe_customer_id, metadata, created_at')
+        .eq('new_status', 'refunded')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      if (refErr) throw refErr
+
+      setPendingRequests(requests || [])
+      setPaidPayments(paid || [])
+      setRefundedEvents(refunds || [])
+    } catch (e) {
+      setErr(e.message)
+    }
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  async function issueRefund(payment) {
+    if (!payment.stripe_payment_intent_id && !payment.stripe_session_id?.startsWith('in_')) {
+      setToast({ type: 'err', msg: `No payment_intent on row — cannot refund automatically. Refund in Stripe dashboard instead.` })
+      return
+    }
+    if (!window.confirm(`Refund ${(payment.amount_cents / 100).toFixed(2)} ${payment.currency.toUpperCase()} to ${payment.email}? This will end their Premium access immediately.`)) return
+    setBusyId(payment.id)
+    setToast(null)
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({
+          action: 'refund',
+          payment_intent_id: payment.stripe_payment_intent_id || null,
+          charge_id: null,
+          reason: 'requested_by_customer',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Refund failed')
+      setToast({ type: 'ok', msg: `Refunded ${(data.amount / 100).toFixed(2)} ${data.currency?.toUpperCase()} — Stripe will push the webhook in a few seconds.` })
+      setTimeout(load, 4000)
+    } catch (e) {
+      setToast({ type: 'err', msg: e.message })
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  if (err) return <Err msg={err} />
+  if (!pendingRequests || !paidPayments || !refundedEvents) return <Loading />
+
+  const refundedCount = refundedEvents.length
+  const pendingCount  = pendingRequests.length
+  const refundedTotal = refundedEvents.reduce((sum, e) => sum + (e.amount_cents || 0), 0)
+
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Pending requests" value={pendingCount} accent="#ffd66a" />
+        <StatCard label="Refunds issued" value={refundedCount} accent="#ff9a9a" />
+        <StatCard label="Refunded total" value={`$${(refundedTotal / 100).toFixed(2)}`} />
+      </div>
+
+      {toast && (
+        <div style={{
+          padding: 12, marginBottom: 16, borderRadius: 10,
+          background: toast.type === 'ok' ? '#0f3d24' : '#3d1416',
+          color: toast.type === 'ok' ? '#7dffb0' : '#ff9a9a',
+          fontSize: 13,
+        }}>{toast.msg}</div>
+      )}
+
+      <Panel title="Cancellation requests (recent — review refund-eligibility manually)">
+        <Table
+          cols={['Email', 'Reason', 'Plan', 'Free text', 'When']}
+          rows={pendingRequests.map(r => [
+            r.email || '—',
+            r.reason || '—',
+            r.plan_at_cancel || '—',
+            (r.free_text || '').slice(0, 80) || <span style={{ color: '#5b6781' }}>—</span>,
+            new Date(r.created_at).toLocaleString(),
+          ])}
+          empty="No cancellation feedback recorded yet."
+        />
+      </Panel>
+
+      <div style={{ marginTop: 24 }}>
+        <Panel title="Paid payments (click Refund to issue full refund)">
+          <Table
+            cols={['Email', 'Plan', 'Amount', 'Created', 'Action']}
+            rows={paidPayments.map(p => [
+              p.email || '—',
+              p.plan,
+              `${(p.amount_cents / 100).toFixed(2)} ${p.currency.toUpperCase()}`,
+              new Date(p.created_at).toLocaleDateString(),
+              <button
+                onClick={() => issueRefund(p)}
+                disabled={busyId === p.id}
+                style={{
+                  background: busyId === p.id ? '#3d1416' : '#C8102E',
+                  color: '#fff', border: 'none', borderRadius: 6,
+                  padding: '6px 12px', fontSize: 12, fontWeight: 700,
+                  cursor: busyId === p.id ? 'wait' : 'pointer',
+                }}
+              >{busyId === p.id ? 'Refunding…' : 'Refund'}</button>,
+            ])}
+            empty="No paid payments yet."
+          />
+        </Panel>
+      </div>
+
+      <div style={{ marginTop: 24 }}>
+        <Panel title="Refund history">
+          <Table
+            cols={['Email', 'Amount', 'When', 'Charge / PI']}
+            rows={refundedEvents.map(e => [
+              e.email || '—',
+              `${((e.amount_cents || 0) / 100).toFixed(2)} ${(e.currency || 'usd').toUpperCase()}`,
+              new Date(e.created_at).toLocaleString(),
+              <span style={{ fontSize: 11, color: '#98a2b5' }}>{e.metadata?.payment_intent || e.metadata?.charge_id || '—'}</span>,
+            ])}
+            empty="No refunds yet."
+          />
+        </Panel>
+      </div>
+    </>
+  )
+}
+
 const shellStyle = {
   minHeight: '100vh',
   background: 'linear-gradient(135deg, #0B1626 0%, #0F1F3D 100%)',
