@@ -20,7 +20,7 @@
 
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
-import { sendEmail, renderWelcome, renderReceipt, renderCancelFinal, renderPastDue } from './_lib/email.js'
+import { sendEmail, renderWelcome, renderReceipt, renderCancelFinal, renderPastDue, renderRefundProcessed } from './_lib/email.js'
 import { upsertBrevoContact, addToBrevoList } from './_lib/brevo.js'
 
 export const config = { api: { bodyParser: false } }
@@ -497,6 +497,30 @@ export default async function handler(req, res) {
           stripe_customer_id:     customerId,
           metadata:               { payment_intent: pi, charge_id: c.id },
         })
+
+        // Refund confirmation email — fires for both full and partial refunds.
+        if (profile?.email) {
+          const isPartial = !c.refunded // c.refunded=true only on full refund
+          const { subject, html } = renderRefundProcessed({
+            name:        profile.full_name,
+            amountCents: c.amount_refunded ?? 0,
+            currency:    (c.currency || 'usd').toLowerCase(),
+            isPartial,
+          })
+          try {
+            await sendEmail({
+              supabase,
+              userId:   profile.id,
+              toEmail:  profile.email,
+              kind:     'refund_processed',
+              subject,
+              html,
+              metadata: { charge_id: c.id, payment_intent: pi, amount_refunded: c.amount_refunded, is_partial: isPartial },
+            })
+          } catch (err) {
+            console.error('[stripe-webhook] refund email failed:', err?.message)
+          }
+        }
         break
       }
 

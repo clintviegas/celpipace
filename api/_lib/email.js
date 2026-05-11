@@ -252,6 +252,20 @@ export function renderCancelFinal({ name }) {
   return { subject, html: shell({ heading, body, ctaUrl: `${SITE}/pricing`, ctaLabel: 'See Plans' }) }
 }
 
+export function renderRefundProcessed({ name, amountCents, currency, isPartial }) {
+  const label = isPartial ? `A partial refund of ${fmtMoney(amountCents, currency)}` : `Your refund of ${fmtMoney(amountCents, currency)}`
+  const subject = `${isPartial ? 'Partial refund' : 'Refund'} processed — ${fmtMoney(amountCents, currency)}`
+  const heading = isPartial ? `Partial refund processed` : `Refund processed`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>${label} has been processed back to your original payment method. Most banks and card issuers post the credit within 3–4 business days — some take up to 10 days depending on the bank.</p>
+    ${isPartial
+      ? `<p>Your Premium access remains active until the end of your current billing period. We've kept your progress and CLB reports either way.</p>`
+      : `<p>Your Premium access has been ended and your account is back on the free plan. We've kept your progress and CLB reports — sign in any time to pick up where you left off.</p>`
+    }
+    <p>If you don't see the credit after 10 business days, reply to this email with your bank statement and we'll help track it down.</p>`
+  return { subject, html: shell({ heading, body, ctaUrl: `${SITE}/dashboard`, ctaLabel: 'Open Dashboard' }) }
+}
+
 // ─── Marketing email shell (with CASL-required unsubscribe + address) ───
 function marketingShell({ heading, body, ctaUrl, ctaLabel, userId }) {
   const unsub = unsubscribeUrl(userId)
