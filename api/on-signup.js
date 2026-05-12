@@ -63,16 +63,19 @@ export default async function handler(req, res) {
     .eq('id', userId)
     .catch(() => {})
 
-  // Send signup welcome email (fire-and-forget — never block the response)
   const { subject, html } = renderSignupWelcome({ name: firstName })
-  sendEmail({
-    supabase: auth.supabase,
-    userId,
-    toEmail: email,
-    kind: 'signup_welcome',
-    subject,
-    html,
-  }).catch(err => console.error('[on-signup] welcome email failed:', err))
+  try {
+    await sendEmail({
+      supabase: auth.supabase,
+      userId,
+      toEmail: email,
+      kind: 'signup_welcome',
+      subject,
+      html,
+    })
+  } catch (err) {
+    console.error('[on-signup] welcome email failed:', err)
+  }
 
   return res.status(200).json({ synced: true })
 }
