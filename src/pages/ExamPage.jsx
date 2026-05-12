@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
 import AuthModal from '../components/AuthModal'
@@ -29,6 +29,7 @@ const EXAMS = Array.from({ length: 8 }, (_, i) => ({
 /* ── Main ExamPage ─────────────────────────────────────────── */
 export default function ExamPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { user, isPremium } = useAuth()
   const [authOpen, setAuthOpen] = useState(false)
   const [authReason, setAuthReason] = useState('')
@@ -36,7 +37,9 @@ export default function ExamPage() {
   const [scoresByExam, setScoresByExam] = useState({}) // { [examNumber]: session row | null }
   const [attemptsByExam, setAttemptsByExam] = useState({}) // { [examNumber]: session[] }
 
-  // Pull the most recent completed mock attempt per exam number for this user
+  // Pull the most recent completed mock attempt per exam number for this user.
+  // Depends on location.key so it re-fetches on every navigation to this page
+  // (not just when user?.id changes), ensuring data is fresh after exam completion.
   useEffect(() => {
     if (!user?.id) { setScoresByExam({}); setAttemptsByExam({}); return }
     let cancelled = false
@@ -45,6 +48,7 @@ export default function ExamPage() {
         const { data, error } = await supabase
           .from('test_sessions')
           .select('id, exam_number, scores, meta, completed_at, updated_at')
+          .eq('user_id', user.id)
           .eq('kind', 'mock')
           .eq('is_completed', true)
           .order('completed_at', { ascending: false })
@@ -53,9 +57,6 @@ export default function ExamPage() {
         const map = {}
         const attemptsMap = {}
         for (const row of data || []) {
-          // Skip ghost rows: marked complete but with no scores recorded.
-          // Defensive — the new RPC writes scores atomically, but legacy rows
-          // (or any future quirk) shouldn't appear as legitimate attempts.
           const hasScores = row.scores && Object.keys(row.scores).length > 0
           if (!hasScores) continue
           if (row.exam_number != null && !map[row.exam_number]) map[row.exam_number] = row
@@ -65,12 +66,13 @@ export default function ExamPage() {
         }
         setScoresByExam(map)
         setAttemptsByExam(attemptsMap)
-      } catch {
+      } catch (err) {
+        console.error('[ExamPage] failed to load scores:', err)
         if (!cancelled) { setScoresByExam({}); setAttemptsByExam({}) }
       }
     })()
     return () => { cancelled = true }
-  }, [user?.id])
+  }, [user?.id, location.key])
 
   const handleScoreClick = (examNum) => {
     if (!user) { setAuthReason('view your mock exam scores'); setAuthOpen(true); return }
