@@ -416,9 +416,115 @@ function UsersTab() {
 /* ═══════════════════════════════════════════════════════════ */
 /*  ACTIVITY                                                    */
 /* ═══════════════════════════════════════════════════════════ */
+function UserEventsPanel({ userId, email, onClose }) {
+  const [events, setEvents] = useState(null)
+  const [err, setErr] = useState('')
+
+  useEffect(() => {
+    if (!userId) return
+    let cancel = false
+    ;(async () => {
+      const { data, error } = await adminSupabase
+        .from('analytics_events')
+        .select('id, session_id, event_type, page_path, page_title, element_label, element_tag, href, metadata, created_at')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(300)
+      if (cancel) return
+      if (error) setErr(error.message)
+      else setEvents(data ?? [])
+    })()
+    return () => { cancel = true }
+  }, [userId])
+
+  const pageViews = events ? events.filter(e => e.event_type === 'page_view') : []
+  const clicks = events ? events.filter(e => e.event_type === 'click') : []
+  const sessions = events ? [...new Set(events.map(e => e.session_id).filter(Boolean))] : []
+
+  // Top pages this user visited
+  const pageCounts = {}
+  pageViews.forEach(e => { const p = e.page_path || 'Unknown'; pageCounts[p] = (pageCounts[p] || 0) + 1 })
+  const topPages = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([label, count]) => ({ label, count }))
+
+  // Top clicks
+  const clickCounts = {}
+  clicks.forEach(e => {
+    const k = e.element_label || e.href || e.element_tag || 'Unknown'
+    clickCounts[k] = (clickCounts[k] || 0) + 1
+  })
+  const topClicks = Object.entries(clickCounts).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([label, count]) => ({ label, count }))
+
+  // Exit page per session (first page_view per session in desc order = last visited)
+  const sessionExit = {}
+  pageViews.forEach(e => { if (e.session_id && !sessionExit[e.session_id]) sessionExit[e.session_id] = e.page_path || 'Unknown' })
+  const exitCounts = {}
+  Object.values(sessionExit).forEach(p => { exitCounts[p] = (exitCounts[p] || 0) + 1 })
+  const topExits = Object.entries(exitCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([label, count]) => ({ label, count }))
+
+  return (
+    <div style={{ background: '#0d1f38', border: '1px solid #1d3152', borderRadius: 12, padding: 20, marginTop: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <div>
+          <strong style={{ color: '#E6ECF5', fontSize: 15 }}>Event history — {email}</strong>
+          {events && (
+            <span style={{ color: '#98a2b5', fontSize: 13, marginLeft: 12 }}>
+              {events.length} events · {pageViews.length} page views · {clicks.length} clicks · {sessions.length} sessions
+            </span>
+          )}
+        </div>
+        <button onClick={onClose} style={{ ...btnSmallStyle, background: 'transparent', border: '1px solid #1d3152' }}>✕ Close</button>
+      </div>
+
+      {err && <Err msg={err} />}
+      {!events && !err && <Loading />}
+
+      {events && (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 16 }}>
+            <Panel title="Pages visited">
+              <RankedList rows={topPages} empty="No page views recorded." />
+            </Panel>
+            <Panel title="Top clicks">
+              <RankedList rows={topClicks} empty="No clicks recorded." />
+            </Panel>
+            <Panel title="Exit pages (where they left)">
+              <RankedList rows={topExits} empty="No sessions recorded." />
+            </Panel>
+          </div>
+
+          <Panel title="Recent events">
+            <Table
+              cols={['When', 'Type', 'Page', 'Click target', 'Session']}
+              rows={events.slice(0, 100).map(e => [
+                new Date(e.created_at).toLocaleString(),
+                e.event_type === 'click'
+                  ? <Chip color="#ffd66a" text="CLICK" />
+                  : <Chip color="#7dc8ff" text="PAGE" />,
+                <div>
+                  <strong>{e.page_path || '—'}</strong>
+                  <div style={{ color: '#98a2b5', fontSize: 11 }}>{e.page_title || ''}</div>
+                </div>,
+                e.event_type === 'click'
+                  ? <span style={{ fontSize: 12 }}>{e.element_label || e.href || e.element_tag || '—'}</span>
+                  : <span style={{ color: '#667' }}>—</span>,
+                <code style={{ color: '#98a2b5', fontSize: 11 }}>{e.session_id?.slice(0, 16) || '—'}</code>,
+              ])}
+              empty="No events."
+            />
+            {events.length > 100 && (
+              <p style={{ color: '#667', fontSize: 12, margin: '8px 0 0' }}>Showing 100 of {events.length} events.</p>
+            )}
+          </Panel>
+        </>
+      )}
+    </div>
+  )
+}
+
 function ActivityTab() {
   const { rows, err } = useAdminActivity()
   const [query, setQuery] = useState('')
+  const [selectedUser, setSelectedUser] = useState(null)
 
   if (err) return <Err msg={`${err}. Run supabase/admin_hardening.sql if this is the first deploy of activity analytics.`} />
   if (!rows) return <Loading />
@@ -459,7 +565,7 @@ function ActivityTab() {
 
       <Panel>
         <Table
-          cols={['User', 'Last Seen', 'Last Response', 'Activity', 'Joined']}
+          cols={['User', 'Last Seen', 'Last Response', 'Activity', 'Joined', 'Events']}
           rows={filtered.map(r => [
             <div>
               <div style={{ fontWeight: 700 }}>{r.full_name || friendlyName(r.email)}</div>
@@ -469,14 +575,28 @@ function ActivityTab() {
             <span style={{ color: r.last_response_at ? '#E6ECF5' : '#98a2b5' }}>{formatRelativeTime(r.last_response_at)}</span>,
             <div>
               <strong>{r.response_count || 0}</strong>
-              <span style={{ color: '#98a2b5', marginLeft: 6 }}>events</span>
+              <span style={{ color: '#98a2b5', marginLeft: 6 }}>responses</span>
               {!!r.completed_sessions_count && <span style={{ color: '#7dffb0', marginLeft: 8 }}>{r.completed_sessions_count} completed</span>}
             </div>,
             r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
+            <button
+              onClick={() => setSelectedUser(selectedUser?.id === r.id ? null : r)}
+              style={{ ...btnSmallStyle, background: selectedUser?.id === r.id ? '#1d3152' : 'transparent', border: '1px solid #1d3152' }}
+            >
+              {selectedUser?.id === r.id ? 'Hide' : 'View events →'}
+            </button>,
           ])}
           empty="No activity found."
         />
       </Panel>
+
+      {selectedUser && (
+        <UserEventsPanel
+          userId={selectedUser.id}
+          email={selectedUser.email}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </>
   )
 }
@@ -678,6 +798,21 @@ function AnalyticsTab() {
   const anonymousEvents = filtered.filter(event => !event.user_id).length
   const activeUserLabel = uniqueUsers ? uniqueUsers : '—'
 
+  // Bounce rate: sessions with only 1 page_view
+  const sessionPVCounts = {}
+  pageViews.forEach(e => {
+    if (!e.session_id) return
+    sessionPVCounts[e.session_id] = (sessionPVCounts[e.session_id] || 0) + 1
+  })
+  const pvSessionCount = Object.keys(sessionPVCounts).length
+  const bouncedCount = Object.values(sessionPVCounts).filter(n => n === 1).length
+  const bounceRate = pvSessionCount ? Math.round((bouncedCount / pvSessionCount) * 100) : 0
+
+  // Exit pages: last page_view per session (events are desc order, so first occurrence per session = last page visited)
+  const sessionExitPage = {}
+  pageViews.forEach(e => { if (e.session_id && !sessionExitPage[e.session_id]) sessionExitPage[e.session_id] = e.page_path || 'Unknown' })
+  const topExitPages = topGroups(Object.values(sessionExitPage).map(p => ({ page_path: p })), e => e.page_path, 10)
+
   const topClicks = topGroups(clicks, event => {
     const label = event.element_label || event.href || event.element_id || event.element_tag || 'Unknown click'
     return `${label}${event.page_path ? ` · ${event.page_path}` : ''}`
@@ -749,6 +884,7 @@ function AnalyticsTab() {
         <StatCard label="Sessions" value={uniqueSessions} />
         <StatCard label="Known users" value={activeUserLabel} accent="#7dffb0" />
         <StatCard label="Anonymous events" value={anonymousEvents} />
+        <StatCard label="Bounce rate" value={pvSessionCount ? `${bounceRate}%` : '—'} accent={bounceRate > 70 ? '#ff7d7d' : bounceRate > 40 ? '#ffd66a' : '#7dffb0'} />
       </div>
 
       <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
@@ -800,6 +936,13 @@ function AnalyticsTab() {
         </Panel>
         <Panel title="Most active users">
           <RankedList rows={topUsers} empty="No signed-in user events in this view yet." />
+        </Panel>
+        <Panel title={`Exit pages — where sessions end (${pvSessionCount} sessions)`}>
+          <p style={{ color: '#98a2b5', fontSize: 12, margin: '0 0 12px' }}>
+            Last page visited before the user left. Bounce rate: <strong style={{ color: bounceRate > 70 ? '#ff7d7d' : bounceRate > 40 ? '#ffd66a' : '#7dffb0' }}>{bounceRate}%</strong>
+            <span style={{ color: '#667', marginLeft: 6 }}>({bouncedCount} of {pvSessionCount} sessions had only 1 page view)</span>
+          </p>
+          <RankedList rows={topExitPages} empty="Not enough session data yet." />
         </Panel>
       </div>
 
