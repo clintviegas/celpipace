@@ -65,7 +65,7 @@ export default function Hero() {
         </p>
 
         <div className="hp-hero-ctas">
-          <button className="btn btn-white btn-lg" onClick={() => navigate('/calculator')}>
+          <button className="btn btn-white btn-lg" onClick={() => navigate('/crs-score-calculator')}>
             Calculate CRS Score
           </button>
           <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/celpip-mock-test')}>

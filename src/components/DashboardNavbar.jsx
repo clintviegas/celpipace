@@ -51,7 +51,7 @@ const NAV_LINKS = [
     id: 'learn', label: 'Learn', path: '/tips', color: '#6B4FAF', colorLight: '#F3EFFF',
     parts: [
       { label: 'CLB Scoring Guide', desc: 'Understand CLB levels and how scores map to CRS', path: '/scores' },
-      { label: 'CRS Calculator', desc: 'Calculate your Express Entry CRS score instantly', path: '/calculator' },
+      { label: 'CRS Calculator', desc: 'Calculate your Express Entry CRS score instantly', path: '/crs-score-calculator' },
       { label: 'Tips & Strategies', desc: 'Section-by-section tips to boost your CLB band', path: '/tips' },
       { label: 'Score Tracker', desc: 'Track your CLB progress across all 4 sections', path: '/scores' },
       { label: 'Blog & Articles', desc: 'Expert tips, strategies and immigration guides', path: '/blog' },
@@ -59,7 +59,7 @@ const NAV_LINKS = [
   },
 ]
 
-const LEARN_PATHS = new Set(['tips', 'scores', 'calculator', 'blog'])
+const LEARN_PATHS = new Set(['tips', 'scores', 'crs-score-calculator', 'blog'])
 const SECTION_ROUTE_IDS = {
   'celpip-listening-practice': 'listening',
   'celpip-reading-practice': 'reading',

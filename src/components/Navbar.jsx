@@ -70,7 +70,7 @@ const NAV_ITEMS = [
     colorLight: '#F3EFFF',
     parts: [
       { label: 'CLB Scoring Guide',   desc: 'Understand CLB levels and how scores map to CRS', action: 'scores' },
-      { label: 'CRS Calculator',      desc: 'Calculate your Express Entry CRS score instantly',  action: 'calculator' },
+      { label: 'CRS Calculator',      desc: 'Calculate your Express Entry CRS score instantly',  action: 'crs-score-calculator' },
       { label: 'Tips & Strategies',   desc: 'Section-by-section tips to boost your CLB band', action: 'tips' },
       { label: 'Score Tracker',       desc: 'Track your CLB progress across all 4 sections', action: 'scores' },
       { label: 'Blog & Articles',     desc: 'Expert tips, strategies and immigration guides', action: 'blog' },
@@ -291,7 +291,7 @@ export default function Navbar({ onSignIn }) {
   useEffect(() => { setMenuOpen(false); setOpenId(null) }, [location.pathname])
 
   const currentPath = location.pathname.split('/').filter(Boolean)[0] || 'home'
-  const activeId = ['tips', 'scores', 'calculator', 'blog'].includes(currentPath) ? 'learn' : currentPath
+  const activeId = ['tips', 'scores', 'crs-score-calculator', 'blog'].includes(currentPath) ? 'learn' : currentPath
 
   return (
     <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>

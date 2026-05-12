@@ -462,7 +462,7 @@ export default function CRSCalculatorPage() {
       <SEO
         title="CRS Score Calculator – Express Entry Points Estimator"
         description="Calculate your Express Entry Comprehensive Ranking System (CRS) score instantly. Supports single and married applicants with full IRCC formula."
-        canonical="/calculator"
+        canonical="/crs-score-calculator"
       />
       <div className="page-header">
         <h2 className="page-title">🧮 <span className="highlight">CRS Score Calculator</span></h2>

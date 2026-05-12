@@ -32,8 +32,8 @@ export default function Footer() {
       heading: 'Resources',
       links: [
         { label: 'CELPIP vs IELTS',           page: 'celpip-vs-ielts' },
-        { label: 'CELPIP for Immigration',    page: 'calculator' },
-        { label: 'CRS Calculator',            page: 'calculator' },
+        { label: 'CELPIP for Immigration',    page: 'crs-score-calculator' },
+        { label: 'CRS Calculator',            page: 'crs-score-calculator' },
         { label: 'Blog & Articles',           page: 'blog' },
         { label: 'Pricing',                   page: 'pricing' },
       ],

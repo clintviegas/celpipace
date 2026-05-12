@@ -23,7 +23,7 @@ export default function CTA() {
             <button className="btn btn-white btn-lg" onClick={() => navigate('/exam')}>
               Start Practicing Free
             </button>
-            <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/calculator')}>
+            <button className="btn btn-ghost-white btn-lg" onClick={() => navigate('/crs-score-calculator')}>
               Calculate My CRS Score →
             </button>
           </div>

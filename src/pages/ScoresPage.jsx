@@ -168,7 +168,7 @@ export default function ScoresPage() {
               <LineChart size={17} strokeWidth={2.4} />
               View progress
             </button>
-            <button className="scores-hero-secondary" onClick={() => navigate('/calculator')}>
+            <button className="scores-hero-secondary" onClick={() => navigate('/crs-score-calculator')}>
               <Gauge size={17} strokeWidth={2.4} />
               CRS calculator
             </button>
@@ -503,7 +503,7 @@ export default function ScoresPage() {
                   </span>
                 </div>
               ))}
-              <button className="tracker-crs-calc-btn" onClick={() => navigate('/calculator')}>
+              <button className="tracker-crs-calc-btn" onClick={() => navigate('/crs-score-calculator')}>
                 Open CRS Calculator →
               </button>
             </div>

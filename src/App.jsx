@@ -149,7 +149,7 @@ const MOBILE_HOME_SECTIONS = [
 ]
 
 const MOBILE_HOME_LINKS = [
-  { label: 'CRS', path: '/calculator', Icon: Gauge },
+  { label: 'CRS', path: '/crs-score-calculator', Icon: Gauge },
   { label: 'Tips', path: '/tips', Icon: Sparkles },
   { label: 'Premium', path: '/pricing', Icon: Trophy },
 ]
@@ -187,7 +187,7 @@ function MobileHomeApp({ onSignIn }) {
         <h1>A focused CELPIP study home.</h1>
         <p>{PRODUCT_STATS.questionItems} question items, mock exams, scoring, and section drills built for quick mobile study sessions.</p>
         <div className="mh-actions">
-          <button className="mh-primary" onClick={() => navigate('/calculator')}>Calculate CRS</button>
+          <button className="mh-primary" onClick={() => navigate('/crs-score-calculator')}>Calculate CRS</button>
           <button className="mh-secondary" onClick={() => navigate('/exam')}>Mock exams</button>
         </div>
       </div>
@@ -331,7 +331,7 @@ export function AppInner() {
   const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
   // Keep public learning pages on the original site navbar so dropdown behavior stays consistent after navigation.
-  const innerPaths = ['/dashboard','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription']
+  const innerPaths = ['/dashboard','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription','/crs-score-calculator']
   const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
   const isPaymentRoute = location.pathname === '/payment'
 
@@ -371,7 +371,8 @@ export function AppInner() {
           <Route path="/celpip-vs-ielts" element={<SEOLandingPage type="comparison" />} />
           <Route path="/tips" element={<TipsPage />} />
           <Route path="/scores" element={<ScoresPage />} />
-          <Route path="/calculator" element={<CRSCalculatorPage />} />
+          <Route path="/crs-score-calculator" element={<CRSCalculatorPage />} />
+          <Route path="/calculator" element={<Navigate to="/crs-score-calculator" replace />} />
           <Route path="/exam" element={<ExamPage />} />
           <Route path="/mock-test/:examId" element={<RequirePremium reason="Sign in with Google to start or review a mock exam."><MockTestPage /></RequirePremium>} />
 

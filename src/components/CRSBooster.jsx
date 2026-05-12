@@ -149,7 +149,7 @@ export default function CRSBooster() {
                 <button className="btn btn-primary" onClick={() => navigate('/pricing')} style={{ marginTop: '1rem' }}>
                   Practice for CLB 10 →
                 </button>
-                <button className="btn btn-outline" onClick={() => navigate('/calculator')} style={{ marginTop: '0.5rem', marginLeft: '8px' }}>
+                <button className="btn btn-outline" onClick={() => navigate('/crs-score-calculator')} style={{ marginTop: '0.5rem', marginLeft: '8px' }}>
                   Open CRS Calculator
                 </button>
               </div>
