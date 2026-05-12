@@ -74,7 +74,14 @@ export default function ExamPage() {
 
   const handleScoreClick = (examNum) => {
     if (!user) { setAuthReason('view your mock exam scores'); setAuthOpen(true); return }
-    setScoreModal({ examNumber: examNum, session: scoresByExam[examNum] || null })
+    const saved = scoresByExam[examNum]
+    if (saved?.id) {
+      // Navigate straight to the full report page — no modal friction
+      navigate(`/mock-test/${examNum}?attempt=${saved.id}`)
+    } else {
+      // No attempt yet — show the "no attempt" prompt
+      setScoreModal({ examNumber: examNum, session: null })
+    }
   }
 
   const handleReviewAttempt = (examNum, sessionId) => {
