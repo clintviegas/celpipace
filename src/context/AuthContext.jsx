@@ -83,6 +83,22 @@ async function syncPendingAuthConsent(profile) {
   }
 }
 
+// Fetch IP-based geolocation once per user (only called when country_code is missing).
+// Uses ipapi.co free tier (1 000 req/day). Returns null on any failure — never throws.
+async function fetchGeo() {
+  try {
+    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(5000) })
+    if (!res.ok) return null
+    const d = await res.json()
+    return {
+      country_code: d.country_code   || null,
+      country:      d.country_name   || null,
+      city:         d.city           || null,
+      timezone:     d.timezone       || null,
+    }
+  } catch { return null }
+}
+
 /* ─────────────────────────────────────────────────────────────
    AuthContext — global auth state
    Exposes: user, profile, isPremium, isAdmin, loading,
@@ -156,11 +172,18 @@ export function AuthProvider({ children }) {
       // If no profile row exists yet (e.g. trigger hasn't fired yet for legacy
       // users), do a one-time best-effort upsert with safe columns only.
       if (!data) {
+        // New user — fetch geo before creating the profile row
+        const geo = await fetchGeo()
         await supabase.from('profiles').upsert({
-          id:         currentUser.id,
-          email:      currentUser.email,
-          full_name:  currentUser.user_metadata?.full_name  ?? null,
-          avatar_url: currentUser.user_metadata?.avatar_url ?? null,
+          id:           currentUser.id,
+          email:        currentUser.email,
+          full_name:    currentUser.user_metadata?.full_name  ?? null,
+          avatar_url:   currentUser.user_metadata?.avatar_url ?? null,
+          locale:       currentUser.user_metadata?.locale     ?? null,
+          country_code: geo?.country_code ?? null,
+          country:      geo?.country      ?? null,
+          city:         geo?.city         ?? null,
+          timezone:     geo?.timezone     ?? null,
         }, { onConflict: 'id' }).catch(() => {})
         const { data: created } = await supabase
           .from('profiles').select('*').eq('id', currentUser.id).maybeSingle()
@@ -172,6 +195,20 @@ export function AuthProvider({ children }) {
       const syncedProfile = await syncPendingAuthConsent(data)
       setProfile(syncedProfile)
       maybeSyncNewUser(syncedProfile)
+
+      // Existing user missing location — backfill silently in the background
+      if (!data.country_code) {
+        fetchGeo().then(geo => {
+          if (!geo) return
+          supabase.from('profiles').update({
+            locale:       currentUser.user_metadata?.locale ?? data.locale ?? null,
+            country_code: geo.country_code,
+            country:      geo.country,
+            city:         geo.city,
+            timezone:     geo.timezone,
+          }).eq('id', currentUser.id).catch(() => {})
+        })
+      }
     } catch (e) {
       console.warn('[auth] profile load exception:', e?.message)
       setProfile(null)

@@ -310,10 +310,13 @@ function OverviewTab() {
 
       <Panel title="Recent signups">
         <Table
-          cols={['Email', 'Name', 'Plan', 'Joined']}
+          cols={['Email', 'Name', 'Location', 'Plan', 'Joined']}
           rows={recent.map(r => [
             r.email,
             r.full_name || '—',
+            r.country_code
+              ? <span style={{ fontSize: 12 }}>{r.city ? `${r.city}, ` : ''}{r.country || r.country_code}</span>
+              : <span style={{ color: '#667', fontSize: 12 }}>—</span>,
             r.is_premium ? <Chip color="#ffd66a" text="PREMIUM" /> : <span style={{ color: '#98a2b5' }}>free</span>,
             r.created_at ? new Date(r.created_at).toLocaleString() : '—',
           ])}
@@ -392,10 +395,16 @@ function UsersTab() {
 
       <Panel>
         <Table
-          cols={['Email', 'Name', 'Joined', 'Premium', 'Source', 'Action']}
+          cols={['Email', 'Name', 'Location', 'Joined', 'Premium', 'Source', 'Action']}
           rows={filtered.map(r => [
             r.email,
             r.full_name || <span style={{ color: '#667' }}>—</span>,
+            <div style={{ fontSize: 12 }}>
+              {r.country_code
+                ? <><span style={{ color: '#E6ECF5' }}>{r.city ? `${r.city}, ` : ''}{r.country || r.country_code}</span>
+                    {r.locale && <span style={{ color: '#667', marginLeft: 6 }}>({r.locale})</span>}</>
+                : <span style={{ color: '#667' }}>—</span>}
+            </div>,
             r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
             r.is_premium ? <Chip color="#ffd66a" text="PREMIUM" /> : <span style={{ color: '#98a2b5' }}>free</span>,
             <span style={{ color: '#98a2b5', fontSize: 12 }}>{r.premium_source || '—'}</span>,
