@@ -150,7 +150,7 @@ const MOBILE_HOME_SECTIONS = [
 
 const MOBILE_HOME_LINKS = [
   { label: 'CRS', path: '/crs-score-calculator', Icon: Gauge },
-  { label: 'Tips', path: '/tips', Icon: Sparkles },
+  { label: 'Resources', path: '/celpip-resources', Icon: Sparkles },
   { label: 'Premium', path: '/pricing', Icon: Trophy },
 ]
 
@@ -369,7 +369,8 @@ export function AppInner() {
           <Route path="/celpip-mock-test" element={<SEOLandingPage type="mock" />} />
           <Route path="/celpip-score-calculator" element={<SEOLandingPage type="score" />} />
           <Route path="/celpip-vs-ielts" element={<SEOLandingPage type="comparison" />} />
-          <Route path="/tips" element={<TipsPage />} />
+          <Route path="/celpip-resources" element={<TipsPage />} />
+          <Route path="/tips" element={<Navigate to="/celpip-resources" replace />} />
           <Route path="/scores" element={<ScoresPage />} />
           <Route path="/crs-score-calculator" element={<CRSCalculatorPage />} />
           <Route path="/calculator" element={<Navigate to="/crs-score-calculator" replace />} />

@@ -152,9 +152,9 @@ export default function TipsPage() {
   return (
     <div className="page-wrap tips-page">
       <SEO
-        title="CELPIP Tips & Strategies"
+        title="CELPIP Resources — Tips & Strategies"
         description="Free section-by-section CELPIP tips for Listening, Reading, Writing, and Speaking, plus downloadable training resources."
-        canonical="/tips"
+        canonical="/celpip-resources"
       />
 
       <header className="tips-hero-panel">

@@ -48,18 +48,18 @@ const NAV_LINKS = [
     ],
   },
   {
-    id: 'learn', label: 'Learn', path: '/tips', color: '#6B4FAF', colorLight: '#F3EFFF',
+    id: 'learn', label: 'Learn', path: '/blog', color: '#6B4FAF', colorLight: '#F3EFFF',
     parts: [
       { label: 'CLB Scoring Guide', desc: 'Understand CLB levels and how scores map to CRS', path: '/scores' },
       { label: 'CRS Calculator', desc: 'Calculate your Express Entry CRS score instantly', path: '/crs-score-calculator' },
-      { label: 'Tips & Strategies', desc: 'Section-by-section tips to boost your CLB band', path: '/tips' },
+      { label: 'CELPIP Resources', desc: 'Section-by-section tips and training to boost your CLB band', path: '/celpip-resources' },
       { label: 'Score Tracker', desc: 'Track your CLB progress across all 4 sections', path: '/scores' },
       { label: 'Blog & Articles', desc: 'Expert tips, strategies and immigration guides', path: '/blog' },
     ],
   },
 ]
 
-const LEARN_PATHS = new Set(['tips', 'scores', 'crs-score-calculator', 'blog'])
+const LEARN_PATHS = new Set(['celpip-resources', 'scores', 'crs-score-calculator', 'blog'])
 const SECTION_ROUTE_IDS = {
   'celpip-listening-practice': 'listening',
   'celpip-reading-practice': 'reading',
@@ -281,8 +281,8 @@ export default function DashboardNavbar({ onSignIn }) {
                     <button className="dbn-account-item" onClick={() => goTo('subscription')}>
                       <CreditCard size={16} /> Manage subscription
                     </button>
-                    <button className="dbn-account-item" onClick={() => goTo('tips')}>
-                      <Sparkles size={16} /> Tips & resources
+                    <button className="dbn-account-item" onClick={() => goTo('celpip-resources')}>
+                      <Sparkles size={16} /> CELPIP Resources
                     </button>
                     <button className="dbn-account-item" onClick={() => goTo('contact')}>
                       <HelpCircle size={16} /> Contact support

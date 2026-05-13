@@ -658,4 +658,93 @@ export const BLOG_ARTICLES = [
       },
     ],
   },
+  /* ── 13 ── */
+  {
+    slug: '7-days-to-crack-celpip',
+    title: 'Why 7 Days Is All You Need to Crack the CELPIP',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#C8102E',
+    tagColorLight: '#FFF0F0',
+    readTime: '8 min read',
+    date: 'May 13, 2026',
+    excerpt:
+      'Most CELPIP candidates spend weeks studying without a plan and plateau early. A focused, structured 7-day sprint — targeting each section with purpose — consistently outperforms months of unfocused practice. Here is exactly how to do it.',
+    sections: [
+      {
+        heading: 'The CELPIP Is Built to Be Passable — If You Know What to Target',
+        body: `The CELPIP General is a two-and-a-half hour computer-based English test. Unlike the IELTS, which relies on human raters, CELPIP uses a computer-adaptive marking system — which means scoring patterns are highly consistent and learnable.\n\nThe test has four sections: Listening (55 minutes), Reading (55 minutes), Writing (54 minutes), and Speaking (20 minutes). Each section is scored on a CLB scale from 1 to 12. Most Express Entry candidates need CLB 7 or higher in all four sections to maximize their CRS language points.\n\nThe key insight: CELPIP scores do not require native-level fluency. They require familiarity with the format and consistent use of specific strategies. Seven days is enough time to build both — if those seven days are intentional.`,
+      },
+      {
+        heading: 'Day 1 — Understand CLB Levels and Set a Precise Target Score',
+        body: `Before touching a single practice question, spend Day 1 on strategy orientation.\n\nFirst, check the CLB-to-CRS conversion table. The jump from CLB 7 (64 language points) to CLB 9 (118 points) is worth 54 CRS points — often the difference between receiving an Invitation to Apply and waiting through multiple draws. If you are already at CLB 9, pushing to CLB 10 across all four skills adds another 12 points.\n\nSecond, map your target CELPIP scores to CLB levels:\n`,
+        list: [
+          'CLB 7 = CELPIP score of 6 in each section',
+          'CLB 8 = CELPIP score of 7',
+          'CLB 9 = CELPIP score of 8',
+          'CLB 10 = CELPIP score of 10–12',
+        ],
+        body2: `Third, take one untimed diagnostic practice set in each section. Note where you lose marks. This is not for scoring — it is for identifying which section needs the most work over the remaining six days. Use the CRS Score Calculator to model exactly how your target CLB level affects your Express Entry score before test day.`,
+      },
+      {
+        heading: 'Day 2 — Listening (3 Focused Hours)',
+        body: `The Listening section has six parts:\n\n**L1 (Daily Conversations):** Two people discussing everyday situations. Practise listening for main topic, speaker attitude, and implied meaning — not just factual details.\n\n**L2 (Phone Conversations):** Usually includes leave-a-message scenarios. Listen for specific pieces of information: names, times, numbers, and reasons.\n\n**L3 (News Items):** Short CBC-style news reports. Train yourself to catch the "what happened, who was involved, what the outcome was" structure in the first 30 seconds.\n\n**L4 (Panel Discussions):** Multiple speakers, often disagreeing. Your target is to track which speaker holds which opinion — not to understand every word.\n\n**L5 (Conversations):** A longer naturalistic exchange. Focus on speaker purpose and the final decision or outcome.\n\n**L6 (Viewpoints):** A short monologue or lecture. This part rewards listeners who can follow an argument structure rather than just picking out keywords.\n\nThe single most effective listening strategy: do not try to remember what you hear. Answer each question immediately after the clip ends while the audio is still fresh. Revisit the strategies guide on the CELPIP Resources page for section-specific drills.`,
+      },
+      {
+        heading: 'Day 3 — Reading (3 Focused Hours)',
+        body: `The Reading section has four parts:\n\n**R1 (Correspondence):** An email or letter with multiple-choice questions. Read the subject line and opening paragraph first — they almost always contain the answer to the first question.\n\n**R2 (Apply a Diagram):** A visual (form, schedule, floor plan, chart) paired with a text. The most common mistake here is answering from memory rather than re-checking the visual for every question. Always go back.\n\n**R3 (Reading for Information):** A fact-dense text — often a policy, guide, or instructions. Skim the structure first, then anchor each question to a specific section before reading carefully.\n\n**R4 (Reading for Viewpoints):** The hardest part for most candidates. An opinion or editorial piece with inference-heavy questions. The key technique: the correct answer will always be supported by specific language in the text — not just plausibly true. Eliminate answers that go beyond what is stated.\n\nTime management: R4 typically consumes the most time. Aim to finish R1 and R2 in 20 minutes, leaving 35 minutes for R3 and R4. Practise under time pressure from Day 3 onward. For a deeper breakdown of the inference technique, read the guide on CELPIP Reading inference questions.`,
+      },
+      {
+        heading: 'Day 4 — Writing (The Section Most Candidates Underestimate)',
+        body: `The Writing section has two tasks:\n\n**W1 (Email/Letter):** You are given a situation and three bullet points to address. Most candidates lose points for omitting one bullet point entirely, using informal register when formal is required, or writing too short (aim for 150–200 words).\n\n**W2 (Responding to Survey/Discussion):** A paragraph presenting two sides of an issue. You must state and defend your own position. Hedging ("it could be argued that…") is penalized. Take a clear position in the first sentence and support it with two specific reasons.\n\nThe three things that move Writing scores from CLB 7 to CLB 9:\n`,
+        list: [
+          'Sentence variety — mix simple, compound, and complex structures in every paragraph',
+          'Precise vocabulary — replace "good" with "beneficial," "bad" with "detrimental," "get" with "obtain"',
+          'Cohesion markers — use "Furthermore," "In contrast," "As a result," "Consequently" between ideas',
+        ],
+        body2: `Use Day 4 to write two full practice responses for each task type, then compare against the CLB 9 descriptors. The writing strategies section in CELPIP Resources includes annotated sample responses at CLB 7, 9, and 10 that make the differences immediately visible.`,
+      },
+      {
+        heading: 'Day 5 — Speaking (Fluency Over Perfection)',
+        body: `The Speaking section has eight tasks and only 20 minutes. The computer records you — there is no human in the room — and your response must fit exactly within the given time limit.\n\nCommon mistakes that drop Speaking scores:\n`,
+        list: [
+          'Leaving dead silence at the start while thinking — fill with "Well, in this situation I would…"',
+          'Repeating the same sentence structures across all 8 tasks',
+          'Speaking too fast or too slowly — aim for clear, measured delivery',
+          'Using filler words excessively ("um," "like," "you know")',
+        ],
+        body2: `The fastest way to improve Speaking is not to study vocabulary — it is to practise under exam conditions every time. Set a timer for each task and start speaking the moment it begins. Do this for every speaking prompt on Day 5, then review your patterns.\n\nFor CLB 9 and above, the scoring rubric rewards topic development. It is not enough to answer the question — you must extend, elaborate, and use specific details. A shallow correct answer scores lower than a rich, organized one. Read the full guide on scoring CLB 10 in Speaking for annotated response examples.`,
+      },
+      {
+        heading: 'Day 6 — Full Mock Exam Under Real Conditions',
+        body: `Day 6 is your simulation day. Take a complete timed mock exam — all four sections back to back — starting at the same time of day as your actual test.\n\nRules for the simulation:\n`,
+        list: [
+          'No pausing, no looking things up, no breaks beyond what the real test allows',
+          'Use the same computer setup you will have on test day',
+          'Do not skip any section — the mental stamina of sitting through all four sections is itself a skill',
+          'Record your Speaking responses if possible and play them back',
+        ],
+        body2: `After completing the mock, review every wrong answer — not to memorize correct responses, but to identify the type of error: time pressure, format confusion, vocabulary gap, or inference mistake. Each error type requires a different fix. The mock exam feature on CELPIPace gives you a full CLB report by section so you can pinpoint exactly where to focus on Day 7.`,
+      },
+      {
+        heading: 'Day 7 — Targeted Review and Final Prep',
+        body: `Day 7 is not a rest day — it is a surgical review day.\n\nSpend the first 90 minutes on your two weakest parts from the Day 6 mock. Do not re-do a full section — do three targeted practice sets on the specific part types where you lost the most marks.\n\nSpend the next 60 minutes reviewing your Speaking responses and Writing samples from the week. Identify one or two recurring patterns (same weak vocabulary, same structural issue) and consciously practice correcting them.\n\nSpend the final 30 minutes on logistics:\n`,
+        list: [
+          'Confirm your test centre location and exact check-in time',
+          'Review what identification you need to bring',
+          'Plan your travel time with a 30-minute buffer',
+          'Avoid any new material — your brain needs consolidation, not new input',
+        ],
+        body2: `On test morning: eat a proper meal, arrive early, and remember that CELPIP rewards familiarity with format above all else. After seven days of deliberate practice, you have built that familiarity.`,
+      },
+      {
+        heading: 'Why 7 Days Works When Months of Casual Study Do Not',
+        body: `Months of low-intensity studying plateau because candidates repeat the same types of practice without identifying and fixing specific weaknesses. A 7-day sprint works because it forces a diagnosis-first approach: Day 1 identifies where you stand, Days 2–5 target each section with a specific strategy, Day 6 simulates real test conditions, and Day 7 applies surgical corrections.\n\nThe second reason 7 days works: CELPIP is a format test. The content of the passages and audio clips you will see on test day is entirely unpredictable. What is predictable — and therefore trainable — is the question format, the time pressure, and the scoring criteria. Seven days is exactly enough time to internalize all three.\n\nCandidates who score CLB 9 or above consistently share two traits: they practised under timed, exam-like conditions from the very first day, and they reviewed their errors analytically rather than just retaking tests. This 7-day plan builds both habits by design.\n\nFor a deeper look at how language scores convert to CRS points — and how your target CELPIP score maps to Express Entry outcomes — read the CRS language points breakdown and the Express Entry 2026 language scores guide.`,
+      },
+      {
+        heading: 'Your 7-Day Sprint Starts Now',
+        body: `The CELPIP is a learnable test. The scoring criteria are public, the format is fixed, and the strategies are well-established. What separates candidates who hit their CLB target on the first attempt from those who sit the test two or three times is almost never language ability — it is preparation structure.\n\nStart with a diagnostic today. Take one practice set from each section, note your weak points, and begin Day 1 of your 7-day plan. The full practice library — Listening, Reading, Writing, and Speaking — is available on CELPIPace with instant CLB feedback after every set.\n\nYour ITA is closer than you think.`,
+      },
+    ],
+  },
 ]

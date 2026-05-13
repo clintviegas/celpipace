@@ -21,9 +21,9 @@ export default function Footer() {
     {
       heading: 'Learn',
       links: [
-        { label: 'Study Guides & Courses', page: 'tips' },
-        { label: 'Tips & Strategies',      page: 'tips' },
-        { label: 'Vocabulary Builder',     page: 'tips' },
+        { label: 'Study Guides & Courses', page: 'celpip-resources' },
+        { label: 'Tips & Strategies',      page: 'celpip-resources' },
+        { label: 'Vocabulary Builder',     page: 'celpip-resources' },
         { label: 'Score Tracker',          page: 'scores' },
         { label: 'CLB to CRS Chart',       page: 'celpip-score-calculator' },
       ],
