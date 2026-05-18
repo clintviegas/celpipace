@@ -433,6 +433,48 @@ async function main() {
 
   console.log(`Prerendered ${written.length} SEO routes:`)
   written.forEach(route => console.log(`  - ${route}`))
+
+  await writeSitemap()
+}
+
+// Static (non-blog) URLs included in sitemap.xml. Blog URLs come from the DB.
+const STATIC_SITEMAP_ROUTES = [
+  { path: '/',                          priority: '1.0',  changefreq: 'weekly' },
+  { path: '/celpip-practice-test',      priority: '0.95', changefreq: 'monthly' },
+  { path: '/celpip-mock-test',          priority: '0.95', changefreq: 'monthly' },
+  { path: '/celpip-listening-practice', priority: '0.9',  changefreq: 'weekly' },
+  { path: '/celpip-reading-practice',   priority: '0.9',  changefreq: 'weekly' },
+  { path: '/celpip-writing-practice',   priority: '0.95', changefreq: 'weekly' },
+  { path: '/celpip-speaking-practice',  priority: '0.95', changefreq: 'weekly' },
+  { path: '/celpip-score-calculator',   priority: '0.9',  changefreq: 'monthly' },
+  { path: '/celpip-vs-ielts',           priority: '0.85', changefreq: 'monthly' },
+  { path: '/practice',                  priority: '0.85', changefreq: 'weekly' },
+  { path: '/exam',                      priority: '0.9',  changefreq: 'weekly' },
+  { path: '/scores',                    priority: '0.8',  changefreq: 'monthly' },
+  { path: '/crs-score-calculator',      priority: '0.8',  changefreq: 'monthly' },
+  { path: '/celpip-resources',          priority: '0.8',  changefreq: 'monthly' },
+  { path: '/pricing',                   priority: '0.75', changefreq: 'monthly' },
+  { path: '/blog',                      priority: '0.8',  changefreq: 'weekly' },
+  { path: '/contact',                   priority: '0.5',  changefreq: 'monthly' },
+  { path: '/privacy',                   priority: '0.3',  changefreq: 'yearly' },
+  { path: '/terms',                     priority: '0.3',  changefreq: 'yearly' },
+  { path: '/refund',                    priority: '0.3',  changefreq: 'yearly' },
+]
+
+async function writeSitemap() {
+  const today = new Date().toISOString().slice(0, 10)
+  const urls = [
+    ...STATIC_SITEMAP_ROUTES.map(r =>
+      `  <url><loc>https://celpipace.ca${r.path}</loc><lastmod>${today}</lastmod><changefreq>${r.changefreq}</changefreq><priority>${r.priority}</priority></url>`
+    ),
+    ...BLOG_ARTICLES.map(a =>
+      `  <url><loc>https://celpipace.ca/blog/${a.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>`
+    ),
+  ]
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`
+  const sitemapPath = path.join(distDir, 'sitemap.xml')
+  await writeFile(sitemapPath, xml, 'utf8')
+  console.log(`Wrote sitemap.xml with ${STATIC_SITEMAP_ROUTES.length} static + ${BLOG_ARTICLES.length} blog URLs`)
 }
 
 main().catch(error => {
