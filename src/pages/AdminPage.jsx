@@ -1656,6 +1656,33 @@ function BlogTab() {
   const [editing, setEditing] = useState(null) // current draft being edited, or null
   const [busy, setBusy]       = useState(false)
   const [query, setQuery]     = useState('')
+  const [deployState, setDeployState] = useState('idle') // idle | deploying | ok | err
+  const [deployMsg, setDeployMsg]     = useState('')
+
+  const triggerDeploy = async () => {
+    if (!confirm('Trigger a fresh Vercel deploy to regenerate pre-rendered HTML for all published posts? This usually takes ~1 minute.')) return
+    setDeployState('deploying')
+    setDeployMsg('')
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'deploy' }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setDeployState('err')
+        setDeployMsg(data.error || `HTTP ${res.status}`)
+        return
+      }
+      setDeployState('ok')
+      setDeployMsg(`Deploy queued (${data.state || 'PENDING'}). New post HTML will be live in ~1–2 min.`)
+    } catch (e) {
+      setDeployState('err')
+      setDeployMsg(e?.message || 'Deploy request failed')
+    }
+  }
 
   const load = async () => {
     const { data, error } = await adminSupabase
@@ -1761,9 +1788,31 @@ function BlogTab() {
             onChange={e => setQuery(e.target.value)}
             style={{ ...inputStyle, width: 220, margin: 0 }}
           />
+          <button
+            onClick={triggerDeploy}
+            disabled={deployState === 'deploying'}
+            style={{ ...btnGhostStyle, opacity: deployState === 'deploying' ? 0.6 : 1 }}
+            title="Rebuild the site so newly published posts get pre-rendered SEO HTML."
+          >
+            {deployState === 'deploying' ? 'Deploying…' : '⚡ Deploy now'}
+          </button>
           <button onClick={startNew} style={btnPrimaryCompact}>+ New Post</button>
         </div>
       </div>
+
+      {deployMsg && (
+        <div style={{
+          padding: '10px 14px',
+          marginBottom: 14,
+          borderRadius: 8,
+          fontSize: 13,
+          background: deployState === 'ok' ? 'rgba(125,255,176,0.1)' : 'rgba(255,154,154,0.1)',
+          color: deployState === 'ok' ? '#7dffb0' : '#ff9a9a',
+          border: `1px solid ${deployState === 'ok' ? '#1d5232' : '#5d2222'}`,
+        }}>
+          {deployMsg}
+        </div>
+      )}
 
       <Panel>
         <Table

@@ -84,6 +84,32 @@ export default async function handler(req, res) {
       }
     }
 
+    case 'deploy': {
+      // Trigger a fresh Vercel deploy via Deploy Hook so newly published
+      // blog posts get their per-slug pre-rendered HTML (prerender-seo.mjs
+      // pulls from Supabase at build time).
+      const hookUrl = process.env.VERCEL_DEPLOY_HOOK_URL
+      if (!hookUrl) {
+        return res.status(500).json({ error: 'VERCEL_DEPLOY_HOOK_URL not set in Vercel env vars.' })
+      }
+      try {
+        const r = await fetch(hookUrl, { method: 'POST' })
+        const body = await r.json().catch(() => ({}))
+        if (!r.ok) {
+          console.error('[admin/deploy] hook returned', r.status, body)
+          return res.status(502).json({ error: `Deploy hook responded ${r.status}` })
+        }
+        return res.status(200).json({
+          ok: true,
+          job_id: body?.job?.id || null,
+          state: body?.job?.state || 'PENDING',
+        })
+      } catch (err) {
+        console.error('[admin/deploy] error:', err?.message || err)
+        return res.status(500).json({ error: err?.message || 'Deploy hook failed' })
+      }
+    }
+
     default:
       return res.status(400).json({ error: `Unknown action: ${action || '(empty)'}` })
   }
