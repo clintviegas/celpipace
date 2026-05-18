@@ -1,9 +1,65 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { readFileSync as readSync, existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { BLOG_ARTICLES } from '../src/data/blogData.js'
+import { createClient } from '@supabase/supabase-js'
+
+// Load .env into process.env if it exists (Vercel CI already populates these,
+// but a local `npm run build` needs them for the Supabase fetch below).
+{
+  const __filename = fileURLToPath(import.meta.url)
+  const envPath = path.resolve(path.dirname(__filename), '..', '.env')
+  if (existsSync(envPath)) {
+    for (const line of readSync(envPath, 'utf8').split('\n')) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+)\s*$/)
+      if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '')
+    }
+  }
+}
+import { BLOG_ARTICLES as FALLBACK_ARTICLES } from '../src/data/blogData.js'
 import { BRAND_NAME, PRODUCT_STATS, PUBLIC_SITE_URL } from '../src/data/constants.js'
 import { LANDING_PAGES, faqJsonLd, softwareJsonLd } from '../src/data/seoPages.js'
+
+// Fetch published blog posts from Supabase at build time so the CMS drives SEO.
+// Falls back to the static blogData.js array if env vars are missing or fetch fails.
+async function loadBlogArticles() {
+  const url  = process.env.VITE_SUPABASE_URL
+  const anon = process.env.VITE_SUPABASE_ANON_KEY
+  if (!url || !anon) {
+    console.warn('[prerender] Supabase env vars missing — using static fallback.')
+    return FALLBACK_ARTICLES
+  }
+  try {
+    const supabase = createClient(url, anon)
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('slug, title, category, tag, tag_color, tag_color_light, read_time, date_label, excerpt, sections')
+      .eq('published', true)
+      .order('sort_order', { ascending: false })
+      .order('created_at', { ascending: false })
+    if (error || !data?.length) {
+      console.warn('[prerender] DB fetch failed — using static fallback:', error?.message)
+      return FALLBACK_ARTICLES
+    }
+    return data.map(r => ({
+      slug:           r.slug,
+      title:          r.title,
+      category:       r.category,
+      tag:            r.tag,
+      tagColor:       r.tag_color,
+      tagColorLight:  r.tag_color_light,
+      readTime:       r.read_time,
+      date:           r.date_label,
+      excerpt:        r.excerpt,
+      sections:       Array.isArray(r.sections) ? r.sections : [],
+    }))
+  } catch (e) {
+    console.warn('[prerender] DB load exception — using static fallback:', e?.message)
+    return FALLBACK_ARTICLES
+  }
+}
+
+const BLOG_ARTICLES = await loadBlogArticles()
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(__dirname, '..')

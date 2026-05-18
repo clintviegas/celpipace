@@ -1,9 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useParams } from 'react-router-dom'
-import { BLOG_ARTICLES, BLOG_CATEGORIES } from '../data/blogData'
+import { BLOG_CATEGORIES, BLOG_ARTICLES as FALLBACK_ARTICLES } from '../data/blogData'
+import { supabase } from '../lib/supabase'
 import SEO from '../components/SEO'
 import { BRAND_NAME } from '../data/constants'
+
+// Map snake_case DB row -> camelCase shape used throughout the page.
+function rowToArticle(r) {
+  return {
+    slug:           r.slug,
+    title:          r.title,
+    category:       r.category,
+    tag:            r.tag,
+    tagColor:       r.tag_color,
+    tagColorLight:  r.tag_color_light,
+    readTime:       r.read_time,
+    date:           r.date_label,
+    excerpt:        r.excerpt,
+    sections:       Array.isArray(r.sections) ? r.sections : [],
+  }
+}
 
 /* ── Reading progress bar ── */
 function ReadingProgress({ articleRef }) {
@@ -185,19 +202,41 @@ function ArticleCard({ article, onClick, index }) {
 export default function BlogPage() {
   const navigate = useNavigate()
   const { slug } = useParams()
+  const [articles, setArticles]             = useState(FALLBACK_ARTICLES)
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeArticle, setActiveArticle]   = useState(null)
   const [search, setSearch]                 = useState('')
+
+  // Fetch published posts from Supabase. Falls back to the static array
+  // (FALLBACK_ARTICLES) if the request fails so the page never shows blank.
+  useEffect(() => {
+    let cancel = false
+    ;(async () => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('slug, title, category, tag, tag_color, tag_color_light, read_time, date_label, excerpt, sections, sort_order, created_at')
+        .eq('published', true)
+        .order('sort_order', { ascending: false })
+        .order('created_at', { ascending: false })
+      if (cancel) return
+      if (error || !data?.length) {
+        console.warn('[blog] DB fetch failed, using static fallback:', error?.message)
+        return
+      }
+      setArticles(data.map(rowToArticle))
+    })()
+    return () => { cancel = true }
+  }, [])
 
   useEffect(() => {
     if (!slug) {
       setActiveArticle(null)
       return
     }
-    setActiveArticle(BLOG_ARTICLES.find(a => a.slug === slug) || null)
-  }, [slug])
+    setActiveArticle(articles.find(a => a.slug === slug) || null)
+  }, [slug, articles])
 
-  const filtered = BLOG_ARTICLES.filter(a => {
+  const filtered = articles.filter(a => {
     const matchCat = activeCategory === 'all' || a.category === activeCategory
     const matchSearch = !search || a.title.toLowerCase().includes(search.toLowerCase()) ||
                         a.excerpt.toLowerCase().includes(search.toLowerCase())
@@ -205,7 +244,7 @@ export default function BlogPage() {
   })
 
   const relatedArticles = activeArticle
-    ? BLOG_ARTICLES
+    ? articles
         .filter(a => a.slug !== activeArticle.slug && (a.category === activeArticle.category || a.category === 'strategy'))
         .slice(0, 4)
     : []
@@ -276,7 +315,7 @@ export default function BlogPage() {
                     {cat.label}
                     {cat.id !== 'all' && (
                       <span className="blog-cat-count">
-                        {BLOG_ARTICLES.filter(a => a.category === cat.id).length}
+                        {articles.filter(a => a.category === cat.id).length}
                       </span>
                     )}
                   </button>

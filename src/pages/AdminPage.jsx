@@ -162,6 +162,7 @@ export default function AdminPage() {
             ['refunds', 'Refunds'],
             ['observability', 'Observability'],
             ['coupons', 'Coupons'],
+            ['blog', 'Blog'],
             ['analytics', 'Analytics'],
           ].map(([id, label]) => (
             <button
@@ -192,6 +193,7 @@ export default function AdminPage() {
         {tab === 'refunds' && <RefundsTab />}
         {tab === 'observability' && <ObservabilityTab />}
         {tab === 'coupons' && <CouponsTab />}
+        {tab === 'blog' && <BlogTab />}
         {tab === 'analytics' && <AnalyticsTab />}
       </div>
     </div>
@@ -1611,6 +1613,290 @@ function RefundsTab() {
             empty="No refunds yet."
           />
         </Panel>
+      </div>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  BLOG CMS                                                    */
+/* ═══════════════════════════════════════════════════════════ */
+const BLOG_CATEGORY_OPTIONS = [
+  { id: 'writing',     label: 'Writing',     color: '#C8972A', light: '#FFF7E0' },
+  { id: 'listening',   label: 'Listening',   color: '#4A90D9', light: '#EAF3FF' },
+  { id: 'reading',     label: 'Reading',     color: '#2D8A56', light: '#F0FDF4' },
+  { id: 'speaking',    label: 'Speaking',    color: '#C8102E', light: '#FFF0F0' },
+  { id: 'immigration', label: 'Immigration', color: '#6B4FAF', light: '#F3EFFF' },
+  { id: 'strategy',    label: 'Strategy',    color: '#C8102E', light: '#FFF0F0' },
+]
+
+const EMPTY_BLOG_DRAFT = {
+  slug: '',
+  title: '',
+  category: 'strategy',
+  read_time: '6 min read',
+  date_label: '',
+  excerpt: '',
+  sections: [{ heading: '', body: '', list: [], body2: '' }],
+  published: true,
+  sort_order: 0,
+}
+
+function slugify(s) {
+  return (s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 96)
+}
+
+function BlogTab() {
+  const [posts, setPosts]     = useState(null)
+  const [err, setErr]         = useState('')
+  const [editing, setEditing] = useState(null) // current draft being edited, or null
+  const [busy, setBusy]       = useState(false)
+  const [query, setQuery]     = useState('')
+
+  const load = async () => {
+    const { data, error } = await adminSupabase
+      .from('blog_posts')
+      .select('*')
+      .order('sort_order', { ascending: false })
+      .order('created_at', { ascending: false })
+    if (error) setErr(error.message)
+    else setPosts(data ?? [])
+  }
+  useEffect(() => { load() }, [])
+
+  const startNew = () => {
+    const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    setEditing({ ...EMPTY_BLOG_DRAFT, date_label: today, sort_order: (posts?.[0]?.sort_order ?? 0) + 1 })
+  }
+
+  const startEdit = (post) => {
+    setEditing({
+      ...post,
+      sections: Array.isArray(post.sections) && post.sections.length
+        ? post.sections.map(s => ({ heading: s.heading || '', body: s.body || '', list: Array.isArray(s.list) ? s.list : [], body2: s.body2 || '' }))
+        : [{ heading: '', body: '', list: [], body2: '' }],
+    })
+  }
+
+  const cancelEdit = () => setEditing(null)
+
+  const save = async () => {
+    if (!editing.title.trim()) { alert('Title required'); return }
+    const slug = editing.slug.trim() || slugify(editing.title)
+    const cat  = BLOG_CATEGORY_OPTIONS.find(c => c.id === editing.category) || BLOG_CATEGORY_OPTIONS[5]
+
+    const cleanedSections = editing.sections
+      .filter(s => s.heading.trim() || s.body.trim() || (s.list?.length))
+      .map(s => {
+        const out = { heading: s.heading.trim(), body: s.body.trim() }
+        const list = (s.list || []).map(li => li.trim()).filter(Boolean)
+        if (list.length) out.list = list
+        if (s.body2?.trim()) out.body2 = s.body2.trim()
+        return out
+      })
+
+    const payload = {
+      slug,
+      title:           editing.title.trim(),
+      category:        editing.category,
+      tag:             cat.label,
+      tag_color:       cat.color,
+      tag_color_light: cat.light,
+      read_time:       editing.read_time.trim() || '5 min read',
+      date_label:      editing.date_label.trim(),
+      excerpt:         editing.excerpt.trim(),
+      sections:        cleanedSections,
+      published:       editing.published,
+      sort_order:      editing.sort_order ?? 0,
+    }
+
+    setBusy(true)
+    const { error } = await adminSupabase.from('blog_posts').upsert(payload, { onConflict: 'slug' })
+    setBusy(false)
+    if (error) { alert('Save failed: ' + error.message); return }
+    setEditing(null)
+    load()
+  }
+
+  const togglePublished = async (post) => {
+    const { error } = await adminSupabase.from('blog_posts').update({ published: !post.published }).eq('slug', post.slug)
+    if (error) { alert(error.message); return }
+    setPosts(prev => prev.map(p => p.slug === post.slug ? { ...p, published: !post.published } : p))
+  }
+
+  const remove = async (post) => {
+    if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) return
+    const { error } = await adminSupabase.from('blog_posts').delete().eq('slug', post.slug)
+    if (error) { alert(error.message); return }
+    setPosts(prev => prev.filter(p => p.slug !== post.slug))
+  }
+
+  if (err) return <Err msg={err} />
+  if (!posts) return <Loading />
+
+  if (editing) {
+    return <BlogEditor draft={editing} setDraft={setEditing} onSave={save} onCancel={cancelEdit} busy={busy} />
+  }
+
+  const q = query.trim().toLowerCase()
+  const filtered = q ? posts.filter(p => `${p.title} ${p.slug} ${p.excerpt}`.toLowerCase().includes(q)) : posts
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Blog Posts</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            {posts.length} total · {posts.filter(p => p.published).length} published · {posts.filter(p => !p.published).length} draft
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <input
+            placeholder="Search title / slug…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            style={{ ...inputStyle, width: 220, margin: 0 }}
+          />
+          <button onClick={startNew} style={btnPrimaryCompact}>+ New Post</button>
+        </div>
+      </div>
+
+      <Panel>
+        <Table
+          cols={['Title', 'Slug', 'Category', 'Status', 'Updated', 'Actions']}
+          rows={filtered.map(p => [
+            <div>
+              <div style={{ fontWeight: 700 }}>{p.title}</div>
+              <div style={{ color: '#98a2b5', fontSize: 12, marginTop: 2, maxWidth: 480, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.excerpt}</div>
+            </div>,
+            <code style={{ color: '#7dc8ff', fontSize: 12 }}>/blog/{p.slug}</code>,
+            <Chip color={p.tag_color || '#98a2b5'} text={(p.category || '').toUpperCase()} />,
+            p.published
+              ? <Chip color="#7dffb0" text="LIVE" />
+              : <Chip color="#98a2b5" text="DRAFT" />,
+            p.updated_at ? new Date(p.updated_at).toLocaleString() : '—',
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              <button onClick={() => startEdit(p)} style={btnSmallStyle}>Edit</button>
+              <button onClick={() => togglePublished(p)} style={btnSmallStyle}>{p.published ? 'Unpublish' : 'Publish'}</button>
+              <a href={`/blog/${p.slug}`} target="_blank" rel="noreferrer" style={{ ...btnSmallStyle, textDecoration: 'none', display: 'inline-block' }}>View ↗</a>
+              <button onClick={() => remove(p)} style={{ ...btnSmallStyle, color: '#ff9a9a' }}>Delete</button>
+            </div>,
+          ])}
+          empty="No posts yet. Click + New Post to create one."
+        />
+      </Panel>
+    </>
+  )
+}
+
+function BlogEditor({ draft, setDraft, onSave, onCancel, busy }) {
+  const update = (patch) => setDraft(d => ({ ...d, ...patch }))
+  const updateSection = (idx, patch) => setDraft(d => ({
+    ...d,
+    sections: d.sections.map((s, i) => i === idx ? { ...s, ...patch } : s),
+  }))
+  const addSection = () => setDraft(d => ({ ...d, sections: [...d.sections, { heading: '', body: '', list: [], body2: '' }] }))
+  const removeSection = (idx) => setDraft(d => ({ ...d, sections: d.sections.filter((_, i) => i !== idx) }))
+  const moveSection = (idx, dir) => setDraft(d => {
+    const next = [...d.sections]
+    const tgt = idx + dir
+    if (tgt < 0 || tgt >= next.length) return d
+    ;[next[idx], next[tgt]] = [next[tgt], next[idx]]
+    return { ...d, sections: next }
+  })
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <h2 style={{ margin: 0, fontSize: 22, color: '#E6ECF5' }}>{draft.slug ? `Edit: ${draft.title || draft.slug}` : 'New Blog Post'}</h2>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={onCancel} style={btnGhostStyle} disabled={busy}>Cancel</button>
+          <button onClick={onSave} style={btnPrimaryCompact} disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
+        </div>
+      </div>
+
+      <Panel title="Metadata">
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14 }}>
+          <div>
+            <label style={labelStyle}>Title</label>
+            <input value={draft.title} onChange={e => update({ title: e.target.value, slug: draft.slug || slugify(e.target.value) })} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Slug (/blog/…)</label>
+            <input value={draft.slug} onChange={e => update({ slug: slugify(e.target.value) })} style={inputStyle} placeholder="auto from title" />
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 14, marginTop: 8 }}>
+          <div>
+            <label style={labelStyle}>Category</label>
+            <select value={draft.category} onChange={e => update({ category: e.target.value })} style={inputStyle}>
+              {BLOG_CATEGORY_OPTIONS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle}>Read time</label>
+            <input value={draft.read_time} onChange={e => update({ read_time: e.target.value })} style={inputStyle} placeholder="6 min read" />
+          </div>
+          <div>
+            <label style={labelStyle}>Date label</label>
+            <input value={draft.date_label} onChange={e => update({ date_label: e.target.value })} style={inputStyle} placeholder="May 13, 2026" />
+          </div>
+          <div>
+            <label style={labelStyle}>Sort order (higher = top)</label>
+            <input type="number" value={draft.sort_order} onChange={e => update({ sort_order: parseInt(e.target.value || '0', 10) })} style={inputStyle} />
+          </div>
+        </div>
+        <div style={{ marginTop: 8 }}>
+          <label style={labelStyle}>Excerpt (shown in cards & meta description)</label>
+          <textarea value={draft.excerpt} onChange={e => update({ excerpt: e.target.value })} rows={3} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
+        </div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, color: '#E6ECF5', fontSize: 14 }}>
+          <input type="checkbox" checked={draft.published} onChange={e => update({ published: e.target.checked })} />
+          Published (visible at /blog/{draft.slug || '…'})
+        </label>
+      </Panel>
+
+      <Panel title={`Sections (${draft.sections.length})`}>
+        {draft.sections.map((s, i) => (
+          <div key={i} style={{ border: '1px solid #1d3152', borderRadius: 8, padding: 14, marginBottom: 12, background: '#0d1f38' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <strong style={{ color: '#ffd66a', fontSize: 13 }}>Section {i + 1}</strong>
+              <div style={{ display: 'flex', gap: 4 }}>
+                <button onClick={() => moveSection(i, -1)} disabled={i === 0} style={{ ...btnSmallStyle, padding: '4px 8px' }}>↑</button>
+                <button onClick={() => moveSection(i, 1)} disabled={i === draft.sections.length - 1} style={{ ...btnSmallStyle, padding: '4px 8px' }}>↓</button>
+                <button onClick={() => removeSection(i)} style={{ ...btnSmallStyle, padding: '4px 8px', color: '#ff9a9a' }}>✕</button>
+              </div>
+            </div>
+
+            <label style={labelStyle}>Heading</label>
+            <input value={s.heading} onChange={e => updateSection(i, { heading: e.target.value })} style={inputStyle} />
+
+            <label style={labelStyle}>Body (supports \n for paragraph breaks, **bold**)</label>
+            <textarea value={s.body} onChange={e => updateSection(i, { body: e.target.value })} rows={5} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
+
+            <label style={labelStyle}>Bullet list (one item per line, optional)</label>
+            <textarea
+              value={(s.list || []).join('\n')}
+              onChange={e => updateSection(i, { list: e.target.value.split('\n') })}
+              rows={4}
+              style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }}
+              placeholder="One bullet per line"
+            />
+
+            <label style={labelStyle}>Body 2 (text after the bullet list, optional)</label>
+            <textarea value={s.body2 || ''} onChange={e => updateSection(i, { body2: e.target.value })} rows={3} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
+          </div>
+        ))}
+        <button onClick={addSection} style={btnGhostStyle}>+ Add Section</button>
+      </Panel>
+
+      <div style={{ display: 'flex', gap: 8, marginTop: 16, justifyContent: 'flex-end' }}>
+        <button onClick={onCancel} style={btnGhostStyle} disabled={busy}>Cancel</button>
+        <button onClick={onSave} style={btnPrimaryCompact} disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
       </div>
     </>
   )
