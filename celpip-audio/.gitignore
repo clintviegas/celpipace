@@ -1,0 +1,9 @@
+/celpip-audio
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+.env
+.fly/
