@@ -747,4 +747,423 @@ export const BLOG_ARTICLES = [
       },
     ],
   },
+
+  /* ── 14 ── */
+  {
+    slug: 'what-is-celpip-8-score',
+    title: 'What Is a CELPIP 8 Score? CLB Mapping, CRS Impact, and How to Reach It',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '7 min read',
+    date: 'May 15, 2026',
+    excerpt:
+      'A CELPIP 8 in each skill maps to CLB 8 and is the most common Express Entry threshold candidates target first. Here is what the score means, what it is worth in CRS points, and how to move from CLB 7 to CLB 8 in each section.',
+    sections: [
+      {
+        heading: 'What a CELPIP 8 Actually Means',
+        body: `A CELPIP score of 8 in any of the four skills — Listening, Reading, Writing, or Speaking — corresponds to **CLB 8** on the Canadian Language Benchmarks scale. CLB 8 represents what the CELPIP framework calls "very good intermediate" English proficiency.\n\nIn practical terms, a CLB 8 test-taker can:`,
+        list: [
+          'Understand and respond to most everyday workplace and social conversations without significant effort',
+          'Read standard documents (emails, articles, forms, policies) and identify both stated facts and implied meaning',
+          'Write organized, mostly grammatically correct responses with a range of sentence structures',
+          'Speak fluently on familiar topics with only minor hesitation or vocabulary slips',
+        ],
+        body2: `CELPIP scores 0–12 do not behave like percentages. The jump from 7 to 8 is meaningful — it represents a real shift in fluency, accuracy, and range. The jump from 8 to 9 is even more significant because that is the CLB 9 threshold most Express Entry candidates need.`,
+      },
+      {
+        heading: 'How CELPIP 8 Maps to CLB',
+        body: `Canada's immigration programs use the CLB scale, not raw CELPIP scores. The mapping is one-to-one for CELPIP General scores 4 through 10:`,
+        list: [
+          'CELPIP 4 = CLB 4',
+          'CELPIP 5 = CLB 5',
+          'CELPIP 6 = CLB 6',
+          'CELPIP 7 = CLB 7',
+          'CELPIP 8 = CLB 8',
+          'CELPIP 9 = CLB 9',
+          'CELPIP 10–12 = CLB 10',
+        ],
+        body2: `So if you score CELPIP 8 in Listening, that is reported as CLB 8 Listening on your test result for immigration purposes. Each of the four skills is scored independently — your overall CLB level for Express Entry is determined skill by skill, not averaged.`,
+      },
+      {
+        heading: 'What CELPIP 8 / CLB 8 Is Worth in CRS Points',
+        body: `For Express Entry candidates with a spouse, CLB 8 in all four skills awards 22 first-official-language CRS points per skill — a total of 88 core language points.\n\nFor candidates without a spouse, the per-skill value is slightly higher (24 points per skill, or 96 total).\n\nBut the bigger CRS impact comes from **skill transferability points**, which only unlock at CLB 7 and increase substantially at CLB 9. At CLB 8, you qualify for partial skill transferability bonuses if you also have Canadian work experience or foreign work experience plus education.\n\nThe takeaway: CLB 8 is a solid floor, but most candidates targeting an Express Entry ITA aim for CLB 9 in all four skills because the jump from 8 to 9 unlocks **+50 CRS points** through enhanced language points and full transferability bonuses. The single biggest CRS lever for most candidates is moving from CLB 8 to CLB 9.`,
+      },
+      {
+        heading: 'Who Should Target a CELPIP 8?',
+        body: `A CELPIP 8 / CLB 8 score is the right target if:`,
+        list: [
+          'You are applying through a Provincial Nominee Program with a CLB 7 or CLB 8 minimum language threshold',
+          'You are a Federal Skilled Worker (FSW) applicant where CLB 7 is the minimum and CLB 8 gives you breathing room',
+          'You are applying for Canadian citizenship — which requires CLB 4 in Speaking and Listening — but want a stronger language record',
+          'You are testing your readiness before pushing to CLB 9 — a CELPIP 8 mock score is the standard "almost ready" signal',
+        ],
+        body2: `If your Express Entry goal is a competitive CRS score in the current pool (above 510 for most CEC draws in 2026), CLB 8 alone will not be enough. You need to plan for CLB 9 across all four skills.`,
+      },
+      {
+        heading: 'How to Move from CELPIP 7 to CELPIP 8 — Section by Section',
+        body: `The jump from CLB 7 to CLB 8 is mostly about **range and consistency**, not about new skills. Below is what to focus on in each section.\n\n**Listening (7 → 8):** Stop relying on keyword matching. CLB 8 questions test inference and speaker attitude — you need to track *why* someone is saying something, not just *what* they said. Practice noting the speaker's tone, purpose, and implied opinion as you listen.\n\n**Reading (7 → 8):** R3 (Reading for Information) and R4 (Viewpoints) are where most CLB 7 candidates plateau. The fix is technique: in R3, anchor every question to a specific paragraph before reading carefully. In R4, eliminate any answer that "could be true" but is not directly supported by the text.\n\n**Writing (7 → 8):** CLB 8 writing requires sentence variety. A response made entirely of simple sentences caps at CLB 7 even if the grammar is perfect. Mix simple, compound, and complex sentences in every paragraph. Use cohesion markers — "Furthermore," "In contrast," "As a result" — between ideas.\n\n**Speaking (7 → 8):** Fluency over perfection. Aim for a steady pace with minimal dead silence, even if you make small grammar slips. Extend your answers — a 30-second response with three specific details consistently outscores a 15-second response with perfect grammar.`,
+      },
+      {
+        heading: 'Common Reasons Candidates Stay Stuck at CELPIP 7',
+        body: `Most candidates who plateau at CLB 7 do so for one of four reasons:`,
+        list: [
+          'Practicing untimed — the real test is heavily time-pressured and untimed practice masks weak areas',
+          'Re-doing the same practice sets without analyzing errors — repetition without diagnosis does not improve scores',
+          'Ignoring Speaking and Writing because they feel uncomfortable — these are where CLB 7 candidates leave the most points on the table',
+          'Studying vocabulary lists in isolation — vocabulary only improves scores when it appears in your active responses, not your passive recognition',
+        ],
+        body2: `The fix is structured, timed practice with error review after every session. Track which question types you get wrong, identify the pattern, then drill that specific weakness.`,
+      },
+      {
+        heading: 'Practice Toward CELPIP 8 — and Beyond',
+        body: `CELPIPACE offers timed CELPIP practice tests with instant CLB scoring, real-time writing and speaking feedback, and saved score reports so you can track your progress from CLB 7 to CLB 8 to CLB 9. Start with a free diagnostic to see exactly where you stand, then use the CRS Score Calculator to model how each CLB jump changes your Express Entry profile.\n\nFor a deeper look at the next milestone, read the guide on what a CELPIP 9 score means and how to reach it.`,
+      },
+    ],
+  },
+
+  /* ── 15 ── */
+  {
+    slug: 'what-is-celpip-9-score',
+    title: 'What Is a CELPIP 9 Score? The Express Entry Threshold That Unlocks +50 CRS Points',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '8 min read',
+    date: 'May 16, 2026',
+    excerpt:
+      'CELPIP 9 in all four skills maps to CLB 9 — the single most important Express Entry threshold. Reaching CLB 9 across the board can add over 50 CRS points compared to CLB 8. Here is what the score means and how to get there.',
+    sections: [
+      {
+        heading: 'Why CELPIP 9 Matters More Than Any Other Score',
+        body: `In the entire CLB scale, no single jump is worth as many CRS points as the move from CLB 8 to CLB 9 across all four skills.\n\nA CELPIP score of 9 maps directly to CLB 9, which Express Entry treats as the threshold for **enhanced language points** and **full skill transferability bonuses**. For candidates without a spouse, CLB 9 in all four skills awards 31 points per skill — 124 core language points total, compared to 96 at CLB 8.\n\nLayer on the skill transferability bonus (which only triggers fully at CLB 9), and a candidate with Canadian or foreign work experience can gain another 25–50 CRS points just by hitting CLB 9 across all four skills.\n\nIn the current Express Entry pool — where CEC draws sit above CRS 510 — this single threshold often decides whether a candidate gets an ITA in the next round or waits another six months.`,
+      },
+      {
+        heading: 'What CLB 9 Proficiency Looks Like',
+        body: `CLB 9 represents what the CELPIP framework calls "effective advanced" proficiency. A CLB 9 test-taker can:`,
+        list: [
+          'Follow extended discussions on unfamiliar topics with minimal misunderstanding',
+          'Read detailed texts and identify subtle inferences, viewpoints, and tone shifts',
+          'Write organized, fluent responses with strong range of vocabulary and grammar',
+          'Speak naturally with consistent grammatical accuracy and developed ideas',
+        ],
+        body2: `The difference between CLB 8 and CLB 9 is not "slightly better English." It is the difference between **competent communication** and **confident communication**. CLB 9 candidates rarely hesitate, rarely simplify their ideas to avoid grammar mistakes, and rarely miss the implied meaning of a passage.`,
+      },
+      {
+        heading: 'CELPIP 9 in Each Skill — What the Scoring Rubric Rewards',
+        body: `**Listening (CLB 9):** You correctly answer inference and attitude questions in L4 (Panel Discussions) and L6 (Viewpoints) — the two parts where CLB 8 candidates lose the most marks. You do not need to catch every word; you need to follow argument structure.\n\n**Reading (CLB 9):** You consistently score above 90% in R3 (Information) and reliably eliminate "plausible but unsupported" answers in R4 (Viewpoints). R4 is the single biggest difference between CLB 8 and CLB 9 readers.\n\n**Writing (CLB 9):** Your responses show range — varied sentence structures, precise vocabulary, accurate use of complex grammar (relative clauses, conditional structures, passive where appropriate), and clear cohesion across paragraphs. The CLB 9 writer also stays on topic and develops ideas with specific examples, not generic statements.\n\n**Speaking (CLB 9):** You speak fluently for the full task duration without significant pausing. Your responses extend beyond the surface answer — you give reasons, examples, and elaboration. Grammar is mostly accurate; small slips do not interfere with meaning.`,
+      },
+      {
+        heading: 'The CRS Math at CLB 9',
+        body: `Here is exactly what CLB 9 across all four skills is worth on the CRS scale, compared to CLB 8:`,
+        list: [
+          'Core language points (without spouse): 124 at CLB 9 vs 96 at CLB 8 — gain of 28 points',
+          'Skill transferability — language + education: up to 50 points at CLB 9 vs 25 at CLB 8',
+          'Skill transferability — language + foreign work experience: up to 50 points at CLB 9 vs 25 at CLB 8',
+          'Total typical gain from CLB 8 to CLB 9: 50–80 CRS points depending on profile',
+        ],
+        body2: `For a candidate currently sitting at CRS 470 with CLB 8 scores, reaching CLB 9 in all four skills typically moves them into the 520–540 range — competitive in most recent CEC and PNP-enhanced draws.`,
+      },
+      {
+        heading: 'How to Move from CLB 8 to CLB 9 — Section by Section',
+        body: `**Listening:** Train on L4 and L6 specifically. These two parts require following an argument structure rather than catching individual facts. Practice noting the main claim, the supporting evidence, and any counter-points as you listen — not after.\n\n**Reading:** R4 is the bottleneck. The technique that consistently moves candidates from CLB 8 to CLB 9 in Reading: read the question, then return to the specific paragraph that addresses it, then read the relevant sentence(s) carefully. Do not rely on a single read-through of the passage.\n\n**Writing:** Three changes move Writing scores from CLB 8 to CLB 9 — use at least two complex sentence structures per paragraph; replace generic vocabulary with precise alternatives ("effective" instead of "good," "substantial" instead of "big"); use explicit cohesion markers between every major idea shift.\n\n**Speaking:** Stop trying to sound perfect. The CLB 9 speaker prioritizes fluency, idea development, and clear pacing. A 45-second response with three specific reasons and one example outscores a 30-second response that is grammatically flawless but shallow.`,
+      },
+      {
+        heading: 'How Long It Actually Takes to Reach CLB 9',
+        body: `For a candidate already scoring CELPIP 8 in most sections, reaching CELPIP 9 across all four typically takes 4–8 weeks of structured practice. The variables:`,
+        list: [
+          'How wide the gap is — a 7 in one section and 8 in others needs more work than a consistent 8',
+          'Which skills need to improve — Reading and Listening generally move faster than Writing and Speaking',
+          'How much timed practice you do — untimed practice does not produce CLB 9 results',
+          'How carefully you review errors — analytical review is the fastest improvement lever',
+        ],
+        body2: `Candidates starting from CLB 7 in multiple sections should plan 8–12 weeks. Candidates already strong in 2–3 sections but weak in one (often Speaking or Writing) can target the weak skill specifically and reach CLB 9 in 3–4 weeks of focused work.`,
+      },
+      {
+        heading: 'Practice Toward CELPIP 9',
+        body: `CELPIPACE includes full-length CELPIP mock exams with instant CLB scoring, real-time Writing and Speaking feedback, and section-specific drills targeting the exact rubrics that distinguish CLB 8 from CLB 9. Use the CRS Score Calculator to confirm exactly how many points a CLB 9 profile adds to your Express Entry score.\n\nFor a deeper look at the highest CELPIP score bands and who actually needs them, see the guide on CELPIP 10, 11, and 12.`,
+      },
+    ],
+  },
+
+  /* ── 16 ── */
+  {
+    slug: 'celpip-10-11-12-explained',
+    title: 'CELPIP 10, 11, and 12 Explained: Who Actually Needs the Top Scores?',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '6 min read',
+    date: 'May 17, 2026',
+    excerpt:
+      'CELPIP scores of 10, 11, and 12 all map to CLB 10 for Express Entry — but they signal different levels of mastery. Here is what each band means, who needs them, and whether pushing past CLB 9 is worth the effort.',
+    sections: [
+      {
+        heading: 'The Top of the CELPIP Scale',
+        body: `CELPIP scores 10, 11, and 12 represent the highest band on the test. All three map to **CLB 10** for Canadian immigration scoring — which is the maximum CLB level the Express Entry system recognizes for CRS points.\n\nThis means, for immigration purposes, there is no points difference between a CELPIP 10 and a CELPIP 12 — both are CLB 10. But there is a real proficiency difference, and a few specific scenarios where a CELPIP 11 or 12 matters beyond CRS.`,
+        list: [
+          'CELPIP 10 = CLB 10 — strong advanced proficiency',
+          'CELPIP 11 = CLB 10 — near-native proficiency',
+          'CELPIP 12 = CLB 10 — native-level expertise',
+        ],
+      },
+      {
+        heading: 'What CRS Points Look Like at CLB 10',
+        body: `For candidates without a spouse, CLB 10 in all four skills awards **34 first-language CRS points per skill — 136 total**, compared to 124 at CLB 9.\n\nThat is a +12 core language point gain over CLB 9, plus the skill transferability bonus stays at its maximum value (which already triggered at CLB 9).\n\nFor most candidates, the CRS payoff of pushing from CLB 9 to CLB 10 is therefore modest — about 12 points — compared to the 50+ point payoff of moving from CLB 8 to CLB 9. This is why immigration consultants almost universally recommend targeting CLB 9 first, and only attempting CLB 10 if there is a specific strategic reason.`,
+      },
+      {
+        heading: 'When CLB 10 Is Worth Targeting',
+        body: `Pushing from CLB 9 to CLB 10 makes strategic sense in a few specific cases:`,
+        list: [
+          'Your current CRS sits just below recent draw cut-offs and +12 points would tip you above the line',
+          'You are applying through a Provincial Nominee Program that explicitly rewards or requires CLB 10 in specific skills',
+          'You are applying for a regulated profession (law, medicine, certain engineering paths) where employers or licensing bodies value CLB 10 evidence',
+          'You are already very close to CLB 10 in 3 of 4 skills and only need to push one section over the line',
+        ],
+        body2: `For most other candidates, the time investment to push from CLB 9 to CLB 10 is better spent elsewhere — additional work experience, French testing for the bonus, or completing PNP applications.`,
+      },
+      {
+        heading: 'What CLB 10 Proficiency Looks Like',
+        body: `CLB 10 is the level at which CELPIP considers a test-taker to have "expert" English proficiency. In practice, a CLB 10 candidate can:`,
+        list: [
+          'Follow extended academic, professional, or technical discussions without effort',
+          'Read complex, dense texts (academic articles, legal documents, technical specifications) and accurately identify nuance, tone, and implied meaning',
+          'Write organized, sophisticated responses with strong range of grammar, precise vocabulary, and clear argumentation',
+          'Speak fluently and naturally on any topic with consistently accurate grammar and appropriate register',
+        ],
+        body2: `The difference between CLB 9 and CLB 10 is **range and polish**. A CLB 9 candidate is competent. A CLB 10 candidate sounds and writes like an educated native speaker — with the occasional small slip that does not affect meaning.`,
+      },
+      {
+        heading: 'CELPIP 11 vs CELPIP 12 — Does It Matter?',
+        body: `For Express Entry CRS scoring: no. CELPIP 11 and CELPIP 12 both report as CLB 10 and award the same CRS points.\n\nFor other purposes:`,
+        list: [
+          'Some employers, particularly in professional services, view a CELPIP 12 as a stronger language credential',
+          'Certain academic admissions in Canada (graduate programs, professional schools) may set CELPIP 11 or 12 as a preferred threshold rather than minimum',
+          'CELPIP 12 is rare and signals exceptional command of English — useful in competitive professional contexts but not necessary for immigration',
+        ],
+        body2: `If your goal is Canadian PR through Express Entry, do not spend time chasing a CELPIP 12. Target CELPIP 9–10 across all four skills and move on.`,
+      },
+      {
+        heading: 'How to Reach CLB 10 from CLB 9',
+        body: `The jump from CLB 9 to CLB 10 is mostly about **eliminating small errors** and **demonstrating range** rather than learning new techniques.\n\n**Listening (9 → 10):** Already strong listeners need to catch the most subtle inference and attitude cues — sarcasm, hedging, implied disagreement. Train on the trickiest L4 and L6 questions specifically.\n\n**Reading (9 → 10):** R4 still separates the top scorers. CLB 10 readers eliminate not only "plausibly true" wrong answers, but also "partially supported" wrong answers — the correct answer is fully supported by specific text.\n\n**Writing (9 → 10):** Reduce small errors (article use, preposition choice, subject-verb agreement). Use varied syntactic structures — including inverted, cleft, and conditional constructions where natural. Show vocabulary precision across the entire response, not just in a few sentences.\n\n**Speaking (9 → 10):** Eliminate hesitation, filler words, and repetition. Demonstrate range — different sentence structures, varied connectors, precise word choices. The CLB 10 speaker sounds confident and natural for the full task duration.`,
+      },
+      {
+        heading: 'Practice Toward CLB 10',
+        body: `If you have already reached CLB 9 and have a specific reason to push higher, CELPIPACE offers full-length mock exams with detailed CLB feedback at the top end of the scale. The Writing and Speaking practice modules include CLB 10-band sample responses so you can see exactly what the highest scores look like.\n\nFor most candidates, however, the smarter move is to lock in CLB 9 first. Read the guide on what a CELPIP 9 score means and how to reach it, then use the CRS Score Calculator to confirm whether pushing past CLB 9 is worth your time.`,
+      },
+    ],
+  },
+
+  /* ── 17 ── */
+  {
+    slug: 'celpip-reading-score-calculator-guide',
+    title: 'CELPIP Reading Score Calculator: How CELPIP Reading Is Scored and How to Convert Raw Scores',
+    category: 'reading',
+    tag: 'Reading',
+    tagColor: '#2D8A56',
+    tagColorLight: '#F0FDF4',
+    readTime: '6 min read',
+    date: 'May 18, 2026',
+    excerpt:
+      'CELPIP Reading scoring is more transparent than most candidates realize. Here is how the four parts contribute to your final score, how raw correct answers convert to CLB levels, and how to estimate your Reading band from a practice test.',
+    sections: [
+      {
+        heading: 'How CELPIP Reading Is Structured',
+        body: `The CELPIP General Reading section has **four parts and 38 questions** total, completed in 55–60 minutes:`,
+        list: [
+          'R1 — Reading Correspondence: 11 questions on an email or letter (split into two passages)',
+          'R2 — Reading to Apply a Diagram: 8 questions on a visual paired with a short text',
+          'R3 — Reading for Information: 9 questions on a fact-dense passage',
+          'R4 — Reading for Viewpoints: 10 questions on an opinion or editorial piece',
+        ],
+        body2: `All questions are multiple choice. Each correct answer counts equally toward your raw score. There is no penalty for wrong answers, so you should always guess if you are running out of time.`,
+      },
+      {
+        heading: 'How Raw Scores Convert to CLB Levels',
+        body: `CELPIP does not publish an official raw-to-CLB conversion table — the actual exam uses statistical equating to adjust for question difficulty across test administrations. However, based on widely reported candidate data and CELPIP's published descriptors, a reasonable approximation is:`,
+        list: [
+          '36–38 correct out of 38 → CLB 10 (CELPIP 10–12)',
+          '33–35 correct → CLB 9 (CELPIP 9)',
+          '29–32 correct → CLB 8 (CELPIP 8)',
+          '24–28 correct → CLB 7 (CELPIP 7)',
+          '19–23 correct → CLB 6 (CELPIP 6)',
+          '14–18 correct → CLB 5 (CELPIP 5)',
+        ],
+        body2: `These ranges shift slightly between test forms — the exact cutoff for CLB 9 on your test might be 33 or 34 correct depending on how difficult the form is rated. For planning purposes, a reliable estimator is: aim for **at least 33 correct out of 38** if your target is CLB 9.`,
+      },
+      {
+        heading: 'Which Parts Are Worth the Most Points',
+        body: `Every question contributes equally to your raw score, but the parts differ in difficulty — which means some parts are easier to maximize than others.\n\n**R1 (Correspondence) — easy points:** With clear technique, most CLB 8+ candidates can score 10/11 or 11/11. Read the subject line and opening paragraph first; they almost always contain the answer to Q1.\n\n**R2 (Apply a Diagram) — easy points:** R2 is the most straightforward part. Almost every wrong answer in R2 is caused by reading too fast or by answering from memory instead of re-checking the visual. Always go back to the visual for every question. Target: 8/8.\n\n**R3 (Information) — moderate:** R3 requires careful anchoring of each question to a specific paragraph. Target: 7–8 out of 9 at CLB 9 level.\n\n**R4 (Viewpoints) — hardest:** R4 is the part where most candidates lose CLB 9 status. The inference and viewpoint questions test whether you can distinguish "supported by the text" from "plausibly true." Target: 7–8 out of 10 for CLB 9.`,
+      },
+      {
+        heading: 'How to Estimate Your CLB Level from a Practice Test',
+        body: `If you have just completed a practice Reading section, here is how to convert your raw score into a realistic CLB estimate:`,
+        list: [
+          'Count your total correct answers out of 38',
+          'Find the band in the conversion table above',
+          'Adjust downward by 1 band if the practice test was untimed — timed performance is always lower',
+          'Adjust downward by 1 band if you used scratch paper or notes — the real test allows neither for Reading',
+        ],
+        body2: `So if you scored 33/38 untimed with notes, your realistic CLB Reading band on test day is closer to CLB 7 than CLB 9. Always practice under real exam conditions before estimating your score.`,
+      },
+      {
+        heading: 'Why the Calculator Cannot Be Exact',
+        body: `Two reasons:\n\nFirst, CELPIP uses **equating** to adjust for differences in question difficulty across test forms. The exact raw-to-scaled conversion changes from test to test. A score that is CLB 9 on one form might be CLB 8 on a slightly easier form.\n\nSecond, the scaled scoring rewards consistency across question types. Two candidates with the same raw score can receive slightly different CLB levels if one performs strongly on hard questions and weakly on easy ones, while the other shows the opposite pattern.\n\nFor accurate score estimation, use practice tests that simulate real exam conditions — timed, no notes, no breaks — and target raw scores at the upper end of each CLB band (35+/38 if CLB 9 is your goal).`,
+      },
+      {
+        heading: 'Faster Ways to Raise Your Reading Score',
+        body: `Three changes consistently raise CELPIP Reading from CLB 7–8 to CLB 9:`,
+        list: [
+          'Lock in 100% on R2 — it is the easiest part and most candidates leave 1–2 points on the table',
+          'Drill R4 inference technique — eliminate any answer that is not directly supported by specific text',
+          'Time every practice set — the real test penalizes slow readers more than careless ones',
+        ],
+        body2: `For section-specific drills with instant CLB scoring on every passage, use the Reading practice library on CELPIPACE. Each practice set is timed, scored, and tracked so you can see exactly which question types you need to drill next.`,
+      },
+      {
+        heading: 'Try the Live Calculator',
+        body: `For a full estimate that includes Listening, Reading, Writing, and Speaking — and converts your CELPIP scores into both CLB levels and Express Entry CRS points — use the CELPIP Score Calculator. It is the fastest way to see exactly where your scores sit on the immigration scale.\n\nFor the inference technique that consistently moves candidates from CLB 8 to CLB 9 in Reading, see the dedicated guide on CELPIP Reading inference questions.`,
+      },
+    ],
+  },
+
+  /* ── 18 ── */
+  {
+    slug: 'free-celpip-practice-tests-online',
+    title: 'Free CELPIP Practice Tests: What Is Actually Free Online (and What Is Not)',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0F7490',
+    tagColorLight: '#E0F7FA',
+    readTime: '6 min read',
+    date: 'May 19, 2026',
+    excerpt:
+      'Searching for free CELPIP practice tests returns dozens of sites — most of them recycle the same two or three sample questions. Here is what is genuinely free, what is paywalled, and how to build an effective free study plan.',
+    sections: [
+      {
+        heading: 'What "Free CELPIP Practice" Usually Means',
+        body: `Most websites that promise "free CELPIP practice tests" fall into one of three categories:\n\n**The official sample:** Paragon Testing (the maker of CELPIP) publishes one short free sample test on the official CELPIP website. It is a real preview, but it is only one set — not enough to actually prepare.\n\n**Recycled samples:** Many third-party sites simply republish the official sample or a handful of practice items from old textbooks. These look like multiple tests but are mostly the same content reformatted.\n\n**Free preview + paywall:** Most legitimate practice platforms offer a small free portion (a few question items or one short section) and then require an account, subscription, or one-time purchase to access the full library.\n\nNone of these is bad — but knowing the model helps you avoid wasting time on the same recycled samples.`,
+      },
+      {
+        heading: 'What Is Genuinely Free and Useful',
+        body: `If you have zero budget for CELPIP prep, the following resources are genuinely free and worth using:`,
+        list: [
+          'The official Paragon CELPIP sample test — take it once to understand exam format',
+          'Free section samples on CELPIPACE — Listening, Reading, Writing, and Speaking drills with instant CLB scoring',
+          'Public CELPIP YouTube walkthroughs — useful for visual learners on format and timing',
+          'CLB-level descriptors published by the Centre for Canadian Language Benchmarks — for understanding what each score requires',
+          'Free CRS Score Calculator tools — to model how your target CELPIP score translates to Express Entry points',
+        ],
+        body2: `That is enough material for a baseline diagnostic and rough orientation. It is not enough material to consistently reach CLB 9 on test day.`,
+      },
+      {
+        heading: 'Where Free Practice Falls Short',
+        body: `Free CELPIP practice tests are useful for a baseline. They are not sufficient to actually train for the test. The three things that determine whether you score CLB 9 vs CLB 7 are:`,
+        list: [
+          'Volume — you need 15+ full timed practice sets per section, not 1–2 samples',
+          'Real-time scoring — Writing and Speaking only improve when you receive immediate band feedback',
+          'Saved progress tracking — you need to see your CLB curve over time, not just isolated scores',
+        ],
+        body2: `Free practice provides none of these consistently. That is why most candidates who pass on the first attempt either use a paid platform, take a paid course, or work through an official prep textbook.`,
+      },
+      {
+        heading: 'How to Build a Strong Free Study Plan',
+        body: `If you cannot or do not want to pay for CELPIP prep, here is a free-first plan that gets you as close to test-ready as possible:\n\n**Week 1:** Take the free official sample test under timed conditions. Score yourself honestly using the CLB descriptors. Identify the two weakest skills.\n\n**Week 2:** Work through every free section drill you can find on CELPIPACE and similar platforms. Focus on your two weakest skills.\n\n**Week 3:** Use the free CRS Score Calculator to confirm exactly which CLB level you need across all four skills. This becomes your specific target — not just "a high score."\n\n**Week 4:** Find any free CELPIP writing samples online, write your own responses, then compare to the published samples to identify gaps. Do the same for Speaking — record yourself, listen back, and compare to CLB 9 sample responses.\n\n**Week 5+:** At this point, if you have plateaued, the most cost-effective upgrade is a 1-month paid subscription to a CELPIP practice platform. The cost is typically less than $50 and gives you 10× the practice volume of free resources.`,
+      },
+      {
+        heading: 'When Paying Actually Pays Off',
+        body: `For Express Entry candidates targeting CLB 9, the cost of retaking the CELPIP exam ($280 CAD) is dramatically higher than the cost of a month of paid practice. Most candidates who fail to hit their target the first time end up booking a second exam — making the total cost of "free prep + two exam attempts" higher than the cost of "paid prep + one exam attempt."\n\nIf your immigration timeline matters or your CRS score is tight, paid practice with full mock exams and instant Writing/Speaking feedback is the highest-ROI study investment available.`,
+      },
+      {
+        heading: 'Start with Free, Upgrade When Ready',
+        body: `CELPIPACE offers free section drills across Listening, Reading, Writing, and Speaking — enough to identify your baseline and target weak skills. When you are ready to take full timed mock exams with real-time AI scoring on Writing and Speaking, the paid plan unlocks the full library. Either way, the first step is the same: take a free practice set today and find out where your CLB stands.\n\nFor a structured 8-week schedule that builds from free practice to test-ready, read the CELPIP 8-week study plan.`,
+      },
+    ],
+  },
+
+  /* ── 19 ── */
+  {
+    slug: 'celpip-online-classes-vs-self-study',
+    title: 'CELPIP Online Classes vs Self-Study: Which One Actually Gets You to CLB 9?',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0F7490',
+    tagColorLight: '#E0F7FA',
+    readTime: '7 min read',
+    date: 'May 20, 2026',
+    excerpt:
+      'CELPIP online classes range from $150 group sessions to $2,000 one-on-one coaching — but most candidates who reach CLB 9 do not actually use them. Here is an honest comparison of online classes, self-study, and hybrid approaches.',
+    sections: [
+      {
+        heading: 'What CELPIP Online Classes Actually Provide',
+        body: `Most CELPIP online class offerings fall into three formats:\n\n**Group webinars (4–10 students):** Scheduled live sessions covering test format, strategies, and sample tasks. Typical cost: $150–$400 for a 4–8 week program.\n\n**Recorded course libraries:** Self-paced video lessons covering each section. Typical cost: $50–$200 for lifetime access.\n\n**One-on-one coaching:** Personal sessions with a CELPIP tutor — often a former examiner or experienced ESL teacher. Typical cost: $40–$100 per hour, with most candidates booking 6–12 sessions ($240–$1,200 total).\n\nThe value of each format depends entirely on what you actually need.`,
+      },
+      {
+        heading: 'When Online Classes Are Worth the Money',
+        body: `Online classes consistently pay off in three specific scenarios:`,
+        list: [
+          'You have plateaued at CLB 7 in Speaking and need direct feedback from a human evaluator',
+          'You are unclear about the format and want one structured pass through all four sections',
+          'You need accountability — you struggle to study consistently without scheduled sessions',
+        ],
+        body2: `In all three cases, the right format is one-on-one coaching for Speaking and Writing, not group webinars. Group sessions are too large to give personal feedback on the two sections that actually need it.`,
+      },
+      {
+        heading: 'When Self-Study Is the Better Choice',
+        body: `Self-study consistently outperforms paid classes when:`,
+        list: [
+          'You are already scoring CLB 8 in mock tests and just need volume and refinement',
+          'Your weak skills are Listening or Reading — these improve fastest with structured practice, not lectures',
+          'You have already taken the CELPIP once and know your weak areas precisely',
+          'Your timeline is flexible enough to allow 6–8 weeks of consistent self-directed practice',
+        ],
+        body2: `The reason self-study works for these candidates is that CELPIP rewards format familiarity and pattern recognition, not classroom instruction. Volume of timed, scored practice produces faster gains than watching someone explain strategies in a webinar.`,
+      },
+      {
+        heading: 'The Hybrid Approach Most CLB 9 Candidates Use',
+        body: `In practice, candidates who reach CLB 9 on the first attempt almost always use a hybrid model:`,
+        list: [
+          'Self-study for Listening and Reading — section drills with instant scoring, done daily',
+          'Self-study for Writing — daily writing practice with AI band feedback or model comparisons',
+          '1–3 hours of one-on-one Speaking coaching — only if Speaking is the weak skill',
+          'One full timed mock exam in the final week — to simulate exam conditions',
+        ],
+        body2: `Total cost of the hybrid approach: roughly $50–$200 (paid practice subscription) + $0–$300 (optional Speaking coaching). That is significantly less than a $400+ group class, and produces better results because every hour of practice is targeted to a specific weakness.`,
+      },
+      {
+        heading: 'What to Look For in a CELPIP Online Class',
+        body: `If you have decided that some form of class or coaching is worth the investment, here is what to look for:`,
+        list: [
+          'Real-time Writing and Speaking feedback — not just "your score is X" but specific corrections',
+          'Instructor or platform with CELPIP-specific (not general IELTS or ESL) experience',
+          'Access to full-length mock exams — not just isolated practice questions',
+          'Honest band feedback aligned with public CLB descriptors, not inflated marketing scores',
+          'Refund or trial policy in case the course does not match your level',
+        ],
+        body2: `Avoid: courses that promise "guaranteed CLB 9" (no legitimate provider can guarantee a score), classes with more than 8 students if you need personal feedback, and platforms that do not show sample feedback before purchase.`,
+      },
+      {
+        heading: 'How Much Time Each Approach Actually Takes',
+        body: `Realistic prep time estimates based on starting level:\n\n**Starting at CLB 7, targeting CLB 9:**`,
+        list: [
+          'Pure self-study: 8–12 weeks at 1–2 hours per day',
+          'Online group class only: 8–12 weeks at 2–3 hours per week (class) + 4–6 hours per week (homework)',
+          'Hybrid (self-study + Speaking coaching): 6–10 weeks at 1.5–2 hours per day',
+        ],
+        body2: `**Starting at CLB 8, targeting CLB 9:**`,
+        list2: [
+          'Pure self-study: 4–6 weeks',
+          'Hybrid (recommended): 3–5 weeks',
+          'Online class only: 6–8 weeks — slower because group pacing is fixed',
+        ],
+      },
+      {
+        heading: 'The CELPIPACE Approach',
+        body: `CELPIPACE is built around the hybrid model. The platform provides timed section drills, full-length mock exams, real-time AI scoring on Writing and Speaking, and saved CLB progress reports — all the elements of structured self-study without the recurring cost of group classes.\n\nIf one-on-one coaching is what you need for Speaking specifically, combining a CELPIPACE subscription with a few coaching sessions is the most cost-effective path to CLB 9 most candidates have available.\n\nStart with a free diagnostic test to see exactly where you stand, then decide whether self-study, classes, or a hybrid approach fits your timeline and budget. For a complete week-by-week schedule, read the 8-week CELPIP study plan.`,
+      },
+    ],
+  },
 ]
