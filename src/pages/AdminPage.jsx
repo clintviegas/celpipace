@@ -7,7 +7,7 @@ import { PUBLIC_SITE_URL } from '../data/constants'
    Only accessible when signed in as clint.viegas@gmail.com.
 ───────────────────────────────────────────────────────────── */
 const ADMIN_EMAIL = 'clint.viegas@gmail.com'
-const PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at, last_seen_at'
+const PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at, last_seen_at, country_code, country, city, region, timezone, locale, utm_source, utm_medium, utm_campaign, utm_content, utm_term, landing_page, referrer, first_touch_at, signup_ip_hash, signup_user_agent, current_plan, subscription_status, cancel_at_period_end'
 const LEGACY_PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at'
 const PAYMENT_COLUMNS = 'id, email, plan, amount_cents, currency, status, granted_days, stripe_session_id, stripe_payment_intent_id, stripe_customer_id, created_at'
 
@@ -155,15 +155,17 @@ export default function AdminPage() {
         <div style={{ display: 'flex', gap: 6, borderBottom: '1px solid #1d3152', marginBottom: 24, overflowX: 'auto' }}>
           {[
             ['overview', 'Overview'],
-            ['revenue', 'Revenue'],
+            ['acquisition', 'Acquisition'],
+            ['funnel', 'Funnel'],
             ['users', 'Users'],
             ['activity', 'Activity'],
+            ['revenue', 'Revenue'],
             ['subscriptions', 'Subscriptions'],
+            ['analytics', 'Analytics'],
             ['refunds', 'Refunds'],
             ['observability', 'Observability'],
             ['coupons', 'Coupons'],
             ['blog', 'Blog'],
-            ['analytics', 'Analytics'],
           ].map(([id, label]) => (
             <button
               key={id}
@@ -186,15 +188,17 @@ export default function AdminPage() {
         </div>
 
         {tab === 'overview' && <OverviewTab />}
-        {tab === 'revenue' && <RevenueTab />}
+        {tab === 'acquisition' && <AcquisitionTab />}
+        {tab === 'funnel' && <FunnelTab />}
         {tab === 'users' && <UsersTab />}
         {tab === 'activity' && <ActivityTab />}
+        {tab === 'revenue' && <RevenueTab />}
         {tab === 'subscriptions' && <SubscriptionsTab />}
+        {tab === 'analytics' && <AnalyticsTab />}
         {tab === 'refunds' && <RefundsTab />}
         {tab === 'observability' && <ObservabilityTab />}
         {tab === 'coupons' && <CouponsTab />}
         {tab === 'blog' && <BlogTab />}
-        {tab === 'analytics' && <AnalyticsTab />}
       </div>
     </div>
   )
@@ -244,7 +248,8 @@ function useProfiles() {
         .from('profiles')
         .select(PROFILE_COLUMNS)
         .order('created_at', { ascending: false })
-      if (error?.message?.includes('last_seen_at')) {
+      // If any of the enriched columns are missing on legacy DBs, fall back.
+      if (error && /column .* does not exist/i.test(error.message || '')) {
         const fallback = await adminSupabase
           .from('profiles')
           .select(LEGACY_PROFILE_COLUMNS)
@@ -336,6 +341,7 @@ function UsersTab() {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
   const [busyId, setBusyId] = useState(null)
+  const [selectedUser, setSelectedUser] = useState(null)
 
   const filtered = useMemo(() => {
     if (!rows) return []
@@ -397,22 +403,38 @@ function UsersTab() {
 
       <Panel>
         <Table
-          cols={['Email', 'Name', 'Location', 'Joined', 'Premium', 'Source', 'Action']}
+          cols={['Email', 'Name', 'Source', 'Location', 'Joined', 'Plan', 'Actions']}
           rows={filtered.map(r => [
             r.email,
             r.full_name || <span style={{ color: '#667' }}>—</span>,
             <div style={{ fontSize: 12 }}>
+              {r.utm_source
+                ? <><span style={{ color: '#ffd66a' }}>{r.utm_source}</span>
+                    {r.utm_campaign && <span style={{ color: '#98a2b5' }}> · {r.utm_campaign}</span>}</>
+                : r.referrer
+                ? <span style={{ color: '#7dc8ff' }}>{(() => { try { return new URL(r.referrer).hostname } catch { return r.referrer.slice(0, 24) } })()}</span>
+                : <span style={{ color: '#667' }}>direct</span>}
+            </div>,
+            <div style={{ fontSize: 12 }}>
               {r.country_code
-                ? <><span style={{ color: '#E6ECF5' }}>{r.city ? `${r.city}, ` : ''}{r.country || r.country_code}</span>
-                    {r.locale && <span style={{ color: '#667', marginLeft: 6 }}>({r.locale})</span>}</>
+                ? <><span style={{ color: '#E6ECF5' }}>{r.city ? `${r.city}, ` : ''}{r.country || r.country_code}</span></>
                 : <span style={{ color: '#667' }}>—</span>}
             </div>,
             r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
-            r.is_premium ? <Chip color="#ffd66a" text="PREMIUM" /> : <span style={{ color: '#98a2b5' }}>free</span>,
-            <span style={{ color: '#98a2b5', fontSize: 12 }}>{r.premium_source || '—'}</span>,
-            <button onClick={() => togglePremium(r)} disabled={busyId === r.id} style={btnSmallStyle}>
-              {busyId === r.id ? '…' : (r.is_premium ? 'Revoke' : 'Grant')}
-            </button>,
+            r.is_premium
+              ? <Chip color="#ffd66a" text="PREMIUM" />
+              : <span style={{ color: '#98a2b5', fontSize: 12 }}>free</span>,
+            <div style={{ display: 'flex', gap: 6 }}>
+              <button
+                onClick={() => setSelectedUser(selectedUser?.id === r.id ? null : r)}
+                style={{ ...btnSmallStyle, background: selectedUser?.id === r.id ? '#1d3152' : 'transparent', border: '1px solid #1d3152' }}
+              >
+                {selectedUser?.id === r.id ? 'Hide' : 'View →'}
+              </button>
+              <button onClick={() => togglePremium(r)} disabled={busyId === r.id} style={btnSmallStyle}>
+                {busyId === r.id ? '…' : (r.is_premium ? 'Revoke' : 'Grant')}
+              </button>
+            </div>,
           ])}
           empty="No users match."
         />
@@ -420,6 +442,14 @@ function UsersTab() {
       <p style={{ color: '#667', fontSize: 12, marginTop: 16, textAlign: 'center' }}>
         {filtered.length} of {rows.length} users shown
       </p>
+
+      {selectedUser && (
+        <UserDetailDrawer
+          userId={selectedUser.id}
+          email={selectedUser.email}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </>
   )
 }
@@ -427,110 +457,214 @@ function UsersTab() {
 /* ═══════════════════════════════════════════════════════════ */
 /*  ACTIVITY                                                    */
 /* ═══════════════════════════════════════════════════════════ */
-function UserEventsPanel({ userId, email, onClose }) {
-  const [events, setEvents] = useState(null)
+/* User detail drawer — joins every table that references this user_id into
+   one chronological view. Used by both Activity and Users tabs. */
+function UserDetailDrawer({ userId, email, onClose }) {
+  const [data, setData] = useState(null)
   const [err, setErr] = useState('')
 
   useEffect(() => {
     if (!userId) return
     let cancel = false
     ;(async () => {
-      const { data, error } = await adminSupabase
-        .from('analytics_events')
-        .select('id, session_id, event_type, page_path, page_title, element_label, element_tag, href, metadata, created_at')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(300)
-      if (cancel) return
-      if (error) setErr(error.message)
-      else setEvents(data ?? [])
+      try {
+        const [profileR, eventsR, practiceR, paymentsR, subsR, emailsR] = await Promise.all([
+          adminSupabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
+          adminSupabase.from('analytics_events')
+            .select('id, session_id, event_type, page_path, page_title, element_label, element_tag, href, metadata, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(300),
+          adminSupabase.from('practice_attempts')
+            .select('id, section, part_id, set_number, score, total, pct, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(50),
+          adminSupabase.from('payments')
+            .select('id, plan, amount_cents, currency, status, granted_days, stripe_session_id, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }),
+          adminSupabase.from('subscription_events')
+            .select('id, event_type, prev_status, new_status, plan, amount_cents, currency, reason, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(50),
+          adminSupabase.from('email_log')
+            .select('id, kind, subject, status, provider, sent_at, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(50),
+        ])
+
+        if (cancel) return
+        const firstError = [profileR, eventsR, practiceR, paymentsR, subsR, emailsR].find(r => r.error)?.error
+        if (firstError) { setErr(firstError.message); return }
+
+        setData({
+          profile: profileR.data,
+          events: eventsR.data ?? [],
+          practice: practiceR.data ?? [],
+          payments: paymentsR.data ?? [],
+          subs: subsR.data ?? [],
+          emails: emailsR.data ?? [],
+        })
+      } catch (e) {
+        if (!cancel) setErr(e?.message || 'Failed to load user detail')
+      }
     })()
     return () => { cancel = true }
   }, [userId])
 
-  const pageViews = events ? events.filter(e => e.event_type === 'page_view') : []
-  const clicks = events ? events.filter(e => e.event_type === 'click') : []
-  const sessions = events ? [...new Set(events.map(e => e.session_id).filter(Boolean))] : []
+  if (err) return <div style={drawerStyle}><Err msg={err} /></div>
+  if (!data) return <div style={drawerStyle}><Loading /></div>
 
-  // Top pages this user visited
+  const { profile, events, practice, payments, subs, emails } = data
+
+  // ── Engagement aggregates (existing logic) ──
+  const pageViews = events.filter(e => e.event_type === 'page_view')
+  const clicks    = events.filter(e => e.event_type === 'click')
+  const sessions  = [...new Set(events.map(e => e.session_id).filter(Boolean))]
+
   const pageCounts = {}
   pageViews.forEach(e => { const p = e.page_path || 'Unknown'; pageCounts[p] = (pageCounts[p] || 0) + 1 })
-  const topPages = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([label, count]) => ({ label, count }))
+  const topPages = Object.entries(pageCounts).sort((a,b) => b[1]-a[1]).slice(0,8).map(([label,count]) => ({ label, count }))
 
-  // Top clicks
   const clickCounts = {}
-  clicks.forEach(e => {
-    const k = e.element_label || e.href || e.element_tag || 'Unknown'
-    clickCounts[k] = (clickCounts[k] || 0) + 1
-  })
-  const topClicks = Object.entries(clickCounts).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([label, count]) => ({ label, count }))
+  clicks.forEach(e => { const k = e.element_label || e.href || e.element_tag || 'Unknown'; clickCounts[k] = (clickCounts[k] || 0) + 1 })
+  const topClicks = Object.entries(clickCounts).sort((a,b) => b[1]-a[1]).slice(0,8).map(([label,count]) => ({ label, count }))
 
-  // Exit page per session (first page_view per session in desc order = last visited)
-  const sessionExit = {}
-  pageViews.forEach(e => { if (e.session_id && !sessionExit[e.session_id]) sessionExit[e.session_id] = e.page_path || 'Unknown' })
-  const exitCounts = {}
-  Object.values(sessionExit).forEach(p => { exitCounts[p] = (exitCounts[p] || 0) + 1 })
-  const topExits = Object.entries(exitCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([label, count]) => ({ label, count }))
+  // ── Combined chronological lifecycle feed ──
+  const lifecycle = [
+    ...payments.map(p => ({ when: p.created_at, kind: 'payment',  label: `${(p.amount_cents/100).toFixed(2)} ${p.currency?.toUpperCase()} · ${p.plan}`, status: p.status, color: '#7dffb0' })),
+    ...subs.map(s => ({ when: s.created_at, kind: 'subscription', label: `${s.event_type}${s.prev_status && s.new_status ? ` · ${s.prev_status} → ${s.new_status}` : ''}`, status: s.reason || s.plan, color: '#ffd66a' })),
+    ...emails.map(e => ({ when: e.sent_at || e.created_at, kind: 'email', label: `${e.kind} · ${e.subject || ''}`, status: e.status, color: '#7dc8ff' })),
+    ...practice.map(p => ({ when: p.created_at, kind: 'practice', label: `${p.section} · ${p.part_id || ''}${p.set_number ? ` #${p.set_number}` : ''}${p.pct != null ? ` · ${p.pct}%` : ''}`, status: p.score != null ? `${p.score}/${p.total}` : null, color: '#a78bfa' })),
+  ]
+    .filter(x => x.when)
+    .sort((a,b) => new Date(b.when).getTime() - new Date(a.when).getTime())
+
+  const utmKnown = profile.utm_source || profile.utm_medium || profile.utm_campaign || profile.referrer
 
   return (
-    <div style={{ background: '#0d1f38', border: '1px solid #1d3152', borderRadius: 12, padding: 20, marginTop: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+    <div style={drawerStyle}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <strong style={{ color: '#E6ECF5', fontSize: 15 }}>Event history — {email}</strong>
-          {events && (
-            <span style={{ color: '#98a2b5', fontSize: 13, marginLeft: 12 }}>
-              {events.length} events · {pageViews.length} page views · {clicks.length} clicks · {sessions.length} sessions
-            </span>
-          )}
+          <div style={{ fontSize: 12, letterSpacing: '.16em', color: '#ffd66a', marginBottom: 2 }}>USER DETAIL</div>
+          <strong style={{ color: '#E6ECF5', fontSize: 17 }}>{profile?.full_name || friendlyName(email)}</strong>
+          <div style={{ color: '#98a2b5', fontSize: 13, marginTop: 2 }}>
+            {email}
+            {profile?.is_premium && <Chip color="#ffd66a" text="PREMIUM" />}
+            {profile?.subscription_status && profile.subscription_status !== 'none' && (
+              <span style={{ marginLeft: 8, color: '#98a2b5', fontSize: 12 }}>· {profile.subscription_status}</span>
+            )}
+          </div>
         </div>
         <button onClick={onClose} style={{ ...btnSmallStyle, background: 'transparent', border: '1px solid #1d3152' }}>✕ Close</button>
       </div>
 
-      {err && <Err msg={err} />}
-      {!events && !err && <Loading />}
+      {/* Quick stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12, marginBottom: 18 }}>
+        <StatCard label="Page views"     value={pageViews.length} />
+        <StatCard label="Clicks"         value={clicks.length} />
+        <StatCard label="Sessions"       value={sessions.length} />
+        <StatCard label="Practice"       value={practice.length} accent="#a78bfa" />
+        <StatCard label="Payments"       value={payments.length} accent="#7dffb0" />
+        <StatCard label="Emails sent"    value={emails.length} accent="#7dc8ff" />
+      </div>
 
-      {events && (
-        <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 16 }}>
-            <Panel title="Pages visited">
-              <RankedList rows={topPages} empty="No page views recorded." />
-            </Panel>
-            <Panel title="Top clicks">
-              <RankedList rows={topClicks} empty="No clicks recorded." />
-            </Panel>
-            <Panel title="Exit pages (where they left)">
-              <RankedList rows={topExits} empty="No sessions recorded." />
-            </Panel>
+      {/* Attribution + Geo side-by-side */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 18 }}>
+        <Panel title="Acquisition">
+          {utmKnown ? (
+            <div style={{ fontSize: 13, lineHeight: 1.9 }}>
+              {profile.utm_source   && <KV k="utm_source"   v={profile.utm_source} />}
+              {profile.utm_medium   && <KV k="utm_medium"   v={profile.utm_medium} />}
+              {profile.utm_campaign && <KV k="utm_campaign" v={profile.utm_campaign} />}
+              {profile.utm_content  && <KV k="utm_content"  v={profile.utm_content} />}
+              {profile.utm_term     && <KV k="utm_term"     v={profile.utm_term} />}
+              {profile.referrer     && <KV k="referrer"     v={profile.referrer} truncate />}
+              {profile.landing_page && <KV k="landing"      v={profile.landing_page} />}
+              {profile.first_touch_at && <KV k="first touch" v={new Date(profile.first_touch_at).toLocaleString()} />}
+            </div>
+          ) : (
+            <div style={{ color: '#98a2b5', fontSize: 13 }}>
+              No attribution captured. Signed up direct or before tracking was enabled.
+            </div>
+          )}
+        </Panel>
+
+        <Panel title="Location & device">
+          <div style={{ fontSize: 13, lineHeight: 1.9 }}>
+            {profile.country_code
+              ? <KV k="country" v={`${profile.country || profile.country_code} (${profile.country_code})`} />
+              : <KV k="country" v="unknown" />}
+            {profile.region   && <KV k="region"   v={profile.region} />}
+            {profile.city     && <KV k="city"     v={profile.city} />}
+            {profile.timezone && <KV k="timezone" v={profile.timezone} />}
+            {profile.locale   && <KV k="locale"   v={profile.locale} />}
+            {profile.signup_ip_hash && <KV k="ip hash" v={profile.signup_ip_hash.slice(0,16) + '…'} />}
+            {profile.signup_user_agent && <KV k="user agent" v={profile.signup_user_agent} truncate />}
           </div>
+        </Panel>
+      </div>
 
-          <Panel title="Recent events">
-            <Table
-              cols={['When', 'Type', 'Page', 'Click target', 'Session']}
-              rows={events.slice(0, 100).map(e => [
-                new Date(e.created_at).toLocaleString(),
-                e.event_type === 'click'
-                  ? <Chip color="#ffd66a" text="CLICK" />
-                  : <Chip color="#7dc8ff" text="PAGE" />,
-                <div>
-                  <strong>{e.page_path || '—'}</strong>
-                  <div style={{ color: '#98a2b5', fontSize: 11 }}>{e.page_title || ''}</div>
-                </div>,
-                e.event_type === 'click'
-                  ? <span style={{ fontSize: 12 }}>{e.element_label || e.href || e.element_tag || '—'}</span>
-                  : <span style={{ color: '#667' }}>—</span>,
-                <code style={{ color: '#98a2b5', fontSize: 11 }}>{e.session_id?.slice(0, 16) || '—'}</code>,
-              ])}
-              empty="No events."
-            />
-            {events.length > 100 && (
-              <p style={{ color: '#667', fontSize: 12, margin: '8px 0 0' }}>Showing 100 of {events.length} events.</p>
-            )}
-          </Panel>
-        </>
-      )}
+      {/* Lifecycle timeline */}
+      <Panel title={`Lifecycle (${lifecycle.length})`}>
+        {lifecycle.length === 0 ? (
+          <div style={{ color: '#98a2b5', fontSize: 13 }}>No payments, subscription events, emails, or practice attempts yet.</div>
+        ) : (
+          <Table
+            cols={['When', 'Kind', 'Detail', 'Status']}
+            rows={lifecycle.slice(0, 50).map(item => [
+              new Date(item.when).toLocaleString(),
+              <Chip color={item.color} text={item.kind.toUpperCase()} />,
+              <span style={{ fontSize: 13 }}>{item.label}</span>,
+              <span style={{ color: '#98a2b5', fontSize: 12 }}>{item.status || '—'}</span>,
+            ])}
+          />
+        )}
+      </Panel>
+
+      {/* Engagement summary */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginTop: 18 }}>
+        <Panel title="Top pages">
+          <RankedList rows={topPages} empty="No page views recorded." />
+        </Panel>
+        <Panel title="Top clicks">
+          <RankedList rows={topClicks} empty="No clicks recorded." />
+        </Panel>
+      </div>
+
+      {/* Recent raw events */}
+      <Panel title={`Recent events (${events.length})`}>
+        <Table
+          cols={['When', 'Type', 'Page', 'Click target', 'Session']}
+          rows={events.slice(0, 80).map(e => [
+            new Date(e.created_at).toLocaleString(),
+            e.event_type === 'click' ? <Chip color="#ffd66a" text="CLICK" /> : <Chip color="#7dc8ff" text="PAGE" />,
+            <div>
+              <strong style={{ fontSize: 13 }}>{e.page_path || '—'}</strong>
+              <div style={{ color: '#98a2b5', fontSize: 11 }}>{e.page_title || ''}</div>
+            </div>,
+            e.event_type === 'click'
+              ? <span style={{ fontSize: 12 }}>{e.element_label || e.href || e.element_tag || '—'}</span>
+              : <span style={{ color: '#667' }}>—</span>,
+            <code style={{ color: '#98a2b5', fontSize: 11 }}>{e.session_id?.slice(0,16) || '—'}</code>,
+          ])}
+          empty="No events."
+        />
+        {events.length > 80 && (
+          <p style={{ color: '#667', fontSize: 12, margin: '8px 0 0' }}>Showing 80 of {events.length}.</p>
+        )}
+      </Panel>
     </div>
   )
 }
+
+// Backwards-compat alias for the old name used inside ActivityTab.
+const UserEventsPanel = UserDetailDrawer
+
+function KV({ k, v, truncate }) {
+  return (
+    <div style={{ display: 'flex', gap: 10 }}>
+      <span style={{ color: '#667', minWidth: 92, fontSize: 12, textTransform: 'uppercase', letterSpacing: '.06em' }}>{k}</span>
+      <span style={{ color: '#E6ECF5', wordBreak: 'break-all', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: truncate ? 'nowrap' : 'normal', maxWidth: truncate ? 280 : undefined }}>{v}</span>
+    </div>
+  )
+}
+
+const drawerStyle = { background: '#0d1f38', border: '1px solid #1d3152', borderRadius: 12, padding: 20, marginTop: 16 }
 
 function ActivityTab() {
   const { rows, err } = useAdminActivity()
@@ -1018,6 +1152,228 @@ function RankedList({ rows, empty }) {
         </div>
       ))}
     </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  ACQUISITION — where are users coming from?                  */
+/* ═══════════════════════════════════════════════════════════ */
+function AcquisitionTab() {
+  const { rows, err } = useProfiles()
+  const [range, setRange] = useState('30')
+
+  if (err) return <Err msg={err} />
+  if (!rows) return <Loading />
+
+  const days = parseInt(range, 10)
+  const since = Date.now() - days * 864e5
+  const inRange = rows.filter(r => r.created_at && new Date(r.created_at).getTime() >= since)
+
+  const total       = inRange.length
+  const paid        = inRange.filter(r => r.is_premium).length
+  const withUtm     = inRange.filter(r => r.utm_source).length
+  const withRef     = inRange.filter(r => r.referrer).length
+  const direct      = total - withUtm - withRef
+  const convRate    = total ? Math.round(paid / total * 100) : 0
+
+  const sources  = topGroups(inRange, r => r.utm_source     || (r.referrer ? 'referral' : 'direct'), 10)
+  const mediums  = topGroups(inRange, r => r.utm_medium     || (r.referrer ? 'referral' : '(none)'), 10)
+  const campaigns= topGroups(inRange.filter(r => r.utm_campaign), r => r.utm_campaign, 10)
+  const referrers= topGroups(inRange.filter(r => r.referrer), r => { try { return new URL(r.referrer).hostname } catch { return r.referrer.slice(0, 30) } }, 10)
+  const countries= topGroups(inRange.filter(r => r.country_code), r => `${r.country || r.country_code}`, 10)
+  const cities   = topGroups(inRange.filter(r => r.city), r => `${r.city}${r.country_code ? `, ${r.country_code}` : ''}`, 10)
+  const landings = topGroups(inRange.filter(r => r.landing_page), r => (r.landing_page || '').split('?')[0], 10)
+
+  // Conversion rate by UTM source
+  const bySource = {}
+  for (const r of inRange) {
+    const key = r.utm_source || (r.referrer ? 'referral' : 'direct')
+    if (!bySource[key]) bySource[key] = { total: 0, paid: 0 }
+    bySource[key].total++
+    if (r.is_premium) bySource[key].paid++
+  }
+  const sourceConv = Object.entries(bySource)
+    .map(([source, s]) => ({ source, total: s.total, paid: s.paid, rate: s.total ? Math.round(s.paid/s.total*100) : 0 }))
+    .sort((a,b) => b.total - a.total)
+    .slice(0, 12)
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Acquisition</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>Where signups come from. Captured first-touch — never overwritten.</p>
+        </div>
+        <select value={range} onChange={e => setRange(e.target.value)} style={{ ...inputStyle, margin: 0, width: 160 }}>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+          <option value="9999">All time</option>
+        </select>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Signups"          value={total} />
+        <StatCard label="Paid conversions" value={paid} accent="#7dffb0" />
+        <StatCard label="Conversion %"     value={`${convRate}%`} accent="#ffd66a" />
+        <StatCard label="UTM-tagged"       value={withUtm} accent="#ffd66a" />
+        <StatCard label="Referral"         value={withRef} accent="#7dc8ff" />
+        <StatCard label="Direct / unknown" value={direct} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
+        <Panel title="Top sources">
+          <RankedList rows={sources} empty="No source data yet." />
+        </Panel>
+        <Panel title="Top mediums">
+          <RankedList rows={mediums} empty="No medium data yet." />
+        </Panel>
+        <Panel title="Top campaigns">
+          <RankedList rows={campaigns} empty="No campaigns tagged. Use ?utm_source=…&utm_campaign=… links." />
+        </Panel>
+        <Panel title="Top referring domains">
+          <RankedList rows={referrers} empty="No external referrals captured." />
+        </Panel>
+        <Panel title="Top countries">
+          <RankedList rows={countries} empty="No geo data yet." />
+        </Panel>
+        <Panel title="Top cities">
+          <RankedList rows={cities} empty="No city data yet." />
+        </Panel>
+        <Panel title="Top landing pages">
+          <RankedList rows={landings} empty="No landing pages captured." />
+        </Panel>
+      </div>
+
+      <Panel title="Conversion rate by source">
+        <Table
+          cols={['Source', 'Signups', 'Paid', 'Conversion']}
+          rows={sourceConv.map(s => [
+            <strong>{s.source}</strong>,
+            s.total,
+            <span style={{ color: s.paid ? '#7dffb0' : '#98a2b5' }}>{s.paid}</span>,
+            <span style={{ color: s.rate >= 10 ? '#7dffb0' : s.rate > 0 ? '#ffd66a' : '#98a2b5' }}>{s.rate}%</span>,
+          ])}
+          empty="Not enough data."
+        />
+      </Panel>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  FUNNEL — signup → first practice → paid → retained          */
+/* ═══════════════════════════════════════════════════════════ */
+function FunnelTab() {
+  const { rows: profiles, err: profilesErr } = useProfiles()
+  const [practiceUsers, setPracticeUsers] = useState(null)
+  const [err, setErr] = useState('')
+  const [range, setRange] = useState('30')
+
+  useEffect(() => {
+    let cancel = false
+    ;(async () => {
+      // Distinct user_ids that have at least one practice_attempt
+      const { data, error } = await adminSupabase
+        .from('practice_attempts')
+        .select('user_id, created_at')
+        .order('created_at', { ascending: true })
+        .limit(5000)
+      if (cancel) return
+      if (error) setErr(error.message)
+      else {
+        // earliest practice per user
+        const firstPractice = {}
+        for (const row of data || []) {
+          if (!firstPractice[row.user_id]) firstPractice[row.user_id] = row.created_at
+        }
+        setPracticeUsers(firstPractice)
+      }
+    })()
+    return () => { cancel = true }
+  }, [])
+
+  if (profilesErr) return <Err msg={profilesErr} />
+  if (!profiles || !practiceUsers) return <Loading />
+
+  const days = parseInt(range, 10)
+  const since = Date.now() - days * 864e5
+  const cohort = profiles.filter(p => p.created_at && new Date(p.created_at).getTime() >= since)
+
+  const step1_signup     = cohort.length
+  const step2_anyEvent   = cohort.filter(p => p.last_seen_at).length
+  const step3_practice   = cohort.filter(p => practiceUsers[p.id]).length
+  const step4_paid       = cohort.filter(p => p.is_premium || p.premium_source === 'paid' || p.premium_source === 'stripe').length
+  const step5_retained   = cohort.filter(p => p.is_premium && !p.cancel_at_period_end && p.subscription_status === 'active').length
+
+  const steps = [
+    { label: 'Signed up',                   value: step1_signup,   color: '#7dc8ff' },
+    { label: 'Returned (any session)',      value: step2_anyEvent, color: '#a78bfa' },
+    { label: 'Started practice',            value: step3_practice, color: '#ffd66a' },
+    { label: 'Converted to paid',           value: step4_paid,     color: '#7dffb0' },
+    { label: 'Still active (not cancelled)', value: step5_retained, color: '#34d399' },
+  ]
+
+  const max = Math.max(1, ...steps.map(s => s.value))
+
+  // Median time to first practice (only for those who did)
+  const timeToFirst = cohort
+    .filter(p => practiceUsers[p.id])
+    .map(p => new Date(practiceUsers[p.id]).getTime() - new Date(p.created_at).getTime())
+    .sort((a,b) => a - b)
+  const median = timeToFirst.length ? timeToFirst[Math.floor(timeToFirst.length/2)] : null
+  const medianHours = median != null ? Math.round(median / 3600000 * 10) / 10 : null
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Conversion funnel</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            How users move from signup to paid retention. Cohort = users created in the selected range.
+          </p>
+        </div>
+        <select value={range} onChange={e => setRange(e.target.value)} style={{ ...inputStyle, margin: 0, width: 160 }}>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+          <option value="9999">All time</option>
+        </select>
+      </div>
+
+      <Panel title={`Funnel · ${step1_signup} users in cohort`}>
+        <div style={{ display: 'grid', gap: 14 }}>
+          {steps.map((s, i) => {
+            const pctOfTop = step1_signup ? Math.round(s.value / step1_signup * 100) : 0
+            const pctOfPrev = i === 0 ? null : (steps[i-1].value ? Math.round(s.value / steps[i-1].value * 100) : 0)
+            return (
+              <div key={s.label}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
+                  <span style={{ color: '#E6ECF5' }}><strong style={{ marginRight: 8 }}>{i+1}.</strong>{s.label}</span>
+                  <span style={{ color: s.color }}>
+                    <strong>{s.value}</strong>
+                    <span style={{ color: '#98a2b5', marginLeft: 8 }}>{pctOfTop}% of signups</span>
+                    {pctOfPrev != null && <span style={{ color: '#667', marginLeft: 8 }}>({pctOfPrev}% of step {i})</span>}
+                  </span>
+                </div>
+                <div style={{ height: 14, background: '#0B1626', borderRadius: 999, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${(s.value / max) * 100}%`, background: s.color, transition: 'width .3s ease' }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </Panel>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginTop: 18 }}>
+        <StatCard label="Activation rate"    value={step1_signup ? `${Math.round(step3_practice/step1_signup*100)}%` : '—'} accent="#ffd66a" />
+        <StatCard label="Free → paid"        value={step1_signup ? `${Math.round(step4_paid/step1_signup*100)}%` : '—'} accent="#7dffb0" />
+        <StatCard label="Retention (paid)"   value={step4_paid ? `${Math.round(step5_retained/step4_paid*100)}%` : '—'} />
+        <StatCard label="Median time to 1st practice" value={medianHours != null ? `${medianHours}h` : '—'} />
+      </div>
+    </>
   )
 }
 

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { AUTH_CONSENT_STORAGE_KEY, PUBLIC_SITE_URL, TERMS_VERSION } from '../data/constants'
+import { getStoredAttribution } from '../lib/attribution.js'
 
 let supabaseClientPromise
 
@@ -23,9 +24,14 @@ async function maybeSyncNewUser(profile) {
     const supabase = await getSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return
+    const attribution = getStoredAttribution()
     await fetch('/api/on-signup', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${session.access_token}` },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ attribution: attribution || null }),
     })
   } catch { /* non-blocking */ }
 }
