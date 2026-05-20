@@ -4,7 +4,8 @@
   "framework": "vite",
   "installCommand": "npm install --legacy-peer-deps",
   "crons": [
-    { "path": "/api/cron-sweep", "schedule": "0 0 * * *" }
+    { "path": "/api/cron-sweep",      "schedule": "0 0 * * *"  },
+    { "path": "/api/cron-marketing",  "schedule": "0 10 * * *" }
   ],
   "routes": [
     { "src": "/writing", "headers": { "Location": "/celpip-writing-practice" }, "status": 301 },
