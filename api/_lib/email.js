@@ -338,3 +338,41 @@ export function renderPastDue({ name, amountCents, currency, hostedInvoiceUrl })
     ${hostedInvoiceUrl ? `<p style="margin-top:14px"><a href="${escapeAttr(hostedInvoiceUrl)}" style="color:#0ea5e9">Pay outstanding invoice</a></p>` : ''}`
   return { subject, html: shell({ heading, body, ctaUrl: `${SITE}/subscription`, ctaLabel: 'Update Payment Method' }) }
 }
+
+// ─── Win-back sequence (days 3 / 14 / 30 after premium_expires_at) ────────────
+
+// Day 3 — empathy + "your progress is saved"
+export function renderWinbackDay3({ name, userId }) {
+  const subject = `Your CELPIPACE progress is still here`
+  const heading = `Everything you built is still here.`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>Your Premium access ended a few days ago, but your CLB reports, saved scores, and practice history are all still in your account. Nothing was deleted.</p>
+    <p>If the timing wasn't right, no pressure — come back whenever you're ready. If you want to keep drilling before your test, you can pick up exactly where you left off.</p>`
+  return { subject, html: marketingShell({ heading, body, ctaUrl: `${SITE}/dashboard`, ctaLabel: 'Open my dashboard', userId }) }
+}
+
+// Day 14 — value recap + discount offer
+export function renderWinbackDay14({ name, userId }) {
+  const subject = `Still preparing for CELPIP? 25% off to come back`
+  const heading = `Your CLB target is still reachable.`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>A lot can change in two weeks of focused practice. If you're still working toward your CELPIP target, Premium gives you:</p>
+    <ul style="padding-left:20px;margin:8px 0 16px">
+      <li>Full-length timed mock exams with instant CLB reports</li>
+      <li>Real-time AI scoring on every Writing and Speaking attempt</li>
+      <li>Section drills targeting exactly where you're losing marks</li>
+    </ul>
+    <p>Use code <strong style="background:#0f172a;color:#fff;padding:2px 8px;border-radius:6px;letter-spacing:.05em">CELPIP25</strong> for <strong>25% off your first month back</strong>.</p>`
+  return { subject, html: marketingShell({ heading, body, ctaUrl: `${SITE}/pricing`, ctaLabel: 'Reactivate Premium', userId }) }
+}
+
+// Day 30 — final check-in, no hard sell
+export function renderWinbackDay30({ name, userId }) {
+  const subject = `One last check-in from CELPIPACE`
+  const heading = `Rooting for you either way.`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>This is the last email we'll send about your subscription. If you've already passed your CELPIP — congratulations. If you're still preparing, we'll be here.</p>
+    <p>Your saved CLB reports and practice history will stay in your account. Sign in any time — no subscription needed to access your past results.</p>
+    <p>Good luck with the test. You've got this.</p>`
+  return { subject, html: marketingShell({ heading, body, ctaUrl: `${SITE}/dashboard`, ctaLabel: 'Sign in', userId }) }
+}
