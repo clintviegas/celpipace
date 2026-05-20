@@ -18,7 +18,7 @@ import { createClient } from '@supabase/supabase-js'
 }
 import { BLOG_ARTICLES as FALLBACK_ARTICLES } from '../src/data/blogData.js'
 import { BRAND_NAME, PRODUCT_STATS, PUBLIC_SITE_URL } from '../src/data/constants.js'
-import { LANDING_PAGES, faqJsonLd, softwareJsonLd } from '../src/data/seoPages.js'
+import { LANDING_PAGES, faqJsonLd, softwareJsonLd, landingsForBlogCategory } from '../src/data/seoPages.js'
 
 // Fetch published blog posts from Supabase at build time so the CMS drives SEO.
 // Falls back to the static blogData.js array if env vars are missing or fetch fails.
@@ -137,6 +137,30 @@ function renderList(items, className = '') {
 }
 
 function renderLandingPage(page) {
+  const siblings = Array.isArray(page.siblings) ? page.siblings : []
+  const blogBySlug = Object.fromEntries(BLOG_ARTICLES.map(a => [a.slug, a]))
+  const related = (page.relatedBlogSlugs || []).map(slug => blogBySlug[slug]).filter(Boolean)
+
+  const siblingsBlock = siblings.length
+    ? `      <section class="seo-section seo-siblings-section">
+        <p class="seo-section-label">Keep exploring</p>
+        <h2>Related CELPIP resources</h2>
+        <div class="seo-card-grid">
+          ${siblings.map(sib => `<a class="seo-card seo-card-link" href="${escapeHtml(sib.to)}"><h3>${escapeHtml(sib.label)}</h3><p>${escapeHtml(sib.blurb)}</p><span class="seo-card-cta">Open ${escapeHtml(sib.label)} →</span></a>`).join('\n          ')}
+        </div>
+      </section>`
+    : ''
+
+  const relatedBlock = related.length
+    ? `      <section class="seo-section seo-related-guides-section">
+        <p class="seo-section-label">Related guides</p>
+        <h2>Read before you practice</h2>
+        <div class="seo-card-grid">
+          ${related.map(article => `<a class="seo-card seo-card-link" href="/blog/${escapeHtml(article.slug)}"><h3>${escapeHtml(article.title)}</h3><p>${escapeHtml(article.excerpt)}</p><span class="seo-card-cta">Read article →</span></a>`).join('\n          ')}
+        </div>
+      </section>`
+    : ''
+
   return `    <main class="seo-page prerender-page">
       <section class="seo-hero">
         <div class="seo-hero-copy">
@@ -169,6 +193,8 @@ function renderLandingPage(page) {
           ${page.faqs.map(([question, answer]) => `<article class="seo-faq-item"><h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p></article>`).join('\n          ')}
         </div>
       </section>
+${siblingsBlock}
+${relatedBlock}
     </main>`
 }
 
@@ -177,8 +203,8 @@ function renderHomePage() {
       <section class="seo-hero">
         <div class="seo-hero-copy">
           <p class="seo-eyebrow">CELPIP practice with AI scoring</p>
-          <h1>CELPIP Practice Tests With AI Scoring</h1>
-          <p class="seo-subhead">Prepare with ${PRODUCT_STATS.questionItems} CELPIP-style question items, ${PRODUCT_STATS.mockExams} full mock exams, writing and speaking AI feedback, and saved CLB reports.</p>
+          <h1>CELPIP Mock Test – Free Practice Tests & AI Scoring</h1>
+          <p class="seo-subhead">Ace CELPIP with full-length mock exams, section practice, and instant AI scoring. Trusted by Canadian PR applicants. Start free today.</p>
           <div class="seo-actions">
             <a class="seo-primary" href="/exam">Start Free Diagnostic</a>
             <a class="seo-secondary" href="/celpip-mock-test">See Mock Tests</a>
@@ -235,6 +261,17 @@ function renderBlogIndex() {
 }
 
 function renderBlogArticle(article) {
+  const recs = landingsForBlogCategory(article.category)
+  const recsBlock = recs.length
+    ? `      <section class="seo-section seo-related-guides-section">
+        <p class="seo-section-label">Recommended next</p>
+        <h2>Put this into practice</h2>
+        <div class="seo-card-grid">
+          ${recs.map(rec => `<a class="seo-card seo-card-link" href="${escapeHtml(rec.to)}"><h3>${escapeHtml(rec.label)}</h3><p>${escapeHtml(rec.blurb)}</p><span class="seo-card-cta">Open →</span></a>`).join('\n          ')}
+        </div>
+      </section>`
+    : ''
+
   return `    <main class="seo-page prerender-page">
       <article class="seo-section seo-faq-section">
         <p class="seo-section-label">${escapeHtml(article.tag)} · ${escapeHtml(article.readTime)}</p>
@@ -244,6 +281,7 @@ function renderBlogArticle(article) {
           ${article.sections.map(section => `<section class="seo-faq-item"><h2>${escapeHtml(section.heading)}</h2><p>${escapeHtml(section.body)}</p>${section.list ? renderList(section.list) : ''}${section.body2 ? `<p>${escapeHtml(section.body2)}</p>` : ''}</section>`).join('\n          ')}
         </div>
       </article>
+${recsBlock}
     </main>`
 }
 
@@ -374,15 +412,28 @@ async function main() {
     {
       path: '/',
       meta: {
-        title: 'CELPIP Practice Tests With AI Scoring & Mock Exams',
-        description: `Prepare for CELPIP with ${PRODUCT_STATS.questionItems} question items, ${PRODUCT_STATS.mockExams} full mock exams, AI writing and speaking feedback, and saved CLB score reports.`,
+        title: 'CELPIP Mock Test – Free Practice Tests & AI Scoring',
+        description: 'Ace CELPIP with full-length mock exams, section practice, and instant AI scoring. Trusted by Canadian PR applicants. Start free today.',
         canonical: '/',
-        jsonLd: [{
-          '@context': 'https://schema.org',
-          '@type': 'WebSite',
-          name: BRAND_NAME,
-          url: PUBLIC_SITE_URL,
-        }],
+        jsonLd: [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: BRAND_NAME,
+            url: PUBLIC_SITE_URL,
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              { '@type': 'Question', name: 'What is a CELPIP mock test?', acceptedAnswer: { '@type': 'Answer', text: 'A CELPIP mock test is a full-length timed simulation of the official CELPIP General exam, covering Listening, Reading, Writing, and Speaking. CELPIPAce mock exams include instant CLB score reports and real-time AI feedback on writing and speaking.' } },
+              { '@type': 'Question', name: 'Is CELPIPAce free to use?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. CELPIPAce offers free section practice across all four CELPIP skills. Full-length mock exams and detailed score reports are available with a premium subscription.' } },
+              { '@type': 'Question', name: 'How do I prepare for the CELPIP exam?', acceptedAnswer: { '@type': 'Answer', text: 'Start with section drills to identify your weakest skill, then take timed mock exams to build stamina. Review your CLB score reports after each mock to focus your remaining study time on the sections that will gain you the most CRS points.' } },
+              { '@type': 'Question', name: 'Does CELPIPAce cover all four CELPIP sections?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. CELPIPAce includes practice and mock exam content for all four CELPIP General sections: Listening, Reading, Writing, and Speaking.' } },
+              { '@type': 'Question', name: 'Is CELPIP accepted for Canadian permanent residence?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. CELPIP General is an accepted English language test for many Canadian immigration programs, including Express Entry. Your CELPIP scores are converted to CLB levels, which determine your CRS language points.' } },
+            ],
+          },
+        ],
       },
       body: renderHomePage(),
     },

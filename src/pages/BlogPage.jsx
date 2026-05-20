@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BLOG_CATEGORIES, BLOG_ARTICLES as FALLBACK_ARTICLES } from '../data/blogData'
 import { supabase } from '../lib/supabase'
 import SEO from '../components/SEO'
 import { BRAND_NAME } from '../data/constants'
+import { landingsForBlogCategory } from '../data/seoPages'
 
 // Map snake_case DB row -> camelCase shape used throughout the page.
 function rowToArticle(r) {
@@ -118,6 +119,26 @@ function ArticleView({ article, onBack, relatedArticles }) {
             </div>
             <a href="/exam" className="blog-art-cta-btn">Start Practising →</a>
           </div>
+
+          {/* Contextual landing-page links based on article category */}
+          {(() => {
+            const recs = landingsForBlogCategory(article.category)
+            if (!recs.length) return null
+            return (
+              <div className="blog-art-recs">
+                <h3 className="blog-art-recs-title">Recommended next</h3>
+                <div className="blog-art-recs-grid">
+                  {recs.map(rec => (
+                    <Link key={rec.to} to={rec.to} className="blog-art-rec-card">
+                      <span className="blog-art-rec-label">{rec.label}</span>
+                      <span className="blog-art-rec-blurb">{rec.blurb}</span>
+                      <span className="blog-art-rec-cta">Open →</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
         </article>
 
         {/* Sidebar */}
@@ -126,10 +147,10 @@ function ArticleView({ article, onBack, relatedArticles }) {
             <h3 className="blog-sidebar-title">Related Articles</h3>
             <div className="blog-sidebar-list">
               {relatedArticles.map(rel => (
-                <button
+                <Link
                   key={rel.slug}
+                  to={`/blog/${rel.slug}`}
                   className="blog-sidebar-item"
-                  onClick={() => onBack(rel)}
                 >
                   <span
                     className="blog-sidebar-tag"
@@ -139,7 +160,7 @@ function ArticleView({ article, onBack, relatedArticles }) {
                   </span>
                   <span className="blog-sidebar-item-title">{rel.title}</span>
                   <span className="blog-sidebar-item-read">{rel.readTime}</span>
-                </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -157,18 +178,18 @@ function ArticleView({ article, onBack, relatedArticles }) {
 }
 
 /* ── Article card ── */
-function ArticleCard({ article, onClick, index }) {
+const MotionLink = motion(Link)
+
+function ArticleCard({ article, index }) {
   return (
-    <motion.article
+    <MotionLink
+      to={`/blog/${article.slug}`}
       className="blog-card"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.06 }}
       whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(0,0,0,0.10)' }}
-      onClick={() => onClick(article)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={e => e.key === 'Enter' && onClick(article)}
+      style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
     >
       <div
         className="blog-card-band"
@@ -194,7 +215,7 @@ function ArticleCard({ article, onClick, index }) {
           <span className="blog-card-cta">Read article {'->'}</span>
         </div>
       </div>
-    </motion.article>
+    </MotionLink>
   )
 }
 
@@ -341,7 +362,6 @@ export default function BlogPage() {
                       <ArticleCard
                         key={article.slug}
                         article={article}
-                        onClick={(nextArticle) => navigate(`/blog/${nextArticle.slug}`)}
                         index={i}
                       />
                     ))}

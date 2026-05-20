@@ -32,3 +32,10 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# GSC pull script — credentials and tokens never commit; raw data is local-only
+.gsc-credentials.json
+gsc-credentials.json
+.gsc-oauth-client.json
+.gsc-token.json
+docs/gsc/*.json

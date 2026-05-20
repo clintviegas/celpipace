@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import CelpipAceLogo from './CelpipAceLogo'
 
@@ -79,41 +79,28 @@ const NAV_ITEMS = [
 ]
 
 /* ── Single dropdown item ── */
-function DropItem({ item, color, closeAll, parentId }) {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    if (item.action) {
-      navigate('/' + item.action)
-      closeAll()
-      return
-    }
-
-    const sectionMap = { listening: 'listening', reading: 'reading', writing: 'writing', speaking: 'speaking' }
-    const section = sectionMap[parentId]
-
-    if (section) {
-      const match = item.label.match(/^([A-Z]\d+)/)
-      if (match) {
-        const partId = match[1]
-        navigate(`/${section}/${partId}`)
-        closeAll()
-        return
-      }
-      navigate('/' + section)
-    } else {
-      navigate('/exam')
-    }
-    closeAll()
+function dropItemHref(item, parentId) {
+  if (item.action) return '/' + item.action
+  const sectionMap = { listening: 'listening', reading: 'reading', writing: 'writing', speaking: 'speaking' }
+  const section = sectionMap[parentId]
+  if (section) {
+    const match = item.label.match(/^([A-Z]\d+)/)
+    if (match) return `/${section}/${match[1]}`
+    return '/' + section
   }
+  return '/exam'
+}
+
+function DropItem({ item, color, closeAll, parentId }) {
   return (
-    <button
+    <Link
+      to={dropItemHref(item, parentId)}
       className="nav-drop-item"
-      onClick={handleClick}
+      onClick={closeAll}
     >
       <div className="nav-drop-label" style={{ color }}>{item.label}</div>
       <div className="nav-drop-desc">{item.desc}</div>
-    </button>
+    </Link>
   )
 }
 
@@ -138,12 +125,13 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
   if (item.flat) {
     return (
       <li ref={ref}>
-        <button
+        <Link
+          to={'/' + item.id}
           className={`nav-link-btn${active ? ' nav-link-active' : ''}`}
-          onClick={() => { navigate('/' + item.id); setOpenId(null); closeMenu?.() }}
+          onClick={() => { setOpenId(null); closeMenu?.() }}
         >
           {item.label}
-        </button>
+        </Link>
       </li>
     )
   }
@@ -192,13 +180,14 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
           </div>
           {item.id !== 'learn' && (
             <div className="nav-drop-footer">
-              <button
+              <Link
+                to={'/' + item.id}
                 className="nav-drop-cta"
                 style={{ background: item.color }}
-                onClick={() => { navigate('/' + item.id); setOpenId(null); closeMenu?.() }}
+                onClick={() => { setOpenId(null); closeMenu?.() }}
               >
                 Practice {item.label} →
-              </button>
+              </Link>
             </div>
           )}
         </div>
@@ -297,9 +286,9 @@ export default function Navbar({ onSignIn }) {
     <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
       <div className="nav-inner">
         {/* Logo */}
-        <button className="nav-logo" onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+        <Link to="/" className="nav-logo" aria-label="CELPIPACE home" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'inline-flex' }}>
           <CelpipAceLogo height={34} />
-        </button>
+        </Link>
 
         {/* Desktop nav */}
         <ul className={`nav-links${menuOpen ? ' open' : ''}`}>

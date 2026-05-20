@@ -1,51 +1,50 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { BRAND_NAME, SUPPORT_EMAIL } from '../data/constants'
 import CelpipAceLogo from './CelpipAceLogo'
 
 export default function Footer() {
   const year = new Date().getFullYear()
-  const navigate = useNavigate()
 
   const cols = [
     {
       heading: 'Practice Tests',
       links: [
-        { label: 'CELPIP Practice Test', page: 'celpip-practice-test' },
-        { label: 'CELPIP Mock Test',     page: 'celpip-mock-test' },
-        { label: 'Listening Practice',   page: 'listening' },
-        { label: 'Reading Practice',     page: 'reading' },
-        { label: 'Writing Practice',     page: 'celpip-writing-practice' },
-        { label: 'Speaking Practice',    page: 'celpip-speaking-practice' },
+        { label: 'CELPIP Practice Test', to: '/celpip-practice-test' },
+        { label: 'CELPIP Mock Test',     to: '/celpip-mock-test' },
+        { label: 'Listening Practice',   to: '/listening' },
+        { label: 'Reading Practice',     to: '/reading' },
+        { label: 'Writing Practice',     to: '/celpip-writing-practice' },
+        { label: 'Speaking Practice',    to: '/celpip-speaking-practice' },
       ],
     },
     {
       heading: 'Learn',
       links: [
-        { label: 'Study Guides & Courses', page: 'celpip-resources' },
-        { label: 'Tips & Strategies',      page: 'celpip-resources' },
-        { label: 'Vocabulary Builder',     page: 'celpip-resources' },
-        { label: 'Score Tracker',          page: 'scores' },
-        { label: 'CLB to CRS Chart',       page: 'celpip-score-calculator' },
+        { label: 'Study Guides & Courses', to: '/celpip-resources' },
+        { label: 'Tips & Strategies',      to: '/celpip-resources' },
+        { label: 'Vocabulary Builder',     to: '/celpip-resources' },
+        { label: 'Score Tracker',          to: '/scores' },
+        { label: 'CLB to CRS Chart',       to: '/celpip-score-calculator' },
       ],
     },
     {
       heading: 'Resources',
       links: [
-        { label: 'CELPIP vs IELTS',           page: 'celpip-vs-ielts' },
-        { label: 'CELPIP for Immigration',    page: 'crs-score-calculator' },
-        { label: 'CRS Calculator',            page: 'crs-score-calculator' },
-        { label: 'Blog & Articles',           page: 'blog' },
-        { label: 'Pricing',                   page: 'pricing' },
+        { label: 'CELPIP vs IELTS',           to: '/celpip-vs-ielts' },
+        { label: 'CELPIP for Immigration',    to: '/crs-score-calculator' },
+        { label: 'CRS Calculator',            to: '/crs-score-calculator' },
+        { label: 'Blog & Articles',           to: '/blog' },
+        { label: 'Pricing',                   to: '/pricing' },
       ],
     },
     {
       heading: 'Company',
       links: [
-        { label: 'About Us',         page: 'home' },
-        { label: 'Privacy Policy',   page: 'privacy' },
-        { label: 'Terms & Conditions', page: 'terms' },
-        { label: 'Refund Policy',    page: 'refund' },
-        { label: 'Contact',          page: 'contact' },
+        { label: 'About Us',         to: '/' },
+        { label: 'Privacy Policy',   to: '/privacy' },
+        { label: 'Terms & Conditions', to: '/terms' },
+        { label: 'Refund Policy',    to: '/refund' },
+        { label: 'Contact',          to: '/contact' },
       ],
     },
   ]
@@ -55,9 +54,9 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-top">
           <div className="footer-brand">
-            <button onClick={() => navigate('/')} className="footer-logo-btn" style={{background:'none',border:'none',cursor:'pointer',padding:0}}>
+            <Link to="/" className="footer-logo-btn" aria-label={BRAND_NAME} style={{background:'none',border:'none',cursor:'pointer',padding:0,display:'inline-block'}}>
               <CelpipAceLogo height={52} />
-            </button>
+            </Link>
             <p className="footer-tagline">
               Focused CELPIP practice with instant scoring across all 4 skills.
             </p>
@@ -78,12 +77,12 @@ export default function Footer() {
               <ul>
                 {col.links.map(l => (
                   <li key={l.label}>
-                    <button
-                      onClick={() => navigate(l.path || '/' + (l.page === 'home' ? '' : l.page))}
-                      style={{background:'none',border:'none',cursor:'pointer',padding:0,font:'inherit',color:'inherit',textAlign:'left'}}
+                    <Link
+                      to={l.to}
+                      style={{background:'none',border:'none',cursor:'pointer',padding:0,font:'inherit',color:'inherit',textAlign:'left',textDecoration:'none'}}
                     >
                       {l.label}
-                    </button>
+                    </Link>
                   </li>
                 ))}
               </ul>

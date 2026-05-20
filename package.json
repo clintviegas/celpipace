@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "e2e": "playwright test",
     "e2e:smoke": "playwright test smoke.spec.js",
-    "e2e:install": "playwright install chromium"
+    "e2e:install": "playwright install chromium",
+    "gsc:pull": "node scripts/gsc-pull.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",
@@ -34,6 +35,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "googleapis": "^171.4.0",
     "tailwindcss": "^4.2.1",
     "vite": "^8.0.0"
   },

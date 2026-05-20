@@ -1,12 +1,14 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle2, ClipboardCheck, Gauge, Headphones, Mic, PenLine, Search, Sparkles } from 'lucide-react'
 import SEO from '../components/SEO'
 import { LANDING_PAGES, faqJsonLd, softwareJsonLd } from '../data/seoPages'
+import { BLOG_ARTICLES } from '../data/blogData'
 
 const ICONS = { ClipboardCheck, Gauge, Headphones, Mic, PenLine, Search, Sparkles }
 
+const BLOG_BY_SLUG = Object.fromEntries(BLOG_ARTICLES.map(a => [a.slug, a]))
+
 export default function SEOLandingPage({ type = 'practice' }) {
-  const navigate = useNavigate()
   const page = LANDING_PAGES[type] || LANDING_PAGES.practice
   const Icon = ICONS[page.icon] || ClipboardCheck
 
@@ -25,12 +27,12 @@ export default function SEOLandingPage({ type = 'practice' }) {
           <h1>{page.title}</h1>
           <p className="seo-subhead">{page.description}</p>
           <div className="seo-actions">
-            <button className="seo-primary" onClick={() => navigate(page.primaryPath)}>
+            <Link to={page.primaryPath} className="seo-primary">
               {page.primaryCta} <ArrowRight size={18} />
-            </button>
-            <button className="seo-secondary" onClick={() => navigate(page.secondaryPath)}>
+            </Link>
+            <Link to={page.secondaryPath} className="seo-secondary">
               {page.secondaryCta}
-            </button>
+            </Link>
           </div>
         </div>
         <div className="seo-proof-panel" aria-label="CELPIPACE proof points">
@@ -72,6 +74,41 @@ export default function SEOLandingPage({ type = 'practice' }) {
           ))}
         </div>
       </section>
+
+      {page.siblings?.length > 0 && (
+        <section className="seo-section seo-siblings-section">
+          <p className="seo-section-label">Keep exploring</p>
+          <h2>Related CELPIP resources</h2>
+          <div className="seo-card-grid">
+            {page.siblings.map(sib => (
+              <Link key={sib.to} to={sib.to} className="seo-card seo-card-link">
+                <h3>{sib.label}</h3>
+                <p>{sib.blurb}</p>
+                <span className="seo-card-cta">Open {sib.label} <ArrowRight size={14} /></span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {page.relatedBlogSlugs?.length > 0 && (
+        <section className="seo-section seo-related-guides-section">
+          <p className="seo-section-label">Related guides</p>
+          <h2>Read before you practice</h2>
+          <div className="seo-card-grid">
+            {page.relatedBlogSlugs
+              .map(slug => BLOG_BY_SLUG[slug])
+              .filter(Boolean)
+              .map(article => (
+                <Link key={article.slug} to={`/blog/${article.slug}`} className="seo-card seo-card-link">
+                  <h3>{article.title}</h3>
+                  <p>{article.excerpt}</p>
+                  <span className="seo-card-cta">Read article <ArrowRight size={14} /></span>
+                </Link>
+              ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }

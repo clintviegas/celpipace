@@ -240,12 +240,45 @@ function HomePage({ onSignIn }) {
     return () => cancelIdle(handle)
   }, [isMobile])
 
+  const homeFaqs = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is a CELPIP mock test?',
+        acceptedAnswer: { '@type': 'Answer', text: 'A CELPIP mock test is a full-length timed simulation of the official CELPIP General exam, covering Listening, Reading, Writing, and Speaking. CELPIPAce mock exams include instant CLB score reports and real-time AI feedback on writing and speaking.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is CELPIPAce free to use?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. CELPIPAce offers free section practice across all four CELPIP skills. Full-length mock exams and detailed score reports are available with a premium subscription.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do I prepare for the CELPIP exam?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Start with section drills to identify your weakest skill, then take timed mock exams to build stamina. Review your CLB score reports after each mock to focus your remaining study time on the sections that will gain you the most CRS points.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Does CELPIPAce cover all four CELPIP sections?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. CELPIPAce includes practice and mock exam content for all four CELPIP General sections: Listening, Reading, Writing, and Speaking.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is CELPIP accepted for Canadian permanent residence?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. CELPIP General is an accepted English language test for many Canadian immigration programs, including Express Entry. Your CELPIP scores are converted to CLB levels, which determine your CRS language points.' },
+      },
+    ],
+  }
+
   return (
     <main className="home-page">
       <SEO
-        title="CELPIP Practice Tests With Real-Time Scoring & Mock Exams"
-        description={`Prepare for CELPIP with ${PRODUCT_STATS.questionItems} question items, ${PRODUCT_STATS.mockExams} full mock exams, real-time writing and speaking feedback, and saved CLB score reports.`}
+        title="CELPIP Mock Test – Free Practice Tests & AI Scoring"
+        description={`Ace CELPIP with full-length mock exams, section practice, and instant AI scoring. Trusted by Canadian PR applicants. Start free today.`}
         canonical="/"
+        jsonLd={homeFaqs}
       />
       {isMobile ? (
         <div className="home-mobile-only">

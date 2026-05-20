@@ -1,5 +1,39 @@
 import { BRAND_NAME, PRODUCT_STATS, PUBLIC_SITE_URL } from './constants.js'
 
+const SIBLING_INFO = {
+  practice:   { to: '/celpip-practice-test',    label: 'CELPIP Practice Tests',   blurb: 'Free section drills across Listening, Reading, Writing, and Speaking.' },
+  mock:       { to: '/celpip-mock-test',        label: 'CELPIP Mock Tests',       blurb: 'Full-length timed mock exams with instant CLB score reports.' },
+  score:      { to: '/celpip-score-calculator', label: 'CELPIP Score Calculator', blurb: 'Convert CELPIP scores to CLB levels and estimate CRS language points.' },
+  comparison: { to: '/celpip-vs-ielts',         label: 'CELPIP vs IELTS',         blurb: 'Compare formats, scoring, and prep strategy for Canadian PR.' },
+}
+
+const SECTION_LINKS = {
+  listening: { to: '/celpip-listening-practice', label: 'CELPIP Listening Practice', blurb: 'Audio drills across all 6 CELPIP Listening parts with instant scoring.' },
+  reading:   { to: '/celpip-reading-practice',   label: 'CELPIP Reading Practice',   blurb: 'Correspondence, diagrams, information, and viewpoints — timed and scored.' },
+  writing:   { to: '/celpip-writing-practice',   label: 'CELPIP Writing Practice',   blurb: 'Email and survey prompts with real-time AI feedback on grammar and band.' },
+  speaking:  { to: '/celpip-speaking-practice',  label: 'CELPIP Speaking Practice',  blurb: 'Timed prompts across all 8 speaking tasks with instant fluency feedback.' },
+}
+
+const BLOG_CATEGORY_TO_LANDINGS = {
+  listening:   ['listening', 'practice'],
+  reading:     ['reading', 'practice'],
+  writing:     ['writing', 'practice'],
+  speaking:    ['speaking', 'practice'],
+  strategy:    ['practice', 'mock'],
+  immigration: ['score', 'comparison'],
+}
+
+export function landingsForBlogCategory(category) {
+  const keys = BLOG_CATEGORY_TO_LANDINGS[category] || ['practice', 'mock']
+  return keys.map(k => SIBLING_INFO[k] || SECTION_LINKS[k]).filter(Boolean)
+}
+
+function siblingsExcept(currentKey) {
+  return Object.entries(SIBLING_INFO)
+    .filter(([key]) => key !== currentKey)
+    .map(([, info]) => info)
+}
+
 export const LANDING_PAGES = {
   practice: {
     canonical: '/celpip-practice-test',
@@ -25,6 +59,8 @@ export const LANDING_PAGES = {
       ['Does CELPIPACE cover all 4 skills?', 'Yes. The platform covers Listening, Reading, Writing, and Speaking with section-specific drills and full mock exams.'],
       ['Is this affiliated with CELPIP?', `${BRAND_NAME} is an independent CELPIP preparation platform and is not affiliated with Paragon Testing Enterprises.`],
     ],
+    siblings: siblingsExcept('practice'),
+    relatedBlogSlugs: ['celpip-8-week-study-plan', '7-days-to-crack-celpip', 'celpip-test-day-checklist'],
   },
   mock: {
     canonical: '/celpip-mock-test',
@@ -50,6 +86,8 @@ export const LANDING_PAGES = {
       ['Does the mock test include writing and speaking?', 'Yes. CELPIPACE includes Writing and Speaking tasks with real-time scoring when users submit responses for evaluation.'],
       ['Can I view my previous mock score?', 'Yes. Completed mock attempts are saved so users can reopen their score report from the mock exam page.'],
     ],
+    siblings: siblingsExcept('mock'),
+    relatedBlogSlugs: ['celpip-8-week-study-plan', 'celpip-test-day-checklist', 'how-to-score-clb-10-writing'],
   },
   score: {
     canonical: '/celpip-score-calculator',
@@ -75,6 +113,8 @@ export const LANDING_PAGES = {
       ['Does CRS use CELPIP directly?', 'Express Entry uses CLB levels, which can be calculated from CELPIP scores.'],
       ['Which language score matters most?', 'All four skills matter. Improving the lowest skill can unlock eligibility or CRS gains.'],
     ],
+    siblings: siblingsExcept('score'),
+    relatedBlogSlugs: ['crs-points-language-breakdown', 'express-entry-2026-language-scores', 'celpip-score-requirements-citizenship-2026'],
   },
   comparison: {
     canonical: '/celpip-vs-ielts',
@@ -100,6 +140,8 @@ export const LANDING_PAGES = {
       ['Is CELPIP accepted for Canadian PR?', 'Yes. CELPIP General is accepted for many Canadian immigration pathways, including Express Entry language testing.'],
       ['Should I prepare differently for CELPIP?', 'Yes. CELPIP requires comfort with Canadian English, computer typing, recorded speaking, and the CELPIP-specific task formats.'],
     ],
+    siblings: siblingsExcept('comparison'),
+    relatedBlogSlugs: ['celpip-vs-ielts-which-is-easier', 'express-entry-2026-language-scores', 'celpip-score-requirements-citizenship-2026'],
   },
 }
 
