@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import SEO from '../components/SEO'
 import { useAuth } from '../context/AuthContext'
 import { useTestSession } from '../hooks/useTestSession'
+import { useAudioRecorder } from '../hooks/useAudioRecorder'
 import { supabase } from '../lib/supabase'
 import { authedFetch } from '../lib/apiClient'
 import {
@@ -193,10 +194,10 @@ async function scoreWritingAI(responseText, prompt, criteria, taskType) {
     return { overall: 0, clbBand: '-', scores: {}, feedback: `Scoring unavailable: ${err.message}`, suggestions: [], error: true }
   }
 }
-async function scoreSpeakingAI(responseText, prompt, taskType, topic) {
+async function scoreSpeakingAI(responseText, prompt, taskType, topic, fluencyMetrics) {
   try {
     const res = await authedFetch('/api/score', {
-      body: { section: 'speaking', responseText, prompt, taskType, topic },
+      body: { section: 'speaking', responseText, prompt, taskType, topic, fluencyMetrics: fluencyMetrics || null },
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
@@ -1213,39 +1214,25 @@ function SpeakingPart({ partId, promptData, color, meta, onDone, onScore }) {
   const [phase, setPhase] = useState('idle')
   const [elapsed, setElapsed] = useState(0)
   const [transcript, setTranscript] = useState('')
-  const [interimText, setInterimText] = useState('')
-  const [isListening, setIsListening] = useState(false)
+  const [fluencyMetrics, setFluencyMetrics] = useState(null)
   const [aiResult, setAiResult] = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
   const timerRef = useRef(null)
-  const recognitionRef = useRef(null)
-  const finalTranscriptRef = useRef('')
 
-  const SpeechRecognition = typeof window !== 'undefined' ? window.SpeechRecognition || window.webkitSpeechRecognition : null
+  // Whisper-backed audio capture. Replaces browser SpeechRecognition so we
+  // can score against word-level timing data.
+  const recorder = useAudioRecorder()
+  const isListening = recorder.state === 'recording'
+  const isTranscribing = recorder.state === 'transcribing'
+  const recorderError = recorder.error
 
-  const startRecognition = () => {
-    if (!SpeechRecognition) return
-    try {
-      const recog = new SpeechRecognition()
-      recog.continuous = true; recog.interimResults = true; recog.lang = 'en-US'
-      finalTranscriptRef.current = transcript
-      recog.onresult = (event) => {
-        let interim = ''
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const t = event.results[i][0].transcript
-          if (event.results[i].isFinal) { finalTranscriptRef.current += (finalTranscriptRef.current ? ' ' : '') + t.trim(); setTranscript(finalTranscriptRef.current) }
-          else { interim += t }
-        }
-        setInterimText(interim)
-      }
-      recog.onerror = () => { /* browser speech errors are non-fatal */ }
-      recog.onend = () => { if (recognitionRef.current === recog) try { recog.start() } catch { /* ignore restart errors */ } }
-      recog.start(); recognitionRef.current = recog; setIsListening(true)
-    } catch { /* speech recognition may be unavailable */ }
-  }
-  const stopRecognition = () => {
-    if (recognitionRef.current) { try { recognitionRef.current.stop() } catch { /* ignore stop errors */ }; recognitionRef.current = null }
-    setIsListening(false); setInterimText('')
+  const captureRecorderResult = async () => {
+    const result = await recorder.stop()
+    if (result && typeof result.text === 'string') {
+      setTranscript(result.text.trim())
+      setFluencyMetrics(result.metrics || null)
+    }
+    return result
   }
 
   const prepTime = promptData.prep_time_seconds || promptData.prep_seconds || 30
@@ -1253,19 +1240,29 @@ function SpeakingPart({ partId, promptData, color, meta, onDone, onScore }) {
 
   const startPrep = () => { setPhase('prep'); setElapsed(0); if (timerRef.current) clearInterval(timerRef.current); timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000) }
   const skipPrep = () => { if (timerRef.current) clearInterval(timerRef.current); startSpeak() }
-  const startSpeak = () => { if (timerRef.current) clearInterval(timerRef.current); setPhase('speak'); setElapsed(0); timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000); startRecognition() }
-  const finishSpeaking = () => { if (timerRef.current) clearInterval(timerRef.current); stopRecognition(); setPhase('done') }
+  const startSpeak = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    setPhase('speak')
+    setElapsed(0)
+    timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000)
+    recorder.start()
+  }
+  const finishSpeaking = async () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    await captureRecorderResult()
+    setPhase('done')
+  }
 
   useEffect(() => { if (phase === 'prep' && elapsed >= prepTime) startSpeak() }, [phase, elapsed])
   useEffect(() => { if (phase === 'speak' && elapsed >= speakTime) finishSpeaking() }, [phase, elapsed])
-  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); stopRecognition() }, [])
+  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current) }, [])
 
   const handleAIScore = async () => {
     if (!transcript.trim() || aiLoading) return
     setAiLoading(true); setAiResult(null)
-    const result = normalizeAiResult(await scoreSpeakingAI(transcript, promptData.prompt, meta.label, promptData.topic || ''))
+    const result = normalizeAiResult(await scoreSpeakingAI(transcript, promptData.prompt, meta.label, promptData.topic || '', fluencyMetrics))
     setAiResult(result); setAiLoading(false)
-    onScore?.({ transcript, wordCount, aiResult: result })
+    onScore?.({ transcript, wordCount, fluencyMetrics, aiResult: result })
   }
 
   const prepRemaining = Math.max(0, prepTime - elapsed)
@@ -1339,14 +1336,20 @@ function SpeakingPart({ partId, promptData, color, meta, onDone, onScore }) {
             </svg>
             <div className="sl-timer-center"><span className="sl-timer-digits">{fmtTime(speakRemaining)}</span><span className="sl-timer-label">remaining</span></div>
           </div>
-          {isListening && <div className="sl-mic-indicator"><span className="sl-mic-pulse" /><span>{'\uD83C\uDF99\uFE0F'} Recording...</span></div>}
-          {(transcript || interimText) && (
+          {isListening && <div className="sl-mic-indicator"><span className="sl-mic-pulse" /><span>{'\uD83C\uDF99\uFE0F'} Recording\u2026</span></div>}
+          {isTranscribing && <div className="sl-mic-indicator"><span>{'\u23F3'} Transcribing your response\u2026</span></div>}
+          {!recorder.supported && (
+            <p className="sl-mic-warning">{'\u26A0\uFE0F'} Your browser does not support audio recording. Use Chrome, Edge, or Safari.</p>
+          )}
+          {recorderError && (
+            <p className="sl-mic-warning">{'\u26A0\uFE0F'} {recorderError}</p>
+          )}
+          {transcript && !isListening && !isTranscribing && (
             <div className="sl-live-transcript">
               <span>{transcript}</span>
-              {interimText && <span style={{ color: '#9ca3af' }}> {interimText}</span>}
             </div>
           )}
-          <button className="sl-finish-btn" onClick={finishSpeaking}>Finish Early</button>
+          <button className="sl-finish-btn" onClick={finishSpeaking} disabled={isTranscribing}>{isTranscribing ? 'Transcribing\u2026' : 'Finish Early'}</button>
         </div>
       )}
 

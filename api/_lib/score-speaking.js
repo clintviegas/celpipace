@@ -1,7 +1,7 @@
 /* global process */
 // /api/score-speaking.js
-// CELPIP Speaking scoring — RAG-augmented mirror of score-writing.js.
-// See score-writing.js for the high-level pipeline notes.
+// CELPIP Speaking scoring — RAG-augmented, anchored, dual-pass.
+// Mirrors score-writing.js. See that file for the high-level pipeline notes.
 
 import { embed } from './embeddings.js';
 import {
@@ -13,10 +13,70 @@ import {
 } from './rag.js';
 import { requireUser } from './auth.js';
 import { checkRateLimit } from './rateLimit.js';
+import { buildSpeakingAnchorBlock } from './score-anchors.js';
+import { runDualPassScoring } from './score-shared.js';
 
 const MAX_RESPONSE_CHARS = 6000;  // transcripts run longer than written prose
 const MAX_PROMPT_CHARS   = 2000;
 const MAX_TOPIC_CHARS    = 200;
+
+const DIMENSIONS = ['taskFulfillment', 'coherence', 'vocabulary', 'listenability'];
+
+// Trust-but-bound: drop anything outside plausible ranges so a manipulated
+// client payload can't unfairly inflate or tank the score.
+function sanitizeFluencyMetrics(raw) {
+  if (!raw || typeof raw !== 'object') return null
+  const num = (v, min, max) => {
+    const n = Number(v)
+    if (!Number.isFinite(n)) return null
+    return Math.max(min, Math.min(max, n))
+  }
+  const out = {
+    durationSec: num(raw.durationSec, 0, 600),
+    wordCount: num(raw.wordCount, 0, 5000),
+    wpm: num(raw.wpm, 0, 400),
+    fillerCount: num(raw.fillerCount, 0, 500),
+    fillerRate: num(raw.fillerRate, 0, 1),
+    pauseCount: num(raw.pauseCount, 0, 500),
+    longPauseCount: num(raw.longPauseCount, 0, 100),
+    avgPauseSec: num(raw.avgPauseSec, 0, 60),
+    maxPauseSec: num(raw.maxPauseSec, 0, 60),
+    pauseRatio: num(raw.pauseRatio, 0, 1),
+    confidence: num(raw.confidence, 0, 1),
+  }
+  if (Array.isArray(raw.fillerWords)) {
+    out.fillerWords = raw.fillerWords
+      .filter(f => f && typeof f.word === 'string' && Number.isFinite(Number(f.count)))
+      .slice(0, 10)
+      .map(f => ({ word: String(f.word).slice(0, 24), count: Math.max(0, Math.min(500, Number(f.count))) }))
+  }
+  // If none of the structural fields are usable, treat the whole thing as missing.
+  if (out.wpm == null && out.fillerCount == null && out.pauseCount == null) return null
+  return out
+}
+
+function buildFluencyBlock(m) {
+  if (!m) return ''
+  const lines = []
+  lines.push('AUDIO FLUENCY METRICS (from Whisper transcription):')
+  if (m.durationSec != null) lines.push(`- Spoken duration: ${m.durationSec.toFixed(1)}s`)
+  if (m.wpm != null) lines.push(`- Words per minute: ${m.wpm} (CLB 9+ typically 110–160 WPM; under 80 suggests halting delivery)`)
+  if (m.fillerCount != null) {
+    const rate = m.fillerRate != null ? ` (${(m.fillerRate * 100).toFixed(1)}% of all words)` : ''
+    lines.push(`- Filler words used: ${m.fillerCount}${rate}`)
+    if (m.fillerWords?.length) {
+      lines.push(`  Top fillers: ${m.fillerWords.map(f => `"${f.word}" ×${f.count}`).join(', ')}`)
+    }
+  }
+  if (m.pauseCount != null) {
+    lines.push(`- Pauses ≥ 0.4s: ${m.pauseCount} (long pauses ≥ 1.0s: ${m.longPauseCount ?? 0}, avg ${m.avgPauseSec ?? 0}s, max ${m.maxPauseSec ?? 0}s)`)
+  }
+  if (m.pauseRatio != null) lines.push(`- Time spent silent: ${(m.pauseRatio * 100).toFixed(0)}%`)
+  if (m.confidence != null) lines.push(`- Transcription clarity confidence: ${(m.confidence * 100).toFixed(0)}% (low values suggest unclear pronunciation)`)
+  lines.push('')
+  lines.push('Use these signals when scoring Listenability and Coherence. A transcript that reads well but came from a halting delivery (low WPM, many long pauses, high filler rate) should not score top bands on Listenability. Conversely, smooth, well-paced delivery should be rewarded even if the transcript looks plain.')
+  return lines.join('\n')
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -35,7 +95,8 @@ export default async function handler(req, res) {
   const rl = await checkRateLimit({ supabase: auth.supabase, scope: 'score-speaking', key: userId, limit: 30, windowSec: 3600 });
   if (!rl.ok) return res.status(429).json({ error: 'too_many_requests', message: rl.message });
 
-  const { responseText, prompt, taskType, topic } = req.body || {};
+  const { responseText, prompt, taskType, topic, fluencyMetrics: rawMetrics } = req.body || {};
+  const fluencyMetrics = sanitizeFluencyMetrics(rawMetrics);
 
   if (!responseText || !prompt) {
     return res.status(400).json({ error: 'Missing responseText or prompt' });
@@ -89,68 +150,46 @@ export default async function handler(req, res) {
     ragMeta.weaknessSamples    = weaknessProfile?.sample_count || 0;
   }
 
+  const anchorBlock   = buildSpeakingAnchorBlock();
   const exemplarBlock = buildExemplarBlock(exemplars);
   const weaknessBlock = buildWeaknessBlock(weaknessProfile);
+  const fluencyBlock  = buildFluencyBlock(fluencyMetrics);
 
   // ── 2. Build prompt ───────────────────────────────────────────────────────
-  const systemPrompt = `You are a certified CELPIP Speaking examiner with 10+ years of experience. You evaluate spoken response transcripts using the official CELPIP-General scoring scale (3–12).
+  const systemPrompt = `You are a certified CELPIP Speaking examiner with 10+ years of experience. You evaluate spoken response transcripts using the official CELPIP-General scoring scale (3–12). You are rigorous and conservative — when in doubt, score lower rather than higher.
 
-The student has completed a speaking task and typed a transcript of what they said. Evaluate the transcript as if it were a spoken response.
+The student has completed a speaking task and submitted a transcript of what they said. Evaluate the transcript as if it were a spoken response, taking into account fillers, self-corrections, and natural spoken cadence.
 
-SCORING CRITERIA (score each 3–12):
-1. **Task Fulfillment** (Content & Task Completion)
-   - Does the response fully address the prompt and all required points?
-   - Is the content relevant and on-topic throughout?
-   - Is there sufficient detail and elaboration?
+SCORING DIMENSIONS (each scored 3–12):
+1. **Task Fulfillment** — Does the response fully address the prompt and all required points? Relevant throughout? Sufficient detail and elaboration?
+2. **Coherence & Organization** — Clear intro/body/conclusion, logical flow, natural transitions for spoken English.
+3. **Vocabulary Range** — Precision, variety, natural collocations for spoken English, register match.
+4. **Listenability** — Reads as natural spoken English (not stiff/written), appropriate pacing, controlled use of fillers and self-corrections.
 
-2. **Coherence & Organization** (Discourse Structure)
-   - Is there a clear introduction, body, and conclusion?
-   - Are ideas logically organized with smooth transitions?
-   - Does the response flow naturally as spoken language?
+CLB BAND DESCRIPTORS:
+- 10–12: Advanced — near-native fluency, sophisticated vocabulary, full coverage of all prompt points.
+- 8–9:  Upper-Intermediate — clear and effective, good range, minor gaps in coverage.
+- 6–7:  Intermediate — adequate communication, noticeable gaps, limited elaboration.
+- 4–5:  Lower — limited range, frequent issues, incomplete task coverage.
+- 3:    Developing — very limited, significant difficulty communicating ideas.
 
-3. **Vocabulary Range** (Lexical Resource)
-   - Is word choice precise, varied, and natural for spoken English?
-   - Are collocations and expressions used appropriately?
-   - Is vocabulary sophisticated enough for the CLB target?
+SPEAKING TASK TYPE: ${normalisedTaskType}${topic ? `
+SCENE/TOPIC: ${topic}
+For "Describing a Scene" tasks, score Task Fulfillment based on coverage of the specific scene elements (people, actions, spatial details, atmosphere). For "Making Predictions" tasks, score based on the logic and specificity of predictions about what will happen next in this scene.` : ''}
 
-4. **Listenability** (Based on written transcript: fluency, pacing, naturalness)
-   - Does the response read as natural spoken English (not overly formal/written)?
-   - Is the pacing appropriate — not too short or too verbose?
-   - Are filler words, self-corrections, or incomplete thoughts present?
+LENGTH RULES (strict — speaking tasks run 60–90 seconds):
+- Under 30 words: Task Fulfillment cannot exceed 4.
+- 30–59 words: Task Fulfillment cannot exceed 6.
+- 60–89 words: Task Fulfillment cannot exceed 7.
+- 90+ words: full range available based on quality.
 
-SPEAKING TASK TYPE: ${normalisedTaskType}${topic ? `\nSCENE/TOPIC: ${topic}\nFor "Describing a Scene" tasks, the student must describe what is happening in a ${topic} scene. Score Task Fulfillment based on how well they cover the specific elements of this scene (people, actions, spatial details, atmosphere). For "Making Predictions" tasks, score based on how well the student predicts what will happen next in this specific ${topic} scene with logical reasoning.` : ''}
+SCORING METHOD:
+- Anchor your scores to the calibration anchors below. Match the transcript to whichever anchor it most resembles in fluency, organization, vocabulary, and task coverage.
+- Be conservative: a transcript only earns CLB 9+ when its weakest dimension matches the CLB 9 anchor.
+- Each suggestion must reference a specific phrase or sentence from the student's transcript (quote it).
+- Feedback should be 2–3 sentences, concrete, and reference the actual transcript.
 
-SCORING GUIDELINES:
-- 10–12: Advanced — near-native fluency, sophisticated vocabulary, fully addresses all parts of the prompt
-- 8–9: Upper-Intermediate — clear and effective, good range, minor gaps in coverage
-- 6–7: Intermediate — adequate communication, noticeable gaps, limited elaboration
-- 4–5: Lower — limited range, frequent issues, incomplete task coverage
-- 3: Developing — very limited, significant difficulty communicating ideas
-
-IMPORTANT:
-- Be fair but rigorous — match real CELPIP scoring standards
-- Very short responses (under 40 words for a 60s task or under 60 words for a 90s task) should receive lower Task Fulfillment scores
-- Responses that miss required points from the prompt should lose Task Fulfillment marks
-- Provide specific, actionable feedback referencing the actual transcript
-- Each suggestion must be practical and specific to this response${weaknessBlock ? '\n\n' + weaknessBlock : ''}${exemplarBlock ? '\n\n' + exemplarBlock : ''}
-
-Respond with ONLY valid JSON in this exact format:
-{
-  "overall": <number 3.0-12.0 with one decimal>,
-  "scores": {
-    "taskFulfillment": <number 3-12>,
-    "coherence": <number 3-12>,
-    "vocabulary": <number 3-12>,
-    "listenability": <number 3-12>
-  },
-  "feedback": "<2-3 sentences of specific feedback about this response>",
-  "suggestions": [
-    "<specific suggestion 1 referencing the actual transcript>",
-    "<specific suggestion 2>",
-    "<specific suggestion 3>",
-    "<specific suggestion 4>"
-  ]
-}`;
+${anchorBlock}${fluencyBlock ? '\n\n' + fluencyBlock : ''}${weaknessBlock ? '\n\n' + weaknessBlock : ''}${exemplarBlock ? '\n\n' + exemplarBlock : ''}`;
 
   const userMessage = `SPEAKING PROMPT:
 ${prompt}
@@ -160,54 +199,25 @@ TASK TYPE: ${normalisedTaskType}${topic ? `\nSCENE TOPIC: ${topic}` : ''}
 STUDENT'S SPOKEN RESPONSE TRANSCRIPT (${wordCount} words):
 ${responseText}
 
-Score this spoken response transcript. Return ONLY the JSON object.`;
+Score this transcript against the calibration anchors. Return scores as integers 3–12 for each of: taskFulfillment, coherence, vocabulary, listenability. Provide 2–3 sentences of feedback and 3–4 specific suggestions, each quoting a fragment from the student's transcript.`;
 
-  // ── 3. Call the chat model ────────────────────────────────────────────────
+  // ── 3. Dual-pass scoring ──────────────────────────────────────────────────
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user',   content: userMessage  },
-        ],
-        temperature: 0.3,
-        max_tokens: 600,
-      }),
+    const result = await runDualPassScoring({
+      apiKey,
+      systemPrompt,
+      userMessage,
+      dimensions: DIMENSIONS,
+      wordCount,
+      responseText,
+      fluencyMetrics,
+      section: 'speaking',
     });
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error('OpenAI error:', response.status, errBody);
-      return res.status(502).json({ error: 'Scoring service error', detail: errBody });
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) return res.status(502).json({ error: 'Empty scoring response' });
-
-    const jsonStr = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
-    const result = JSON.parse(jsonStr);
-
-    const clamp = v => Math.max(3, Math.min(12, Math.round(Number(v) || 5)));
-    const scores = {
-      taskFulfillment: clamp(result.scores?.taskFulfillment),
-      coherence:       clamp(result.scores?.coherence),
-      vocabulary:      clamp(result.scores?.vocabulary),
-      listenability:   clamp(result.scores?.listenability),
-    };
-    const rawOverall = +((scores.taskFulfillment + scores.coherence + scores.vocabulary + scores.listenability) / 4).toFixed(1);
-    const overall = Math.max(3, Math.min(12, Math.round(rawOverall)));
+    const { scores, rawOverall, overall, feedback, suggestions, meta } = result;
     const clbBand = overall;
-    const suggestions = Array.isArray(result.suggestions) ? result.suggestions.slice(0, 4) : [];
-    const feedback = result.feedback || 'No feedback available.';
 
-    // ── 4. Persist ──────────────────────────────────────────────────────────
+    // ── 4. Persist (best-effort) ────────────────────────────────────────────
     if (queryEmbedding && userId) {
       await persistScoredEssay({
         userId,
@@ -233,9 +243,11 @@ Score this spoken response transcript. Return ONLY the JSON object.`;
       feedback,
       suggestions,
       rag: ragMeta,
+      scoring: meta,
+      fluency: fluencyMetrics || null,
     });
   } catch (err) {
     console.error('Score speaking error:', err);
-    return res.status(500).json({ error: 'Failed to score response' });
+    return res.status(500).json({ error: 'Failed to score response', detail: err?.message });
   }
 }

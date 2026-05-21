@@ -1,19 +1,18 @@
 /* global process */
 // /api/score-writing.js
-// CELPIP Writing scoring — RAG-augmented.
+// CELPIP Writing scoring — RAG-augmented, anchored, dual-pass.
 //
 // Pipeline:
 //   1. Embed the response.
-//   2. Retrieve top-3 exemplars (same task_type) and the user's weakness profile.
-//   3. Inject both into the system prompt — exemplars as calibration, weakness
-//      profile as personalised feedback steering.
-//   4. Call the chat model.
-//   5. Persist the submission + embedding + scores back to essay_embeddings,
-//      so future submissions benefit from a richer history.
+//   2. Retrieve top-3 exemplars (same task_type) + user's weakness profile.
+//   3. Inject calibration anchors (CLB 6/8/9/11), exemplars, and weakness
+//      profile into the system prompt.
+//   4. Run dual-pass scoring (gpt-4o, two temperatures, structured outputs),
+//      average per-dimension scores, apply length-based hard rules.
+//   5. Persist the submission + embedding + scores for future RAG.
 //
-// All RAG steps are best-effort. If embedding or retrieval fails, the function
-// degrades cleanly to the original rubric-only behaviour — the user always
-// gets a score back.
+// All RAG steps are best-effort. If embedding/retrieval fails, scoring still
+// proceeds with anchors-only calibration.
 
 import { embed } from './embeddings.js';
 import {
@@ -25,9 +24,13 @@ import {
 } from './rag.js';
 import { requireUser } from './auth.js';
 import { checkRateLimit } from './rateLimit.js';
+import { buildWritingAnchorBlock } from './score-anchors.js';
+import { runDualPassScoring } from './score-shared.js';
 
 const MAX_RESPONSE_CHARS = 4000;  // ~600 words — well above CELPIP 250-word ceiling
 const MAX_PROMPT_CHARS   = 2000;
+
+const DIMENSIONS = ['taskFulfillment', 'coherence', 'vocabulary', 'readability'];
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -91,65 +94,41 @@ export default async function handler(req, res) {
     ragMeta.weaknessSamples    = weaknessProfile?.sample_count || 0;
   }
 
+  const anchorBlock   = buildWritingAnchorBlock(normalisedTaskType);
   const exemplarBlock = buildExemplarBlock(exemplars);
   const weaknessBlock = buildWeaknessBlock(weaknessProfile);
 
   // ── 2. Build prompt ───────────────────────────────────────────────────────
-  const systemPrompt = `You are a certified CELPIP Writing examiner with 10+ years of experience. You evaluate responses using the official CELPIP-General scoring scale (3–12).
+  const systemPrompt = `You are a certified CELPIP Writing examiner with 10+ years of experience. You evaluate responses using the official CELPIP-General scoring scale (3–12). You are rigorous and conservative — when in doubt, score lower rather than higher.
 
-SCORING CRITERIA (score each 3–12):
-1. **Task Fulfillment** (Content & Task Completion)
-   - Does the response fully address the prompt and all required points?
-   - Is the purpose, audience, and tone appropriate?
-   - Is the response within the recommended 150–200 word range?
+SCORING DIMENSIONS (each scored 3–12):
+1. **Task Fulfillment** — Does the response fully address the prompt? Is purpose, audience, and tone appropriate? Is length within 150–200 words?
+2. **Coherence & Organization** — Clear intro/body/closing, logical flow, smooth transitions, paragraph purpose.
+3. **Vocabulary Range** — Precision, variety, natural collocations, register match.
+4. **Readability & Grammar** — Tense/article/agreement accuracy, sentence variety, spelling, punctuation.
 
-2. **Coherence & Organization** (Text Structure)
-   - Is there a clear introduction, body, and closing?
-   - Are ideas logically organized with smooth transitions?
-   - Does each paragraph serve a clear purpose?
-
-3. **Vocabulary Range** (Lexical Resource)
-   - Is word choice precise and varied?
-   - Are collocations and idioms used naturally?
-   - Is vocabulary appropriate for the context and audience?
-
-4. **Readability & Grammar** (Linguistic Control)
-   - Is grammar accurate (tenses, articles, prepositions, subject-verb agreement)?
-   - Is sentence structure varied (simple, compound, complex)?
-   - Are spelling and punctuation correct?
-
-SCORING GUIDELINES:
-- 10–12: Advanced — near-native fluency, sophisticated vocabulary, complex structures with minimal errors
-- 8–9: Upper-Intermediate — clear and effective, good range, occasional minor errors
-- 6–7: Intermediate — adequate communication, noticeable errors that don't impede understanding
-- 4–5: Lower — limited range, frequent errors, meaning sometimes unclear
-- 3: Developing — very limited, significant difficulty communicating
+CLB BAND DESCRIPTORS:
+- 10–12: Advanced — near-native fluency, sophisticated vocabulary, complex structures, minimal/no errors.
+- 8–9:  Upper-Intermediate — clear and effective, good range, occasional minor errors.
+- 6–7:  Intermediate — adequate communication, noticeable errors that don't impede understanding.
+- 4–5:  Lower — limited range, frequent errors, meaning sometimes unclear.
+- 3:    Developing — very limited, significant difficulty communicating.
 
 TASK TYPE: ${normalisedTaskType === 'W1' ? 'Email Writing (formal/semi-formal/informal based on context)' : 'Survey Response (expressing and supporting an opinion)'}
 
-IMPORTANT:
-- Be fair but rigorous — match real CELPIP scoring standards
-- Shorter responses (<140 words) should receive lower Task Fulfillment scores
-- Provide specific, actionable feedback referencing the actual text
-- Each suggestion must reference a specific part of the response that can be improved${weaknessBlock ? '\n\n' + weaknessBlock : ''}${exemplarBlock ? '\n\n' + exemplarBlock : ''}
+LENGTH RULES (strict):
+- Under 50 words: Task Fulfillment cannot exceed 4.
+- 50–99 words: Task Fulfillment cannot exceed 6.
+- 100–139 words: Task Fulfillment cannot exceed 7.
+- 140+ words: full range available based on quality.
 
-Respond with ONLY valid JSON in this exact format:
-{
-  "overall": <number 3.0-12.0 with one decimal>,
-  "scores": {
-    "taskFulfillment": <number 3-12>,
-    "coherence": <number 3-12>,
-    "vocabulary": <number 3-12>,
-    "readability": <number 3-12>
-  },
-  "feedback": "<2-3 sentences of specific feedback about this response>",
-  "suggestions": [
-    "<specific suggestion 1 referencing the actual text>",
-    "<specific suggestion 2>",
-    "<specific suggestion 3>",
-    "<specific suggestion 4>"
-  ]
-}`;
+SCORING METHOD:
+- Anchor your scores to the calibration anchors below. Match the response to whichever anchor it most resembles.
+- Be conservative: a response only earns CLB 9+ when its weakest dimension matches the CLB 9 anchor.
+- Each suggestion must reference a specific phrase or sentence in the student's response (quote it).
+- Feedback should be 2–3 sentences, concrete, and reference the actual text.
+
+${anchorBlock}${weaknessBlock ? '\n\n' + weaknessBlock : ''}${exemplarBlock ? '\n\n' + exemplarBlock : ''}`;
 
   const userMessage = `WRITING PROMPT:
 ${prompt}
@@ -160,56 +139,25 @@ ${(criteria || ['Task Fulfillment', 'Coherence', 'Vocabulary', 'Grammar']).join(
 STUDENT'S RESPONSE (${wordCount} words):
 ${responseText}
 
-Score this response. Return ONLY the JSON object.`;
+Score this response against the calibration anchors. Return scores as integers 3–12 for each of: taskFulfillment, coherence, vocabulary, readability. Provide 2–3 sentences of feedback and 3–4 specific suggestions, each quoting a fragment from the student's response.`;
 
-  // ── 3. Call the chat model ────────────────────────────────────────────────
+  // ── 3. Dual-pass scoring ──────────────────────────────────────────────────
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user',   content: userMessage  },
-        ],
-        temperature: 0.3,
-        max_tokens: 600,
-      }),
+    const result = await runDualPassScoring({
+      apiKey,
+      systemPrompt,
+      userMessage,
+      dimensions: DIMENSIONS,
+      wordCount,
+      responseText,
+      section: 'writing',
     });
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error('OpenAI error:', response.status, errBody);
-      return res.status(502).json({ error: 'Scoring service error', detail: errBody });
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) return res.status(502).json({ error: 'Empty scoring response' });
-
-    const jsonStr = content.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
-    const result = JSON.parse(jsonStr);
-
-    const clamp = v => Math.max(3, Math.min(12, Math.round(Number(v) || 5)));
-    const scores = {
-      taskFulfillment: clamp(result.scores?.taskFulfillment),
-      coherence:       clamp(result.scores?.coherence),
-      vocabulary:      clamp(result.scores?.vocabulary),
-      readability:     clamp(result.scores?.readability),
-    };
-    const rawOverall = +((scores.taskFulfillment + scores.coherence + scores.vocabulary + scores.readability) / 4).toFixed(1);
-    const overall = Math.max(3, Math.min(12, Math.round(rawOverall)));
+    const { scores, rawOverall, overall, feedback, suggestions, meta } = result;
     const clbBand = overall;
-    const suggestions = Array.isArray(result.suggestions) ? result.suggestions.slice(0, 4) : [];
-    const feedback = result.feedback || 'No feedback available.';
 
-    // ── 4. Persist (best-effort, non-blocking on response) ──────────────────
+    // ── 4. Persist (best-effort) ────────────────────────────────────────────
     if (queryEmbedding && userId) {
-      // Fire-and-await briefly so logs are coherent, but failures don't break the response.
       await persistScoredEssay({
         userId,
         section:      'writing',
@@ -234,9 +182,10 @@ Score this response. Return ONLY the JSON object.`;
       feedback,
       suggestions,
       rag: ragMeta,
+      scoring: meta,
     });
   } catch (err) {
     console.error('Score writing error:', err);
-    return res.status(500).json({ error: 'Failed to score response' });
+    return res.status(500).json({ error: 'Failed to score response', detail: err?.message });
   }
 }

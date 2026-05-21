@@ -9,6 +9,7 @@ import speakingQData from '../data/speakingQuestions.json'
 import { useProgress } from '../hooks/useProgress'
 import { useAuth } from '../context/AuthContext'
 import { useAuthGate } from '../hooks/useAuthGate'
+import { useAudioRecorder } from '../hooks/useAudioRecorder'
 import { authedFetch } from '../lib/apiClient'
 import UpgradeModal from '../components/UpgradeModal'
 import SEO from '../components/SEO'
@@ -3931,10 +3932,10 @@ const SPEAKING_TASK_META = {
 }
 
 /* ── Speaking real-time scoring ────────────────────────────── */
-async function scoreSpeakingWithAI(responseText, prompt, taskType, topic) {
+async function scoreSpeakingWithAI(responseText, prompt, taskType, topic, fluencyMetrics) {
   try {
     const res = await authedFetch('/api/score', {
-      body: { section: 'speaking', responseText, prompt, taskType, topic },
+      body: { section: 'speaking', responseText, prompt, taskType, topic, fluencyMetrics: fluencyMetrics || null },
     })
     if (res.status === 401) throw new Error('Sign in to get AI scoring.')
     if (res.status === 429) {
@@ -4210,76 +4211,28 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const [showTips, setShowTips]     = useState(false)
   const [completedSets, setCompleted] = useState({})
   const [transcripts, setTranscripts] = useState({})   // { [idx]: text }
+  const [fluencyByIdx, setFluencyByIdx] = useState({}) // { [idx]: metrics }
   const [aiResult, setAiResult]     = useState(null)
   const [aiLoading, setAiLoading]   = useState(false)
-  const [isListening, setIsListening] = useState(false)
-  const [interimText, setInterimText] = useState('')
-  const [micSupported, setMicSupported] = useState(true)
   const [showFinishConfirm, setShowFinishConfirm] = useState(false)
   const timerRef = useRef(null)
-  const recognitionRef = useRef(null)
-  const finalTranscriptRef = useRef('')
 
-  /* ── Web Speech API setup ── */
-  const SpeechRecognition = typeof window !== 'undefined'
-    ? window.SpeechRecognition || window.webkitSpeechRecognition
-    : null
+  /* ── Whisper-backed audio recorder ── */
+  const recorder = useAudioRecorder()
+  const isListening = recorder.state === 'recording'
+  const isTranscribing = recorder.state === 'transcribing'
+  const micSupported = recorder.supported
+  const recorderError = recorder.error
 
-  useEffect(() => {
-    if (!SpeechRecognition) setMicSupported(false)
-  }, [])
-
-  const startRecognition = () => {
-    if (!SpeechRecognition) return
-    try {
-      const recog = new SpeechRecognition()
-      recog.continuous = true
-      recog.interimResults = true
-      recog.lang = 'en-US'
-      finalTranscriptRef.current = transcripts[activeIdx] || ''
-
-      recog.onresult = (event) => {
-        let interim = ''
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const t = event.results[i][0].transcript
-          if (event.results[i].isFinal) {
-            finalTranscriptRef.current += (finalTranscriptRef.current ? ' ' : '') + t.trim()
-            setTranscripts(r => ({ ...r, [activeIdx]: finalTranscriptRef.current }))
-          } else {
-            interim += t
-          }
-        }
-        setInterimText(interim)
-      }
-
-      recog.onerror = (e) => {
-        if (e.error !== 'aborted') console.warn('Speech recognition error:', e.error)
-      }
-
-      recog.onend = () => {
-        // Auto-restart if still in speak phase (browser sometimes stops early)
-        if (recognitionRef.current === recog) {
-          try { recog.start() } catch (_) { /* already stopped */ }
-        }
-      }
-
-      recog.start()
-      recognitionRef.current = recog
-      setIsListening(true)
-    } catch (err) {
-      console.warn('Mic start failed:', err)
-      setMicSupported(false)
+  // After every successful transcription, persist text + metrics for the active prompt.
+  const captureRecorderResult = async () => {
+    const result = await recorder.stop()
+    if (result && typeof result.text === 'string') {
+      const text = result.text.trim()
+      setTranscripts(r => ({ ...r, [activeIdx]: text }))
+      setFluencyByIdx(f => ({ ...f, [activeIdx]: result.metrics || null }))
     }
-  }
-
-  const stopRecognition = () => {
-    if (recognitionRef.current) {
-      const recog = recognitionRef.current
-      recognitionRef.current = null
-      try { recog.stop() } catch (_) {}
-    }
-    setIsListening(false)
-    setInterimText('')
+    return result
   }
 
   const prompt = prompts[activeIdx]
@@ -4295,14 +4248,13 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const switchSet = (idx) => {
     if (!isPremium && (!FREE_PARTS.has(partId) || idx > 0)) { setUpgradeFor(prompts[idx]?.setId || idx + 1); return }
     if (timerRef.current) clearInterval(timerRef.current)
-    stopRecognition()
+    recorder.reset()
     setActiveIdx(idx)
     setPhase('idle')
     setElapsed(0)
     setShowTips(false)
     setAiResult(null)
     setAiLoading(false)
-    setInterimText('')
     setShowFinishConfirm(false)
   }
 
@@ -4314,20 +4266,22 @@ function SpeakingLayout({ color, partId, onComplete }) {
     timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000)
   }
 
-  const startSpeak = () => {
+  const startSpeak = async () => {
     if (!requireAuth()) return
     if (timerRef.current) clearInterval(timerRef.current)
     setPhase('speak')
     setElapsed(0)
     setShowFinishConfirm(false)
     timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000)
-    startRecognition()
+    // Begin capturing audio. If start fails the hook surfaces the error;
+    // we don't block the timer so the user can still write their answer later.
+    recorder.start()
   }
 
-  const finishSpeaking = () => {
+  const finishSpeaking = async () => {
     if (timerRef.current) clearInterval(timerRef.current)
-    stopRecognition()
     setShowFinishConfirm(false)
+    const result = await captureRecorderResult()
     setPhase('done')
     if (!completedSets[activeIdx]) {
       setCompleted(c => ({ ...c, [activeIdx]: true }))
@@ -4336,7 +4290,8 @@ function SpeakingLayout({ color, partId, onComplete }) {
         prompt: prompt.prompt,
         taskType: meta.label,
         topic: prompt.topic || prompt.topicName,
-        responseText: transcripts[activeIdx] || finalTranscriptRef.current || '',
+        responseText: result?.text || transcripts[activeIdx] || '',
+        fluencyMetrics: result?.metrics || fluencyByIdx[activeIdx] || null,
         completedBy: 'finish-button',
       })
     }
@@ -4349,11 +4304,14 @@ function SpeakingLayout({ color, partId, onComplete }) {
     }
   }, [phase, elapsed, prompt.prep_time_seconds])
 
-  // Auto-transition from speak to done
+  // Auto-transition from speak to done — stops the recorder, uploads, and persists metrics.
   useEffect(() => {
-    if (phase === 'speak' && elapsed >= prompt.speak_time_seconds) {
-      if (timerRef.current) clearInterval(timerRef.current)
-      stopRecognition()
+    if (phase !== 'speak' || elapsed < prompt.speak_time_seconds) return
+    if (timerRef.current) clearInterval(timerRef.current)
+    let cancelled = false
+    ;(async () => {
+      const result = await captureRecorderResult()
+      if (cancelled) return
       setPhase('done')
       if (!completedSets[activeIdx]) {
         setCompleted(c => ({ ...c, [activeIdx]: true }))
@@ -4362,39 +4320,40 @@ function SpeakingLayout({ color, partId, onComplete }) {
           prompt: prompt.prompt,
           taskType: meta.label,
           topic: prompt.topic || prompt.topicName,
-          responseText: transcripts[activeIdx] || finalTranscriptRef.current || '',
+          responseText: result?.text || transcripts[activeIdx] || '',
+          fluencyMetrics: result?.metrics || fluencyByIdx[activeIdx] || null,
           completedBy: 'timer',
         })
       }
-    }
+    })()
+    return () => { cancelled = true }
   }, [phase, elapsed, prompt.speak_time_seconds])
 
-  // Cleanup timer and recognition on unmount
+  // Cleanup timer on unmount; hook cleans up its own MediaRecorder.
   useEffect(() => () => {
     if (timerRef.current) clearInterval(timerRef.current)
-    stopRecognition()
   }, [])
 
   const reset = () => {
     if (timerRef.current) clearInterval(timerRef.current)
-    stopRecognition()
+    recorder.reset()
     setPhase('idle')
     setElapsed(0)
     setAiResult(null)
     setAiLoading(false)
-    setInterimText('')
     setShowFinishConfirm(false)
   }
 
   const transcript = transcripts[activeIdx] || ''
   const wordCount = transcript.trim() ? transcript.trim().split(/\s+/).length : 0
+  const fluencyMetrics = fluencyByIdx[activeIdx] || null
 
   const handleAIScore = async () => {
     if (!requireAuth()) return
     if (!transcript.trim() || aiLoading) return
     setAiLoading(true)
     setAiResult(null)
-    const result = await scoreSpeakingWithAI(transcript, prompt.prompt, meta.label, prompt.topic || prompt.topicName)
+    const result = await scoreSpeakingWithAI(transcript, prompt.prompt, meta.label, prompt.topic || prompt.topicName, fluencyMetrics)
     setAiResult(result)
     setAiLoading(false)
     if (result && result.overall && onComplete) {
@@ -4405,6 +4364,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
         topic: prompt.topic || prompt.topicName,
         responseText: transcript,
         wordCount,
+        fluencyMetrics,
         aiResult: result,
       })
     }
@@ -5044,17 +5004,27 @@ function SpeakingLayout({ color, partId, onComplete }) {
               <div className="sl-phase-fill" style={{ width: `${100 - speakPct}%`, background: color }} />
             </div>
             {!micSupported && (
-              <p className="sl-mic-warning">{'\u26A0\uFE0F'} Your browser doesn{"'"}t support microphone input. Use Chrome or Edge for the best experience.</p>
+              <p className="sl-mic-warning">{'\u26A0\uFE0F'} Your browser doesn{"'"}t support microphone input. Use Chrome, Edge, or Safari for the best experience.</p>
+            )}
+            {recorderError && (
+              <p className="sl-mic-warning">{'⚠️'} {recorderError}</p>
             )}
             <div className="sl-live-transcript">
               <div className="sl-live-label">
                 {isListening && <span className="sl-rec-dot" />}
-                Live Transcript
+                {isListening ? 'Recording…' : isTranscribing ? 'Transcribing…' : 'Recording status'}
               </div>
               <div className="sl-live-text">
-                {transcript && <span>{transcript}</span>}
-                {interimText && <span className="sl-live-interim">{interimText}</span>}
-                {!transcript && !interimText && <span className="sl-live-placeholder">Start speaking… your words will appear here in real-time</span>}
+                {isListening && (
+                  <span className="sl-live-placeholder">Speak naturally. We{"'"}ll transcribe with Whisper after you finish — the full transcript and a fluency report will appear then.</span>
+                )}
+                {isTranscribing && (
+                  <span className="sl-live-placeholder">Transcribing your response…</span>
+                )}
+                {!isListening && !isTranscribing && transcript && <span>{transcript}</span>}
+                {!isListening && !isTranscribing && !transcript && (
+                  <span className="sl-live-placeholder">Recording will start automatically when prep ends.</span>
+                )}
               </div>
             </div>
             <p className="sl-phase-tip">Speak clearly and address every part of the prompt. Maintain a natural pace.</p>
