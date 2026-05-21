@@ -11,13 +11,20 @@ function getSupabaseClient() {
   return supabaseClientPromise
 }
 
-// Fire once per session for brand-new accounts (created_at within last 2 min).
+// Fire once per session for:
+//   a) brand-new accounts (created_at within last 2 min) — Brevo sync + welcome email
+//   b) any user missing country_code — server-side geo backfill via Vercel headers
 // Uses sessionStorage so it doesn't repeat on tab focus within the same session.
 async function maybeSyncNewUser(profile) {
-  if (!profile?.created_at) return
-  const isNew = Date.now() - new Date(profile.created_at).getTime() < 2 * 60 * 1000
-  if (!isNew) return
-  const flag = `loops_signup_fired_${profile.id}`
+  if (!profile?.id) return
+  const isNew = profile.created_at &&
+    Date.now() - new Date(profile.created_at).getTime() < 2 * 60 * 1000
+  const needsGeo = !profile.country_code
+
+  if (!isNew && !needsGeo) return
+
+  // Separate flags: signup sync and geo sync are independent
+  const flag = isNew ? `loops_signup_fired_${profile.id}` : `geo_sync_fired_${profile.id}`
   if (sessionStorage.getItem(flag)) return
   sessionStorage.setItem(flag, '1')
   try {
