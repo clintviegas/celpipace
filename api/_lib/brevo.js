@@ -19,6 +19,26 @@ function getKey() {
   return process.env.BREVO_API_KEY
 }
 
+function numericEnv(name) {
+  const raw = process.env[name]
+  if (!raw) return null
+  const value = Number(raw)
+  return Number.isFinite(value) && value > 0 ? value : null
+}
+
+export function getBrevoConfig() {
+  return {
+    hasApiKey: !!getKey(),
+    sender: process.env.EMAIL_FROM || 'CELPIPACE <hello@celpipace.ca>',
+    lists: {
+      users: numericEnv('BREVO_LIST_ID'),
+      free: numericEnv('BREVO_LIST_FREE'),
+      premium: numericEnv('BREVO_LIST_PREMIUM'),
+      cancelled: numericEnv('BREVO_LIST_CANCELLED'),
+    },
+  }
+}
+
 async function brevoFetch(path, { method = 'GET', body } = {}) {
   const key = getKey()
   if (!key) throw new Error('brevo_not_configured')
@@ -97,6 +117,26 @@ export async function addToBrevoList({ email, listId }) {
 }
 
 /**
+ * Remove a contact from a specific Brevo list. Used when a user opts out of
+ * marketing so list-triggered journeys do not keep targeting them.
+ */
+export async function removeFromBrevoList({ email, listId }) {
+  const key = getKey()
+  if (!key || !email || !listId) return { ok: false, error: 'brevo_not_configured' }
+  try {
+    await brevoFetch(`/contacts/lists/${listId}/contacts/remove`, {
+      method: 'POST',
+      body: { emails: [email] },
+    })
+    return { ok: true }
+  } catch (err) {
+    if (/not.*found|does not exist|not in/i.test(err.message)) return { ok: true }
+    console.warn('[brevo] removeFromList failed:', err.message)
+    return { ok: false, error: err.message }
+  }
+}
+
+/**
  * Unsubscribe a contact from all marketing emails.
  */
 export async function unsubscribeBrevoContact({ email }) {
@@ -111,6 +151,28 @@ export async function unsubscribeBrevoContact({ email }) {
   } catch (err) {
     console.warn('[brevo] unsubscribe failed:', err.message)
     return { ok: false, error: err.message }
+  }
+}
+
+/**
+ * Lightweight connectivity check for admin diagnostics.
+ */
+export async function checkBrevoConnection() {
+  const config = getBrevoConfig()
+  if (!config.hasApiKey) return { ok: false, configured: config, error: 'brevo_not_configured' }
+  try {
+    const account = await brevoFetch('/account')
+    return {
+      ok: true,
+      configured: config,
+      account: {
+        email: account?.email || null,
+        companyName: account?.companyName || null,
+        plan: account?.plan?.[0]?.type || null,
+      },
+    }
+  } catch (err) {
+    return { ok: false, configured: config, error: err.message }
   }
 }
 

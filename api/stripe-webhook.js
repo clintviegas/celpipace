@@ -21,7 +21,7 @@
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { sendEmail, renderWelcome, renderReceipt, renderCancelFinal, renderPastDue, renderRefundProcessed } from './_lib/email.js'
-import { upsertBrevoContact, addToBrevoList } from './_lib/brevo.js'
+import { upsertBrevoContact, addToBrevoList, removeFromBrevoList } from './_lib/brevo.js'
 
 export const config = { api: { bodyParser: false } }
 
@@ -260,11 +260,16 @@ export default async function handler(req, res) {
         if (email) {
           const [fn, ...lp] = String(profile.full_name || '').trim().split(/\s+/)
           const premiumListId = process.env.BREVO_LIST_PREMIUM ? Number(process.env.BREVO_LIST_PREMIUM) : null
+          const freeListId    = process.env.BREVO_LIST_FREE    ? Number(process.env.BREVO_LIST_FREE)    : null
           upsertBrevoContact({ email, firstName: fn, lastName: lp.join(' ') })
             .catch(err => console.error('[stripe-webhook] brevo upsert failed:', err?.message))
           if (premiumListId) {
             addToBrevoList({ email, listId: premiumListId })
               .catch(err => console.error('[stripe-webhook] brevo list add failed:', err?.message))
+          }
+          if (freeListId) {
+            removeFromBrevoList({ email, listId: freeListId })
+              .catch(err => console.error('[stripe-webhook] brevo free list remove failed:', err?.message))
           }
         }
 
@@ -342,9 +347,14 @@ export default async function handler(req, res) {
             console.error('[stripe-webhook] cancel_final email failed:', err?.message)
           }
           const cancelledListId = process.env.BREVO_LIST_CANCELLED ? Number(process.env.BREVO_LIST_CANCELLED) : null
+          const freeListId      = process.env.BREVO_LIST_FREE      ? Number(process.env.BREVO_LIST_FREE)      : null
           if (cancelledListId) {
             addToBrevoList({ email: profile.email, listId: cancelledListId })
               .catch(err => console.error('[stripe-webhook] brevo cancelled list add failed:', err?.message))
+          }
+          if (freeListId) {
+            addToBrevoList({ email: profile.email, listId: freeListId })
+              .catch(err => console.error('[stripe-webhook] brevo free list add failed:', err?.message))
           }
         }
         break

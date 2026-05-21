@@ -3,8 +3,8 @@
 // Called once per new user to:
 //   1. Persist first-touch attribution (UTM, referrer, landing page) sent
 //      by the client from localStorage.
-//   2. Persist signup geolocation (country/city/region) using Vercel's free
-//      injected request headers + a SHA-256-hashed IP for dedup/fraud.
+//   2. Persist signup geolocation (country/city/region) from Vercel headers,
+//      with an IP geo fallback + a SHA-256-hashed IP for dedup/fraud.
 //   3. Add the contact to Brevo + send the welcome email.
 //
 // Idempotency: gated by profiles.loops_synced_at — only fires once per user.
@@ -15,7 +15,7 @@
 
 import { createHash } from 'crypto'
 import { requireUser } from './_lib/auth.js'
-import { upsertBrevoContact } from './_lib/brevo.js'
+import { upsertBrevoContact, addToBrevoList } from './_lib/brevo.js'
 import { sendEmail, renderSignupWelcome } from './_lib/email.js'
 
 function getBody(req) {
@@ -45,6 +45,38 @@ function decodeHeader(value) {
 
 function trim(s, max = 240) {
   return s ? String(s).replace(/\s+/g, ' ').trim().slice(0, max) || null : null
+}
+
+function isPublicIp(ip) {
+  if (!ip || typeof ip !== 'string') return false
+  const value = ip.trim()
+  if (!value || value === '::1' || value === '127.0.0.1') return false
+  if (/^(10|127)\./.test(value)) return false
+  if (/^192\.168\./.test(value)) return false
+  if (/^172\.(1[6-9]|2\d|3[0-1])\./.test(value)) return false
+  return !value.startsWith('fc') && !value.startsWith('fd') && !value.startsWith('fe80:')
+}
+
+async function lookupGeoByIp(ip) {
+  if (!isPublicIp(ip)) return null
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 2500)
+  try {
+    const res = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`, { signal: controller.signal })
+    if (!res.ok) return null
+    const data = await res.json()
+    return {
+      countryCode: trim(data.country_code, 2),
+      country: trim(data.country_name, 120),
+      region: trim(data.region, 120),
+      city: trim(data.city, 120),
+      timezone: trim(data.timezone, 120),
+    }
+  } catch {
+    return null
+  } finally {
+    clearTimeout(timeout)
+  }
 }
 
 // Whitelist + length-cap attribution fields the client sends.
@@ -89,12 +121,17 @@ export default async function handler(req, res) {
 
   // --- Attribution + geo backfill ---
   // Vercel injects these headers on every prod request (Edge Network).
-  const countryCode = decodeHeader(req.headers['x-vercel-ip-country'])
-  const region      = decodeHeader(req.headers['x-vercel-ip-country-region'])
-  const city        = decodeHeader(req.headers['x-vercel-ip-city'])
-  const timezone    = decodeHeader(req.headers['x-vercel-ip-timezone'])
+  const clientIp    = getClientIp(req)
+  const headerGeo = {
+    countryCode: decodeHeader(req.headers['x-vercel-ip-country']),
+    region:      decodeHeader(req.headers['x-vercel-ip-country-region']),
+    city:        decodeHeader(req.headers['x-vercel-ip-city']),
+    timezone:    decodeHeader(req.headers['x-vercel-ip-timezone']),
+  }
+  const fallbackGeo = headerGeo.countryCode ? null : await lookupGeoByIp(clientIp)
+  const geo = fallbackGeo ? { ...headerGeo, ...fallbackGeo } : headerGeo
   const userAgent   = trim(req.headers['user-agent'], 500)
-  const ipHash      = hashIp(getClientIp(req))
+  const ipHash      = hashIp(clientIp)
 
   const enrichment = {}
   // Only set attribution columns if currently empty (first-touch wins forever).
@@ -111,10 +148,11 @@ export default async function handler(req, res) {
 
   // Geo from Vercel headers takes precedence; backfill only when missing.
   if (!profile.country_code) {
-    if (countryCode) enrichment.country_code = countryCode
-    if (city)        enrichment.city         = city
-    if (region)      enrichment.region       = region
-    if (timezone)    enrichment.timezone     = timezone
+    if (geo.countryCode) enrichment.country_code = geo.countryCode
+    if (geo.country)     enrichment.country      = geo.country
+    if (geo.city)        enrichment.city         = geo.city
+    if (geo.region)      enrichment.region       = geo.region
+    if (geo.timezone)    enrichment.timezone     = geo.timezone
   }
   if (ipHash)    enrichment.signup_ip_hash    = ipHash
   if (userAgent) enrichment.signup_user_agent = userAgent
@@ -139,7 +177,8 @@ export default async function handler(req, res) {
   const lastName = lastParts.join(' ')
   const subscribed = !!profile.marketing_consent
 
-  const listId = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : null
+  const listId     = process.env.BREVO_LIST_ID   ? Number(process.env.BREVO_LIST_ID)   : null
+  const freeListId = process.env.BREVO_LIST_FREE ? Number(process.env.BREVO_LIST_FREE) : null
 
   // Add to Brevo — triggers the "contact added to list" automation scenario
   await upsertBrevoContact({
@@ -147,7 +186,7 @@ export default async function handler(req, res) {
     firstName,
     lastName,
     emailBlacklisted: !subscribed,
-    listIds: listId ? [listId] : [],
+    listIds: [listId, freeListId].filter(Boolean),
   })
 
   // Mark synced so we never fire twice
