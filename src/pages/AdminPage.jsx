@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { adminSupabase } from '../lib/adminSupabase'
 import { PUBLIC_SITE_URL } from '../data/constants'
 
@@ -342,6 +342,15 @@ function UsersTab() {
   const [filter, setFilter] = useState('all')
   const [busyId, setBusyId] = useState(null)
   const [selectedUser, setSelectedUser] = useState(null)
+  const drawerRef = useRef(null)
+
+  // Scroll the detail drawer into view when a user is opened — without this
+  // the drawer renders below the entire table and looks like the View button
+  // does nothing on tables with many rows.
+  useEffect(() => {
+    if (!selectedUser || !drawerRef.current) return
+    drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [selectedUser])
 
   const filtered = useMemo(() => {
     if (!rows) return []
@@ -444,11 +453,13 @@ function UsersTab() {
       </p>
 
       {selectedUser && (
-        <UserDetailDrawer
-          userId={selectedUser.id}
-          email={selectedUser.email}
-          onClose={() => setSelectedUser(null)}
-        />
+        <div ref={drawerRef}>
+          <UserDetailDrawer
+            userId={selectedUser.id}
+            email={selectedUser.email}
+            onClose={() => setSelectedUser(null)}
+          />
+        </div>
       )}
     </>
   )
@@ -670,6 +681,12 @@ function ActivityTab() {
   const { rows, err } = useAdminActivity()
   const [query, setQuery] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
+  const drawerRef = useRef(null)
+
+  useEffect(() => {
+    if (!selectedUser || !drawerRef.current) return
+    drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [selectedUser])
 
   if (err) return <Err msg={`${err}. Run supabase/admin_hardening.sql if this is the first deploy of activity analytics.`} />
   if (!rows) return <Loading />
@@ -736,11 +753,13 @@ function ActivityTab() {
       </Panel>
 
       {selectedUser && (
-        <UserEventsPanel
-          userId={selectedUser.id}
-          email={selectedUser.email}
-          onClose={() => setSelectedUser(null)}
-        />
+        <div ref={drawerRef}>
+          <UserEventsPanel
+            userId={selectedUser.id}
+            email={selectedUser.email}
+            onClose={() => setSelectedUser(null)}
+          />
+        </div>
       )}
     </>
   )
