@@ -24,6 +24,22 @@ ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS current_period_end TIMESTAMPTZ,
   ADD COLUMN IF NOT EXISTS last_payment_at TIMESTAMPTZ,
   ADD COLUMN IF NOT EXISTS last_seen_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS country_code TEXT,
+  ADD COLUMN IF NOT EXISTS country TEXT,
+  ADD COLUMN IF NOT EXISTS city TEXT,
+  ADD COLUMN IF NOT EXISTS region TEXT,
+  ADD COLUMN IF NOT EXISTS timezone TEXT,
+  ADD COLUMN IF NOT EXISTS locale TEXT,
+  ADD COLUMN IF NOT EXISTS utm_source TEXT,
+  ADD COLUMN IF NOT EXISTS utm_medium TEXT,
+  ADD COLUMN IF NOT EXISTS utm_campaign TEXT,
+  ADD COLUMN IF NOT EXISTS utm_content TEXT,
+  ADD COLUMN IF NOT EXISTS utm_term TEXT,
+  ADD COLUMN IF NOT EXISTS landing_page TEXT,
+  ADD COLUMN IF NOT EXISTS referrer TEXT,
+  ADD COLUMN IF NOT EXISTS first_touch_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS signup_ip_hash TEXT,
+  ADD COLUMN IF NOT EXISTS signup_user_agent TEXT,
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
 
 CREATE INDEX IF NOT EXISTS idx_profiles_last_seen_at
@@ -31,6 +47,12 @@ CREATE INDEX IF NOT EXISTS idx_profiles_last_seen_at
 
 CREATE INDEX IF NOT EXISTS idx_profiles_email_lower
   ON public.profiles(lower(email));
+
+CREATE INDEX IF NOT EXISTS idx_profiles_country_code
+  ON public.profiles(country_code) WHERE country_code IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_profiles_utm_source
+  ON public.profiles(utm_source) WHERE utm_source IS NOT NULL;
 
 -- ---------------------------------------------------------------------------
 -- Single admin predicate used by policies and RPCs

@@ -14,7 +14,7 @@ function getSupabaseClient() {
 // Fire once per session for:
 //   a) brand-new accounts (created_at within last 2 min) — Brevo sync + welcome email
 //   b) any user missing country_code — server-side geo backfill via Vercel headers
-// Uses sessionStorage so it doesn't repeat on tab focus within the same session.
+// The welcome/Brevo path is session-gated; geo retries until the DB has country_code.
 async function maybeSyncNewUser(profile) {
   if (!profile?.id) return
   const isNew = profile.created_at &&
@@ -23,16 +23,14 @@ async function maybeSyncNewUser(profile) {
 
   if (!isNew && !needsGeo) return
 
-  // Separate flags: signup sync and geo sync are independent
-  const flag = isNew ? `loops_signup_fired_${profile.id}` : `geo_sync_fired_${profile.id}`
-  if (sessionStorage.getItem(flag)) return
-  sessionStorage.setItem(flag, '1')
+  const signupFlag = `loops_signup_fired_${profile.id}`
+  if (isNew && sessionStorage.getItem(signupFlag) && !needsGeo) return
   try {
     const supabase = await getSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return
     const attribution = getStoredAttribution()
-    await fetch('/api/on-signup', {
+    const res = await fetch('/api/on-signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +38,15 @@ async function maybeSyncNewUser(profile) {
       },
       body: JSON.stringify({ attribution: attribution || null }),
     })
-  } catch { /* non-blocking */ }
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      console.warn('[auth] signup/geo sync failed:', data.error || res.status)
+      return
+    }
+    if (isNew) sessionStorage.setItem(signupFlag, '1')
+  } catch (error) {
+    console.warn('[auth] signup/geo sync exception:', error?.message || error)
+  }
 }
 
 function readPendingAuthConsent() {

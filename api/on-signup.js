@@ -15,7 +15,7 @@
 
 import { createHash } from 'crypto'
 import { requireUser } from './_lib/auth.js'
-import { upsertBrevoContact, addToBrevoList } from './_lib/brevo.js'
+import { upsertBrevoContact } from './_lib/brevo.js'
 import { sendEmail, renderSignupWelcome } from './_lib/email.js'
 
 function getBody(req) {
@@ -157,15 +157,20 @@ export default async function handler(req, res) {
   if (ipHash)    enrichment.signup_ip_hash    = ipHash
   if (userAgent) enrichment.signup_user_agent = userAgent
 
+  let enrichmentError = null
   if (Object.keys(enrichment).length) {
-    await auth.supabase
+    const { error: updateErr } = await auth.supabase
       .from('profiles')
       .update(enrichment)
       .eq('id', userId)
-      .catch((err) => console.warn('[on-signup] enrichment update failed:', err?.message || err))
+    if (updateErr) {
+      enrichmentError = updateErr.message
+      console.warn('[on-signup] enrichment update failed:', updateErr.message)
+    }
   }
 
   if (alreadySynced) {
+    if (enrichmentError) return res.status(500).json({ error: enrichmentError, enriched: Object.keys(enrichment) })
     return res.status(200).json({ synced: false, enriched: Object.keys(enrichment) })
   }
 
@@ -210,5 +215,9 @@ export default async function handler(req, res) {
     console.error('[on-signup] welcome email failed:', err)
   }
 
-  return res.status(200).json({ synced: true, enriched: Object.keys(enrichment) })
+  return res.status(enrichmentError ? 207 : 200).json({
+    synced: true,
+    enriched: Object.keys(enrichment),
+    ...(enrichmentError ? { enrichmentError } : {}),
+  })
 }

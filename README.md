@@ -52,7 +52,7 @@ CELPIPACE is an independent preparation platform and is not affiliated with, end
 | Auth | Supabase Auth with Google sign-in |
 | Database | Supabase PostgreSQL |
 | Payments | Stripe checkout, billing portal, webhooks |
-| Email | Resend transactional email |
+| Email | Brevo transactional email and lifecycle automation |
 | Testing | Playwright |
 | Deployment | Vercel |
 
@@ -81,7 +81,7 @@ tests/e2e/           Playwright smoke and subscription flow tests
 - npm
 - Supabase project
 - Stripe account
-- Optional: Resend account for transactional email
+- Optional: Brevo account for transactional email and lifecycle automation
 
 ### Install
 
@@ -111,17 +111,21 @@ STRIPE_PRICE_MONTHLY=
 STRIPE_PRICE_QUARTERLY=
 SUPABASE_SERVICE_ROLE_KEY=
 PUBLIC_SITE_URL=
-RESEND_API_KEY=
+BREVO_API_KEY=
+BREVO_LIST_ID=
+BREVO_LIST_PREMIUM=
+BREVO_LIST_CANCELLED=
 EMAIL_FROM=
 ```
 
-Server-side secrets such as `STRIPE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, and `RESEND_API_KEY` must never be exposed with a `VITE_` prefix.
+Server-side secrets such as `STRIPE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, and `BREVO_API_KEY` must never be exposed with a `VITE_` prefix.
 
 ### Database Setup
 
 Run the SQL files in `supabase/` as needed for the feature set you are enabling. Important setup files include:
 
 - `supabase/admin_hardening.sql`
+- `supabase/geo_attribution_schema.sql`
 - `supabase/auth_premium.sql`
 - `supabase/payments_schema.sql`
 - `supabase/subscriptions_schema.sql`
@@ -191,6 +195,7 @@ npm run e2e
 ## Documentation
 
 - `docs/AUTH_DOMAIN_SETUP.md`
+- `docs/BREVO_AUTOMATION_SETUP.md`
 - `docs/CONTACT_SETUP.md`
 - `docs/PAYMENTS_SETUP.md`
 - `docs/PERSISTENCE_SETUP.md`

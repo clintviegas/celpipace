@@ -1,3 +1,4 @@
+/* global process */
 // /api/admin.js
 // Single dispatcher for admin-only operations. Keeps us under Vercel's 12-fn
 // limit while still allowing one-click refunds, manual premium grants, and
@@ -11,6 +12,7 @@
 
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import { addToBrevoList, checkBrevoConnection, getBrevoConfig, upsertBrevoContact } from './_lib/brevo.js'
 
 const ADMIN_EMAIL = 'clint.viegas@gmail.com'
 
@@ -108,6 +110,33 @@ export default async function handler(req, res) {
         console.error('[admin/deploy] error:', err?.message || err)
         return res.status(500).json({ error: err?.message || 'Deploy hook failed' })
       }
+    }
+
+    case 'brevo-status': {
+      const result = await checkBrevoConnection()
+      return res.status(result.ok ? 200 : 500).json(result)
+    }
+
+    case 'brevo-test-contact': {
+      const email = String(body.email || authData.user.email || '').trim().toLowerCase()
+      if (!email) return res.status(400).json({ error: 'email_required' })
+
+      const name = String(body.name || 'CELPIPACE Test').trim()
+      const [firstName, ...lastParts] = name.split(/\s+/)
+      const config = getBrevoConfig()
+      const listKey = String(body.list || 'users')
+      const listId = config.lists[listKey] || config.lists.users
+
+      const upsert = await upsertBrevoContact({
+        email,
+        firstName,
+        lastName: lastParts.join(' '),
+        emailBlacklisted: false,
+      })
+      if (!upsert.ok) return res.status(502).json(upsert)
+
+      const listed = listId ? await addToBrevoList({ email, listId }) : { ok: false, error: 'brevo_list_not_configured' }
+      return res.status(listed.ok ? 200 : 207).json({ ok: upsert.ok && listed.ok, upsert, listed, listId })
     }
 
     default:
