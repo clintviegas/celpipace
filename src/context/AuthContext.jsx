@@ -74,7 +74,7 @@ async function syncPendingAuthConsent(profile) {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return profile
 
-    const res = await fetch('/api/auth-consent', {
+    const res = await fetch('/api/on-signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

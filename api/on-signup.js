@@ -15,8 +15,10 @@
 
 import { createHash } from 'crypto'
 import { requireUser } from './_lib/auth.js'
-import { upsertBrevoContact } from './_lib/brevo.js'
+import { upsertBrevoContact, unsubscribeBrevoContact, addToBrevoList } from './_lib/brevo.js'
 import { sendEmail, renderSignupWelcome } from './_lib/email.js'
+
+const DEFAULT_TERMS_VERSION = '2026-05-07'
 
 function getBody(req) {
   if (!req.body) return {}
@@ -45,6 +47,26 @@ function decodeHeader(value) {
 
 function trim(s, max = 240) {
   return s ? String(s).replace(/\s+/g, ' ').trim().slice(0, max) || null : null
+}
+
+function clean(value, max = 80) {
+  return String(value || '').trim().slice(0, max)
+}
+
+function splitName(fullName) {
+  const [firstName, ...lastParts] = String(fullName || '').trim().split(/\s+/)
+  return { firstName: firstName || '', lastName: lastParts.join(' ') }
+}
+
+async function syncBrevoConsent({ email, firstName, lastName, consent }) {
+  if (!email) return
+  if (consent) {
+    const listId = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : null
+    await upsertBrevoContact({ email, firstName, lastName, emailBlacklisted: false })
+    if (listId) await addToBrevoList({ email, listId })
+  } else {
+    await unsubscribeBrevoContact({ email })
+  }
 }
 
 function isPublicIp(ip) {
@@ -101,8 +123,74 @@ export default async function handler(req, res) {
   const auth = await requireUser(req)
   if (!auth.ok) return res.status(auth.status).json({ error: auth.error })
 
-  const userId = auth.user.id
   const body = getBody(req)
+  const userId = auth.user.id
+  const email = auth.user.email
+  const { firstName, lastName } = splitName(auth.user.user_metadata?.full_name)
+
+  if (Object.hasOwn(body || {}, 'consent')) {
+    const consent = body?.consent === true
+    const nowIso = new Date().toISOString()
+    const patch = consent
+      ? { marketing_consent: true, marketing_consent_at: nowIso, marketing_unsubscribed_at: null }
+      : { marketing_consent: false, marketing_unsubscribed_at: nowIso }
+
+    const { error: updateErr } = await auth.supabase
+      .from('profiles')
+      .update(patch)
+      .eq('id', userId)
+
+    if (updateErr) {
+      console.error('[on-signup] marketing consent update failed:', updateErr.message)
+      return res.status(500).json({ error: updateErr.message })
+    }
+
+    syncBrevoConsent({ email, firstName, lastName, consent })
+      .catch(err => console.warn('[on-signup] brevo consent sync failed:', err.message))
+
+    return res.status(200).json({ consent })
+  }
+
+  if (body?.termsAccepted === true) {
+    const termsVersion = clean(body?.termsVersion || DEFAULT_TERMS_VERSION)
+    const marketingConsent = body?.marketingConsent === true
+    const nowIso = new Date().toISOString()
+    const patch = {
+      terms_accepted_at: nowIso,
+      terms_version: termsVersion,
+    }
+
+    if (marketingConsent) {
+      patch.marketing_consent = true
+      patch.marketing_consent_at = nowIso
+      patch.marketing_unsubscribed_at = null
+    }
+
+    const { data: profile, error: updateErr } = await auth.supabase
+      .from('profiles')
+      .update(patch)
+      .eq('id', userId)
+      .select('terms_accepted_at, terms_version, marketing_consent, marketing_consent_at')
+      .maybeSingle()
+
+    if (updateErr) {
+      console.error('[on-signup] profile consent update failed:', updateErr.message)
+      return res.status(500).json({ error: updateErr.message })
+    }
+
+    if (marketingConsent && email) {
+      syncBrevoConsent({ email, firstName, lastName, consent: true })
+        .catch(err => console.warn('[on-signup] brevo consent sync failed:', err.message))
+    }
+
+    return res.status(200).json({
+      termsAcceptedAt: profile?.terms_accepted_at || nowIso,
+      termsVersion: profile?.terms_version || termsVersion,
+      marketingConsent: !!profile?.marketing_consent,
+      marketingConsentAt: profile?.marketing_consent_at || null,
+    })
+  }
+
   const attribution = sanitizeAttribution(body.attribution)
 
   const { data: profile, error: profErr } = await auth.supabase
@@ -174,12 +262,11 @@ export default async function handler(req, res) {
     return res.status(200).json({ synced: false, enriched: Object.keys(enrichment) })
   }
 
-  const email = profile.email || auth.user.email
-  if (!email) return res.status(200).json({ synced: false, reason: 'no_email' })
+  const profileEmail = profile.email || auth.user.email
+  if (!profileEmail) return res.status(200).json({ synced: false, reason: 'no_email' })
 
   const fullName = profile.full_name || auth.user.user_metadata?.full_name || ''
-  const [firstName, ...lastParts] = String(fullName).trim().split(/\s+/)
-  const lastName = lastParts.join(' ')
+  const signupName = splitName(fullName)
   const subscribed = !!profile.marketing_consent
 
   const listId     = process.env.BREVO_LIST_ID   ? Number(process.env.BREVO_LIST_ID)   : null
@@ -187,9 +274,9 @@ export default async function handler(req, res) {
 
   // Add to Brevo — triggers the "contact added to list" automation scenario
   await upsertBrevoContact({
-    email,
-    firstName,
-    lastName,
+    email: profileEmail,
+    firstName: signupName.firstName,
+    lastName: signupName.lastName,
     emailBlacklisted: !subscribed,
     listIds: [listId, freeListId].filter(Boolean),
   })
@@ -206,7 +293,7 @@ export default async function handler(req, res) {
     await sendEmail({
       supabase: auth.supabase,
       userId,
-      toEmail: email,
+      toEmail: profileEmail,
       kind: 'signup_welcome',
       subject,
       html,
