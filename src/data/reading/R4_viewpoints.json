@@ -18,24 +18,26 @@
           "skill": "opinion_identification",
           "question_text": "What is Elena Rodriguez's main reason for supporting the ban?",
           "options": {
-            "A": "She dislikes cars personally",
+            "A": "Removing cars would make the street safer, which is her primary civic concern",
             "B": "Pedestrian traffic helps her business more than parking does",
-            "C": "She wants the city to lose tax revenue",
-            "D": "Her shop is hard to reach by car"
+            "C": "The festival proved that car-free zones permanently raise property values",
+            "D": "Her shop already attracts customers who arrive on foot or by transit"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Elena says 'Foot traffic is what keeps shops like mine alive — not parking.' A is a partial truth — she mentions safety but frames it around customers, not civic duty. C overstates; she cites a festival sales spike, not a property-value claim."
         },
         {
           "question_number": 2,
           "skill": "nuanced_inference",
           "question_text": "What concern does Elena raise despite her overall support?",
           "options": {
-            "A": "That her customers will not visit",
-            "B": "That rent will increase",
+            "A": "That reduced parking will deter customers who browse nearby shops",
+            "B": "That the city may raise commercial rents once foot traffic improves",
             "C": "That suppliers may not be able to deliver to her shop",
-            "D": "That the festival was a failure"
+            "D": "That the scheduled festival windows were too short to be useful"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Elena says 'The plan needs to guarantee that suppliers can still reach us.' A is a scope trap — she worries about supply-side deliveries, not customer-side parking. D misreads the festival reference, which she cites positively."
         },
         {
           "question_number": 3,
@@ -43,35 +45,38 @@
           "question_text": "How does Mark Thibault's main objection differ from Tom Wexler's?",
           "options": {
             "A": "Mark focuses on commuter access; Tom focuses on customer transport of goods",
-            "B": "Mark and Tom share exactly the same concern",
-            "C": "Mark opposes pedestrians; Tom opposes cyclists",
-            "D": "Mark is a planner; Tom is a commuter"
+            "B": "Mark questions the timeline; Tom questions the data from European cities",
+            "C": "Mark objects on cost grounds; Tom objects on environmental grounds",
+            "D": "Mark opposes the plan in theory; Tom supports it with reservations"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: Mark cannot commute without his car; Tom's customers need vehicles to haul heavy merchandise. B is a quote-mismatch — the European data comes from Dr. Anand, not Tom. D inverts Tom's position; he opposes the plan outright."
         },
         {
           "question_number": 4,
           "skill": "critical_reading",
           "question_text": "According to Dr. Anand, what determines whether the ban will be fair?",
           "options": {
-            "A": "How many shops close in the first year",
-            "B": "Whether property values rise quickly enough",
-            "C": "Whether European cities approve of the plan",
+            "A": "Whether retail revenue per square metre exceeds car-friendly benchmarks within five years",
+            "B": "Whether property values rise quickly enough to offset the eighteen-month transition",
+            "C": "Whether European cities with pedestrian zones endorse the Brookhaven plan",
             "D": "Whether the city invests in adequate public transit"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: Dr. Anand says 'The real question isn't whether to do this — it's whether we'll invest in the transit needed to make it fair.' A and B are real data points she cites but are not what she identifies as the fairness condition."
         },
         {
           "question_number": 5,
           "skill": "opinion_identification",
           "question_text": "Which statement best summarizes the four viewpoints overall?",
           "options": {
-            "A": "All four speakers support the ban",
-            "B": "All four speakers oppose the ban",
-            "C": "Only the planner has any opinion",
+            "A": "Three speakers support the ban; one opposes it for personal reasons",
+            "B": "All four speakers acknowledge the European evidence but disagree on timing",
+            "C": "The speakers split evenly, with two supporting and two opposing unconditionally",
             "D": "Two support with conditions, one opposes practically, one opposes outright"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: Elena supports with delivery caveats, Dr. Anand supports pending transit investment, Mark opposes on practical commuter grounds, and Tom opposes outright. A overcounts supporters. C ignores the conditional nature of Elena's and Dr. Anand's support."
         }
       ],
       "fill_in_blank_comment": {
@@ -81,52 +86,57 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "celebration",
+              "A": "adjustment",
               "B": "transition",
-              "C": "construction",
-              "D": "permanent"
+              "C": "changeover",
+              "D": "shift"
             },
-            "correct_answer": "B"
+            "correct_answer": "B",
+            "explanation": "B is correct: the comment echoes Dr. Anand's exact word — 'The transition is painful for about eighteen months.' A, C, and D are near-synonyms that fit grammatically but lack the precise register used in the source text."
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "delay",
-              "B": "shortage",
+              "A": "upturn",
+              "B": "surge",
               "C": "increase",
-              "D": "decline"
+              "D": "climb"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'a noticeable increase in foot traffic' is the neutral, precise collocation. A (upturn) and D (climb) suggest a steeper or more dramatic recovery than the comment implies. B (surge) overstates the gradual nature described."
           },
           {
             "blank_number": 8,
             "options": {
               "A": "dismiss",
-              "B": "compensate",
-              "C": "investigate",
-              "D": "celebrate"
+              "B": "overlook",
+              "C": "sidestep",
+              "D": "downplay"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: 'too quick to dismiss' means to reject outright without consideration, which matches the criticism that planners ignore businesses like Tom's. B–D imply partial acknowledgment, but the comment accuses planners of total disregard."
           },
           {
             "blank_number": 9,
             "options": {
               "A": "eliminated",
-              "B": "rewarded",
-              "C": "studied",
-              "D": "encouraged"
+              "B": "restricted",
+              "C": "managed",
+              "D": "reduced"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: the phrase 'a problem to be eliminated' reflects an absolute, zero-tolerance stance — which is the extreme the commenter is pushing back against. B, C, and D imply partial control rather than total removal."
           },
           {
             "blank_number": 10,
             "options": {
-              "A": "private",
-              "B": "secret",
+              "A": "alignment",
+              "B": "agreement",
               "C": "conflict",
               "D": "common"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: 'more in common' is a fixed English phrase meaning shared ground. A and B are near-synonyms but do not complete the idiomatic expression 'have in common.' C is the opposite of the intended meaning."
           }
         ]
       }

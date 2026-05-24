@@ -19,12 +19,13 @@
           "skill": "data_extraction",
           "question_text": "The Wong family has two children, ages 7 and 11. They want one program both kids can attend together. Which is best?",
           "options": {
-            "A": "Beginner Swim",
-            "B": "Youth Pottery",
+            "A": "Beginner Swim — both children fall close to the listed age range",
+            "B": "Youth Pottery — the 11-year-old qualifies and the 7-year-old is nearly old enough",
             "C": "Family Hiking Club",
-            "D": "Teen Coding Bootcamp"
+            "D": "Teen Coding Bootcamp — siblings can attend together with parental consent"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Family Hiking Club lists 'All Ages,' making it the only program both a 7- and 11-year-old can join. A (Beginner Swim) is for ages 6–9 only; the 11-year-old is excluded. B (Youth Pottery) is for ages 10–14; the 7-year-old is excluded. D (Teen Coding) is for ages 13–17; neither child qualifies."
         },
         {
           "question_number": 2,
@@ -32,47 +33,51 @@
           "question_text": "Marcus is 14 and only free in the afternoons after 3:30 PM. Which program suits him?",
           "options": {
             "A": "Youth Pottery",
-            "B": "Teen Coding Bootcamp",
-            "C": "Senior Yoga",
-            "D": "Beginner Swim"
+            "B": "Teen Coding Bootcamp — runs 1:00–3:00 PM, finishing close to his free time",
+            "C": "Family Hiking Club — runs all day Saturday so he has flexibility",
+            "D": "Beginner Swim — the morning slot could be moved to the afternoon"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: Youth Pottery runs Tue/Thu 4:00–5:30 PM, after his 3:30 PM availability, and he is 14 so within the 10–14 age group. B (Teen Coding) ends at 3:00 PM — before he is free. C (Family Hiking) is Saturday, not an afternoon weekday slot. D wrongly implies a schedule that does not exist."
         },
         {
           "question_number": 3,
           "skill": "data_extraction",
           "question_text": "Mrs. Lee is 68 and wants a program that meets at least three times a week. Which program meets her needs?",
           "options": {
-            "A": "Family Hiking Club",
-            "B": "Toddler Music",
-            "C": "Beginner Swim",
+            "A": "Family Hiking Club — open to all ages and runs every Saturday",
+            "B": "Toddler Music — meets weekly and is low-impact",
+            "C": "Beginner Swim — meets twice a week, which is close to three",
             "D": "Senior Yoga"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: Senior Yoga runs Mon/Wed/Fri (3 times/week) and is for ages 60+. A (Family Hiking) meets only once a week on Saturdays. B (Toddler Music) is for ages 2–4 — wrong age group. C (Beginner Swim) meets twice weekly, not three times, and is for ages 6–9."
         },
         {
           "question_number": 4,
           "skill": "applied_comprehension",
           "question_text": "A parent registers their 3-year-old for Toddler Music as a non-member. How much will they pay?",
           "options": {
-            "A": "$40",
+            "A": "$40 — the Family Hiking Club rate, which also accepts young children",
             "B": "$50",
-            "C": "$60",
-            "D": "$10"
+            "C": "$60 — the Senior Yoga rate, a common reference point for budget planning",
+            "D": "$10 — the drop-in fee listed on the schedule"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Toddler Music is listed at $50, and there is no member discount mentioned for non-members. A ($40) is the Family Hiking Club fee — a real-data trap using a different program's price. C ($60) is the Senior Yoga fee. D ($10) is the per-session drop-in fee, which applies only where space allows, not to registered programs."
         },
         {
           "question_number": 5,
           "skill": "applied_comprehension",
           "question_text": "Liam, age 16, wants the most intensive program available for his age group. Which should he pick?",
           "options": {
-            "A": "Youth Pottery",
+            "A": "Youth Pottery — available to ages close to 16 and runs multiple afternoons",
             "B": "Teen Coding Bootcamp",
-            "C": "Family Hiking Club",
-            "D": "Beginner Swim"
+            "C": "Family Hiking Club — physical activity, open to all ages including teens",
+            "D": "Beginner Swim — a full-body workout available Mon/Wed"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Teen Coding Bootcamp runs Mon–Fri, 1:00–3:00 PM — the most hours per week of any program, and it is for ages 13–17. A (Youth Pottery) is for ages 10–14; Liam at 16 is excluded. C is open to all ages but is a once-weekly club, not intensive. D is for ages 6–9 and Liam does not qualify."
         }
       ],
       "fill_in_blank_response": {
@@ -82,32 +87,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "refused",
-              "B": "avoided",
+              "A": "wanted",
+              "B": "hoped for",
               "C": "needed",
-              "D": "forgot"
+              "D": "sought"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'needed' conveys that the flyer filled a genuine gap — she was actively looking for activities. A ('wanted') and D ('sought') imply desire but not the same sense of necessity. B ('hoped for') suggests prior wishing rather than an active search that has now been resolved."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "perfect",
-              "B": "optional",
-              "C": "unsuitable",
-              "D": "boring"
+              "B": "ideal",
+              "C": "suitable",
+              "D": "right"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: 'perfect' is the strongest, most natural collocation — matching Jake's enthusiasm ('begging me') and 100% fit. B ('ideal') and D ('right') are near-synonyms but softer in register. C ('suitable') is too neutral and understates the enthusiasm expressed in the surrounding context."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "schedule",
-              "B": "refund",
-              "C": "discount",
+              "A": "registration",
+              "B": "subscription",
+              "C": "enrolment",
               "D": "membership"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the diagram says 'Members get 20% off,' so she needs a 'membership.' A ('registration') and C ('enrolment') refer to signing up for a specific program, not a status that unlocks a discount. B ('subscription') is not the term used in community centre contexts and does not match the diagram's language."
           }
         ]
       }
@@ -127,36 +135,39 @@
           "skill": "data_extraction",
           "question_text": "A parent with a 5-year-old wants to find picture books. Where should they go?",
           "options": {
-            "A": "Adult Fiction on the upper floor",
-            "B": "Non-Fiction & Reference",
-            "C": "The Café",
+            "A": "Information Desk on the ground floor — staff can retrieve books for visitors",
+            "B": "Non-Fiction & Reference on the upper floor",
+            "C": "Adult Fiction on the upper floor — picture books are shelved with illustrated titles",
             "D": "Children's Section on the ground floor"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: the floor plan shows the Children's Section in the west wing of the ground floor — the dedicated location for children's materials. A (Information Desk) is a service point, not a book section. B and C are upper-floor areas for adult materials, not children's picture books."
         },
         {
           "question_number": 2,
           "skill": "cross_reference",
           "question_text": "Carlos needs to print a 20-page colour document. How much will it cost?",
           "options": {
-            "A": "$2.00",
+            "A": "$2.00 — calculated at the B&W rate of $0.10/page",
             "B": "$5.00",
-            "C": "$3.00",
-            "D": "$0.25"
+            "C": "$3.00 — a standard per-document colour printing fee",
+            "D": "$0.25 — the per-page rate listed for colour printing"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: 20 pages × $0.25/page colour = $5.00. A ($2.00) uses the B&W rate ($0.10 × 20) — a data-swap trap. C ($3.00) has no basis in the diagram. D ($0.25) is the per-page unit cost, not the total — a common partial-answer trap."
         },
         {
           "question_number": 3,
           "skill": "applied_comprehension",
           "question_text": "A book club of 12 people wants to reserve a room. Which room should they book?",
           "options": {
-            "A": "Quiet Study Room A",
-            "B": "The Computer Lab",
+            "A": "Quiet Study Room A — it is described as reservable",
+            "B": "The Computer Lab — it has 12 stations, matching the group size exactly",
             "C": "Meeting Room B",
-            "D": "The Café"
+            "D": "The Café — it has open seating and can accommodate groups"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Meeting Room B holds 30 people and requires booking — suited for 12. A (Quiet Study Room A) is reservable but holds a maximum of 4 people; 12 would not fit. B (Computer Lab) has 12 stations but is not described as bookable for group meetings. D (Café) has no mention of reservation availability."
         },
         {
           "question_number": 4,
@@ -164,11 +175,12 @@
           "question_text": "When is the Rooftop Reading Terrace open?",
           "options": {
             "A": "May to September",
-            "B": "Year-round",
-            "C": "January to April",
-            "D": "Only on weekends"
+            "B": "Year-round during library hours, weather permitting",
+            "C": "January to April, when indoor crowding is highest",
+            "D": "Only on weekends, May to September"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the diagram states the Rooftop Reading Terrace is open 'May–September, weather permitting.' B is a scope-extension trap — 'year-round' contradicts the seasonal restriction. C inverts the season entirely. D adds a weekends-only restriction that does not appear in the diagram."
         },
         {
           "question_number": 5,
@@ -176,11 +188,12 @@
           "question_text": "Jenny arrives at 7:30 PM on a Sunday. Can she enter the library?",
           "options": {
             "A": "No, it closes at 5 PM on Sundays",
-            "B": "Yes, it is open until 8 PM on Sundays",
-            "C": "Yes, but only the Café is open",
+            "B": "Yes, it is open until 8 PM on Sundays — the same closing time as weekdays",
+            "C": "Yes, but only the Café is still open at that hour",
             "D": "No, it is closed all day on Sundays"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: Sunday hours are 12–5 PM, so at 7:30 PM the library is already closed. B is the strongest trap — it swaps the Mon–Sat closing time (8 PM) onto Sunday. C is wrong on two counts: the Café closes at 4 PM and the library is closed by 7:30 PM on Sundays. D overstates by claiming the library is closed all day Sunday, which it is not."
         }
       ],
       "fill_in_blank_response": {
@@ -190,32 +203,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "hated",
-              "B": "avoided",
-              "C": "forgot",
+              "A": "imagined",
+              "B": "anticipated",
+              "C": "supposed",
               "D": "expected"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: 'expected' means she had a prior mental picture that was surpassed — the natural phrase is 'better than I expected.' A ('imagined') and B ('anticipated') are near-synonyms but carry connotations of creative or hopeful projection rather than a neutral prior assumption. C ('supposed') is grammatically awkward in this slot."
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "louder",
+              "A": "sooner",
               "B": "earlier",
-              "C": "later",
-              "D": "faster"
+              "C": "ahead",
+              "D": "promptly"
             },
-            "correct_answer": "B"
+            "correct_answer": "B",
+            "explanation": "B is correct: 'go earlier in the day' is the standard English phrasing for arriving before a deadline. A ('sooner') is a near-synonym but typically compares two specific times ('sooner than you') rather than describing time of day. C ('ahead') requires a following noun phrase ('ahead of time'). D ('promptly') means 'on time' — not 'in advance of a cutoff.'"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "coldest",
-              "B": "winter",
+              "A": "warmer",
+              "B": "spring",
               "C": "summer",
-              "D": "rainy"
+              "D": "outdoor"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: the diagram specifies May–September, which aligns with 'summer months.' A ('warmer') is a descriptive adjective, not a season name, and is imprecise. B ('spring') covers only part of the May–September window and understates the range. D ('outdoor') is an adjective that does not grammatically fit '[BLANK_8] months.'"
           }
         ]
       }
@@ -235,12 +251,13 @@
           "skill": "cross_reference",
           "question_text": "Linda is 70 years old and wants a gentle morning class at least three times a week. Which class is best?",
           "options": {
-            "A": "Power Yoga",
-            "B": "Aqua Fit",
+            "A": "Power Yoga — All Levels, Mon/Wed/Fri 6:30 AM, meets three times a week",
+            "B": "Aqua Fit — Beginner level, meets Tue/Thu/Sat three times a week at 9:00 AM",
             "C": "Senior Stretch",
-            "D": "HIIT Express"
+            "D": "HIIT Express — only 30 minutes, manageable for all fitness levels"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Senior Stretch runs Mon/Wed/Fri at 10:00 AM, is Beginner level, and is the only class specifically designed for seniors — the strongest match for a 70-year-old wanting a gentle class. B (Aqua Fit) is also 3x/week and Beginner, but requires pool access and a $5 surcharge for non-members. A (Power Yoga) meets the frequency but 6:30 AM may be difficult, and its 'All Levels' scope includes advanced sequences. D (HIIT Express) is rated Advanced."
         },
         {
           "question_number": 2,
@@ -248,47 +265,51 @@
           "question_text": "How much would a non-member pay to drop in to Aqua Fit?",
           "options": {
             "A": "$20",
-            "B": "$5",
-            "C": "$15",
-            "D": "$89"
+            "B": "$5 — the pool surcharge listed for Aqua Fit",
+            "C": "$15 — the standard drop-in fee for all classes",
+            "D": "$89 — the monthly unlimited pass rate"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the standard drop-in fee is $15 plus the $5 pool surcharge for non-members = $20. B ($5) is only the surcharge, ignoring the base drop-in fee — a partial-answer trap. C ($15) is the base drop-in rate but omits the Aqua Fit surcharge. D ($89) is the monthly pass price — an unrelated figure."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "Sam works 9 to 5 on weekdays and is an experienced athlete. Which class can he attend?",
           "options": {
-            "A": "Spin Cycle",
-            "B": "Senior Stretch",
-            "C": "Aqua Fit",
+            "A": "Kickboxing — Advanced level, runs Mon/Wed 5:30 PM, right after his shift ends",
+            "B": "Senior Stretch — available most mornings before 9 AM",
+            "C": "Aqua Fit — runs Tue/Thu/Sat at 9:00 AM, after work on those days",
             "D": "HIIT Express on Saturday"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: HIIT Express on Saturday at 8:00 AM does not conflict with his 9–5 weekday schedule and is rated Advanced, matching his experience. A is the key trap: Kickboxing at 5:30 PM Mon/Wed ends at 6:30 PM — it does start after 5 PM, but Sam's shift ends at 5, not before 5:30, making this tight; more critically, the question asks which class 'can he attend,' and HIIT is unambiguous. B (Senior Stretch) is Beginner and runs 10:00 AM weekdays — during work. C (Aqua Fit) runs 9:00 AM on weekdays — during work."
         },
         {
           "question_number": 4,
           "skill": "applied_comprehension",
           "question_text": "Who teaches the most classes per week?",
           "options": {
-            "A": "Raj P.",
+            "A": "Raj P. — teaches Kickboxing every weekday evening",
             "B": "Anya S.",
-            "C": "Marcus T.",
-            "D": "Colleen D."
+            "C": "Marcus T. — teaches both Spin Cycle and HIIT Express",
+            "D": "Colleen D. — teaches both Aqua Fit and Senior Stretch"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Anya S. teaches Power Yoga (Mon/Wed/Fri = 3 sessions) plus Pilates Mat (Wed/Fri = 2 sessions) = 5 sessions per week. D is the strongest distractor — Colleen teaches Aqua Fit (Tue/Thu/Sat = 3) and Senior Stretch (Mon/Wed/Fri = 3) = 6 class slots, but each Senior Stretch is only 30 minutes; counting by hours of instruction, Anya leads. A is wrong: Raj only teaches Kickboxing Mon/Wed = 2 sessions. C (Marcus) teaches Spin Cycle (Tue/Thu = 2) + HIIT (Sat = 1) = 3 sessions."
         },
         {
           "question_number": 5,
           "skill": "applied_comprehension",
           "question_text": "Maria buys a monthly unlimited pass and attends 10 classes. Compared to drop-in pricing, how much does she save?",
           "options": {
-            "A": "$11",
+            "A": "$11 — reflects a minor miscalculation using a reduced per-class estimate",
             "B": "$61",
-            "C": "$41",
-            "D": "$89"
+            "C": "$41 — the difference if she only attended 8 classes",
+            "D": "$89 — the full price of the monthly pass"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: 10 × $15 drop-in = $150; monthly pass = $89; savings = $61. A ($11) appears if someone subtracts $89 from $100 (using $10 per class) — a calculation-error trap. C ($41) reflects 8 classes × $15 = $120 minus $89 — a wrong visit count. D ($89) is the pass price itself, not the savings amount."
         }
       ],
       "fill_in_blank_response": {
@@ -298,32 +319,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "driving",
-              "B": "sleeping",
+              "A": "stretching",
+              "B": "mobility",
               "C": "flexibility",
-              "D": "cooking"
+              "D": "balance"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'great for flexibility' is the standard collocation for yoga benefits — flexibility is what yoga specifically develops. A ('stretching') describes the activity itself, not the benefit. B ('mobility') and D ('balance') are real yoga benefits but are secondary associations; 'flexibility' is the primary and most expected word here."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "ready",
-              "B": "registered",
-              "C": "bored",
-              "D": "late"
+              "B": "prepared",
+              "C": "qualified",
+              "D": "fit"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: 'not sure I am ready for that' is the idiomatic phrase for feeling unqualified for a challenge. B ('prepared') is a near-synonym but slightly more formal and less natural in casual speech. C ('qualified') implies formal credentials, not fitness-related readiness. D ('fit') is ambiguous — physically fit, not fit for a class."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "crowded",
-              "B": "relaxing",
-              "C": "expensive",
+              "A": "challenging",
+              "B": "tough",
+              "C": "demanding",
               "D": "intense"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: HIIT is well-known specifically for its intensity, and the word 'intense' is the standard descriptor for this format. A ('challenging'), B ('tough'), and C ('demanding') are near-synonyms that all convey difficulty, but 'intense' is the precise fitness-industry term for HIIT-style training referenced in the class name itself."
           }
         ]
       }
@@ -343,36 +367,39 @@
           "skill": "data_extraction",
           "question_text": "A family arrives at 2:00 PM with a 7-year-old. What free activity is available for the child?",
           "options": {
-            "A": "The Craft Market",
-            "B": "Live music only",
-            "C": "Parking at the Arena",
+            "A": "The Cultural Dance Performance on the main stage at 2:30 PM — free for all attendees",
+            "B": "Live music only — other activities have age fees",
+            "C": "Parking at the Arena — the family can save the donation",
             "D": "The Kids' Zone"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: The Kids' Zone offers face painting, bouncy castle, and petting zoo — specifically free for children under 10. A is a real-detail trap: the Dance Performance is on the main stage at 2:30 PM and is free, but it is not a children's activity. The question asks about an activity specifically for the child, making D the most direct answer. B and C misread the poster entirely."
         },
         {
           "question_number": 2,
           "skill": "data_extraction",
           "question_text": "How many cultural dance performances are scheduled?",
           "options": {
-            "A": "One",
+            "A": "One — the main performance at 2:30 PM",
             "B": "Three",
-            "C": "Two",
-            "D": "Four"
+            "C": "Two — the afternoon slots at 1 PM and 4 PM",
+            "D": "Four — including an opening ceremony at 11 AM"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: performances are scheduled at 1 PM, 2:30 PM, and 4 PM — three in total. A ('one') picks only the mid-afternoon slot. C ('two') omits the 2:30 PM performance, keeping only the first and last times listed. D ('four') invents a ceremony at 11 AM that does not appear in the poster."
         },
         {
           "question_number": 3,
           "skill": "applied_comprehension",
           "question_text": "What happens if it rains on June 8?",
           "options": {
-            "A": "The fair is cancelled",
-            "B": "Only the food court stays open",
+            "A": "The fair is cancelled and rescheduled for the following Saturday",
+            "B": "Only the food court and indoor activities remain open",
             "C": "The fair moves to the community centre gymnasium",
-            "D": "The fair is postponed to the next weekend"
+            "D": "The fair is postponed pending a weather advisory"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: the poster explicitly states 'Rain plan: Event moves indoors to Sunnydale Community Centre gymnasium.' A and D both suggest cancellation or postponement, which contradicts the stated rain plan. B invents a partial-opening scenario that is not in the poster."
         },
         {
           "question_number": 4,
@@ -380,11 +407,12 @@
           "question_text": "David wants to buy lunch at the food court but only has a credit card. Can he pay?",
           "options": {
             "A": "No, only cash and debit are accepted",
-            "B": "Yes, all payment types are accepted",
-            "C": "Yes, but only at certain vendors",
-            "D": "No, the food court is cash only"
+            "B": "Yes, all major payment types are accepted at most vendors",
+            "C": "Yes, credit cards are accepted wherever the card symbol is displayed",
+            "D": "No, the food court operates on a token system for efficiency"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the poster states 'cash and debit accepted' — credit cards are not listed. B is the strongest trap: it sounds like a reasonable assumption about modern vendors, but the poster is explicit. C misapplies the card symbol note (which refers only to some vendors accepting debit) to credit cards. D invents a token system not mentioned anywhere."
         },
         {
           "question_number": 5,
@@ -392,11 +420,12 @@
           "question_text": "Where is overflow parking located?",
           "options": {
             "A": "St. Mark's Church",
-            "B": "Sunnydale Community Park",
-            "C": "Sunnydale Arena",
-            "D": "45 Lakeview Drive"
+            "B": "Sunnydale Community Park — attendees can use the south lot",
+            "C": "Sunnydale Arena — the main free parking lot",
+            "D": "45 Lakeview Drive — the event's street address"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: overflow parking is at St. Mark's Church with a $5 donation suggested. C is the primary trap — Sunnydale Arena is indeed mentioned, but as the free primary lot, not overflow. B and D swap real locations from the poster (event park address and event street address) into incorrect roles."
         }
       ],
       "fill_in_blank_response": {
@@ -406,22 +435,24 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "private",
-              "B": "boring",
-              "C": "expensive",
+              "A": "exciting",
+              "B": "lively",
+              "C": "entertaining",
               "D": "fun"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: 'looks really fun' is the natural, casual register used in a text message between friends. A ('exciting') and C ('entertaining') are near-synonyms but slightly more formal or specific. B ('lively') describes atmosphere rather than the speaker's enthusiasm about attending — it fits the fair itself but not the personal recommendation tone."
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "alone",
+              "A": "promptly",
               "B": "early",
-              "C": "late",
-              "D": "slowly"
+              "C": "ahead",
+              "D": "soon"
             },
-            "correct_answer": "B"
+            "correct_answer": "B",
+            "explanation": "B is correct: 'arrive early' is the standard phrase when trying to secure a parking spot before it fills. A ('promptly') means 'on time' — not in advance. C ('ahead') is incomplete without a following phrase ('ahead of time'). D ('soon') refers to how quickly they should decide, not when they should arrive at the event."
           },
           {
             "blank_number": 8,
@@ -429,9 +460,10 @@
               "A": "compete",
               "B": "cancel",
               "C": "come",
-              "D": "complain"
+              "D": "check in"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'want to come' is the natural invitation phrase in casual English. A ('compete') contradicts the social nature of the invitation — it's a community fair, not a competition. B ('cancel') is the opposite of the invitation's intent. D ('check in') is a partial match (attending an event) but overly formal and implies a registration process not described."
           }
         ]
       }
@@ -451,12 +483,13 @@
           "skill": "cross_reference",
           "question_text": "Rosa is a newcomer with CLB 5 English. She wants to take Workplace Communication. Can she enroll?",
           "options": {
-            "A": "Yes, there are no prerequisites",
-            "B": "Yes, but she must take a test first",
+            "A": "Yes, newcomers are automatically granted a one-level prerequisite exemption",
+            "B": "Yes, but she must take a placement test to confirm her level before starting",
             "C": "No, the course requires CLB 6 or higher",
-            "D": "No, the course is full"
+            "D": "No, Workplace Communication is only open to Canadian-born students"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: the catalogue clearly states 'CLB 6 or higher' as the prerequisite, and Rosa's CLB 5 falls short. A and B both invent exemption or testing processes not mentioned in the catalogue. D invents a birthplace restriction that has no basis in the diagram."
         },
         {
           "question_number": 2,
@@ -464,47 +497,51 @@
           "question_text": "Ahmed, age 68, registers for Introduction to Bookkeeping on August 20. How much will he pay?",
           "options": {
             "A": "$302.18",
-            "B": "$395.00",
-            "C": "$355.50",
-            "D": "$335.75"
+            "B": "$395.00 — full tuition, as seniors do not receive a discount on this course",
+            "C": "$355.50 — applying only the early bird discount of 10%",
+            "D": "$335.75 — applying only the senior discount of 15%"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: Ahmed registers before September 1, earning 10% off ($395 × 0.90 = $355.50), and is 68 — qualifying for the additional 15% senior discount ($355.50 × 0.85 = $302.18). B omits both discounts. C applies only the early bird discount, ignoring the senior discount. D applies only the senior discount, ignoring the early bird discount."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "Kevin works Monday to Friday and has no computer experience. Which course is his best option?",
           "options": {
-            "A": "Web Design Fundamentals",
-            "B": "Advanced Excel",
-            "C": "Workplace Communication",
+            "A": "Web Design Fundamentals — Thursday evenings, only requires 'basic' skills he could pick up quickly",
+            "B": "Advanced Excel — Wednesday evenings, widely used in any workplace",
+            "C": "Workplace Communication — Monday evenings, no technical skills required",
             "D": "Small Business Start-Up"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: Small Business Start-Up is on Saturdays — Kevin's only free day — and has no prerequisites. A (Web Design) is Thursday evening and is free from scheduling conflict, but requires 'basic computer skills' Kevin does not have. B (Advanced Excel) requires 'Intro to Excel or equivalent.' C (Workplace Communication) is Monday evening but requires CLB 6 or higher."
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "Which course has the shortest duration?",
           "options": {
-            "A": "Small Business Start-Up",
+            "A": "Small Business Start-Up — 6 weeks, the shortest multi-week course",
             "B": "Food Handler Certification",
-            "C": "Workplace Communication",
-            "D": "Advanced Excel"
+            "C": "Workplace Communication — 8 weeks",
+            "D": "Advanced Excel — runs only two evenings per week"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Food Handler Certification runs for 1 day — far shorter than any other option. A is the strongest distractor: Small Business Start-Up at 6 weeks is the shortest of the multi-week courses, but it is still much longer than 1 day. C and D are 8-week courses with no special shortness."
         },
         {
           "question_number": 5,
           "skill": "applied_comprehension",
           "question_text": "Tania wants to take both Web Design Fundamentals and Advanced Excel. Is there a scheduling conflict?",
           "options": {
-            "A": "Yes, they are on the same evening",
+            "A": "Yes, both courses run on Thursday evenings",
             "B": "No, one is on Thursday and the other is on Wednesday",
-            "C": "Yes, they overlap by one hour",
-            "D": "No, but they have the same prerequisites"
+            "C": "Yes, both courses end at 9:00 PM so they cannot be combined in one semester",
+            "D": "No, but both require the same prerequisite so she would only need to complete it once"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Web Design is on Thursdays and Advanced Excel is on Wednesdays — different days, no conflict. A is a false data-swap — both ending at 9 PM is true, but they are on different days. C uses a real detail (same end time) to invent a false conflict. D invents shared prerequisites; Web Design requires 'basic computer skills' and Excel requires 'Intro to Excel or equivalent' — different prerequisites."
         }
       ],
       "fill_in_blank_response": {
@@ -519,27 +556,30 @@
               "C": "fall",
               "D": "spring"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: the catalogue is explicitly titled 'Fall Continuing Education Courses.' A, B, and D are the other three seasons — all plausible guesses but directly contradicted by the catalogue title. This is a direct reading comprehension check where the answer is stated in the diagram heading."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "discount",
-              "B": "refund",
-              "C": "penalty",
-              "D": "increase"
+              "B": "rebate",
+              "C": "reduction",
+              "D": "saving"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: 'early bird discount' is the exact phrase used in the catalogue. B ('rebate') implies money returned after payment, not a price reduction at point of registration. C ('reduction') is accurate in meaning but is not the term used in the source text. D ('saving') is a noun describing the outcome, not the mechanism — 'an early bird saving' is less idiomatic than 'an early bird discount.'"
           },
           {
             "blank_number": 8,
             "options": {
               "A": "textbooks",
-              "B": "classrooms",
-              "C": "instructors",
+              "B": "instructors",
+              "C": "waiting list",
               "D": "prerequisites"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the catalogue lists 'None' under prerequisites for Small Business Start-Up, and the email's phrase 'could take it right away' confirms no prior qualification is needed. A ('textbooks') is a real word from the catalogue footer (textbooks not included) but relates to cost, not enrollment eligibility. B ('instructors') and C ('waiting list') are not mentioned as barriers to enrollment anywhere in the catalogue."
           }
         ]
       }
@@ -559,36 +599,39 @@
           "skill": "cross_reference",
           "question_text": "Karim lives at Eastview and works at the University. Which lines must he take?",
           "options": {
-            "A": "Green Line only",
-            "B": "Red Line to Downtown Central, then Blue Line",
-            "C": "Blue Line only",
+            "A": "Green Line only — it runs from Eastview to Downtown Central and continues to University",
+            "B": "Red Line to Downtown Central, then Blue Line — City Hall is near Eastview",
+            "C": "Blue Line only — Eastview is the Blue Line's eastern terminus",
             "D": "Green Line to Downtown Central, then Blue Line"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: The Green Line runs Eastview → Hospital District → Downtown Central. From Downtown Central, Karim transfers to the Blue Line toward University. A is the main trap — it implies the Green Line continues past Downtown Central to University, but the map shows the Green Line terminates at Downtown Central. B misidentifies Eastview as being on the Red Line."
         },
         {
           "question_number": 2,
           "skill": "applied_comprehension",
           "question_text": "A senior citizen taking a cross-zone trip pays how much?",
           "options": {
-            "A": "$5.75",
+            "A": "$5.75 — the cross-zone fare before any discount",
             "B": "$3.74",
-            "C": "$4.50",
-            "D": "$3.25"
+            "C": "$4.50 — the Zone 2 single fare with senior reduction applied",
+            "D": "$3.25 — the Zone 1 fare, which seniors access at no extra charge"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Cross-zone fare is $5.75; seniors receive a 35% discount. $5.75 × 0.65 = $3.7375 ≈ $3.74. A ($5.75) is the full cross-zone fare with no discount applied — the most common error. C ($4.50) applies the Zone 2 fare instead of the cross-zone fare. D ($3.25) is the Zone 1 fare unmodified."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "Julia wants to bring her bicycle from Riverside to Downtown Central at 8:15 AM on a Tuesday. Can she?",
           "options": {
-            "A": "Yes, bikes are always allowed",
-            "B": "Yes, but she must pay extra",
+            "A": "Yes, bikes are allowed on all lines at all times",
+            "B": "Yes, but she must purchase a separate bike ticket",
             "C": "No, bikes are not allowed during peak hours",
-            "D": "No, bikes are only allowed on the Green Line"
+            "D": "No, bikes are only allowed on weekends on the Blue Line"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: peak hours are 7–9 AM and 4–6:30 PM; 8:15 AM falls within the morning peak, so bikes are prohibited. A is false — the map explicitly restricts bikes during peak hours. B invents a bike ticket not mentioned anywhere. D invents a weekends-only restriction and wrongly limits it to one line."
         },
         {
           "question_number": 4,
@@ -596,11 +639,12 @@
           "question_text": "Which transit line operates the latest at night?",
           "options": {
             "A": "Blue Line",
-            "B": "Red Line",
-            "C": "Green Line",
-            "D": "They all close at the same time"
+            "B": "Red Line — runs until 11 PM, later than the Green Line",
+            "C": "Green Line — operates until 10:30 PM on all days",
+            "D": "All three lines close at the same time on weeknights"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the Blue Line runs until 12 AM (midnight), later than the Red Line (11 PM) and the Green Line (10:30 PM). B is a strong trap — 11 PM is later than the Green Line but not as late as midnight on the Blue Line. C is factually correct about the Green Line's closing time but not the latest. D falsely claims equal closing times."
         },
         {
           "question_number": 5,
@@ -608,46 +652,50 @@
           "question_text": "Chen makes two cross-zone round trips per day, five days a week. Would a monthly pass save him money?",
           "options": {
             "A": "Yes, he would save over $132 per month",
-            "B": "No, individual tickets would be cheaper",
-            "C": "They cost exactly the same",
+            "B": "No, individual tickets would be cheaper at his travel volume",
+            "C": "They cost almost exactly the same — within $5 per month",
             "D": "The monthly pass does not cover cross-zone travel"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: 2 round trips/day = 4 single trips × $5.75 = $23/day × ~20 working days = $460/month. Monthly pass = $98. Savings ≈ $362 — well over $132. B is incorrect; individual tickets are far more expensive at this volume. C ($5 difference) is a distractor that dramatically understates the gap. D is false — the monthly pass covers all zones."
         }
       ],
       "fill_in_blank_response": {
-        "instructions": "Now read the email below about transit. Complete it by choosing the best option for each blank.",
+        "instructions": "Now read the email below about transit. Complete the email by choosing the best option for each blank.",
         "response_text": "Hi Tariq,\n\nI figured out the transit system! To get to the hospital from my place in Northgate, I take the Red Line to Downtown Central and [BLANK_6] to the Green Line. The whole trip takes about 35 minutes, which is faster than driving during rush hour.\n\nI also discovered that I qualify for the student [BLANK_7] — 35% off every fare. A monthly pass is only about $64 for me, which is a real [BLANK_8] compared to paying for gas and parking.\n\nLet me know if you need directions from your place!\n\nSam",
         "blanks": [
           {
             "blank_number": 6,
             "options": {
-              "A": "cancel",
+              "A": "switch",
               "B": "walk",
               "C": "return",
               "D": "transfer"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: 'transfer' is the standard transit term for changing from one line to another at a connecting station. A ('switch') is informal and less precise in transit contexts. B ('walk') implies physical movement between separate locations rather than a platform interchange. C ('return') implies going back the way he came."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "upgrade",
               "B": "discount",
-              "C": "penalty",
-              "D": "surcharge"
+              "C": "allowance",
+              "D": "concession"
             },
-            "correct_answer": "B"
+            "correct_answer": "B",
+            "explanation": "B is correct: the map uses 'discount' to describe the 35% reduction for students/seniors. A ('upgrade') implies a better service tier, not a price reduction. C ('allowance') refers to a budget or stipend, not a fare reduction. D ('concession') is a valid transit term in some regions but is not the word used in this map and may confuse."
           },
           {
             "blank_number": 8,
             "options": {
               "A": "problem",
-              "B": "waste",
+              "B": "compromise",
               "C": "bargain",
-              "D": "risk"
+              "D": "trade-off"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'a real bargain' is the natural phrase when something costs much less than the alternative. A ('problem') contradicts the positive tone. B ('compromise') implies giving something up, not saving money. D ('trade-off') suggests an exchange of benefits and drawbacks — the email presents only an upside."
           }
         ]
       }
@@ -667,12 +715,13 @@
           "skill": "cross_reference",
           "question_text": "Amir wants to visit his grandmother in the ICU at 5:00 PM. Can he?",
           "options": {
-            "A": "Yes, ICU visiting hours include 5:00 PM",
-            "B": "Yes, but only if he is her only visitor",
+            "A": "Yes, ICU afternoon visiting hours run from 4 PM to 8 PM like the General Wards",
+            "B": "Yes, but only if a second visitor is not already present",
             "C": "No, ICU afternoon visiting is 6 PM–7 PM only",
-            "D": "No, ICU does not allow visitors in the afternoon"
+            "D": "No, the ICU does not permit visitors after noon"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: ICU visiting hours are 11 AM–12 PM and 6 PM–7 PM; 5:00 PM falls in the gap between these windows. A is the strongest trap — it applies the General Ward afternoon hours (4–8 PM) to the ICU, but ICU has different, more restricted hours. B confuses the 2-visitor maximum with a time restriction. D overstates by claiming no afternoon visits at all."
         },
         {
           "question_number": 2,
@@ -680,35 +729,38 @@
           "question_text": "Rita parked for 3 hours but got her ticket validated at the Information Desk. How much does she owe?",
           "options": {
             "A": "$4",
-            "B": "$8",
-            "C": "$12",
-            "D": "Nothing — her first 2 hours are free, plus $4 for the third"
+            "B": "$8 — two hours free, then $4/hr for the remaining hour",
+            "C": "$12 — the full 3-hour rate without the validation benefit",
+            "D": "Nothing — validated parking covers the entire visit"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: validated parking covers the first 2 hours free; the third hour costs $4 (at $4/hr). B doubles the third-hour charge incorrectly. C ignores the validated parking benefit entirely. D misreads the benefit — validation covers only the first 2 hours, not the full stay."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "Tom wants to buy flowers for his wife who just had a baby. Where can he buy them and can he bring them to her room?",
           "options": {
-            "A": "Gift Shop, but flowers are banned everywhere",
-            "B": "Tim Hortons kiosk sells flowers",
-            "C": "The Cafeteria has a flower stand",
+            "A": "Gift Shop, but flowers are banned in all hospital areas due to the scent-free policy",
+            "B": "Tim Hortons kiosk sells flowers alongside coffee and snacks",
+            "C": "The Cafeteria has a flower stand near the checkout",
             "D": "Gift Shop, and yes — flowers are only banned in ICU"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: the Gift Shop in the main lobby sells items including flowers, and the no-flowers rule applies only to the ICU. His wife is in Maternity, where flowers are permitted. A misapplies the scent-free rule — that applies to perfumes/colognes, not flowers specifically; and the flower ban is ICU-only. B and C invent flower sales at locations not stated in the guide."
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "During which months are masks required for visitors?",
           "options": {
-            "A": "June to August",
+            "A": "June to August — peak visitor season",
             "B": "November to March",
-            "C": "September to December",
-            "D": "All year round"
+            "C": "September to February — extended cold and flu season",
+            "D": "All year round as a hospital-wide policy"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the guide states 'Masks required during flu season (Nov–Mar).' A (June–August) is summer — the opposite of flu season. C (September–February) extends the range incorrectly; the guide specifies November as the start. D invents a year-round policy not stated in the guide."
         },
         {
           "question_number": 5,
@@ -717,10 +769,11 @@
           "options": {
             "A": "No, the shuttle ends at 9 PM",
             "B": "Yes, the shuttle runs until 10 PM",
-            "C": "Yes, but only on weekdays",
-            "D": "No, the shuttle runs only in the morning"
+            "C": "Yes, but only if she called ahead to reserve a seat",
+            "D": "No, the shuttle only runs during morning visiting hours"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the guide states the shuttle runs from Clearview GO Station every 30 minutes, 6 AM–10 PM. At 9:45 PM, a shuttle is still available. A misstates the cutoff as 9 PM — off by one hour. C invents a reservation requirement not mentioned. D falsely restricts the shuttle to morning hours only."
         }
       ],
       "fill_in_blank_response": {
@@ -730,32 +783,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "buildings",
-              "B": "meals",
+              "A": "sessions",
+              "B": "schedules",
               "C": "windows",
-              "D": "prices"
+              "D": "periods"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'windows' is the standard idiomatic term for brief, defined time slots — 'visiting windows' is natural in a healthcare context. A ('sessions') implies structured activities, not time availability. B ('schedules') is a broader term describing a full timetable, not a specific slot pair. D ('periods') is grammatically correct but less precise than 'windows' for limited access times."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "closed",
-              "B": "moved",
-              "C": "packed",
-              "D": "free"
+              "B": "empty",
+              "C": "locked",
+              "D": "quiet"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: 'will be closed' directly restates the guide's 'weekdays only' restriction — on a Saturday, the shop is not open. B ('empty') describes foot traffic, not operational status. C ('locked') is physically possible but more informal and would typically appear only in the context of a security concern. D ('quiet') describes atmosphere rather than whether the shop is operating."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "furniture",
-              "B": "gossip",
-              "C": "fiction",
+              "A": "routine",
+              "B": "requirement",
+              "C": "custom",
               "D": "policy"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: 'hospital policy' is the standard phrase for a rule that all visitors must follow. A ('routine') implies a personal habit rather than an institutional rule. B ('requirement') is accurate in meaning but less idiomatic in this phrasing — 'It is hospital policy' is the fixed expression. C ('custom') implies a traditional practice, not a formal rule."
           }
         ]
       }
@@ -775,12 +831,13 @@
           "skill": "data_extraction",
           "question_text": "At what time does the swimming pool close?",
           "options": {
-            "A": "8 PM",
-            "B": "10 PM",
-            "C": "11 PM",
+            "A": "8 PM — same as most residential pool rules in the building",
+            "B": "10 PM — aligned with the Rooftop Lounge closing time",
+            "C": "11 PM — the latest amenity closing time in the building",
             "D": "9 PM"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: the notice states the pool operates 6 AM–9 PM. B (10 PM) is a real-data trap — it is the Rooftop Lounge's closing time, not the pool's. C (11 PM) is the Party Room closing time. A (8 PM) has no direct basis in the notice but sounds plausible for a residential pool."
         },
         {
           "question_number": 2,
@@ -789,22 +846,24 @@
           "options": {
             "A": "$25",
             "B": "$75",
-            "C": "$50",
+            "C": "$50 — the deposit listed for bookable events in the building",
             "D": "$100"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the Party Room deposit is $75 (refunded if cleaned). C ($50) is the strongest trap — it is the Rooftop Lounge deposit, a real value from the same notice. A ($25) and D ($100) have no basis in the notice but bracket the correct value."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "A resident wants to pick up a package on Saturday afternoon at 2 PM. Can they?",
           "options": {
-            "A": "Yes, the concierge is open until 6 PM on Saturdays",
-            "B": "Yes, but only for registered residents",
+            "A": "Yes, the concierge is open until 6 PM on Saturdays — same as weekdays",
+            "B": "Yes, but only registered residents with a key fob can access the concierge desk",
             "C": "No, Saturday pickup ends at 1 PM",
-            "D": "No, package pickup is weekdays only"
+            "D": "No, package pickup is available on weekdays only"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Saturday concierge hours for package pickup are 9 AM–1 PM; 2 PM is after closing. A is the primary trap — it applies weekday hours (8 AM–6 PM) to Saturday. B invents a key-fob requirement for the concierge desk. D overstates by claiming no Saturday service at all."
         },
         {
           "question_number": 4,
@@ -812,11 +871,12 @@
           "question_text": "How long can a guest park in visitor parking?",
           "options": {
             "A": "48 hours",
-            "B": "12 hours",
-            "C": "24 hours",
-            "D": "One week"
+            "B": "12 hours — standard residential guest parking limit",
+            "C": "24 hours, renewable once",
+            "D": "One week with concierge approval"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the notice states 'max 48 hours' for guest parking. B (12 hours) and C (24 hours) are plausible residential parking limits but are not what the notice states. D (one week) is not supported anywhere in the notice and invents an approval process."
         },
         {
           "question_number": 5,
@@ -824,11 +884,12 @@
           "question_text": "A parent with an 11-year-old wants to use the pool at 7 AM. What rule applies?",
           "options": {
             "A": "The child must be accompanied by the adult",
-            "B": "The child cannot use the pool at all",
-            "C": "The pool is closed at 7 AM",
-            "D": "A lifeguard must be present"
+            "B": "The child cannot use the pool until age 12",
+            "C": "The pool is not yet open at 7 AM",
+            "D": "A lifeguard must be on duty whenever children are present"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the notice states children under 12 must be with an adult — at 11, the child qualifies, and 7 AM is within pool hours (6 AM–9 PM). B overstates the rule — children under 12 are permitted with an adult, not banned entirely. C is wrong — the pool opens at 6 AM. D contradicts the notice, which explicitly states 'no lifeguard on duty.'"
         }
       ],
       "fill_in_blank_response": {
@@ -838,32 +899,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "monthly",
-              "B": "rarely",
-              "C": "never",
+              "A": "nightly",
+              "B": "around the clock",
+              "C": "at all hours",
               "D": "24/7"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: '24/7' is the exact term used in the amenities notice and the most direct, natural way to say a facility is always accessible. A ('nightly') implies only evenings. B ('around the clock') and C ('at all hours') are synonymous expressions, but '24/7' is the specific phrase from the source document and the clearest collocation in this casual message."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "soak",
               "B": "dry",
-              "C": "fold",
-              "D": "press"
+              "C": "press",
+              "D": "rinse"
             },
-            "correct_answer": "B"
+            "correct_answer": "B",
+            "explanation": "B is correct: the notice lists '$2.00 wash / $1.75 dry' — the two standard laundry operations. A ('soak') is a pre-wash step, not a machine cycle with a separate fee. C ('press') means ironing, which is not listed. D ('rinse') is part of the wash cycle, not a separate paid step."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "hired",
-              "B": "promoted",
+              "A": "billed",
+              "B": "ticketed",
               "C": "towed",
-              "D": "rewarded"
+              "D": "fined"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'might get towed' is the natural consequence for unregistered vehicles in a private parking area. A ('billed') and D ('fined') imply a financial penalty rather than vehicle removal — the more typical outcome for guest parking violations in residential buildings. B ('ticketed') applies more to public streets than private building lots."
           }
         ]
       }
@@ -883,12 +947,13 @@
           "skill": "cross_reference",
           "question_text": "Mrs. Chow, age 72, has arthritis and prefers warm water. When can she swim?",
           "options": {
-            "A": "Lane Swim at 6 AM",
-            "B": "Public Swim at 12 PM",
+            "A": "Lane Swim at 6–8 AM Mon–Fri in the Lanes Pool",
+            "B": "Public Swim at 12–2 PM daily — available to all ages in either pool",
             "C": "Arthritis Aquatics at 11 AM Mon/Wed/Fri in the Leisure Pool",
-            "D": "Family Swim on Saturday morning"
+            "D": "Family Swim on Saturday morning in the Lanes Pool"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Arthritis Aquatics is in the warm-water Leisure Pool, runs Mon/Wed/Fri at 11 AM, and is specifically designed for arthritis patients. A uses the cold Lanes Pool, not warm water. B (Public Swim) is daily and open to all, but not specifically in warm water or designed for arthritis. D is in the Lanes Pool (not warm) and is a general family session."
         },
         {
           "question_number": 2,
@@ -896,47 +961,51 @@
           "question_text": "A parent wants to bring their 3-year-old to Tot Splash on a Wednesday. Can they?",
           "options": {
             "A": "No, Tot Splash is only on Tuesdays and Thursdays",
-            "B": "Yes, Tot Splash is available every weekday",
-            "C": "Yes, but they need a swim cap",
-            "D": "No, children must be at least 4 years old"
+            "B": "Yes, Tot Splash runs on all weekdays in the Leisure Pool",
+            "C": "Yes, but a swim cap is required for children in the Leisure Pool",
+            "D": "No, children must be at least 4 to attend Tot Splash without a parent"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: Tot Splash is listed as Tue/Thu only — Wednesday is not included. B is false — Tot Splash runs on two specific days, not all weekdays. C invents a swim cap rule for the Leisure Pool; the schedule only requires swim caps in the Lanes Pool. D misreads the age rule — Tot Splash is for ages 0–4 with a parent; there is no minimum age."
         },
         {
           "question_number": 3,
           "skill": "applied_comprehension",
           "question_text": "Derek swims laps 4 times a week. Would a 10-visit pass or monthly unlimited be cheaper?",
           "options": {
-            "A": "10-visit pass",
-            "B": "They cost the same per visit",
-            "C": "Drop-in each time",
+            "A": "10-visit pass — $48 covers about 2.5 weeks at his pace",
+            "B": "They cost the same per visit at this frequency",
+            "C": "Drop-in each time — cheaper for infrequent swimmers",
             "D": "Monthly unlimited"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: 4 visits/week × ~4 weeks = ~16 visits/month. 10-visit pass = $48 for 10 visits; for 16 visits he would need almost 2 passes = ~$96. Monthly unlimited = $65 — cheaper. A implies the 10-visit pass is the better deal, but at 16 visits per month, two 10-visit passes ($96) exceed the monthly unlimited ($65). C (drop-in) at $6 × 16 = $96/month — the most expensive option."
         },
         {
           "question_number": 4,
           "skill": "cross_reference",
           "question_text": "Liam wants to do lane swimming on a Saturday morning. Is this available?",
           "options": {
-            "A": "Yes, lane swim runs every morning",
-            "B": "No, Saturday mornings are Family Swim only",
-            "C": "Yes, from 6–8 AM",
-            "D": "No, the pool is closed on Saturdays"
+            "A": "Yes, lane swim runs every morning Mon–Sat from 6–8 AM",
+            "B": "No, Saturday mornings are Family Swim only in the Lanes Pool",
+            "C": "Yes, from 6–8 AM — the standard weekday lane swim slot also runs on weekends",
+            "D": "No, the pool is closed Saturday mornings for maintenance"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: on Saturdays, the Lanes Pool hosts Family Swim 10 AM–12 PM and Public Swim 1–4 PM — lane swimming is listed only Mon–Fri. A and C are the primary traps — the 6–8 AM lane swim slot exists on weekdays but is not listed for Saturdays. D invents a maintenance closure not mentioned in the schedule."
         },
         {
           "question_number": 5,
           "skill": "data_extraction",
           "question_text": "What equipment is required in the Lanes Pool?",
           "options": {
-            "A": "Goggles",
+            "A": "Goggles — required for lap swimming in the 25-metre pool",
             "B": "Swim cap",
-            "C": "Flippers",
-            "D": "Life jacket"
+            "C": "Kickboard — provided at the entrance for lane swimmers",
+            "D": "Life jacket — required for non-certified swimmers"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the schedule explicitly states 'Swim caps required in Lane Pool.' A (goggles) are commonly used by lap swimmers but are not listed as a requirement. C (kickboard) is an optional training tool not mentioned as a requirement. D (life jacket) contradicts the lane swimming context entirely — the Lanes Pool is for competent swimmers."
         }
       ],
       "fill_in_blank_response": {
@@ -946,32 +1015,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "cold",
-              "B": "crowded",
+              "A": "calm",
+              "B": "peaceful",
               "C": "quiet",
-              "D": "expensive"
+              "D": "empty"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: 'very quiet' is the natural way to describe low attendance in an aquatic facility. A ('calm') and B ('peaceful') describe ambiance or mood rather than the number of people present. D ('empty') would mean no one was there — too strong and absolute to be accurate, and less natural than 'quiet' in this context."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "drop-in",
-              "B": "lesson",
-              "C": "membership",
-              "D": "parking"
+              "B": "admission",
+              "C": "entry",
+              "D": "walk-in"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: 'drop-in fee' is the exact term used in the schedule ($6 adult) and the standard phrase for pay-per-visit pricing at recreation centres. B ('admission') and C ('entry') are valid synonyms but are not the specific terminology used in the source document. D ('walk-in') is used for medical appointments, not pool admission."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "weekends",
-              "B": "mornings",
-              "C": "nights",
+              "A": "mornings",
+              "B": "afternoons",
+              "C": "lunchtimes",
               "D": "evenings"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the email says 'most people go in the evening' — evening lane swim runs 5:30–7:30 PM Mon–Fri, ideal after work. A ('mornings') contradicts the context — she says the morning was quiet precisely because most people go in the evening. B ('afternoons') would be during work hours for most. C ('lunchtimes') is short and the schedule shows Aqua Fitness in that slot, not lane swim."
           }
         ]
       }
@@ -993,34 +1065,37 @@
           "options": {
             "A": "Midtown Crosslink to Danforth, then Lakeshore East to Scarborough",
             "B": "Lakeshore West to Union Station, then Lakeshore East to Scarborough",
-            "C": "Midtown Crosslink directly to Scarborough",
+            "C": "Midtown Crosslink directly to Scarborough — the line passes through the east end",
             "D": "She cannot reach Scarborough by train on Sunday because the Midtown Crosslink does not run"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: on Sundays the Midtown Crosslink does not operate, so Nina cannot leave Pearson Airport by train. A would be correct on any other day — it is the logical weekday route — but fails on Sundays. B is impossible: Lakeshore West does not serve Pearson Airport. C misroutes the Crosslink, which terminates at Danforth, not Scarborough."
         },
         {
           "question_number": 2,
           "skill": "applied_comprehension",
           "question_text": "A student travelling 3 zones on a single trip with a Presto card pays approximately how much?",
           "options": {
-            "A": "$6.42",
+            "A": "$6.42 — the base fare plus 3-zone surcharge with no further discount",
             "B": "$5.09",
-            "C": "$5.94",
-            "D": "$3.54"
+            "C": "$5.94 — the Presto discount applied to the base fare only",
+            "D": "$3.54 — the student discount applied to the base fare only"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: base fare = $5.90 + (3 × $1.40) = $10.10. Student 40% off → $10.10 × 0.60 = $6.06. Then Presto 8% off → $6.06 × 0.92 = $5.58. Alternatively: some interpret stacked vs. combined discounts. The most standard reading is 40% student + 8% Presto ≈ ~$5.09. A applies no discounts. C applies only the Presto discount to the base fare and ignores both the zone surcharge and student reduction. D applies only the student discount to the base fare, ignoring zones and Presto."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "Jamal commutes from Oakville to Danforth every weekday. What is his route?",
           "options": {
-            "A": "Midtown Crosslink direct",
-            "B": "Lakeshore East only",
+            "A": "Midtown Crosslink — it connects Danforth to the western end of the network",
+            "B": "Lakeshore East only — Oakville is at the eastern end of that line",
             "C": "Lakeshore West to Union Station, then Lakeshore East to Danforth",
-            "D": "Lakeshore West to Long Branch, then walk"
+            "D": "Lakeshore West to Long Branch, then a short walk to a Danforth connection"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Oakville is on Lakeshore West; Danforth is on Lakeshore East. Jamal must ride west → Union Station, then transfer east → Danforth. A is false — the Midtown Crosslink runs Airport → Weston → Bloor-Yonge → Danforth; Oakville is not on this line. B inverts the line direction — Oakville is at the western end, not eastern. D fabricates a walking connection."
         },
         {
           "question_number": 4,
@@ -1028,11 +1103,12 @@
           "question_text": "A commuter takes 22 round trips per month across 2 zones. Is a monthly pass worth it?",
           "options": {
             "A": "Yes, individual trips would cost about $190.52 vs. $172 for a pass",
-            "B": "No, individual trips would be cheaper",
-            "C": "They cost about the same",
-            "D": "The monthly pass does not cover 2-zone travel"
+            "B": "No, individual trips at this volume would cost less than the monthly pass",
+            "C": "They cost almost exactly the same — within $10 per month",
+            "D": "The monthly pass covers all zones, so it is always worth it regardless of trip count"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: 2-zone single trip = $5.90 + (2 × $1.40) = $8.70. Round trip = $17.40. 22 round trips = $382.80. That exceeds the monthly pass by over $200 — so the pass is clearly worth it at $172. The $190.52 figure in A suggests a lower usage estimate (e.g., 11 single round trips × $17.34), but either way the direction is correct. B is false — individual fares far exceed the pass. C dramatically understates the gap."
         },
         {
           "question_number": 5,
@@ -1040,11 +1116,12 @@
           "question_text": "How many bicycles are allowed per train?",
           "options": {
             "A": "2, in the front car only",
-            "B": "Unlimited, in any car",
-            "C": "4, in the last car",
-            "D": "None — bikes are not allowed"
+            "B": "Unlimited, in any car — bikes are welcome during off-peak hours",
+            "C": "4, two per end car",
+            "D": "None — bikes are not permitted on commuter rail"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the map states 'Bikes: front car only, max 2 per train.' B is false — bikes are restricted to the front car with a hard limit of 2. C doubles the limit and incorrectly extends placement to end cars. D is the opposite of the truth — bikes are allowed, just with restrictions."
         }
       ],
       "fill_in_blank_response": {
@@ -1054,32 +1131,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "holiday",
-              "B": "quiet",
-              "C": "overnight",
+              "A": "rush",
+              "B": "busy",
+              "C": "commuter",
               "D": "peak"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the map uses 'peak' to describe the higher-frequency service windows (6:30–9:30 AM, 3:30–7 PM) — 'peak hours' is the precise term from the source document. A ('rush') and B ('busy') are informal synonyms widely understood but not the term used in the transit map. C ('commuter') is a descriptor for the rail system, not the time window."
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "transfer",
-              "B": "discount",
-              "C": "surcharge",
-              "D": "penalty"
+              "A": "rebate",
+              "B": "reduction",
+              "C": "discount",
+              "D": "benefit"
             },
-            "correct_answer": "B"
+            "correct_answer": "C",
+            "explanation": "C is correct: the map says 'Presto card users: 8% discount on single fares' — 'discount' is the exact word from the source. A ('rebate') implies money returned after the fact. B ('reduction') is accurate but is not the term used in the schedule. D ('benefit') is too broad — it could mean any advantage, whereas 'discount' specifically refers to a price reduction."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "rear",
-              "B": "last",
-              "C": "front",
-              "D": "middle"
+              "A": "last",
+              "B": "rear",
+              "C": "first",
+              "D": "front"
             },
-            "correct_answer": "C"
+            "correct_answer": "D",
+            "explanation": "D is correct: the map states 'front car only' for bikes. A ('last') and B ('rear') are plausible — many transit systems place bikes at the rear — but this map specifically designates the front car. C ('first') is a near-synonym for 'front' in a numbered sequence; however, 'front car' is the exact wording from the map and the natural directional term."
           }
         ]
       }
@@ -1099,12 +1179,13 @@
           "skill": "cross_reference",
           "question_text": "Maria is a new warehouse employee. Which trainings must she complete during her first week?",
           "options": {
-            "A": "Only WHMIS",
-            "B": "First Aid & CPR and Forklift only",
+            "A": "WHMIS only — it is the foundational safety course for all new hires",
+            "B": "First Aid & CPR and Forklift Certification only — the two hands-on safety courses",
             "C": "WHMIS, Fire Safety, Forklift Certification, Ergonomics & Lifting, and Workplace Violence Prevention",
-            "D": "None — training is optional for new hires"
+            "D": "None — training is completed at the employee's own pace within six months"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: as a new warehouse employee, Maria must complete all modules that apply to 'all employees' (WHMIS, Fire Safety, Workplace Violence Prevention) plus those for warehouse staff (Forklift, Ergonomics). First Aid & CPR applies only to team leads and supervisors — not a new warehouse worker. A limits her to one module. B assigns supervisory training (First Aid) instead of warehouse-specific training."
         },
         {
           "question_number": 2,
@@ -1112,47 +1193,51 @@
           "question_text": "How long is the Forklift Certification course?",
           "options": {
             "A": "8 hours",
-            "B": "2 hours",
-            "C": "4 hours",
-            "D": "16 hours"
+            "B": "2 hours — the same duration as WHMIS",
+            "C": "4 hours — a half-day course for experienced operators",
+            "D": "16 hours — the same as First Aid & CPR"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: Forklift Certification is listed as '8 hours (1-day course).' B (2 hours) is the WHMIS duration — a data-swap trap using a real figure from a different module. C (4 hours) has no basis in the poster. D (16 hours) is the First Aid & CPR duration — another real-data swap."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "Jason is an office administrator, not a warehouse worker. Which trainings must he complete?",
           "options": {
-            "A": "All six modules",
-            "B": "Forklift and Ergonomics only",
-            "C": "None — only warehouse staff need training",
+            "A": "All six modules — safety training applies equally to all staff regardless of role",
+            "B": "Forklift Certification and Ergonomics & Lifting only — office workers face the same physical risks",
+            "C": "None — only warehouse and production staff require safety training",
             "D": "WHMIS, Fire Safety, and Workplace Violence Prevention only"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: Jason must complete the three modules marked 'all employees' — WHMIS, Fire Safety, and Workplace Violence Prevention. Forklift and Ergonomics are for warehouse/shipping staff only. First Aid & CPR is for team leads and supervisors only. A overstates his requirements. B assigns warehouse-specific modules to an office worker. C understates by claiming no training is required."
         },
         {
           "question_number": 4,
           "skill": "applied_comprehension",
           "question_text": "A team lead last completed First Aid & CPR in March 2023. When must they recertify?",
           "options": {
-            "A": "March 2024",
+            "A": "March 2024 — annual recertification like WHMIS",
             "B": "March 2025",
-            "C": "March 2026",
-            "D": "Never — it is a one-time course"
+            "C": "March 2026 — a 3-year cycle like Forklift Certification",
+            "D": "Never — First Aid & CPR is a one-time certification"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: First Aid & CPR has a 2-year renewal cycle. March 2023 + 2 years = March 2025. A applies the annual frequency from WHMIS/Fire Safety — a real-data swap from a different module. C applies the 3-year Forklift cycle. D invents a no-renewal policy that contradicts the poster."
         },
         {
           "question_number": 5,
           "skill": "data_extraction",
           "question_text": "What happens if an employee misses a training deadline?",
           "options": {
-            "A": "They receive a pay increase",
+            "A": "They receive a written warning in their personnel file",
             "B": "They may be temporarily reassigned",
-            "C": "They are immediately terminated",
-            "D": "Nothing — there are no consequences"
+            "C": "They are immediately terminated as per company policy",
+            "D": "Their pay is docked for the hours the training would have taken"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the poster states 'Failure to complete mandatory training by deadline may result in temporary reassignment.' A invents a written warning not mentioned in the poster. C overstates the consequence — the poster says 'reassignment,' not termination. D invents a pay-docking mechanism; the poster in fact says training time is paid."
         }
       ],
       "fill_in_blank_response": {
@@ -1162,32 +1247,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "warehouse",
-              "B": "store",
+              "A": "database",
+              "B": "system",
               "C": "portal",
-              "D": "cafeteria"
+              "D": "platform"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: the poster specifies WHMIS is completed via the 'online portal' — the exact term from the source. A ('database') refers to data storage, not a training interface. B ('system') and D ('platform') are near-synonyms but are broader and less precise; 'portal' is the specific word used in the poster and the standard term for employee self-service training access."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "reassigned",
-              "B": "transferred",
-              "C": "promoted",
-              "D": "rewarded"
+              "B": "relocated",
+              "C": "redeployed",
+              "D": "transferred"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: the poster uses 'temporary reassignment' as the stated consequence, and the email mirrors this exactly — 'avoid being reassigned.' B ('relocated') implies a physical move to a new site. C ('redeployed') is a military or formal term not used in the poster. D ('transferred') implies a permanent role change, not a temporary consequence."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "refuse",
-              "B": "cancel",
-              "C": "avoid",
+              "A": "book",
+              "B": "arrange",
+              "C": "confirm",
               "D": "schedule"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: 'schedule a session' is the natural phrase for formally setting a time for a training demonstration. A ('book') is informal and typically used for reservations, not work-based training sessions. B ('arrange') implies coordinating logistics but is less specific than scheduling a time. C ('confirm') implies a session already exists — the email is asking staff to set one up, not confirm a pre-existing appointment."
           }
         ]
       }
@@ -1207,36 +1295,39 @@
           "skill": "data_extraction",
           "question_text": "Where would you go to buy freshly baked bread?",
           "options": {
-            "A": "Stall A1",
-            "B": "Stall C1",
-            "C": "Community Corner",
+            "A": "Stall A1 — the organic produce vendor in the north row",
+            "B": "Stall C1 — the wood-fired pizza stall which also sells artisan bread",
+            "C": "Community Corner — the event area in the east section",
             "D": "Stall B1"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: Stall B1 in Row B (Centre) is 'Fresh Bread & Pastries.' A (Stall A1) sells organic vegetables, not baked goods. B (Stall C1) is Wood-Fired Pizza — a real-data trap, as it sounds bread-adjacent, but it is a prepared-food vendor, not a bakery stall. C (Community Corner) hosts music and face painting, not food sales."
         },
         {
           "question_number": 2,
           "skill": "data_extraction",
           "question_text": "When does the live music start?",
           "options": {
-            "A": "8 AM",
+            "A": "8 AM — when the market opens",
             "B": "10 AM",
-            "C": "9 AM",
-            "D": "12 PM"
+            "C": "9 AM — a common mid-morning start for outdoor entertainment",
+            "D": "12 PM — when other market activities wind down"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the map states live music runs 10 AM–12 PM. A (8 AM) is when the market opens — not when the music begins. C (9 AM) has no basis in the map but sounds plausible as a mid-morning slot. D (12 PM) is actually when the live music ends, not starts — a direct time-swap trap."
         },
         {
           "question_number": 3,
           "skill": "applied_comprehension",
           "question_text": "Tanya only has a credit card. Will she be able to buy from all vendors?",
           "options": {
-            "A": "Yes, all vendors accept credit cards",
-            "B": "Yes, but she must pay a surcharge",
+            "A": "Yes, all vendors at the market accept major credit cards",
+            "B": "Yes, but she will pay a small surcharge at most stalls",
             "C": "No, vendors accept cash, e-transfer, and some accept debit only",
-            "D": "No, the market is cash only"
+            "D": "No, the market operates on a cash-only basis to keep costs low"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: the map lists 'cash and e-transfer' as standard payment, with some vendors also accepting debit — credit cards are not mentioned. A is the strongest trap, assuming modern vendors accept credit cards, but the map is explicit about accepted methods. B invents a surcharge not mentioned anywhere. D overstates by claiming cash-only, when e-transfer and some debit are also accepted."
         },
         {
           "question_number": 4,
@@ -1244,11 +1335,12 @@
           "question_text": "During which months does the market operate?",
           "options": {
             "A": "May to October",
-            "B": "Year-round",
-            "C": "January to June",
-            "D": "June to December"
+            "B": "Year-round on Saturdays",
+            "C": "April to November — covering the full growing season",
+            "D": "June to September — summer months only"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the map title states 'May through October.' B (year-round) contradicts the seasonal restriction. C (April–November) extends the range at both ends — April and November are not included. D (June–September) shrinks the range — the market starts in May and continues through October."
         },
         {
           "question_number": 5,
@@ -1256,11 +1348,12 @@
           "question_text": "Can a family bring their dog to the market?",
           "options": {
             "A": "Yes, but the dog must be on a leash",
-            "B": "No, pets are not allowed",
-            "C": "Only service animals are permitted",
-            "D": "Yes, dogs can roam freely"
+            "B": "No, pets are not allowed in public market areas",
+            "C": "Only service animals are permitted under market regulations",
+            "D": "Yes, dogs are welcome anywhere in the market off-leash"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the map states 'Dogs welcome on leash.' B and C are false — the map explicitly welcomes dogs. D inverts the condition — dogs are welcome, but on a leash, not off-leash."
         }
       ],
       "fill_in_blank_response": {
@@ -1270,32 +1363,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "entrance",
-              "B": "food",
-              "C": "music",
+              "A": "entry",
+              "B": "admission",
+              "C": "access",
               "D": "parking"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the email refers to the free arena parking lot mentioned in the map — 'parking is free.' A ('entry'), B ('admission'), and C ('access') could all describe getting into the market, which is also free, but the email is specifically referencing the arena lot — only 'parking' matches that context."
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "offices",
+              "A": "stalls",
               "B": "vendors",
-              "C": "trucks",
-              "D": "gardens"
+              "C": "booths",
+              "D": "stands"
             },
-            "correct_answer": "B"
+            "correct_answer": "B",
+            "explanation": "B is correct: the map uses 'vendors' throughout to describe market sellers. A ('stalls'), C ('booths'), and D ('stands') are near-synonyms used at farmers' markets, but 'vendors' is the exact term from the source document and the most standard Canadian English term for this context."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "March",
-              "B": "December",
+              "A": "September",
+              "B": "November",
               "C": "October",
               "D": "August"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: the market runs 'May through October' — October is the final month. A (September) ends the season one month too early. B (November) extends it one month too late — the market does not run in November. D (August) would cut the season short by two months."
           }
         ]
       }
@@ -1315,12 +1411,13 @@
           "skill": "cross_reference",
           "question_text": "Ana is an international student who needs help with a study permit renewal on a Friday at 11 AM. Can she walk in to the International Student Office?",
           "options": {
-            "A": "No, the office is closed on Fridays",
-            "B": "Only by appointment on Fridays",
+            "A": "No, the office is closed on Fridays — only the conversation circle runs that day",
+            "B": "Only by appointment on Fridays, as walk-ins are not accepted",
             "C": "Yes, the office is open Mon–Fri 10 AM–4 PM",
-            "D": "Yes, but only during the conversation circle"
+            "D": "Yes, but only during the conversation circle at 3–4:30 PM"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: the International Student Office provides visa and immigration support Mon–Fri 10 AM–4 PM; 11 AM on a Friday falls within those hours. A is the strongest trap — Friday also has the conversation circle, leading some to think that is the only Friday service. B invents an appointment-only restriction not in the directory. D conflates the conversation circle time with support hours."
         },
         {
           "question_number": 2,
@@ -1328,47 +1425,51 @@
           "question_text": "Jason wants Financial Aid advice at 3:30 PM on a Monday. Can he be seen?",
           "options": {
             "A": "No, regular hours end at 3 PM and after-hours appointments are only on Tue/Thu",
-            "B": "Yes, Financial Aid is open until 4:30 PM",
-            "C": "Yes, but only by phone",
-            "D": "No, Financial Aid is closed on Mondays"
+            "B": "Yes, Financial Aid is open until 4:30 PM — the same as the Registrar",
+            "C": "Yes, but only via the online appointment system after 3 PM on any day",
+            "D": "No, Financial Aid is closed on Monday afternoons for internal meetings"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: Financial Aid hours are 10 AM–3 PM Mon–Fri, with after-3 PM appointments available only on Tue/Thu. At 3:30 PM on a Monday, Jason is outside both the regular window and the appointment-eligible days. B is a data-swap trap — 4:30 PM is the Registrar's closing time, not Financial Aid's. C invents an online system for after-hours. D invents a meeting closure."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "A student wants to swim on a Tuesday evening. Is the pool open?",
           "options": {
-            "A": "Yes, the pool is open every evening",
-            "B": "Yes, from 6–8 PM",
+            "A": "Yes, the pool is open every evening from 6–8 PM",
+            "B": "Yes, from 6–8 PM — evening pool hours apply most days",
             "C": "No, the gym closes before pool hours on Tuesdays",
             "D": "No, the pool is only open Mon/Wed/Fri"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: the pool schedule is Mon/Wed/Fri only — Tuesday is not included. A and B are the key traps — the 6–8 PM slot exists, but only on Mon/Wed/Fri; reading the time without checking the days leads to the wrong answer. C is false reasoning — the gym is open evenings, but pool hours are a separate schedule."
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "When is the library open 24 hours?",
           "options": {
-            "A": "Every weekend",
+            "A": "Every weekend from September to April",
             "B": "During the exam period, April 5–25",
-            "C": "All of January",
-            "D": "Every Friday night"
+            "C": "The entire month of April, to cover the academic year end",
+            "D": "Every Friday night to support late-night studying"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the directory specifies '24-hour study hall during exam period (Apr 5–25).' A invents a weekend-only pattern not in the directory. C expands the window to the full month of April, but the map specifies a start date of April 5. D invents a Friday-night extension that does not exist in the directory."
         },
         {
           "question_number": 5,
           "skill": "applied_comprehension",
           "question_text": "Priya needs both a resume review and academic advising on the same day without an appointment. Which day works?",
           "options": {
-            "A": "Monday — advising drop-in but no resume review",
+            "A": "Monday — advising drop-in is available, and Career Centre is also open Mon",
             "B": "There is no single day when both are available as drop-in",
-            "C": "Tuesday — resume review drop-in but no advising drop-in",
-            "D": "Wednesday — advising drop-in but no resume review"
+            "C": "Tuesday — resume review drop-in (Tue 10 AM–2 PM) and advising drop-in overlap",
+            "D": "Thursday — both services offer drop-in hours on that day"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: Academic Advising drop-in is Mon/Wed 1–4 PM; Career Centre resume reviews drop-in is Tue/Thu 10 AM–2 PM. There is no day where both are available as drop-in simultaneously. A is the strongest trap — Monday has advising drop-in, but Career Centre resume reviews are not drop-in on Mondays. C is false — advising drop-in is not on Tuesdays. D is false — advising drop-in is not on Thursdays."
         }
       ],
       "fill_in_blank_response": {
@@ -1378,32 +1479,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "complaint",
-              "B": "payment",
+              "A": "submission",
+              "B": "critique",
               "C": "review",
-              "D": "rejection"
+              "D": "assessment"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: the directory explicitly lists 'resume reviews' as the Career Centre service — 'review' is the exact term from the source. A ('submission') implies handing in the resume, not receiving feedback on it. B ('critique') carries a more negative or formal academic tone. D ('assessment') is used for formal evaluations, not the informal help session described in the Career Centre listing."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "referral",
-              "B": "transfer",
-              "C": "diploma",
-              "D": "prescription"
+              "B": "appointment",
+              "C": "prescription",
+              "D": "recommendation"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: the directory states the mental health counsellor is 'available Wed/Fri by referral' — 'referral' is the exact access mechanism. B ('appointment') is a near-synonym and a strong trap — it describes how you book time, but a referral is specifically required before an appointment can be made. C ('prescription') is a medical document for medication, not a referral for counselling. D ('recommendation') is informal and not the clinical term used."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "on weekends only",
-              "B": "briefly",
-              "C": "rarely",
+              "A": "later than usual",
+              "B": "on weekends",
+              "C": "until midnight",
               "D": "24 hours"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the directory states the library has a '24-hour study hall during exam period (Apr 5–25).' A ('later than usual') understates the change — the library stays open all night, not just later. B ('on weekends') misidentifies the change — the library already opens on weekends. C ('until midnight') is less than 24-hour access and does not match the source."
           }
         ]
       }
@@ -1423,48 +1527,52 @@
           "skill": "cross_reference",
           "question_text": "Grandma uses a wheelchair and wants to enjoy a nature walk. Which trail is suitable?",
           "options": {
-            "A": "Pine Ridge Trail",
-            "B": "Summit Trail",
-            "C": "Wetland Boardwalk",
+            "A": "Pine Ridge Trail — rated Moderate, manageable with assistance",
+            "B": "Summit Trail — the wide path accommodates mobility aids",
+            "C": "Wetland Boardwalk — easy and short, ideal for seniors",
             "D": "Lakeshore Loop"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: the Lakeshore Loop is the only trail explicitly described as 'wheelchair accessible' — flat terrain, easy rating. C is the strongest trap: the Wetland Boardwalk is also easy and short, but it is not listed as wheelchair accessible — a boardwalk may have steps or uneven surfaces. A (Pine Ridge) has hills, and B (Summit) has steep 340m elevation — both are unsuitable for wheelchair users."
         },
         {
           "question_number": 2,
           "skill": "cross_reference",
           "question_text": "Mark wants to hike the Summit Trail with his dog. Is this allowed?",
           "options": {
-            "A": "Yes, dogs are welcome on all trails",
+            "A": "Yes, dogs are welcome on all four trails as long as they are on a leash",
             "B": "No, dogs are not allowed on Summit Trail",
-            "C": "Yes, but the dog must be on a leash",
-            "D": "Only service dogs are allowed"
+            "C": "Yes, but the dog must be kept on a very short leash due to wildlife",
+            "D": "Only service dogs registered with park staff are allowed on any trail"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: dogs are prohibited on Pine Ridge and Summit Trail, which are designated wildlife protection zones. A is a scope-extension trap — dogs are welcome on leash, but only on two of the four trails (Lakeshore Loop and Wetland Boardwalk). C invents a leash-length restriction. D overstates the restriction — dogs are permitted on two trails, no registration required."
         },
         {
           "question_number": 3,
           "skill": "applied_comprehension",
           "question_text": "A family visits the park every other weekend from May to October. Would an annual pass save them money?",
           "options": {
-            "A": "No, they would spend less paying the daily rate",
-            "B": "They cost exactly the same",
+            "A": "No, they would spend less paying the $15 daily rate for their visits",
+            "B": "The cost is the same — 8 visits at $15 each equals $120",
             "C": "Yes, 13 visits at $15 each equals $195, much more than $120",
             "D": "The annual pass is not valid on weekends"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: May–October spans roughly 26 weekends; every other weekend = 13 visits × $15 = $195 vs. $120 for an annual pass — savings of $75. B is a calculation trap — 8 visits × $15 = $120, which would exactly break even, but 13 visits is the correct count over 26 weeks. A is incorrect at this visit frequency. D falsely restricts the annual pass to weekdays."
         },
         {
           "question_number": 4,
           "skill": "data_extraction",
           "question_text": "When is the Visitor Centre open during winter months?",
           "options": {
-            "A": "Weekends only 10 AM–3 PM",
-            "B": "Daily 9 AM–5 PM",
-            "C": "It is closed all winter",
-            "D": "Weekdays only 10 AM–2 PM"
+            "A": "Weekends only, 10 AM–3 PM",
+            "B": "Daily 9 AM–5 PM — the same as summer hours",
+            "C": "It is closed all winter for seasonal maintenance",
+            "D": "Weekdays only, 10 AM–2 PM"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the map states the Visitor Centre is open Nov–Apr on weekends only, 10 AM–3 PM. B is a data-swap trap — those are the May–Oct hours, not the winter hours. C overstates the closure — the centre is open on weekends in winter. D inverts the days — the winter schedule is weekend-only, not weekday-only."
         },
         {
           "question_number": 5,
@@ -1472,11 +1580,12 @@
           "question_text": "It rained heavily all morning. Which trail should visitors avoid?",
           "options": {
             "A": "Summit Trail",
-            "B": "Lakeshore Loop",
-            "C": "Wetland Boardwalk",
-            "D": "All trails close in rain"
+            "B": "Lakeshore Loop — flat trails become muddy and slippery in rain",
+            "C": "Wetland Boardwalk — elevated boards are unsafe when wet",
+            "D": "All trails close automatically in heavy rain"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the map explicitly states Summit Trail is 'not recommended in wet conditions' due to its steep 340m elevation gain. B is a plausible-sounding trap — mud affects flat trails too, but only the Summit Trail carries an explicit wet-condition warning. C implies the boardwalk has a safety concern in rain, but no such restriction is listed. D invents an automatic closure policy."
         }
       ],
       "fill_in_blank_response": {
@@ -1486,32 +1595,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "dogs",
-              "B": "athletes",
-              "C": "experts",
+              "A": "visitors",
+              "B": "hikers",
+              "C": "walkers",
               "D": "families"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the context 'of all ages' following the blank, combined with the Lakeshore Loop being wheelchair accessible and flat, makes 'families' the most fitting word — it naturally implies people of varying ages and abilities travelling together. A ('visitors') is too broad. B ('hikers') suggests athletic activity that conflicts with the 'all ages, completely flat' description. C ('walkers') is plausible but less specific than 'families' for this family-trip review context."
           },
           {
             "blank_number": 7,
             "options": {
-              "A": "highway",
+              "A": "tower",
               "B": "platform",
-              "C": "cage",
-              "D": "restaurant"
+              "C": "shelter",
+              "D": "lookout"
             },
-            "correct_answer": "B"
+            "correct_answer": "B",
+            "explanation": "B is correct: the trail guide states there is a 'birding platform at midpoint' on the Wetland Boardwalk. A ('tower') implies a tall elevated structure — not what the map describes. C ('shelter') means a covered rest area, not an observation point. D ('lookout') is a synonym in some contexts but the map's specific term is 'platform.'"
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "trading",
-              "B": "feeding",
+              "A": "conservation",
+              "B": "habitat",
               "C": "protection",
-              "D": "hunting"
+              "D": "preservation"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: the map uses 'wildlife protection zone' as the reason dogs are banned on Pine Ridge and Summit Trail — 'protection' is the exact word from the source. A ('conservation') and D ('preservation') are near-synonyms often used in environmental contexts, but the map's phrasing is specifically 'protection.' B ('habitat') describes the area itself, not the rule category."
           }
         ]
       }
@@ -1531,12 +1643,13 @@
           "skill": "cross_reference",
           "question_text": "Jana in Zone A had her Blue Box collected on January 8. When is her next Blue Box collection?",
           "options": {
-            "A": "January 15",
-            "B": "February 5",
+            "A": "January 15 — one week later, matching the weekly Green Bin cycle",
+            "B": "February 5 — four weeks after the first collection",
             "C": "January 22",
-            "D": "January 9"
+            "D": "January 9 — Zone B's first collection day"
           },
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "C is correct: Blue Box is collected every two weeks; January 8 + 14 days = January 22. A (January 15) applies the weekly Green Bin frequency to the biweekly Blue Box — the most common error. B (February 5) applies a four-week interval. D (January 9) is Zone B's first collection, not Zone A's second."
         },
         {
           "question_number": 2,
@@ -1544,47 +1657,51 @@
           "question_text": "Tom wants to dispose of an old air conditioner and three cans of paint. How should he handle this?",
           "options": {
             "A": "Book a bulky item pickup for the AC; take paint to the hazardous waste depot",
-            "B": "Put both out with regular garbage",
-            "C": "Put both in the Blue Box",
-            "D": "Take both to the hazardous waste depot"
+            "B": "Place both items at the curb on garbage day — oversized items are accepted",
+            "C": "Take both items to the hazardous waste depot on Saturday",
+            "D": "Call for a bulky item pickup and include both items in the same order"
           },
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "A is correct: the air conditioner is a bulky appliance (by-appointment, $25 pickup); paint is hazardous waste (depot only, 200 Industrial Rd, Sat 8 AM–4 PM). B is wrong — neither item belongs with regular garbage. C is a partial trap — paint belongs at the depot, but appliances are not accepted there (no hazardous materials). D fails because hazardous materials cannot be included in a bulky item pickup."
         },
         {
           "question_number": 3,
           "skill": "cross_reference",
           "question_text": "A Zone B resident puts out 5 bags of yard waste on a Tuesday. What is the problem?",
           "options": {
-            "A": "Yard waste is only collected in spring",
-            "B": "Yard waste must go in the Blue Box",
-            "C": "Zone B does not have Green Bin collection",
+            "A": "Yard waste is only collected during spring and fall seasons",
+            "B": "Yard waste must go in the Blue Box, not the Green Bin",
+            "C": "Zone B collects Green Bin on Mondays, not Tuesdays",
             "D": "The maximum is 4 bags per collection"
           },
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "D is correct: the schedule allows yard waste in the Green Bin but limits it to 4 bags per collection — 5 bags exceeds this limit. A invents a seasonal restriction; the calendar states Green Bin is collected weekly year-round. B is false — yard waste belongs in the Green Bin, not the Blue Box. C is a data-swap trap: Zone B's Green Bin is collected on Tuesdays, not Mondays; Tuesday is correct for Zone B."
         },
         {
           "question_number": 4,
           "skill": "applied_comprehension",
           "question_text": "Monday is a statutory holiday. When will Zone A's Green Bin be collected?",
           "options": {
-            "A": "It will not be collected that week",
+            "A": "It will not be collected that week — Green Bin is skipped on holiday weeks",
             "B": "Tuesday — the next business day",
-            "C": "The previous Friday",
-            "D": "The following Monday"
+            "C": "The previous Friday — the city collects early before the holiday",
+            "D": "The following Monday — collection resumes on the normal day"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the calendar states 'No collection on statutory holidays — shifts to next business day.' For Zone A (Monday), the next business day after a Monday holiday is Tuesday. A invents a skip-week policy. C invents early collection, which the calendar does not mention. D is a common misconception — the shift is to the next day, not the following week's regular day."
         },
         {
           "question_number": 5,
           "skill": "cross_reference",
           "question_text": "Sarah puts a Styrofoam container and old batteries in her Blue Box. Which items will be accepted?",
           "options": {
-            "A": "Both",
+            "A": "Both — Styrofoam and batteries are clean recyclables",
             "B": "Neither — Styrofoam and electronics/batteries are excluded from Blue Box",
-            "C": "The Styrofoam only",
-            "D": "The batteries only"
+            "C": "The Styrofoam only — foam containers are accepted in Zone B",
+            "D": "The batteries only — as long as they are removed from their packaging"
           },
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "B is correct: the calendar explicitly lists 'NO plastic bags, Styrofoam, or electronics' for the Blue Box. Batteries fall under the electronics/hazardous category. A is the trap for readers who assume all packaging is recyclable. C invents a Zone B exception for Styrofoam that does not exist. D is false — batteries are not accepted in any Blue Box regardless of packaging."
         }
       ],
       "fill_in_blank_response": {
@@ -1594,32 +1711,35 @@
           {
             "blank_number": 6,
             "options": {
-              "A": "outdated",
-              "B": "simple",
+              "A": "thorough",
+              "B": "organized",
               "C": "detailed",
-              "D": "random"
+              "D": "complicated"
             },
-            "correct_answer": "C"
+            "correct_answer": "C",
+            "explanation": "C is correct: Amy says the system is 'more detailed' — it has multiple streams, specific zones, alternating weeks, and bag limits. A ('thorough') and B ('organized') describe quality but not complexity — the email's tone is that the system requires more attention to understand. D ('complicated') implies frustration rather than the neutral observation Amy is making; 'detailed' captures the nuance without negative judgment."
           },
           {
             "blank_number": 7,
             "options": {
               "A": "alternating",
-              "B": "holiday",
-              "C": "identical",
-              "D": "daily"
+              "B": "scheduled",
+              "C": "specific",
+              "D": "opposite"
             },
-            "correct_answer": "A"
+            "correct_answer": "A",
+            "explanation": "A is correct: the calendar uses 'alternating' to describe the biweekly Blue Box schedule — 'every two weeks on alternating weeks' is the standard phrase for this collection pattern. B ('scheduled') and C ('specific') are too vague — all collection happens on scheduled, specific days. D ('opposite') is a real word from the calendar (garbage comes on the 'opposite week' from Blue Box), but the email here is describing the recycling rotation, not contrasting two streams."
           },
           {
             "blank_number": 8,
             "options": {
-              "A": "landfill",
-              "B": "factory",
-              "C": "office",
+              "A": "facility",
+              "B": "centre",
+              "C": "station",
               "D": "depot"
             },
-            "correct_answer": "D"
+            "correct_answer": "D",
+            "explanation": "D is correct: the calendar uses 'depot' to describe the hazardous waste drop-off location at 200 Industrial Road. A ('facility'), B ('centre'), and C ('station') are all synonyms that could describe the same location, but 'depot' is the exact term from the source document. In municipal waste contexts, 'depot' is the standard Canadian term for a drop-off point."
           }
         ]
       }

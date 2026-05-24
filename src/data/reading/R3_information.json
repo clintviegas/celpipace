@@ -21,47 +21,56 @@
         {
           "question_number": 1,
           "question_text": "Honeybees may compete with wild pollinators for limited food.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'Honeybees, being highly efficient foragers, can dominate available nectar and crowd out native species.' Trap: Paragraph B might seem right because it mentions competition for forage, but B focuses on honey output, not on harm to native pollinators."
         },
         {
           "question_number": 2,
           "question_text": "Beekeeping bylaws were once much stricter than they are today.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: bylaws 'treated hives as livestock and pushed them to the outskirts,' and cities 'quietly relaxed their rules.' Trap: Paragraph D might seem relevant because it mentions community groups, but it says nothing about legal restrictions."
         },
         {
           "question_number": 3,
-          "question_text": "Beekeeping classes are now offered for free in most universities.",
-          "correct_answer": "E"
+          "question_text": "Some urban beekeeping associations have partnered with local colleges to offer accredited courses in hive management.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D mentions community groups offering mentorship and shared equipment, but no formal college partnerships or accredited courses are described anywhere in the article."
         },
         {
           "question_number": 4,
           "question_text": "Urban hives can produce more honey than rural ones.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'city hives produced, on average, 20 percent more honey per season than hives in nearby agricultural areas.' Trap: Paragraph A mentions the relaxation of hive rules but says nothing about honey output."
         },
         {
           "question_number": 5,
           "question_text": "Beekeeping can serve as a form of mental relaxation.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Many describe the practice as deeply calming — a form of attention training.' Trap: Paragraph B might seem right because it mentions benefits of urban beekeeping, but B only discusses honey production and pesticide exposure."
         },
         {
           "question_number": 6,
           "question_text": "A specific study linked dense urban hives to declines in wild bees.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'A 2019 study in London found that boroughs with the highest density of registered hives showed measurable declines in wild bee populations.' Trap: Paragraph B also cites a university study but focuses on honey output, not wild bee decline."
         },
         {
           "question_number": 7,
           "question_text": "City beekeepers must usually register their hives with authorities.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: cities allow hives 'provided they registered with local authorities and followed basic placement guidelines.' Trap: Paragraph D mentions community groups but says nothing about registration requirements."
         },
         {
           "question_number": 8,
           "question_text": "Beekeeping groups bring together people from different backgrounds.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: community groups offer 'a social outlet that crosses age and income lines.' Trap: Paragraph C discusses critics of urban beekeeping from different fields, but not social mixing among beekeepers."
         },
         {
           "question_number": 9,
           "question_text": "Rural farms often have shorter blooming seasons than city gardens.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'monoculture farms provide intense but short-lived foraging windows' versus urban gardens offering 'a continuous bloom of diverse flowers from early spring to late autumn.' Trap: Paragraph C mentions shrinking habitat but not seasonal bloom comparisons."
         }
       ]
     },
@@ -82,47 +91,56 @@
         {
           "question_number": 1,
           "question_text": "France has required filters on washing machines to catch fibres.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'France became the first country to require microplastic filters on all new washing machines starting in 2025.' Trap: Paragraph A also discusses fibres from washing machines but offers no country-level policy response."
         },
         {
           "question_number": 2,
           "question_text": "Washing machines can release plastic fibres into wastewater.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'A single load of laundry can release hundreds of thousands of microscopic plastic fibres into wastewater.' Trap: Paragraph D mentions filters on washing machines, which implies fibre release, but does not directly state it."
         },
         {
           "question_number": 3,
           "question_text": "Microplastics have been detected inside the human body.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'studies have found plastic particles in human blood and lung tissue.' Trap: Paragraph B describes ingestion through food, which might suggest the same, but B focuses on consumption estimates, not confirmed bodily presence."
         },
         {
           "question_number": 4,
-          "question_text": "Microplastic pollution has been completely eliminated in Northern Europe.",
-          "correct_answer": "E"
+          "question_text": "Several Northern European countries have jointly agreed to phase out synthetic fabrics in consumer clothing by 2030.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D mentions researchers developing biodegradable fabric alternatives and France's washing-machine filter mandate, but no multinational clothing phase-out agreement is described anywhere in the article."
         },
         {
           "question_number": 5,
           "question_text": "Small marine creatures eat microplastics before larger fish do.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: plankton and shellfish consume microplastics first, then 'these organisms are then eaten by larger fish.' Trap: Paragraph A describes how microplastics enter waterways but does not describe marine consumption."
         },
         {
           "question_number": 6,
           "question_text": "Consumers can reduce microplastic pollution through their purchasing choices.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'choosing natural-fibre clothing, and reducing plastic packaging can all help limit the amount of microplastic entering the environment.' Trap: Paragraph C focuses on health risks, not on consumer action."
         },
         {
           "question_number": 7,
           "question_text": "Microplastics are defined as plastic pieces smaller than five millimetres.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'Microplastics are tiny plastic fragments smaller than five millimetres.' Trap: Paragraph B also discusses microplastics in the environment but never provides the size definition."
         },
         {
           "question_number": 8,
           "question_text": "Scientists are not yet certain about the disease risk of microplastics.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'scientists caution that the concentrations found so far are low, and it is too early to draw firm conclusions about disease risk.' Trap: Paragraph D mentions ongoing research into alternatives, but says nothing about disease uncertainty."
         },
         {
           "question_number": 9,
           "question_text": "A person may consume around 50,000 microplastic particles each year.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'the average person may ingest roughly 50,000 microplastic particles per year through food and water alone.' Trap: Paragraph C discusses particles found inside the body but provides no consumption estimate."
         }
       ]
     },
@@ -143,47 +161,56 @@
         {
           "question_number": 1,
           "question_text": "Chinese workers were paid less than other labourers on the project.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'They were paid significantly less than their white counterparts and endured appalling living conditions.' Trap: Paragraph D discusses injustices but focuses on the head tax and Indigenous land, not wage differences."
         },
         {
           "question_number": 2,
-          "question_text": "The railway was privatized and sold to an American company in 1920.",
-          "correct_answer": "E"
+          "question_text": "Following the moratorium, the Canadian Pacific Railway was sold to a private American consortium and rebranded under a new name.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D discusses the railway's complex legacy and the 2006 head-tax apology, but no sale, privatization, or rebranding of the CPR is mentioned anywhere in the article."
         },
         {
           "question_number": 3,
           "question_text": "The federal government apologized for the head tax in 2006.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'In 2006, the federal government formally apologized for the Chinese head tax.' Trap: Paragraph B describes the head tax itself (1885–1923) but says nothing about the eventual apology."
         },
         {
           "question_number": 4,
           "question_text": "British Columbia joined Confederation on the condition that the railway would be built.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'Its completion was a condition of British Columbia's entry into Confederation.' Trap: Paragraph C discusses economic transformation but does not address the political agreement with BC."
         },
         {
           "question_number": 5,
           "question_text": "The railway made western farming economically viable.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'It opened the western prairies to large-scale farming, enabling wheat and cattle to be shipped to eastern markets.' Trap: Paragraph A mentions crossing the prairies but only in terms of engineering, not agricultural economics."
         },
         {
           "question_number": 6,
           "question_text": "Hundreds of Chinese workers lost their lives during construction.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'at least 600 Chinese workers died during construction from accidents, landslides, and disease.' Trap: Paragraph D mentions injustices suffered by workers but provides no death toll figures."
         },
         {
           "question_number": 7,
           "question_text": "Indigenous communities were not always consulted about the railway route.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Indigenous communities whose lands it crossed, often without consent or adequate compensation.' Trap: Paragraph A describes the route geographically but mentions no consultation with Indigenous peoples."
         },
         {
           "question_number": 8,
           "question_text": "The railway was approximately 4,700 kilometres long.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'The railway stretched nearly 4,700 kilometres from Montreal to Port Moody.' Trap: Paragraph C describes the railway's economic reach but gives no distance figure."
         },
         {
           "question_number": 9,
           "question_text": "The railway helped the federal government govern remote western regions.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'The railway also made it feasible for the federal government to exert authority over western territories that had previously been too remote to administer effectively.' Trap: Paragraph A mentions Macdonald's political capital but not administrative control over the west."
         }
       ]
     },
@@ -204,47 +231,56 @@
         {
           "question_number": 1,
           "question_text": "About one in three Canadian adults sleep fewer than seven hours.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'A 2023 survey by Statistics Canada found that roughly one in three Canadian adults reported sleeping fewer than seven hours on a typical weeknight.' Trap: Paragraph B mentions the six-hour threshold for health risks but gives no Canadian population statistic."
         },
         {
           "question_number": 2,
           "question_text": "Caffeine should be avoided in the afternoon for better sleep.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'avoiding caffeine after 2 p.m.' Trap: Paragraph C cites screen time and stress as sleep disruptors but does not mention caffeine."
         },
         {
           "question_number": 3,
           "question_text": "REM sleep is connected to memory and learning.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'REM sleep — the stage in which most dreaming occurs — plays a key role in memory and learning.' Trap: Paragraph D discusses how to improve sleep stages but does not explain what each stage does."
         },
         {
           "question_number": 4,
-          "question_text": "Napping for 20 minutes at noon boosts afternoon productivity.",
-          "correct_answer": "E"
+          "question_text": "Research shows that taking a short nap of 20 minutes in the early afternoon can improve alertness and cognitive performance for the rest of the day.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D offers sleep improvement tips including consistent bedtimes and CBT-I, but no information about napping or its effect on afternoon alertness appears anywhere in the article."
         },
         {
           "question_number": 5,
           "question_text": "People who sleep too little are more likely to catch colds.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'people who slept fewer than seven hours were nearly three times more likely to develop a cold after being exposed to the virus.' Trap: Paragraph D mentions that exercise improves sleep, which might seem health-related, but it says nothing about colds."
         },
         {
           "question_number": 6,
           "question_text": "Young adults report the worst sleep quality among age groups.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'Young adults aged 18 to 34 were the most likely to report poor sleep quality.' Trap: Paragraph B discusses health risks from sleep deprivation in general but does not break findings down by age group."
         },
         {
           "question_number": 7,
           "question_text": "CBT-I is often recommended over sleeping pills.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'cognitive behavioural therapy for insomnia (CBT-I) has emerged as a highly effective treatment, often preferred over medication.' Trap: Paragraph B discusses health consequences of poor sleep but makes no treatment recommendations."
         },
         {
           "question_number": 8,
           "question_text": "Insufficient sleep increases the risk of heart disease and diabetes.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'people who consistently sleep fewer than six hours per night are at greater risk for obesity, heart disease, diabetes, and depression.' Trap: Paragraph A describes sleep stages and their purposes but does not mention disease risks."
         },
         {
           "question_number": 9,
           "question_text": "The brain goes through several different stages during sleep.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'the brain cycles through several stages, including light sleep, deep sleep, and rapid eye movement (REM) sleep.' Trap: Paragraph D mentions sleep stages indirectly by recommending conditions to improve them but never names the stages."
         }
       ]
     },
@@ -265,47 +301,56 @@
         {
           "question_number": 1,
           "question_text": "Used electric vehicles are becoming more affordable.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'The used EV market is also beginning to grow, making electric cars more accessible to middle-income buyers.' Trap: Paragraph A mentions government incentives reducing upfront costs but discusses only new vehicle purchases."
         },
         {
           "question_number": 2,
           "question_text": "Cold weather can substantially reduce an EV's driving range.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'battery range can drop by 20 to 40 percent in sub-zero temperatures.' Trap: Paragraph C discusses lifetime emissions but says nothing about cold-weather performance."
         },
         {
           "question_number": 3,
-          "question_text": "Canada has built more EV charging stations than any other G7 country.",
-          "correct_answer": "E"
+          "question_text": "Canada's federal government has partnered with automakers to fund a national EV charging network along all major interprovincial highways.",
+          "correct_answer": "E",
+          "explanation": "Paragraph B mentions gaps in charging infrastructure and Paragraph A references federal purchase incentives, but no government-automaker partnership to build a national highway charging network is described anywhere in the article."
         },
         {
           "question_number": 4,
           "question_text": "EVs produce fewer emissions over their lifetime than gasoline cars.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'battery-electric vehicles produce roughly 50 to 70 percent fewer greenhouse gas emissions than comparable gasoline cars.' Trap: Paragraph A cites Canada's zero-emission goal but provides no lifetime emissions comparison."
         },
         {
           "question_number": 5,
           "question_text": "EV sales have grown significantly in Canada since 2020.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: EV sales rose 'from about 3 percent of new car sales in 2020 to nearly 11 percent by mid-2024.' Trap: Paragraph D discusses growing used EV sales, but only the new-car sales trend is quantified and dated."
         },
         {
           "question_number": 6,
           "question_text": "Replacing an EV battery remains costly for used car buyers.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'buyers must carefully evaluate battery health, as replacement packs remain expensive.' Trap: Paragraph C mentions the cost of mining battery materials, but that refers to manufacturing, not replacement costs for owners."
         },
         {
           "question_number": 7,
           "question_text": "Rural areas often lack adequate charging infrastructure.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'rural and northern communities often have few or no public chargers.' Trap: Paragraph A mentions provincial rebates in BC and Quebec but says nothing about infrastructure gaps."
         },
         {
           "question_number": 8,
           "question_text": "Battery production involves materials with environmental concerns.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'mining the lithium, cobalt, and nickel needed for EV batteries carries its own environmental and human rights costs.' Trap: Paragraph D discusses battery health and replacement but not the environmental cost of battery production."
         },
         {
           "question_number": 9,
           "question_text": "Some provinces offer rebates in addition to the federal incentive.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'British Columbia and Quebec offer additional provincial rebates that can bring total savings above $10,000.' Trap: Paragraph D mentions future price parity that might make incentives unnecessary but does not describe current rebate structures."
         }
       ]
     },
@@ -326,47 +371,56 @@
         {
           "question_number": 1,
           "question_text": "Cover cropping and reduced tillage can help restore soil organic matter.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'cover cropping, crop rotation, reduced tillage... can rebuild soil organic matter.' Trap: Paragraph D mentions voluntary stewardship programs but never specifies which farming practices they promote."
         },
         {
           "question_number": 2,
           "question_text": "It can take centuries for nature to create a few centimetres of topsoil.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'it can take up to a thousand years for nature to produce just three centimetres of topsoil.' Trap: Paragraph B discusses carbon stored in soil but does not describe how long topsoil takes to form."
         },
         {
           "question_number": 3,
           "question_text": "Canada does not have federal legislation focused specifically on soil conservation.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Canada lacks equivalent federal legislation specifically targeting soil conservation.' Trap: Paragraph A mentions the FAO's global degradation estimates, which might suggest policy action, but it only describes the problem."
         },
         {
           "question_number": 4,
           "question_text": "Healthy soil stores significantly more carbon than the atmosphere.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'Healthy soil acts as a carbon sink, storing roughly twice as much carbon as the atmosphere and all plant life combined.' Trap: Paragraph C notes that regenerative plots store 30 percent more carbon than conventional plots — a comparative figure about farming, not atmosphere."
         },
         {
           "question_number": 5,
-          "question_text": "Canadian farmers receive automatic payments for adopting regenerative practices.",
-          "correct_answer": "E"
+          "question_text": "Canadian prairie farmers who adopt regenerative practices can apply for federal carbon credits through a government-administered soil health registry.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D mentions that scientists argue for carbon-credit systems to reward farmers and notes that provincial stewardship programs exist, but no federal carbon-credit registry or application process for farmers is described in the article."
         },
         {
           "question_number": 6,
           "question_text": "Regenerative farming matched conventional yields in a long-term study.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: regenerative plots achieved 'comparable crop yields after an initial adjustment period' over 30 years. Trap: Paragraph D references participation in stewardship programs but gives no yield comparison data."
         },
         {
           "question_number": 7,
           "question_text": "Canadian prairies have lost a large portion of their original soil carbon.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'the prairie provinces have lost an estimated 30 to 50 percent of their original topsoil organic carbon since large-scale cultivation began.' Trap: Paragraph B discusses global carbon release from degraded soils but does not single out Canada's prairies."
         },
         {
           "question_number": 8,
           "question_text": "The European Union has proposed legislation requiring soil health monitoring.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'the European Union has proposed a Soil Health Law requiring member states to monitor and improve soil condition.' Trap: Paragraph A cites the UN FAO's global estimates, which might suggest international policy, but the FAO is not proposing legislation."
         },
         {
           "question_number": 9,
           "question_text": "Degraded soil increases the risk of flooding.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'Degraded soils also lose their capacity to absorb and filter rainwater, increasing the risk of flooding.' Trap: Paragraph C mentions improved water retention from regenerative practices — the flip side — but does not explicitly link degraded soil to flooding."
         }
       ]
     },
@@ -387,47 +441,56 @@
         {
           "question_number": 1,
           "question_text": "Empty office buildings may be converted into housing.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'municipalities to explore converting unused office buildings into housing.' Trap: Paragraph C mentions that some companies have downsized office space, but says nothing about conversion to housing."
         },
         {
           "question_number": 2,
           "question_text": "Some employers worry that remote work weakens collaboration and culture.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: employers cite 'concerns about collaboration, mentorship of junior staff, and the erosion of workplace culture.' Trap: Paragraph D mentions that isolation poses mental health risks, which might seem like a workplace concern, but D focuses on employees, not employer worries."
         },
         {
           "question_number": 3,
           "question_text": "Only a small percentage of Canadians worked from home before 2020.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'only about 4 percent of Canadian workers performed their jobs entirely from home' before March 2020. Trap: Paragraph B describes worker satisfaction with remote work but gives no pre-pandemic baseline figure."
         },
         {
           "question_number": 4,
           "question_text": "Most remote workers say their productivity has been maintained or improved.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: '68 percent of Canadian remote workers said their productivity had stayed the same or improved.' Trap: Paragraph C presents the employer perspective on productivity concerns but provides no worker self-assessment data."
         },
         {
           "question_number": 5,
           "question_text": "Remote workers who live alone may face mental health risks due to isolation.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Mental health researchers warn that isolation can be a risk for remote workers who live alone.' Trap: Paragraph C mentions difficulty building team cohesion, which relates to workplace relationships, not personal mental health."
         },
         {
           "question_number": 6,
-          "question_text": "The Canadian government plans to make remote work mandatory for all federal employees.",
-          "correct_answer": "E"
+          "question_text": "Federal legislation passed in 2023 entitles all Canadian workers to request a remote or hybrid work arrangement from their employer.",
+          "correct_answer": "E",
+          "explanation": "Paragraph A describes the shift to hybrid work as a market trend and Paragraph C discusses company-level policies, but no federal legislation giving workers a right to request remote work is mentioned anywhere in the article."
         },
         {
           "question_number": 7,
           "question_text": "Several large Canadian companies have required employees to return to the office.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'several major Canadian banks and technology firms, have mandated a return to the office.' Trap: Paragraph A notes that 'many workers have since returned to offices' but frames it as a general trend, not a corporate mandate."
         },
         {
           "question_number": 8,
           "question_text": "Hybrid work, with two to three days in the office, is now the most common model.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'hybrid arrangements — typically two to three days in the office — becoming the dominant model in knowledge-sector industries.' Trap: Paragraph C describes fully remote models some companies have adopted, but labels them as one option, not the dominant one."
         },
         {
           "question_number": 9,
           "question_text": "Remote work has helped rural workers access better-paying jobs.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'Workers in smaller cities and rural areas have particularly benefited, gaining access to higher-paying urban jobs without relocating.' Trap: Paragraph D mentions workers moving to suburban areas, which is a housing trend, not an employment opportunity for rural residents."
         }
       ]
     },
@@ -448,47 +511,56 @@
         {
           "question_number": 1,
           "question_text": "Gardening provides physical activity similar to walking.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'Regular gardening provides moderate physical exercise equivalent to walking or light cycling.' Trap: Paragraph A describes the physical layout of garden plots but says nothing about the exercise involved."
         },
         {
           "question_number": 2,
           "question_text": "Waiting lists for garden plots can last several years in some cities.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Waiting lists in cities like Montreal and Ottawa can stretch to two or three years.' Trap: Paragraph A describes plot sizes and fees but makes no mention of demand or wait times."
         },
         {
           "question_number": 3,
           "question_text": "Immigrants have introduced new crops and shared techniques with neighbours.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'recent immigrants have introduced crops from their home countries — such as bok choy, bitter melon, and callaloo — and share growing techniques with long-time residents.' Trap: Paragraph A mentions volunteer committees managing gardens but says nothing about cultural exchange."
         },
         {
           "question_number": 4,
           "question_text": "Community garden plots are usually assigned to individual members.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'Members are usually assigned individual plots ranging in size from about 3 by 3 metres to 5 by 10 metres.' Trap: Paragraph D describes land tenure challenges, which touches on plot security, but not on how plots are allocated."
         },
         {
           "question_number": 5,
-          "question_text": "The federal government provides grants to all community gardens in Canada.",
-          "correct_answer": "E"
+          "question_text": "Municipal governments across Canada provide dedicated funding grants to support the operating costs of registered community gardens.",
+          "correct_answer": "E",
+          "explanation": "Paragraph A mentions small annual fees covering operating costs and Paragraph D notes that some municipalities include gardens in zoning plans, but no dedicated municipal funding grants for operating costs are described anywhere in the article."
         },
         {
           "question_number": 6,
           "question_text": "Children who garden are more likely to eat vegetables.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'children who help grow food are far more willing to try new vegetables at the dinner table.' Trap: Paragraph C discusses cultural exchange around food but focuses on adult interactions, not children's eating habits."
         },
         {
           "question_number": 7,
           "question_text": "Gardens can be lost if the landowner decides to build on the property.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'gardens built on privately donated or temporarily leased land can be lost when the owner decides to develop the property.' Trap: Paragraph A mentions that gardens are on municipal or donated land, which implies some risk, but does not state gardens can be lost."
         },
         {
           "question_number": 8,
           "question_text": "Annual fees for a garden plot are typically quite modest.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'Most programs charge a small annual fee — often between $20 and $75.' Trap: Paragraph D discusses long-term costs of land security for municipalities but gives no figures for individual plot fees."
         },
         {
           "question_number": 9,
           "question_text": "Community gardens help reduce isolation in large cities.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'These exchanges build trust, reduce isolation, and foster a sense of belonging, particularly in large cities.' Trap: Paragraph B notes mental health benefits including reduced anxiety, which might seem related, but B focuses on individual health, not social isolation."
         }
       ]
     },
@@ -509,47 +581,56 @@
         {
           "question_number": 1,
           "question_text": "AI training data may not represent all patient populations equally.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'if the datasets used to build an AI model underrepresent certain populations — Indigenous patients, elderly women, or people with rare conditions — the tool may perform poorly for those groups.' Trap: Paragraph D discusses patient acceptance of AI but does not address the data used to build AI systems."
         },
         {
           "question_number": 2,
           "question_text": "AI scheduling reduced surgical wait times at Alberta hospitals.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'an AI scheduling system reduced surgical wait times by an average of 18 percent in its first year of operation' at several Alberta hospitals. Trap: Paragraph A describes AI reducing missed diagnoses in Toronto, a different type of improvement."
         },
         {
           "question_number": 3,
           "question_text": "More than half of Canadians accept AI in diagnosis if a doctor is involved.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: '54 percent of Canadians were comfortable with AI assisting in diagnostic tasks, provided a human physician made the final decision.' Trap: Paragraph C discusses accountability concerns, which might suggest rejection of AI, but gives no acceptance percentage."
         },
         {
           "question_number": 4,
-          "question_text": "All Canadian provinces have passed legislation specifically governing AI in medicine.",
-          "correct_answer": "E"
+          "question_text": "Health Canada has published specific regulations requiring clinical trials before any AI diagnostic tool can be deployed in Canadian hospitals.",
+          "correct_answer": "E",
+          "explanation": "Paragraph C notes that accountability under Canadian law is unclear and Paragraph A describes a pilot project, but no Health Canada regulations requiring clinical trials before AI deployment are described anywhere in the article."
         },
         {
           "question_number": 5,
           "question_text": "AI can analyze medical images much faster than human specialists.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'AI algorithms can now scan thousands of medical images... in a fraction of the time it takes a human specialist.' Trap: Paragraph B discusses AI for scheduling, which also improves efficiency, but does not involve medical image analysis."
         },
         {
           "question_number": 6,
           "question_text": "Legal responsibility for AI misdiagnosis is unclear in Canada.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'it is unclear under current Canadian law whether responsibility lies with the software developer, the hospital, or the clinician.' Trap: Paragraph D mentions patient concerns about data sharing, which is a legal issue, but not about misdiagnosis liability."
         },
         {
           "question_number": 7,
           "question_text": "AI could help reduce emergency room overcrowding.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'Health administrators hope that similar tools can eventually ease the strain on overcrowded emergency rooms.' Trap: Paragraph A discusses AI improving diagnostic accuracy, which might seem to reduce ER burden, but A does not mention emergency rooms."
         },
         {
           "question_number": 8,
           "question_text": "An AI tool improved lung cancer detection rates in a Toronto pilot project.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'an AI-assisted screening tool for lung cancer reduced the rate of missed nodules by 23 percent' at the University Health Network in Toronto. Trap: Paragraph B describes an Alberta hospital study, which might be confused with this Toronto pilot."
         },
         {
           "question_number": 9,
           "question_text": "Older Canadians are less comfortable with AI in healthcare than younger adults.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Acceptance was highest among younger adults aged 18 to 34 and lowest among those over 65.' Trap: Paragraph C discusses concerns about AI underperforming for vulnerable groups, including the elderly, but that is about accuracy, not patient comfort."
         }
       ]
     },
@@ -570,47 +651,56 @@
         {
           "question_number": 1,
           "question_text": "The cod stock has still not fully recovered after more than three decades.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'the northern cod stock has shown only modest signs of recovery' and 'remains well below the level needed to support a commercial fishery.' Trap: Paragraph B describes the collapse to less than one percent, which sets the baseline but says nothing about recovery progress."
         },
         {
           "question_number": 2,
           "question_text": "The Grand Banks cod fishery dates back to the 15th century.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'European vessels began fishing the Grand Banks as early as the 1490s.' Trap: Paragraph B discusses DFO warnings in the 1980s, which involves the same fishery but gives no historical origin date."
         },
         {
           "question_number": 3,
           "question_text": "Scientists' early warnings about declining stocks were resisted for political reasons.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'their warnings were met with political resistance. Fishing communities, provincial politicians, and the federal Fisheries Minister all pushed back against reducing quotas.' Trap: Paragraph D mentions that scientists caution against premature expansion today, but that is current caution, not historical resistance."
         },
         {
           "question_number": 4,
           "question_text": "The moratorium caused the largest mass layoff in Canadian history.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'Approximately 40,000 people lost their livelihoods almost overnight — the largest mass layoff in Canadian history.' Trap: Paragraph B describes the economic fears that delayed the moratorium, but gives no figure for actual job losses."
         },
         {
           "question_number": 5,
-          "question_text": "Norway offered to share its cod management techniques with Canada in 1993.",
-          "correct_answer": "E"
+          "question_text": "Following the moratorium, Canada and Iceland jointly developed a cod stock recovery plan based on shared management of migratory fish populations in the North Atlantic.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D describes DFO's 2024 stewardship fishery and Paragraph B notes political resistance to quotas, but no bilateral cod recovery plan with Iceland or any shared international management framework is mentioned anywhere in the article."
         },
         {
           "question_number": 6,
           "question_text": "Ocean warming and seal predation have slowed the stock's recovery.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Ocean warming, changing prey availability, and predation by growing seal populations have complicated recovery.' Trap: Paragraph B attributes the original collapse to flawed surveys and political resistance, not warming or seals."
         },
         {
           "question_number": 7,
           "question_text": "The peak annual cod catch exceeded 800,000 tonnes.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'At its peak in the late 1960s, the total annual catch exceeded 800,000 tonnes.' Trap: Paragraph B mentions quotas but provides no tonnage figures."
         },
         {
           "question_number": 8,
           "question_text": "The federal government spent billions on aid for displaced fishing workers.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'The federal government spent over $4 billion in aid packages over the following decade.' Trap: Paragraph B describes the economic fears used to resist quotas but does not mention any actual government spending."
         },
         {
           "question_number": 9,
           "question_text": "Scientific surveys at the time overestimated how many fish remained.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'The scientific assessments themselves were later found to have overestimated stock sizes due to flawed survey methods and inadequate data on spawning biomass.' Trap: Paragraph D notes current scientific caution, but that is about future management, not past survey errors."
         }
       ]
     },
@@ -631,47 +721,56 @@
         {
           "question_number": 1,
           "question_text": "Streaming services give listeners access to millions of songs for a low monthly fee.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'access to catalogues of over 100 million tracks for a monthly fee of roughly $10 to $12.' Trap: Paragraph A discusses revenue figures for the industry but says nothing about what listeners pay or access."
         },
         {
           "question_number": 2,
           "question_text": "Most mid-level artists cannot live solely on streaming income.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'mid-level and independent musicians often report that streaming revenue alone cannot cover basic living expenses.' Trap: Paragraph D discusses how artists adapt their release strategy, which might imply financial pressure, but gives no income data."
         },
         {
           "question_number": 3,
-          "question_text": "Spotify pays artists a guaranteed minimum salary regardless of streams.",
-          "correct_answer": "E"
+          "question_text": "Streaming platforms are required to pay artists a minimum per-stream royalty rate set by an international copyright agreement.",
+          "correct_answer": "E",
+          "explanation": "Paragraph C describes actual per-stream payout rates on Spotify but attributes them to estimates, not a mandated minimum. No international copyright agreement setting a minimum rate is mentioned anywhere in the article."
         },
         {
           "question_number": 4,
           "question_text": "Artists now design songs to hook listeners within the first 30 seconds.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'songs are often front-loaded with catchy hooks in the first 30 seconds to prevent listeners from skipping.' Trap: Paragraph B describes algorithms discovering music for listeners but does not discuss how artists structure their songs in response."
         },
         {
           "question_number": 5,
           "question_text": "Global music revenue declined sharply between 2001 and 2014.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: revenue fell from 'roughly $23 billion' in 2001 'to just $14 billion' by 2014. Trap: Paragraph C discusses per-stream payout rates declining in value for artists, but that is a different decline from total industry revenue."
         },
         {
           "question_number": 6,
           "question_text": "Algorithms help listeners discover new artists and music.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'Discovery algorithms introduce users to artists they might never have found through traditional radio.' Trap: Paragraph D discusses how algorithms drive artists to release music frequently, but that is about artist strategy, not listener discovery."
         },
         {
           "question_number": 7,
           "question_text": "Many musicians now rely more on live shows and merchandise.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'Many artists have shifted their income model toward live performances, merchandise sales, and direct fan support.' Trap: Paragraph D discusses format changes like singles and playlists, but does not mention how artists earn income outside streaming."
         },
         {
           "question_number": 8,
           "question_text": "Streaming now accounts for the majority of global music revenue.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'streaming accounting for nearly 70 percent of the total' $28 billion in 2023 revenue. Trap: Paragraph B describes the listener experience of streaming but provides no revenue share figure."
         },
         {
           "question_number": 9,
           "question_text": "The traditional album format has become less dominant.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Albums, once the primary artistic unit, have given way to singles and playlists as the dominant format.' Trap: Paragraph A tracks revenue history but says nothing about shifts in the primary format of music releases."
         }
       ]
     },
@@ -692,47 +791,56 @@
         {
           "question_number": 1,
           "question_text": "Sea lampreys nearly destroyed the lake trout fishery by the 1950s.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'By the 1950s, the lake trout fishery in most Great Lakes had collapsed' due to sea lamprey predation. Trap: Paragraph B describes zebra and quagga mussels smothering native species, which might also seem to threaten fish, but B says nothing about lake trout."
         },
         {
           "question_number": 2,
           "question_text": "Ships must now treat their ballast water before entering the Great Lakes.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: regulations require 'exchanging it in the open ocean before entering the lakes, or by treating it with filtration or ultraviolet light.' Trap: Paragraph A explains how ballast water carries invasive species but describes the problem, not the regulation."
         },
         {
           "question_number": 3,
           "question_text": "Zebra and quagga mussels damage infrastructure and eliminate native food sources.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: mussels clog 'water intake pipes' and remove 'plankton that native fish depend on for food.' Trap: Paragraph C also describes ecological damage but focuses on sea lampreys attacking fish directly, not infrastructure or plankton."
         },
         {
           "question_number": 4,
           "question_text": "More than 180 non-native species have been found in the Great Lakes.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'More than 180 non-native species have been identified in the Great Lakes system.' Trap: Paragraph B describes specific invaders in detail but provides no total count of invasive species."
         },
         {
           "question_number": 5,
           "question_text": "A chemical called lampricide has been used to control sea lamprey populations.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'An intensive control program using a targeted chemical called lampricide... reduced lamprey populations by about 90 percent.' Trap: Paragraph D discusses ballast water treatment chemicals (UV and filtration), which might be confused with lampricide."
         },
         {
           "question_number": 6,
-          "question_text": "All invasive species in the Great Lakes have now been successfully eradicated.",
-          "correct_answer": "E"
+          "question_text": "A joint Canada-US task force has certified the Great Lakes basin as free of zebra mussels in shallower tributaries following a decade-long eradication program.",
+          "correct_answer": "E",
+          "explanation": "Paragraph B notes mussels have spread to all five Great Lakes and Paragraph D discusses ongoing prevention efforts, but no eradication program, certification, or mussel-free status for any part of the basin is described anywhere in the article."
         },
         {
           "question_number": 7,
           "question_text": "Asian carp pose a future threat to the Great Lakes if they reach the basin.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: Asian carp 'could cause ecological devastation if they establish breeding populations' in the Great Lakes. Trap: Paragraph C describes a past threat from lampreys, which might seem parallel, but C does not mention Asian carp."
         },
         {
           "question_number": 8,
           "question_text": "Ballast water from cargo ships has been a major pathway for invasive species.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'Many arrived in the ballast water of ocean-going cargo ships, which take on water in foreign ports and discharge it upon arriving in the lakes.' Trap: Paragraph D discusses regulations on ballast water, which implies the same link, but D focuses on the solution, not the cause."
         },
         {
           "question_number": 9,
           "question_text": "Managing mussel infestations costs hundreds of millions of dollars annually.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'The economic cost of managing mussel infestations has been estimated at over $500 million per year.' Trap: Paragraph C describes ongoing lamprey control costs but gives no dollar figure."
         }
       ]
     },
@@ -753,47 +861,56 @@
         {
           "question_number": 1,
           "question_text": "Canada bans germline editing but allows somatic gene editing.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: Canada prohibits germline editing under the Assisted Human Reproduction Act, but 'somatic gene editing... is permitted and actively pursued in clinical trials.' Trap: Paragraph B describes the He Jiankui case, which involved germline editing, but says nothing about Canadian law."
         },
         {
           "question_number": 2,
           "question_text": "The first gene-edited babies were created without proper ethical oversight.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'the experiment was conducted without adequate ethical oversight or informed consent.' Trap: Paragraph D discusses Canada's criminal prohibition on germline editing, which might seem to address the same issue, but D focuses on current law, not the 2018 case."
         },
         {
           "question_number": 3,
           "question_text": "CRISPR allows scientists to target specific genes using an RNA guide.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'guiding a molecular \"scissors\" to a specific location on a genome using a short RNA sequence.' Trap: Paragraph B describes CRISPR editing the CCR5 gene but explains what was edited, not the technical mechanism."
         },
         {
           "question_number": 4,
           "question_text": "Gene editing could widen the gap between wealthy and disadvantaged families.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'wealthy families might purchase genetic advantages for their children... that poorer families cannot afford,' potentially creating 'a genetic underclass.' Trap: Paragraph B discusses the He Jiankui case, which involves unequal access to experimental technology, but not the socioeconomic inequality argument."
         },
         {
           "question_number": 5,
           "question_text": "Changes to a patient's own body cells are not heritable.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'somatic gene editing — changes made to a patient's own body cells that are not passed on.' Trap: Paragraph B explains that germline changes are heritable, which is the contrast — but B does not address somatic editing."
         },
         {
           "question_number": 6,
           "question_text": "Germline changes are permanent and can be passed to future generations.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'germline editing introduces irreversible changes whose long-term effects are unknown' and would 'be inherited by future generations.' Trap: Paragraph D defines germline editing as criminal in Canada but does not explain why — the irreversibility detail is in B."
         },
         {
           "question_number": 7,
-          "question_text": "CRISPR has been used to completely eradicate malaria in Sub-Saharan Africa.",
-          "correct_answer": "E"
+          "question_text": "CRISPR has been used in approved clinical trials to eliminate the malaria parasite from mosquito populations across several African countries.",
+          "correct_answer": "E",
+          "explanation": "Paragraph A lists CRISPR applications in agriculture and medicine, including sickle cell disease and hereditary blindness, but no malaria-mosquito program in Africa is mentioned anywhere in the article."
         },
         {
           "question_number": 8,
           "question_text": "CRISPR has been applied to both agriculture and medicine.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'breakthroughs in agriculture — including disease-resistant wheat and drought-tolerant rice — and in medicine, where it has shown promise in treating sickle cell disease.' Trap: Paragraph B focuses only on the medical/reproductive use of CRISPR and does not mention agriculture."
         },
         {
           "question_number": 9,
           "question_text": "Some argue that regulation is better than an outright ban on gene editing.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'Supporters counter that... regulation rather than prohibition is the appropriate response.' Trap: Paragraph D describes Canada's criminal prohibition, which is the opposite stance, and might distract from where the argument for regulation is actually made."
         }
       ]
     },
@@ -814,47 +931,56 @@
         {
           "question_number": 1,
           "question_text": "Procrastination is now understood as an emotion management problem, not laziness.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'Psychologists increasingly view it as an emotional regulation problem... not because they cannot manage their time, but because they cannot manage the negative emotions.' Trap: Paragraph D discusses strategies to reduce emotional barriers, which implies the same idea, but D offers solutions rather than defining the cause."
         },
         {
           "question_number": 2,
           "question_text": "Chronic procrastinators tend to have worse grades and more health problems.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'students who procrastinated habitually earned lower grades, reported higher levels of stress and illness.' Trap: Paragraph B mentions missed deadlines and lower-quality work but focuses on emotional dynamics, not academic or health outcomes."
         },
         {
           "question_number": 3,
           "question_text": "Self-compassion helps reduce the shame that follows procrastination.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Self-compassion, rather than self-criticism, has been shown to reduce the shame spiral that often follows a bout of procrastination.' Trap: Paragraph B describes the emotional cost of procrastination but does not suggest self-compassion as a remedy."
         },
         {
           "question_number": 4,
           "question_text": "People sometimes avoid important tasks because starting them triggers anxiety.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'starting a creative project can trigger performance anxiety so intense that avoidance becomes a way of protecting self-esteem.' Trap: Paragraph A defines procrastination as an emotional regulation problem, which is related, but A does not describe specific tasks that trigger avoidance."
         },
         {
           "question_number": 5,
-          "question_text": "A new medication has been approved to treat chronic procrastination.",
-          "correct_answer": "E"
+          "question_text": "Cognitive behavioural therapy has been adapted into a structured online programme specifically approved for treating chronic procrastination in university students.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D mentions cognitive behavioural strategies and Paragraph C notes academic impacts on students, but no online CBT programme specifically approved for procrastination in university students is described anywhere in the article."
         },
         {
           "question_number": 6,
           "question_text": "Over half of all students may procrastinate regularly.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'the rate is even higher among students, with some studies placing it above 50 percent.' Trap: Paragraph C discusses the academic consequences for procrastinating students but gives no prevalence figure."
         },
         {
           "question_number": 7,
           "question_text": "Procrastinators are more likely to delay medical check-ups.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'procrastinators are more likely to postpone health screenings and dental appointments, sometimes with serious consequences.' Trap: Paragraph D mentions using accountability partners to take action, which might seem health-related, but D focuses on task management, not medical care."
         },
         {
           "question_number": 8,
           "question_text": "Putting things off gives a temporary feeling of relief.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'The temporary relief of putting something off is immediately rewarding.' Trap: Paragraph D mentions reducing anxiety through breaking tasks into steps — a different form of relief that comes from action, not avoidance."
         },
         {
           "question_number": 9,
           "question_text": "The 'two-minute rule' prevents small tasks from building up.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'if a task takes less than two minutes, do it immediately — prevents small tasks from accumulating into an anxiety-inducing backlog.' Trap: Paragraph A mentions boredom and self-doubt as drivers of procrastination, which might relate to letting tasks pile up, but A describes causes, not solutions."
         }
       ]
     },
@@ -875,47 +1001,56 @@
         {
           "question_number": 1,
           "question_text": "Methane released from thawing permafrost is a very potent greenhouse gas.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'methane — a greenhouse gas roughly 80 times more potent than CO₂ over a 20-year period.' Trap: Paragraph A mentions that permafrost stores carbon, which implies release risk, but A does not describe methane or its potency."
         },
         {
           "question_number": 2,
           "question_text": "Climate models disagree about how fast permafrost carbon will be released.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'Current climate models disagree on the speed and scale of carbon release from thawing permafrost.' Trap: Paragraph B presents climate model projections of 0.2–0.4°C warming, which might seem to suggest agreement, but B presents a range, not a consensus."
         },
         {
           "question_number": 3,
           "question_text": "Permafrost covers roughly 40 percent of Canada's land.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'underlies approximately 40 percent of Canada's land area.' Trap: Paragraph C describes specific communities affected by permafrost thaw but gives no coverage statistic."
         },
         {
           "question_number": 4,
-          "question_text": "Canadian scientists have found a way to refreeze thawed permafrost artificially.",
-          "correct_answer": "E"
+          "question_text": "Canadian researchers have successfully developed an insulating ground treatment that can slow permafrost thaw beneath existing buildings and roads.",
+          "correct_answer": "E",
+          "explanation": "Paragraph D describes scientists deploying sensors and satellites to monitor permafrost, and Paragraph C describes infrastructure damage, but no ground treatment or insulation technology to slow thaw beneath existing structures is mentioned anywhere in the article."
         },
         {
           "question_number": 5,
           "question_text": "Buildings in northern communities are sinking as the ground thaws.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'Buildings, roads, and airport runways constructed on permafrost are buckling and sinking as the ground beneath them shifts.' Trap: Paragraph B describes the physical thawing process but focuses on greenhouse gas release, not structural damage."
         },
         {
           "question_number": 6,
           "question_text": "Permafrost thaw creates a self-reinforcing warming cycle.",
-          "correct_answer": "B"
+          "correct_answer": "B",
+          "explanation": "Paragraph B: 'This creates a dangerous feedback loop: rising temperatures cause permafrost thaw, which releases greenhouse gases, which cause further warming, which accelerates further thaw.' Trap: Paragraph D notes uncertainties in climate models, which addresses the same cycle but focuses on measurement challenges, not the mechanism."
         },
         {
           "question_number": 7,
           "question_text": "Once triggered, permafrost emissions cannot be directly controlled by humans.",
-          "correct_answer": "D"
+          "correct_answer": "D",
+          "explanation": "Paragraph D: 'permafrost emissions — once triggered — are largely beyond human control.' Trap: Paragraph B describes the feedback loop that drives emissions, which implies difficulty of control, but B does not make that statement explicitly."
         },
         {
           "question_number": 8,
           "question_text": "Some northern communities may need to be completely relocated.",
-          "correct_answer": "C"
+          "correct_answer": "C",
+          "explanation": "Paragraph C: 'In some cases, entire communities may need to be relocated.' Trap: Paragraph D mentions that permafrost emissions are beyond human control, which might suggest communities are also powerless, but D addresses emissions policy, not community relocation."
         },
         {
           "question_number": 9,
           "question_text": "Permafrost holds about twice as much carbon as the atmosphere.",
-          "correct_answer": "A"
+          "correct_answer": "A",
+          "explanation": "Paragraph A: 'permafrost globally holds roughly 1,500 billion tonnes of carbon, approximately twice the amount currently in the atmosphere.' Trap: Paragraph B discusses how that carbon is released as CO₂ and methane, but gives warming projections, not a storage comparison."
         }
       ]
     }
