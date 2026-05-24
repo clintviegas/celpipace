@@ -203,8 +203,8 @@ function renderHomePage() {
       <section class="seo-hero">
         <div class="seo-hero-copy">
           <p class="seo-eyebrow">CELPIP practice with AI scoring</p>
-          <h1>CELPIP Mock Test – Free Practice Tests & AI Scoring</h1>
-          <p class="seo-subhead">Ace CELPIP with full-length mock exams, section practice, and instant AI scoring. Trusted by Canadian PR applicants. Start free today.</p>
+          <h1>CELPIPACE – CELPIP Mock Tests, Practice, and AI Scoring</h1>
+          <p class="seo-subhead">CELPIPACE helps Canadian PR applicants prepare with full-length CELPIP mock exams, section practice, instant AI scoring, and saved CLB reports.</p>
           <div class="seo-actions">
             <a class="seo-primary" href="/exam">Start Free Diagnostic</a>
             <a class="seo-secondary" href="/celpip-mock-test">See Mock Tests</a>
@@ -412,8 +412,8 @@ async function main() {
     {
       path: '/',
       meta: {
-        title: 'CELPIP Mock Test – Free Practice Tests & AI Scoring',
-        description: 'Ace CELPIP with full-length mock exams, section practice, and instant AI scoring. Trusted by Canadian PR applicants. Start free today.',
+        title: 'CELPIPACE – CELPIP Mock Tests, Practice, and AI Scoring',
+        description: 'CELPIPACE helps Canadian PR applicants prepare with full-length CELPIP mock exams, section practice, instant AI scoring, and saved CLB reports.',
         canonical: '/',
         jsonLd: [
           {
@@ -516,10 +516,10 @@ async function writeSitemap() {
   const today = new Date().toISOString().slice(0, 10)
   const urls = [
     ...STATIC_SITEMAP_ROUTES.map(r =>
-      `  <url><loc>https://celpipace.ca${r.path}</loc><lastmod>${today}</lastmod><changefreq>${r.changefreq}</changefreq><priority>${r.priority}</priority></url>`
+      `  <url><loc>${PUBLIC_SITE_URL}${r.path}</loc><lastmod>${today}</lastmod><changefreq>${r.changefreq}</changefreq><priority>${r.priority}</priority></url>`
     ),
     ...BLOG_ARTICLES.map(a =>
-      `  <url><loc>https://celpipace.ca/blog/${a.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>`
+      `  <url><loc>${PUBLIC_SITE_URL}/blog/${a.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>`
     ),
   ]
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`

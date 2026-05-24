@@ -10,7 +10,7 @@ export const asset = (path) => `${CDN_URL}${path}`
 
 export const BRAND_NAME = 'CELPIPACE'
 export const SUPPORT_EMAIL = 'hello@celpipace.ca'
-export const PUBLIC_SITE_URL = (viteEnv.VITE_SITE_URL || nodeEnv.VITE_SITE_URL || 'https://celpipace.ca').replace(/\/$/, '')
+export const PUBLIC_SITE_URL = (viteEnv.VITE_SITE_URL || nodeEnv.VITE_SITE_URL || 'https://www.celpipace.ca').replace(/\/$/, '')
 export const TERMS_VERSION = '2026-05-07'
 export const AUTH_CONSENT_STORAGE_KEY = 'celpipace_pending_auth_consent'
 

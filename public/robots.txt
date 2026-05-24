@@ -10,4 +10,4 @@ Allow: /celpip-writing-practice
 Allow: /celpip-speaking-practice
 Allow: /
 
-Sitemap: https://celpipace.ca/sitemap.xml
+Sitemap: https://www.celpipace.ca/sitemap.xml
