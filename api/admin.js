@@ -6,7 +6,7 @@
 //
 // All requests require:
 //   Authorization: Bearer <supabase access_token>
-//   Body: { action: 'refund' | ..., ...action-specific fields }
+//   Body: { action: 'refund' | 'sync-subscription' | ..., ...action-specific fields }
 //
 // Auth model: the bearer-token user must equal ADMIN_EMAIL.
 
@@ -28,6 +28,77 @@ function getBody(req) {
     try { return JSON.parse(req.body) } catch { return {} }
   }
   return req.body
+}
+
+const PLAN_BY_PRICE = {
+  [process.env.STRIPE_PRICE_WEEKLY    || '']: 'weekly',
+  [process.env.STRIPE_PRICE_MONTHLY   || '']: 'monthly',
+  [process.env.STRIPE_PRICE_ANNUAL    || '']: 'annual',
+  [process.env.STRIPE_PRICE_QUARTERLY || '']: 'annual',
+}
+
+const PLAN_ALIASES = {
+  quarterly: 'annual',
+}
+
+function normalizePlanSlug(plan) {
+  const cleanPlan = String(plan || '').trim().toLowerCase()
+  if (cleanPlan === 'weekly' || cleanPlan === 'monthly' || cleanPlan === 'annual') return cleanPlan
+  return PLAN_ALIASES[cleanPlan] || ''
+}
+
+function stripeTimeToIso(seconds) {
+  return seconds ? new Date(seconds * 1000).toISOString() : null
+}
+
+function subscriptionToProfilePatch(sub, fallbackPlan) {
+  const item = sub.items?.data?.[0]
+  const priceId = item?.price?.id
+  const plan = PLAN_BY_PRICE[priceId] || normalizePlanSlug(sub.metadata?.plan) || normalizePlanSlug(fallbackPlan) || 'premium'
+
+  let status = sub.status
+  if (sub.status === 'canceled') status = 'canceled'
+  else if (sub.status === 'trialing') status = 'trialing'
+  else if (sub.status === 'unpaid') status = 'expired'
+  else if (sub.status === 'incomplete') status = 'incomplete'
+  else if (sub.status === 'past_due') status = 'past_due'
+  else status = 'active'
+
+  const periodStart = stripeTimeToIso(sub.current_period_start || item?.current_period_start)
+  const periodEnd = stripeTimeToIso(sub.current_period_end || item?.current_period_end)
+  const stillPremium = status === 'active' || status === 'trialing' || status === 'past_due'
+
+  return {
+    is_premium: stillPremium,
+    subscription_status: status,
+    current_plan: stillPremium ? plan : 'free',
+    stripe_subscription_id: sub.id,
+    cancel_at_period_end: !!sub.cancel_at_period_end,
+    current_period_start: periodStart,
+    current_period_end: periodEnd,
+    premium_expires_at: periodEnd,
+    premium_source: `stripe:${plan}`,
+  }
+}
+
+async function findProfileForPayment(supabase, payment, { customerId, subscriptionId }) {
+  if (payment?.user_id) {
+    const { data } = await supabase.from('profiles').select('*').eq('id', payment.user_id).maybeSingle()
+    if (data) return data
+  }
+  if (subscriptionId) {
+    const { data } = await supabase.from('profiles').select('*').eq('stripe_subscription_id', subscriptionId).maybeSingle()
+    if (data) return data
+  }
+  if (customerId) {
+    const { data } = await supabase.from('profiles').select('*').eq('stripe_customer_id', customerId).maybeSingle()
+    if (data) return data
+  }
+  if (payment?.email) {
+    const { data } = await supabase.from('profiles').select('*').eq('email', payment.email).maybeSingle()
+    if (data) return data
+  }
+  return null
 }
 
 export default async function handler(req, res) {
@@ -83,6 +154,91 @@ export default async function handler(req, res) {
       } catch (err) {
         console.error('[admin/refund] stripe error:', err?.message || err)
         return res.status(400).json({ error: err?.message || 'Refund failed' })
+      }
+    }
+
+    case 'sync-subscription': {
+      const stripeSecret = process.env.STRIPE_SECRET_KEY
+      if (!stripeSecret) return res.status(500).json({ error: 'Stripe not configured' })
+      const stripe = new Stripe(stripeSecret, { apiVersion: '2024-06-20' })
+
+      const paymentId = String(body.payment_id || '').trim()
+      const sessionId = String(body.stripe_session_id || '').trim()
+      if (!paymentId && !sessionId) return res.status(400).json({ error: 'Need payment_id or stripe_session_id' })
+
+      let query = supabase.from('payments').select('*').eq('status', 'paid').limit(1)
+      query = paymentId ? query.eq('id', paymentId) : query.eq('stripe_session_id', sessionId)
+      const { data: paymentRows, error: paymentErr } = await query
+      if (paymentErr) return res.status(500).json({ error: paymentErr.message })
+      const payment = paymentRows?.[0]
+      if (!payment) return res.status(404).json({ error: 'Paid payment row not found' })
+      if (!payment.stripe_session_id?.startsWith('cs_')) {
+        return res.status(400).json({ error: 'This repair needs an original Stripe Checkout Session row.' })
+      }
+
+      try {
+        const checkout = await stripe.checkout.sessions.retrieve(payment.stripe_session_id, {
+          expand: ['subscription'],
+        })
+        if (checkout.mode !== 'subscription') return res.status(400).json({ error: 'Checkout Session is not a subscription' })
+
+        let sub = checkout.subscription
+        if (!sub) return res.status(400).json({ error: 'Checkout Session has no subscription' })
+        if (typeof sub === 'string') sub = await stripe.subscriptions.retrieve(sub)
+
+        const customerId = typeof checkout.customer === 'string' ? checkout.customer : checkout.customer?.id || null
+        const patch = subscriptionToProfilePatch(sub, payment.plan || checkout.metadata?.plan)
+        const profile = await findProfileForPayment(supabase, payment, { customerId, subscriptionId: sub.id })
+        if (!profile) return res.status(404).json({ error: `Profile not found for ${payment.email}` })
+
+        const grantedAt = payment.created_at || new Date().toISOString()
+        const { data: updated, error: updateErr } = await supabase
+          .from('profiles')
+          .update({
+            ...patch,
+            stripe_customer_id: customerId || payment.stripe_customer_id || profile.stripe_customer_id,
+            premium_granted_at: grantedAt,
+            last_payment_at: payment.created_at || new Date().toISOString(),
+          })
+          .eq('id', profile.id)
+          .select('id, email, is_premium, current_plan, subscription_status, premium_source, premium_expires_at, stripe_customer_id, stripe_subscription_id')
+          .maybeSingle()
+        if (updateErr) return res.status(500).json({ error: updateErr.message })
+
+        await supabase.from('payments').update({
+          plan: patch.current_plan === 'free' ? payment.plan : patch.current_plan,
+          stripe_customer_id: customerId || payment.stripe_customer_id,
+        }).eq('id', payment.id).then(({ error }) => {
+          if (error) console.error('[admin/sync-subscription] payment update error:', error.message)
+        })
+
+        await supabase.from('subscription_events').insert({
+          user_id: profile.id,
+          email: profile.email,
+          event_type: 'admin.subscription_synced',
+          prev_status: profile.subscription_status,
+          new_status: patch.subscription_status,
+          plan: patch.current_plan,
+          amount_cents: payment.amount_cents,
+          currency: payment.currency,
+          cancel_at_period_end: patch.cancel_at_period_end,
+          current_period_end: patch.current_period_end,
+          stripe_subscription_id: sub.id,
+          stripe_customer_id: customerId,
+          metadata: {
+            issued_by: authData.user.email,
+            payment_id: payment.id,
+            stripe_session_id: payment.stripe_session_id,
+            source: 'admin_panel',
+          },
+        }).then(({ error }) => {
+          if (error) console.error('[admin/sync-subscription] subscription event insert error:', error.message)
+        })
+
+        return res.status(200).json({ ok: true, profile: updated })
+      } catch (err) {
+        console.error('[admin/sync-subscription] error:', err?.message || err)
+        return res.status(400).json({ error: err?.message || 'Subscription sync failed' })
       }
     }
 

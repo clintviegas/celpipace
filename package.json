@@ -11,7 +11,8 @@
     "e2e": "playwright test",
     "e2e:smoke": "playwright test smoke.spec.js",
     "e2e:install": "playwright install chromium",
-    "gsc:pull": "node scripts/gsc-pull.mjs"
+    "gsc:pull": "node scripts/gsc-pull.mjs",
+    "stripe:verify": "node scripts/verify-stripe-subscriptions.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",

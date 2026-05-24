@@ -42,6 +42,16 @@ const PLAN_BY_PRICE = {
   [process.env.STRIPE_PRICE_QUARTERLY || '']: 'annual',
 }
 
+const PLAN_ALIASES = {
+  quarterly: 'annual',
+}
+
+function normalizePlanSlug(plan) {
+  const cleanPlan = String(plan || '').trim().toLowerCase()
+  if (cleanPlan === 'weekly' || cleanPlan === 'monthly' || cleanPlan === 'annual') return cleanPlan
+  return PLAN_ALIASES[cleanPlan] || ''
+}
+
 // Find a profile row from any of: user_id metadata, customer_id, sub_id, email.
 async function findProfile(supabase, { userId, customerId, subscriptionId, email }) {
   if (userId) {
@@ -67,12 +77,13 @@ async function findProfile(supabase, { userId, customerId, subscriptionId, email
 function subscriptionToProfilePatch(sub) {
   const item   = sub.items?.data?.[0]
   const priceId = item?.price?.id
-  const plan    = PLAN_BY_PRICE[priceId] || 'premium'
+  const plan    = PLAN_BY_PRICE[priceId] || normalizePlanSlug(sub.metadata?.plan) || 'premium'
 
   // Stripe statuses: trialing | active | past_due | canceled | unpaid | incomplete | incomplete_expired
   // Map down to our 5 simple states for the UI.
   let status = sub.status
   if (sub.status === 'canceled')         status = 'canceled'
+  else if (sub.status === 'trialing')    status = 'trialing'
   else if (sub.status === 'unpaid')      status = 'expired'
   else if (sub.status === 'incomplete')  status = 'incomplete'
   else if (sub.status === 'past_due')    status = 'past_due'

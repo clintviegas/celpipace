@@ -13,6 +13,42 @@ const PAYMENT_COLUMNS = 'id, email, plan, amount_cents, currency, status, grante
 
 // Rough MRR estimate (monthly-equivalent ARPU per premium user in USD)
 const MRR_PER_PREMIUM = 24.99
+const PLAN_LABELS = {
+  weekly: 'Weekly',
+  monthly: 'Monthly',
+  annual: 'Annual',
+  admin: 'Admin',
+  premium: 'Premium',
+  free: 'Free',
+}
+
+function isPaidPremiumSource(source) {
+  const normalized = String(source || '').trim().toLowerCase()
+  return normalized === 'paid' || normalized === 'stripe' || normalized.startsWith('stripe:')
+}
+
+function planLabel(row) {
+  const currentPlan = String(row?.current_plan || '').trim().toLowerCase()
+  if (currentPlan && currentPlan !== 'premium') return PLAN_LABELS[currentPlan] || currentPlan
+
+  const premiumSource = String(row?.premium_source || '').trim().toLowerCase()
+  const [, sourcePlan] = premiumSource.split(':')
+  if (premiumSource.startsWith('stripe:') && sourcePlan) return PLAN_LABELS[sourcePlan] || sourcePlan
+
+  return row?.is_premium ? 'Premium' : 'Free'
+}
+
+function PlanCell({ row, showStatus = false }) {
+  if (!row?.is_premium) return <span style={{ color: '#98a2b5', fontSize: 12 }}>free</span>
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      <Chip color="#ffd66a" text={planLabel(row).toUpperCase()} />
+      {showStatus && row.subscription_status && row.subscription_status !== 'none' && (
+        <span style={{ color: '#98a2b5', fontSize: 12 }}>{row.subscription_status}</span>
+      )}
+    </span>
+  )
+}
 
 function getAdminRedirectUrl() {
   if (typeof window === 'undefined') return `${PUBLIC_SITE_URL}/admin`
@@ -324,7 +360,7 @@ function OverviewTab() {
             r.country_code
               ? <span style={{ fontSize: 12 }}>{r.city ? `${r.city}, ` : ''}{r.country || r.country_code}</span>
               : <span style={{ color: '#667', fontSize: 12 }}>—</span>,
-            r.is_premium ? <Chip color="#ffd66a" text="PREMIUM" /> : <span style={{ color: '#98a2b5' }}>free</span>,
+            <PlanCell row={r} />,
             r.created_at ? new Date(r.created_at).toLocaleString() : '—',
           ])}
         />
@@ -367,8 +403,8 @@ function UsersTab() {
     setBusyId(row.id)
     const next = !row.is_premium
     const payload = next
-      ? { is_premium: true, premium_source: 'admin', premium_granted_at: new Date().toISOString() }
-      : { is_premium: false, premium_source: null, premium_granted_at: null, premium_expires_at: null }
+      ? { is_premium: true, premium_source: 'admin', premium_granted_at: new Date().toISOString(), premium_expires_at: null, current_plan: 'admin', subscription_status: 'active', cancel_at_period_end: false }
+      : { is_premium: false, premium_source: null, premium_granted_at: null, premium_expires_at: null, current_plan: 'free', subscription_status: 'expired', cancel_at_period_end: false }
     const { error } = await adminSupabase.from('profiles').update(payload).eq('id', row.id)
     setBusyId(null)
     if (error) { alert('Update failed: ' + error.message); return }
@@ -430,9 +466,7 @@ function UsersTab() {
                 : <span style={{ color: '#667' }}>—</span>}
             </div>,
             r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
-            r.is_premium
-              ? <Chip color="#ffd66a" text="PREMIUM" />
-              : <span style={{ color: '#98a2b5', fontSize: 12 }}>free</span>,
+            <PlanCell row={r} showStatus />,
             <div style={{ display: 'flex', gap: 6 }}>
               <button
                 onClick={() => setSelectedUser(selectedUser?.id === r.id ? null : r)}
@@ -555,7 +589,7 @@ function UserDetailDrawer({ userId, email, onClose }) {
           <strong style={{ color: '#E6ECF5', fontSize: 17 }}>{profile?.full_name || friendlyName(email)}</strong>
           <div style={{ color: '#98a2b5', fontSize: 13, marginTop: 2 }}>
             {email}
-            {profile?.is_premium && <Chip color="#ffd66a" text="PREMIUM" />}
+            {profile?.is_premium && <span style={{ marginLeft: 8 }}><Chip color="#ffd66a" text={planLabel(profile).toUpperCase()} /></span>}
             {profile?.subscription_status && profile.subscription_status !== 'none' && (
               <span style={{ marginLeft: 8, color: '#98a2b5', fontSize: 12 }}>· {profile.subscription_status}</span>
             )}
@@ -780,7 +814,7 @@ function SubscriptionsTab() {
     if (source === 'all') return true
     if (source === 'coupon') return (r.premium_source || '').startsWith('coupon')
     if (source === 'admin') return r.premium_source === 'admin'
-    if (source === 'paid') return r.premium_source === 'paid' || r.premium_source === 'stripe'
+    if (source === 'paid') return isPaidPremiumSource(r.premium_source)
     return true
   })
 
@@ -810,11 +844,13 @@ function SubscriptionsTab() {
 
       <Panel>
         <Table
-          cols={['Email', 'Name', 'Source', 'Granted', 'Expires']}
+          cols={['Email', 'Name', 'Plan', 'Source', 'Status', 'Granted', 'Expires']}
           rows={filtered.map(r => [
             r.email,
             r.full_name || '—',
+            <PlanCell row={r} />,
             <span style={{ color: '#ffd66a', fontSize: 12 }}>{r.premium_source || '—'}</span>,
+            r.subscription_status || '—',
             r.premium_granted_at ? new Date(r.premium_granted_at).toLocaleDateString() : '—',
             r.premium_expires_at ? new Date(r.premium_expires_at).toLocaleDateString() : <span style={{ color: '#7dffb0' }}>lifetime</span>,
           ])}
@@ -1404,6 +1440,8 @@ function RevenueTab() {
   const [err, setErr]   = useState('')
   const [range, setRange] = useState('30')   // days
   const [planFilter, setPlanFilter] = useState('all')
+  const [syncingId, setSyncingId] = useState(null)
+  const [syncMsg, setSyncMsg] = useState(null)
 
   useEffect(() => {
     let cancel = false
@@ -1488,6 +1526,38 @@ function RevenueTab() {
     URL.revokeObjectURL(url)
   }
 
+  const syncSubscriptionAccess = async (payment) => {
+    setSyncMsg(null)
+    if (!payment.stripe_session_id?.startsWith('cs_')) {
+      setSyncMsg({ type: 'err', msg: 'Only original Checkout Session payments can be synced from Stripe.' })
+      return
+    }
+    if (!window.confirm(`Sync Stripe subscription access for ${payment.email}? This will update their profile plan and expiry from Stripe.`)) return
+
+    setSyncingId(payment.id)
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'sync-subscription', payment_id: payment.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Subscription sync failed')
+
+      const profile = data.profile || {}
+      setRows(prev => prev?.map(row => row.id === payment.id ? { ...row, plan: profile.current_plan || row.plan } : row) ?? prev)
+      setSyncMsg({
+        type: 'ok',
+        msg: `${profile.email || payment.email} synced as ${(profile.current_plan || payment.plan || 'premium').toUpperCase()} until ${profile.premium_expires_at ? new Date(profile.premium_expires_at).toLocaleDateString() : 'the Stripe period end'}.`,
+      })
+    } catch (e) {
+      setSyncMsg({ type: 'err', msg: e.message || 'Subscription sync failed' })
+    } finally {
+      setSyncingId(null)
+    }
+  }
+
   return (
     <>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
@@ -1549,9 +1619,18 @@ function RevenueTab() {
         </div>
       </Panel>
 
+      {syncMsg && (
+        <div style={{
+          padding: 12, marginBottom: 16, borderRadius: 10,
+          background: syncMsg.type === 'ok' ? '#0f3d24' : '#3d1416',
+          color: syncMsg.type === 'ok' ? '#7dffb0' : '#ff9a9a',
+          fontSize: 13,
+        }}>{syncMsg.msg}</div>
+      )}
+
       <Panel title="Recent payments">
         <Table
-          cols={['Date', 'Email', 'Plan', 'Amount', 'Status', 'Stripe', 'Refund review']}
+          cols={['Date', 'Email', 'Plan', 'Amount', 'Status', 'Stripe ID', 'Stripe', 'Access']}
           rows={filtered.slice(0, 100).map(r => [
             new Date(r.created_at).toLocaleString(),
             r.email,
@@ -1571,6 +1650,13 @@ function RevenueTab() {
             >
               Open Stripe
             </a>,
+            <button
+              onClick={() => syncSubscriptionAccess(r)}
+              disabled={syncingId === r.id || r.status !== 'paid' || !r.stripe_session_id?.startsWith('cs_')}
+              style={btnSmallStyle}
+            >
+              {syncingId === r.id ? 'Syncing…' : 'Sync access'}
+            </button>,
           ])}
           empty="No payments yet."
         />
