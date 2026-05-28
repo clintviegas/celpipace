@@ -95,6 +95,31 @@ export default async function handler(req, res) {
   const rl = await checkRateLimit({ supabase: auth.supabase, scope: 'score-speaking', key: userId, limit: 30, windowSec: 3600 });
   if (!rl.ok) return res.status(429).json({ error: 'too_many_requests', message: rl.message });
 
+  // Free tier: 1 AI evaluation per section, lifetime
+  const { data: profile } = await auth.supabase
+    .from('profiles')
+    .select('is_premium, premium_expires_at, subscription_status')
+    .eq('id', userId)
+    .single();
+  const isPremium = !!(profile?.is_premium &&
+    (profile?.subscription_status || 'active') !== 'expired' &&
+    (!profile?.premium_expires_at || new Date(profile.premium_expires_at) > new Date()));
+  if (!isPremium) {
+    const { count } = await auth.supabase
+      .from('essay_embeddings')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('section', 'speaking')
+      .eq('source', 'submission');
+    if ((count ?? 0) >= 1) {
+      return res.status(403).json({
+        error: 'free_limit_reached',
+        section: 'speaking',
+        message: 'You\'ve used your 1 free AI speaking evaluation. Upgrade to Premium for unlimited scoring.',
+      });
+    }
+  }
+
   const { responseText, prompt, taskType, topic, fluencyMetrics: rawMetrics } = req.body || {};
   const fluencyMetrics = sanitizeFluencyMetrics(rawMetrics);
 

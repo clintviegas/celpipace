@@ -1653,6 +1653,10 @@ async function scoreWithAI(responseText, prompt, criteria, taskType) {
       body: { section: 'writing', responseText, prompt, criteria, taskType },
     })
     if (res.status === 401) throw new Error('Sign in to get AI scoring.')
+    if (res.status === 403) {
+      const err = await res.json().catch(() => ({}))
+      if (err.error === 'free_limit_reached') return { limitReached: true, section: 'writing' }
+    }
     if (res.status === 429) {
       const err = await res.json().catch(() => ({}))
       throw new Error(err.message || 'Too many scoring requests — try again later.')
@@ -1835,8 +1839,9 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
     setAiLoading(true)
     setAiResult(null)
     const result = await scoreWithAI(text, q.prompt, q.criteria, q.section)
-    setAiResult(result)
     setAiLoading(false)
+    if (result?.limitReached) { setUpgradeFor(1); return }
+    setAiResult(result)
     if (result && result.overall && onComplete) {
       onComplete('writing', q.section, q.num, Math.round(result.overall), 12, {
         source: 'writing-practice',
@@ -3938,6 +3943,10 @@ async function scoreSpeakingWithAI(responseText, prompt, taskType, topic, fluenc
       body: { section: 'speaking', responseText, prompt, taskType, topic, fluencyMetrics: fluencyMetrics || null },
     })
     if (res.status === 401) throw new Error('Sign in to get AI scoring.')
+    if (res.status === 403) {
+      const err = await res.json().catch(() => ({}))
+      if (err.error === 'free_limit_reached') return { limitReached: true, section: 'speaking' }
+    }
     if (res.status === 429) {
       const err = await res.json().catch(() => ({}))
       throw new Error(err.message || 'Too many scoring requests — try again later.')
@@ -4354,8 +4363,9 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setAiLoading(true)
     setAiResult(null)
     const result = await scoreSpeakingWithAI(transcript, prompt.prompt, meta.label, prompt.topic || prompt.topicName, fluencyMetrics)
-    setAiResult(result)
     setAiLoading(false)
+    if (result?.limitReached) { setUpgradeFor(1); return }
+    setAiResult(result)
     if (result && result.overall && onComplete) {
       onComplete('speaking', partId, prompt.setId, Math.round(result.overall), 12, {
         source: 'speaking-practice',
