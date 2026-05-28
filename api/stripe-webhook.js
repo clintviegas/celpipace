@@ -52,6 +52,21 @@ function normalizePlanSlug(plan) {
   return PLAN_ALIASES[cleanPlan] || ''
 }
 
+function stripeTimeToIso(seconds) {
+  return seconds ? new Date(seconds * 1000).toISOString() : null
+}
+
+function invoiceSubscriptionId(invoice) {
+  const direct = typeof invoice.subscription === 'string' ? invoice.subscription : invoice.subscription?.id
+  if (direct) return direct
+  const parentSubscription = invoice.parent?.subscription_details?.subscription
+  if (typeof parentSubscription === 'string') return parentSubscription
+  const lineSubscription = invoice.lines?.data
+    ?.map((line) => line.parent?.subscription_item_details?.subscription)
+    .find(Boolean)
+  return typeof lineSubscription === 'string' ? lineSubscription : null
+}
+
 // Find a profile row from any of: user_id metadata, customer_id, sub_id, email.
 async function findProfile(supabase, { userId, customerId, subscriptionId, email }) {
   if (userId) {
@@ -91,7 +106,8 @@ function subscriptionToProfilePatch(sub) {
 
   // While canceled with cancel_at_period_end=true, sub.status stays 'active'
   // until the period actually ends — Stripe sends customer.subscription.deleted then.
-  const periodEnd = sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null
+  const periodStart = stripeTimeToIso(sub.current_period_start || item?.current_period_start)
+  const periodEnd = stripeTimeToIso(sub.current_period_end || item?.current_period_end)
 
   // Premium remains true until the period actually ends.
   const stillPremium = status === 'active' || status === 'trialing' || status === 'past_due'
@@ -102,7 +118,7 @@ function subscriptionToProfilePatch(sub) {
     current_plan:           stillPremium ? plan : 'free',
     stripe_subscription_id: sub.id,
     cancel_at_period_end:   !!sub.cancel_at_period_end,
-    current_period_start:   sub.current_period_start ? new Date(sub.current_period_start * 1000).toISOString() : null,
+    current_period_start:   periodStart,
     current_period_end:     periodEnd,
     premium_expires_at:     periodEnd,
     premium_source:         `stripe:${plan}`,
@@ -374,7 +390,7 @@ export default async function handler(req, res) {
       // Renewal succeeded — refresh expiry from the parent subscription.
       case 'invoice.paid': {
         const inv = event.data.object
-        const subId = typeof inv.subscription === 'string' ? inv.subscription : inv.subscription?.id
+        const subId = invoiceSubscriptionId(inv)
         const customerId = typeof inv.customer === 'string' ? inv.customer : inv.customer?.id
         if (!subId) break
 
@@ -451,7 +467,7 @@ export default async function handler(req, res) {
       case 'invoice.payment_failed': {
         const inv = event.data.object
         const customerId = typeof inv.customer === 'string' ? inv.customer : inv.customer?.id
-        const subId = typeof inv.subscription === 'string' ? inv.subscription : inv.subscription?.id
+        const subId = invoiceSubscriptionId(inv)
         const profile = await findProfile(supabase, { customerId, subscriptionId: subId })
         if (!profile) {
           await flagProfileMiss({ event: 'invoice.payment_failed', customerId, subId })
