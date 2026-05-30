@@ -1166,4 +1166,166 @@ export const BLOG_ARTICLES = [
       },
     ],
   },
+
+  /* ── 20 ── */
+  {
+    slug: 'celpip-writing-samples-clb-annotated',
+    title: 'CELPIP Writing Samples: Annotated Email and Survey Response Examples at CLB 7, 9, and 10',
+    category: 'writing',
+    tag: 'Writing',
+    tagColor: '#C8972A',
+    tagColorLight: '#FFFBEB',
+    readTime: '9 min read',
+    date: 'May 28, 2026',
+    excerpt:
+      'The fastest way to improve your CELPIP Writing score is to read high-band responses and understand exactly why they score higher. Here are annotated sample answers for Task 1 (email) and Task 2 (survey response) at CLB 7, CLB 9, and CLB 10.',
+    sections: [
+      {
+        heading: 'Why Sample Answers Matter More Than Grammar Rules',
+        body: `Most CELPIP Writing guides focus on grammar rules and vocabulary lists. But grammar alone does not distinguish CLB 7 from CLB 9. What separates bands is the combination of content coverage, organizational clarity, and vocabulary range — visible only when you compare full sample responses side by side.\n\nThis guide gives you annotated samples at three CLB levels for both Writing tasks. After reading them, you will see the exact patterns that move scores up and down — not just know them in theory.`,
+      },
+      {
+        heading: 'Task 1 (Email Writing) — CLB 7 Sample',
+        body: `**Prompt:** You ordered a laptop online two weeks ago but have not received it. Write an email to the company's customer service asking for an update.\n\n**CLB 7 Response (143 words):**\n\n*Dear Customer Service,\n\nI am writing to you because I have a problem with my order. I ordered a laptop two weeks ago and I still have not received it. This is very frustrating for me.\n\nMy order number is 48291 and I placed the order on May 14. The website said it would arrive in 5-7 days but it has been two weeks already.\n\nI want to know what happened to my order. Can you please check? I need the laptop for my work and it is very important. I have already paid for it.\n\nPlease reply as soon as possible. I hope you can help me solve this problem.\n\nThank you,\nMichael*\n\n**Why this scores CLB 7:** The email addresses the task but relies on simple, repetitive sentence structures. Vocabulary is basic ("very frustrating," "very important"). The tone is appropriate but the content development is thin — no clear request for resolution, no deadline mentioned. Organization is adequate but predictable.`,
+      },
+      {
+        heading: 'Task 1 (Email Writing) — CLB 9 Sample',
+        body: `**Same Prompt — CLB 9 Response (167 words):**\n\n*Dear Customer Service Team,\n\nI am writing to follow up on order #48291, placed on May 14, which has not been delivered despite the stated 5–7 day shipping window.\n\nCould you please investigate the current status of this shipment and advise on the expected delivery date? As this laptop is required for upcoming work commitments, a timely resolution would be greatly appreciated. If the item has been lost in transit, I would ask that you arrange either an expedited replacement or a full refund.\n\nFor your reference, the order was placed under the name Michael Reyes and paid in full via credit card at the time of purchase. I have not received any shipping confirmation or tracking number, which has made it difficult to monitor the parcel independently.\n\nThank you for your prompt attention to this matter. I look forward to your response.\n\nRegards,\nMichael Reyes*\n\n**Why this scores CLB 9:** Sentence structures vary throughout — simple, compound, and complex. Vocabulary is precise ("expedited replacement," "in transit," "at the time of purchase"). The request is specific with clear conditions. The closing is professional and forward-looking. All three implicit bullet points (the problem, a request for action, and contact context) are fully developed.`,
+      },
+      {
+        heading: 'Task 1 (Email Writing) — CLB 10 Distinguishers',
+        body: `A CLB 10 email response looks similar to CLB 9 in structure — but demonstrates higher range and precision throughout. Key differences you would see in a CLB 10 version of the above:`,
+        list: [
+          'More sophisticated conditional framing: "Should the item have been lost in transit, I would request..." instead of "If the item has been lost..."',
+          'Passive construction used naturally: "the order was placed" and "the account was charged" rather than restating "I placed" and "I paid"',
+          'Precise register maintenance throughout — no informal contractions, no hedging phrases like "I hope"',
+          'Cohesion markers that do more work: "Notwithstanding the absence of tracking information..." rather than "I have not received tracking information..."',
+        ],
+        body2: `CLB 10 writers do not just use correct English — they use the most precise and varied English available for every sentence. The difference is consistent throughout the response, not limited to a few impressive phrases.`,
+      },
+      {
+        heading: 'Task 2 (Survey Response) — CLB 7 Sample',
+        body: `**Prompt:** Some people think employees should be allowed to work from home permanently. Others believe that working from the office is better for productivity. Which view do you agree with and why?\n\n**CLB 7 Response (154 words):**\n\n*I agree that employees should be allowed to work from home permanently. There are many advantages to working from home.\n\nFirst, working from home saves time. People do not need to travel to the office every day. This can save one or two hours each day. They can use this time for work or rest.\n\nSecond, working from home is more comfortable. People can work in their own environment and they feel relaxed. This helps them do better work.\n\nSome people think that working in the office is better because they can communicate with colleagues. But I think this problem can be solved with video calls.\n\nIn conclusion, working from home is better for most employees. It saves time and makes people more productive.\n\nI think companies should consider giving this option to their employees.*\n\n**Why this scores CLB 7:** The position is clear and the two reasons are present. However, both reasons are vague — no statistics, no specific scenarios. Vocabulary is basic and repetitive ("time," "work," "better"). Sentences follow the same structure throughout. The counterargument is acknowledged but not effectively refuted.`,
+      },
+      {
+        heading: 'Task 2 (Survey Response) — CLB 9 Sample',
+        body: `**Same Prompt — CLB 9 Response (172 words):**\n\n*I firmly believe that employees who can perform their roles effectively from home should be given the option to do so permanently. Two factors strongly support this position.\n\nFirst, remote work eliminates commuting — a time cost that, for workers in cities like Toronto or Vancouver, can easily consume two hours per day. A 2023 Stanford study found that remote workers were 13% more productive on average, partly because those recovered hours were redirected toward focused work rather than transit.\n\nSecond, workplace flexibility directly supports employee retention. Organizations that offer remote arrangements consistently report lower staff turnover — a significant saving when the average cost of replacing a professional employee exceeds $10,000 CAD.\n\nOpponents argue that in-person collaboration produces better outcomes for team-based work. While this is valid for certain project types, modern communication tools have largely replicated the spontaneous interaction that offices once monopolized.\n\nFor these reasons, a default remote option benefits both employees and organizations significantly.*\n\n**Why this scores CLB 9:** The position is stated immediately in the first sentence. Both reasons are supported with specific data and concrete examples. Vocabulary is precise and varied ("eliminates," "redirected," "monopolized"). The counterargument is acknowledged and specifically refuted. Cohesion markers ("First," "Second," "While this is valid") guide the reader clearly.`,
+      },
+      {
+        heading: 'The Three Patterns That Separate CLB 7 from CLB 9 in Every Response',
+        body: `After reading both task comparisons, the same three patterns explain the gap at every CLB level:`,
+        list: [
+          'Specificity of support — CLB 9 responses use data, named examples, or concrete scenarios; CLB 7 responses use vague assertions ("saves time," "makes people comfortable")',
+          'Sentence variety — CLB 9 responses mix simple, compound, and complex structures in every paragraph; CLB 7 responses repeat the same subject-verb pattern throughout',
+          'Vocabulary precision — CLB 9 responses replace overused words with accurate alternatives; CLB 7 responses recycle the same core vocabulary (good, bad, help, work, better)',
+        ],
+        body2: `The fastest improvement strategy: write a practice response, then go sentence by sentence and ask — Can I replace this with a more precise word? Can I merge these two sentences into one complex sentence? Is this point supported with a specific detail? Answering those three questions closes most of the gap between CLB 7 and CLB 9.`,
+      },
+      {
+        heading: 'Practice with Instant CLB Scoring',
+        body: `Reading samples teaches you what CLB 9 looks like — but you only improve by writing your own responses and getting scored. CELPIPACE offers AI-evaluated Writing practice for both Task 1 and Task 2, with instant band feedback on all four criteria: Content, Organization, Vocabulary, and Conventions. You see your CLB per criterion after every submission, so you can track which dimension is holding your score back.\n\nFor the email formula that consistently produces CLB 9+ responses in Task 1, see the complete guide on how to score CLB 10 in CELPIP Writing.`,
+      },
+    ],
+  },
+
+  /* ── 21 ── */
+  {
+    slug: 'celpip-score-conversion-chart',
+    title: 'CELPIP Score Conversion Chart: CLB Levels, CRS Points, and IELTS Equivalents (2026)',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '7 min read',
+    date: 'May 29, 2026',
+    excerpt:
+      'How does CELPIP 9 convert to CLB? How do CLB levels translate to CRS points? And how does CELPIP compare to IELTS for Canadian immigration? This is the complete 2026 conversion reference.',
+    sections: [
+      {
+        heading: 'Why Score Conversion Matters for Immigration',
+        body: `CELPIP scores, CLB levels, CRS points, and IELTS bands are four different scales that Canadian immigration applicants must navigate simultaneously. Confusion between them is one of the most common reasons candidates misestimate their Express Entry competitiveness.\n\nThis reference covers every conversion you need: CELPIP to CLB, CLB to CRS points, and CELPIP to approximate IELTS equivalents — with the immigration context that explains why each threshold matters.`,
+      },
+      {
+        heading: 'CELPIP Score to CLB Conversion (Official)',
+        body: `IRCC maps CELPIP General scores to CLB levels on a one-to-one basis for scores 4 through 10. The official conversion for each skill (Listening, Reading, Writing, Speaking) is:`,
+        list: [
+          'CELPIP 3 = CLB 3',
+          'CELPIP 4 = CLB 4',
+          'CELPIP 5 = CLB 5',
+          'CELPIP 6 = CLB 6',
+          'CELPIP 7 = CLB 7',
+          'CELPIP 8 = CLB 8',
+          'CELPIP 9 = CLB 9',
+          'CELPIP 10 = CLB 10',
+          'CELPIP 11 = CLB 10',
+          'CELPIP 12 = CLB 10',
+        ],
+        body2: `Important: CELPIP scores 10, 11, and 12 all convert to CLB 10 for immigration scoring. There is no CLB 11 or CLB 12 in the IRCC system — CLB 10 is the ceiling for CRS language points. Each skill is converted independently — your CLB level for Express Entry is reported per-skill, not as an overall average.`,
+      },
+      {
+        heading: 'CLB Level to CRS Points (2026)',
+        body: `Once your CELPIP scores are converted to CLB levels, IRCC assigns CRS points for each skill. The values below are for the **first official language** of a **single applicant without a spouse** under the Federal Skilled Worker (FSW) and Canadian Experience Class (CEC) programs:`,
+        list: [
+          'CLB 10 (CELPIP 10–12): 34 points per skill → 136 core language points total',
+          'CLB 9 (CELPIP 9): 31 points per skill → 124 core language points total',
+          'CLB 8 (CELPIP 8): 23 points per skill → 92 core language points total',
+          'CLB 7 (CELPIP 7): 17 points per skill → 68 core language points total',
+          'CLB 6 (CELPIP 6): 9 points per skill → 36 core language points total',
+          'CLB 5 (CELPIP 5): 6 points per skill → 24 core language points total',
+          'CLB 4 (CELPIP 4): 6 points per skill → 24 core language points total (minimum threshold)',
+        ],
+        body2: `For applicants **with a spouse or common-law partner**, the per-skill values are slightly lower because the CRS distributes points differently across two profiles. For example, CLB 9 with a spouse is worth 29 points per skill (116 total) rather than 31.\n\nThe most important jump: **CLB 8 to CLB 9 adds +32 CRS core language points**. This single threshold is the most valuable single improvement available to most Express Entry candidates.`,
+      },
+      {
+        heading: 'Skill Transferability Points at CLB 9',
+        body: `Beyond core language points, CLB 9 unlocks the maximum **skill transferability bonus** — an additional layer of CRS points based on the combination of your language score and your work experience or education.\n\nAt CLB 9 or above, skill transferability awards:`,
+        list: [
+          'Language + Canadian work experience (1 year): up to 50 additional CRS points',
+          'Language + foreign work experience (3+ years): up to 50 additional CRS points',
+          'Language + post-secondary education (2+ years): up to 50 additional CRS points',
+        ],
+        body2: `At CLB 8, the same combinations are worth only 25 points each — half the value. This means the total CRS gain from moving from CLB 8 to CLB 9 across all four skills is typically **50–80 CRS points** when skill transferability is included — far larger than the 32-point core language increase alone.`,
+      },
+      {
+        heading: 'CELPIP to IELTS Conversion (Approximate)',
+        body: `CELPIP General and IELTS General Training are both accepted for Canadian immigration, but they use different scoring scales. The approximate equivalents below are based on IRCC's published CLB mapping for both tests:`,
+        list: [
+          'CELPIP 10–12 ≈ IELTS 8.0–9.0 per skill → CLB 10',
+          'CELPIP 9 ≈ IELTS 7.5 per skill → CLB 9',
+          'CELPIP 8 ≈ IELTS 6.5–7.0 per skill → CLB 8',
+          'CELPIP 7 ≈ IELTS 6.0 per skill → CLB 7',
+          'CELPIP 6 ≈ IELTS 5.5 per skill → CLB 6',
+          'CELPIP 5 ≈ IELTS 5.0 per skill → CLB 5',
+        ],
+        body2: `These are approximate equivalents based on shared CLB mapping — not a direct linear conversion. CELPIP and IELTS use completely different scoring systems internally. The conversion is through the shared CLB level, not a formula. A CELPIP 9 and an IELTS 7.5 are treated identically by IRCC for CRS purposes, but that does not mean the tests are equally difficult to achieve for every candidate.`,
+      },
+      {
+        heading: 'Score Validity: The Expiry Date Most Applicants Forget',
+        body: `CELPIP scores are valid for **two years from the test date**. IELTS scores are also valid for two years. This creates a critical immigration timeline issue that many applicants discover too late:`,
+        list: [
+          'If your CELPIP expires before your Express Entry profile is drawn, IRCC will request updated scores — delaying your application',
+          'If your scores expire between your PR application and your citizenship application (years later), you must retest',
+          'PR processing under Express Entry can take 6–18 months after an ITA — test timing should account for this window',
+        ],
+        body2: `Strategic rule: take your CELPIP as late in your application preparation as possible to maximize the validity window. If you are targeting citizenship after PR, consider whether a second test will be needed 2–3 years down the line.`,
+      },
+      {
+        heading: 'Which CLB Level Do You Actually Need?',
+        body: `The right CLB target depends on your immigration pathway:`,
+        list: [
+          'Express Entry minimum (FSW/CEC): CLB 7 in all four skills — CELPIP 7',
+          'Competitive Express Entry CRS (current 2026 draws): CLB 9 in all four skills — CELPIP 9',
+          'Maximum core language points: CLB 10 — CELPIP 10',
+          'Canadian citizenship minimum: CLB 4 in Reading and Listening only — CELPIP 4 in those two skills',
+          'Most Provincial Nominee Programs: CLB 7 minimum, CLB 9 preferred',
+          'Skill transferability bonus activation (full value): CLB 9 across all skills',
+        ],
+        body2: `For most Express Entry candidates in the current draw environment (CRS cut-offs above 510), CLB 9 in all four skills is the practical target — not the minimum of CLB 7. Use the CELPIP Score Calculator to model exactly how your current scores translate to CRS points, and what your CLB would need to be to receive an ITA in a recent draw.`,
+      },
+      {
+        heading: 'Model Your CRS Score Now',
+        body: `The fastest way to apply this conversion table to your own profile is the CELPIP Score Calculator on CELPIPACE. Enter your current or target CELPIP scores per skill and the calculator shows your CLB level, CRS core language points, and estimated skill transferability bonus — all in one place.\n\nFor a deeper breakdown of how CLB levels affect every component of the CRS formula, read the complete guide on how language skills affect your CRS score.`,
+      },
+    ],
+  },
 ]
