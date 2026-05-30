@@ -8,34 +8,19 @@
     { "path": "/api/cron?job=marketing", "schedule": "0 10 * * *" },
     { "path": "/api/cron?job=winback",   "schedule": "0 11 * * *" }
   ],
-  "routes": [
-    { "src": "/writing", "headers": { "Location": "/celpip-writing-practice" }, "status": 301 },
-    { "src": "/writing/(.*)", "headers": { "Location": "/celpip-writing-practice/$1" }, "status": 301 },
-    { "src": "/speaking", "headers": { "Location": "/celpip-speaking-practice" }, "status": 301 },
-    { "src": "/speaking/(.*)", "headers": { "Location": "/celpip-speaking-practice/$1" }, "status": 301 },
-    { "src": "/reading", "headers": { "Location": "/celpip-reading-practice" }, "status": 301 },
-    { "src": "/reading/(.*)", "headers": { "Location": "/celpip-reading-practice/$1" }, "status": 301 },
-    { "src": "/listening", "headers": { "Location": "/celpip-listening-practice" }, "status": 301 },
-    { "src": "/listening/(.*)", "headers": { "Location": "/celpip-listening-practice/$1" }, "status": 301 },
-    { "src": "/calculator", "headers": { "Location": "/crs-score-calculator" }, "status": 301 },
-    { "src": "/tips", "headers": { "Location": "/celpip-resources" }, "status": 301 },
-    { "src": "/celpip-practice-test", "dest": "/celpip-practice-test/index.html" },
-    { "src": "/celpip-mock-test", "dest": "/celpip-mock-test/index.html" },
-    { "src": "/celpip-writing-practice", "dest": "/celpip-writing-practice/index.html" },
-    { "src": "/celpip-speaking-practice", "dest": "/celpip-speaking-practice/index.html" },
-    { "src": "/celpip-reading-practice", "dest": "/celpip-reading-practice/index.html" },
-    { "src": "/celpip-listening-practice", "dest": "/celpip-listening-practice/index.html" },
-    { "src": "/celpip-score-calculator", "dest": "/celpip-score-calculator/index.html" },
-    { "src": "/celpip-vs-ielts", "dest": "/celpip-vs-ielts/index.html" },
-    { "src": "/practice", "dest": "/practice/index.html" },
-    { "src": "/exam", "dest": "/exam/index.html" },
-    { "src": "/crs-score-calculator", "dest": "/crs-score-calculator/index.html" },
-    { "src": "/celpip-resources", "dest": "/celpip-resources/index.html" },
-    { "src": "/pricing", "dest": "/pricing/index.html" },
-    { "src": "/contact", "dest": "/contact/index.html" },
-    { "src": "/blog", "dest": "/blog/index.html" },
-    { "src": "/blog/(.*)", "dest": "/blog/$1/index.html" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "redirects": [
+    { "source": "/writing",              "destination": "/celpip-writing-practice",       "permanent": true },
+    { "source": "/writing/:path*",       "destination": "/celpip-writing-practice/:path*","permanent": true },
+    { "source": "/speaking",             "destination": "/celpip-speaking-practice",      "permanent": true },
+    { "source": "/speaking/:path*",      "destination": "/celpip-speaking-practice/:path*","permanent": true },
+    { "source": "/reading",              "destination": "/celpip-reading-practice",       "permanent": true },
+    { "source": "/reading/:path*",       "destination": "/celpip-reading-practice/:path*","permanent": true },
+    { "source": "/listening",            "destination": "/celpip-listening-practice",     "permanent": true },
+    { "source": "/listening/:path*",     "destination": "/celpip-listening-practice/:path*","permanent": true },
+    { "source": "/calculator",           "destination": "/crs-score-calculator",          "permanent": true },
+    { "source": "/tips",                 "destination": "/celpip-resources",              "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
