@@ -90,99 +90,99 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "What is the customer's main problem?",
+            "text": "Why has the customer come into the store?",
             "skill": "main_idea",
             "options": [
-              "The blender lid is cracked",
-              "The blender is the wrong colour",
-              "The blender was too expensive",
-              "The blender is missing parts"
+              "To return an item that was already faulty when she bought it",
+              "To complain that she was charged too much for an item",
+              "To ask whether a newer model has come into stock",
+              "To request a replacement copy of a receipt she lost"
             ],
             "answer": 0
           },
           {
             "num": 2,
-            "text": "How much did the customer pay for the blender?",
+            "text": "How much does the customer say she paid?",
             "skill": "detail_recall",
             "options": [
-              "Forty-five dollars",
-              "Fifty-five dollars",
+              "Thirty dollars",
+              "Sixty-five dollars",
               "Seventy-five dollars",
-              "Sixty-five dollars"
-            ],
-            "answer": 3
-          },
-          {
-            "num": 3,
-            "text": "What two options does the employee offer?",
-            "skill": "decision_tracking",
-            "options": [
-              "An exchange or a discount",
-              "A refund or an exchange",
-              "A repair or an exchange",
-              "A refund or store credit"
+              "Sixteen dollars"
             ],
             "answer": 1
           },
           {
+            "num": 3,
+            "text": "Which two solutions does the employee first put forward?",
+            "skill": "decision_tracking",
+            "options": [
+              "Putting the money back on her card, or swapping it for the same item",
+              "A store credit to spend later, or swapping it for the same item",
+              "Repairing the cracked lid, or giving her a partial discount",
+              "Swapping it for a better model, or a full refund in cash"
+            ],
+            "answer": 0
+          },
+          {
             "num": 4,
-            "text": "What does the customer prefer?",
+            "text": "Which solution does the customer choose, and why?",
             "skill": "speaker_intent",
             "options": [
-              "A full refund to her credit card",
-              "Store credit for future purchases",
-              "An exchange for the same model",
-              "A different, more expensive model"
+              "The swap, because she is fond of this particular model",
+              "The refund, because she no longer trusts the product",
+              "The swap, because it is quicker than waiting for a refund",
+              "The refund, because she would rather buy a different brand"
             ],
-            "answer": 2
+            "answer": 0
           },
           {
             "num": 5,
-            "text": "Why does the employee leave briefly?",
-            "skill": "detail_recall",
+            "text": "When the employee says the blender 'shouldn't have left the store like that', what is he suggesting?",
+            "skill": "inference",
             "options": [
-              "To find the receipt printer",
-              "To speak with a manager",
-              "To check stock in the back",
-              "To process the refund"
+              "He accepts that the item was defective before it was sold",
+              "He believes the customer caused the damage at home",
+              "He doubts the blender was actually bought at his store",
+              "He thinks the lid can be repaired there and then"
             ],
-            "answer": 2
+            "answer": 0
           },
           {
             "num": 6,
-            "text": "What does the employee ask the customer to do to complete the exchange?",
+            "text": "What does the employee need from the customer before he can finalise the swap?",
             "skill": "detail_recall",
             "options": [
-              "Sign a confirmation",
-              "Pay a small difference",
-              "Fill out a feedback form",
-              "Show her identification"
+              "Her signature on a confirmation",
+              "A small additional payment",
+              "A completed feedback form",
+              "A piece of photo identification"
             ],
             "answer": 0
           },
           {
             "num": 7,
-            "text": "How long is the return window the employee mentions?",
+            "text": "If another problem comes up, how long does the customer have to bring the item back?",
             "skill": "detail_recall",
             "options": [
-              "Fourteen days",
-              "Sixty days",
-              "Seven days",
-              "Thirty days"
+              "About a week",
+              "Two weeks",
+              "Around a month",
+              "Two months"
             ],
-            "answer": 3
+            "answer": 2
           },
           {
             "num": 8,
-            "text": "What is the outcome of the conversation?",
+            "text": "How is the situation finally resolved?",
             "skill": "decision_tracking",
             "options": [
-              "The customer upgrades to a more expensive model",
-              "The customer exchanges the blender for the same model",
-              "The customer gets a refund",
-              "The customer decides to keep the damaged blender"
+              "She leaves with a replacement unit that has been checked",
+              "She accepts having her money returned to her card",
+              "She keeps the damaged blender in return for a discount",
+              "She orders the same model for delivery at a later date"
             ],
-            "answer": 1
+            "answer": 0
           }
         ]
       },
@@ -270,99 +270,99 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "What is James calling to book?",
+            "text": "What does James want to arrange?",
             "skill": "main_idea",
             "options": [
-              "An emergency appointment",
-              "A dental cleaning",
-              "A consultation for braces",
-              "A teeth whitening treatment"
-            ],
-            "answer": 1
-          },
-          {
-            "num": 2,
-            "text": "When was James's last visit to the clinic?",
-            "skill": "detail_recall",
-            "options": [
-              "About six months ago",
-              "About one year ago",
-              "About two years ago",
-              "About three years ago"
-            ],
-            "answer": 2
-          },
-          {
-            "num": 3,
-            "text": "Why does the receptionist suggest adding an exam?",
-            "skill": "implied_meaning",
-            "options": [
-              "It has been a long time since his last visit",
-              "The cleaning is covered but the exam is extra",
-              "James specifically requested one",
-              "James mentioned having tooth pain"
+              "A routine teeth cleaning",
+              "An urgent visit for a sore tooth",
+              "A first check-up as a new patient",
+              "A follow-up after recent dental work"
             ],
             "answer": 0
           },
           {
-            "num": 4,
-            "text": "Why does James reject the Thursday appointment?",
+            "num": 2,
+            "text": "How recently had James last been to the clinic?",
             "skill": "detail_recall",
             "options": [
-              "He prefers morning appointments",
-              "He has a family commitment",
-              "He has a dentist phobia",
-              "He is at work until five"
+              "Within the past six months",
+              "Not for around two years",
+              "Not for more than three years",
+              "He had never been before"
+            ],
+            "answer": 1
+          },
+          {
+            "num": 3,
+            "text": "Why does Priya say the dentist would want to do an exam as well?",
+            "skill": "implied_meaning",
+            "options": [
+              "Because an exam is required before every cleaning",
+              "Because James mentioned that a tooth was hurting",
+              "Because a long time has gone by since his last visit",
+              "Because his plan only pays out when an exam is added"
+            ],
+            "answer": 2
+          },
+          {
+            "num": 4,
+            "text": "Why does the Thursday slot not work for James?",
+            "skill": "detail_recall",
+            "options": [
+              "He only books morning slots",
+              "He has a family commitment that afternoon",
+              "He finds the afternoon traffic difficult",
+              "He would still be at work at that hour"
             ],
             "answer": 3
           },
           {
             "num": 5,
-            "text": "Why does James also reject Monday at nine?",
+            "text": "Why does the Monday nine o'clock slot also not suit him?",
             "skill": "detail_recall",
             "options": [
-              "He doesn't like early mornings",
-              "The appointment is too long",
-              "He can't find parking that early",
-              "He has a meeting at nine thirty"
-            ],
-            "answer": 3
-          },
-          {
-            "num": 6,
-            "text": "What time is the final appointment booked for?",
-            "skill": "decision_tracking",
-            "options": [
-              "Tuesday at noon",
-              "Monday at three",
-              "Thursday at two",
-              "Monday at nine"
+              "He dislikes very early appointments",
+              "Something else is scheduled shortly after nine",
+              "The clinic is too far to reach that early",
+              "He thinks an hour-long visit is too long"
             ],
             "answer": 1
           },
           {
+            "num": 6,
+            "text": "When is the appointment finally set for?",
+            "skill": "decision_tracking",
+            "options": [
+              "Monday first thing in the morning",
+              "Thursday just after midday",
+              "Monday afternoon, the clinic's last slot of the day",
+              "Thursday in the late afternoon"
+            ],
+            "answer": 2
+          },
+          {
             "num": 7,
-            "text": "What insurance provider does James have?",
+            "text": "Who provides James's dental coverage?",
             "skill": "detail_recall",
             "options": [
+              "Manulife",
               "Great-West Life",
-              "Blue Cross",
               "Sun Life",
-              "Manulife"
+              "Canada Life"
             ],
             "answer": 2
           },
           {
             "num": 8,
-            "text": "What is James asked to do before the appointment?",
+            "text": "What is James asked to do ahead of the visit?",
             "skill": "detail_recall",
             "options": [
-              "Arrive ten minutes early with his insurance card",
-              "Pay a deposit online",
-              "Fill out an online form the night before",
-              "Call to confirm the morning of"
+              "Pay part of the fee online beforehand",
+              "Arrive a little early so his records can be updated",
+              "Phone to confirm on the morning of the visit",
+              "Submit some forms online the night before"
             ],
-            "answer": 0
+            "answer": 1
           }
         ]
       },
@@ -442,99 +442,99 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "What is the first restaurant Tom suggests?",
+            "text": "What kind of place does Tom suggest first?",
             "skill": "detail_recall",
             "options": [
-              "Basil and Lime",
-              "Pho King Good",
-              "Trattoria Bella",
-              "Patty's"
+              "An Italian restaurant they had been to before",
+              "A Thai restaurant that had recently opened",
+              "A Vietnamese place known for its spring rolls",
+              "A burger spot close to the park"
             ],
-            "answer": 0
+            "answer": 1
           },
           {
             "num": 2,
-            "text": "Why does Megan hesitate about the Thai restaurant?",
-            "skill": "detail_recall",
+            "text": "What puts Megan off the Thai restaurant?",
+            "skill": "implied_meaning",
             "options": [
-              "It's too far away",
-              "It's too expensive",
-              "She doesn't like Thai food",
-              "It's usually very crowded with long waits"
+              "She found the food disappointing last time",
+              "It is the priciest of the choices",
+              "Getting a table there usually takes a long time",
+              "It is too far from where they both live"
             ],
-            "answer": 3
+            "answer": 2
           },
           {
             "num": 3,
-            "text": "Why does Megan reject the Italian restaurant?",
+            "text": "Why does Megan turn down the Italian place?",
             "skill": "detail_recall",
             "options": [
-              "The food wasn't good last time",
-              "It's too expensive for a weeknight",
-              "It's closed on Tuesdays",
-              "She's not in the mood for Italian"
-            ],
-            "answer": 1
-          },
-          {
-            "num": 4,
-            "text": "What is the problem with Patty's?",
-            "skill": "decision_tracking",
-            "options": [
-              "It's too far from where they are",
-              "It doesn't take reservations",
-              "It closes at eight and they don't have enough time",
-              "The food quality has declined"
-            ],
-            "answer": 2
-          },
-          {
-            "num": 5,
-            "text": "What day of the week is this conversation happening?",
-            "skill": "detail_recall",
-            "options": [
-              "Wednesday",
-              "Friday",
-              "Tuesday",
-              "Monday"
-            ],
-            "answer": 2
-          },
-          {
-            "num": 6,
-            "text": "What does Megan especially like at the Vietnamese restaurant?",
-            "skill": "detail_recall",
-            "options": [
-              "The spring rolls",
-              "The pho soup",
-              "The lemongrass chicken",
-              "The bubble tea"
+              "She wants somewhere more relaxed and cheaper tonight",
+              "The food was poor on their last visit",
+              "It happens to be closed earlier in the week",
+              "She simply doesn't feel like Italian"
             ],
             "answer": 0
           },
           {
-            "num": 7,
-            "text": "Where do they finally decide to eat?",
+            "num": 4,
+            "text": "What is the issue with the burger place?",
             "skill": "decision_tracking",
             "options": [
-              "Patty's",
-              "Basil and Lime",
-              "Trattoria Bella",
-              "Pho King Good"
+              "It is too far to reach in time",
+              "It would shut before they could finish eating",
+              "It stops serving food after lunchtime",
+              "It no longer makes the dishes they like"
             ],
-            "answer": 3
+            "answer": 1
+          },
+          {
+            "num": 5,
+            "text": "Which day is the conversation most likely taking place on?",
+            "skill": "inference",
+            "options": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday"
+            ],
+            "answer": 1
+          },
+          {
+            "num": 6,
+            "text": "Which dish does Megan herself say she loves there?",
+            "skill": "detail_recall",
+            "options": [
+              "The lemongrass chicken",
+              "The pho noodle soup",
+              "The spring rolls",
+              "The bubble tea"
+            ],
+            "answer": 2
+          },
+          {
+            "num": 7,
+            "text": "Where do they settle on in the end?",
+            "skill": "decision_tracking",
+            "options": [
+              "The casual Vietnamese spot on Dundas",
+              "The new Thai restaurant on Queen Street",
+              "The Italian place they tried last month",
+              "The burger restaurant by the park"
+            ],
+            "answer": 0
           },
           {
             "num": 8,
-            "text": "How do they plan to get to the restaurant?",
+            "text": "How will the two of them get there?",
             "skill": "detail_recall",
             "options": [
-              "They will walk together",
-              "They will meet there separately",
-              "Tom will drive them both",
-              "Megan will pick Tom up"
+              "Megan will drive round to collect Tom",
+              "They will travel there together",
+              "Each will make their own way there",
+              "Tom will give Megan a lift"
             ],
-            "answer": 1
+            "answer": 2
           }
         ]
       },
@@ -622,99 +622,99 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "Where did David fly from?",
+            "text": "Which city had David just flown in from?",
             "skill": "detail_recall",
             "options": [
-              "Montreal",
-              "Vancouver",
+              "Toronto",
               "Calgary",
+              "Vancouver",
               "Ottawa"
-            ],
-            "answer": 1
-          },
-          {
-            "num": 2,
-            "text": "What does the agent think happened to the bag?",
-            "skill": "main_idea",
-            "options": [
-              "It was damaged during loading",
-              "It was lost permanently",
-              "It was likely placed on a later flight",
-              "It was sent to the wrong city"
             ],
             "answer": 2
           },
           {
+            "num": 2,
+            "text": "What does the agent believe most likely happened to the bag?",
+            "skill": "main_idea",
+            "options": [
+              "It was accidentally sent to a different city",
+              "It was probably loaded onto a later departure",
+              "It was damaged while being handled",
+              "It was mistakenly given to another traveller"
+            ],
+            "answer": 1
+          },
+          {
             "num": 3,
-            "text": "Why is David especially worried about the delay?",
+            "text": "Why is the delay particularly inconvenient for David?",
             "skill": "implied_meaning",
             "options": [
-              "He needs his suit for a meeting the next morning",
-              "He is catching another flight soon",
-              "He has gifts for someone in the suitcase",
-              "He has medication in the suitcase"
+              "He needs something from the bag for the next day",
+              "He has medication packed inside it",
+              "He must catch a connecting flight soon",
+              "It contains gifts he has to hand over"
             ],
             "answer": 0
           },
           {
             "num": 4,
-            "text": "When does the next flight from Vancouver arrive?",
+            "text": "When is the next flight from Vancouver due in?",
             "skill": "detail_recall",
             "options": [
-              "Eight thirty tonight",
-              "Ten fifteen tonight",
-              "Seven o'clock tomorrow morning",
-              "Nine forty-five tonight"
-            ],
-            "answer": 3
-          },
-          {
-            "num": 5,
-            "text": "Where is David staying?",
-            "skill": "detail_recall",
-            "options": [
-              "A rental apartment in Midtown",
-              "The Hilton downtown",
-              "With a friend near the airport",
-              "The Fairmont downtown"
-            ],
-            "answer": 3
-          },
-          {
-            "num": 6,
-            "text": "How much can David claim for emergency essentials if the bag doesn't arrive?",
-            "skill": "detail_recall",
-            "options": [
-              "One hundred and fifty dollars",
-              "Two hundred dollars",
-              "Two hundred and fifty dollars",
-              "One hundred dollars"
+              "Around half past eight tonight",
+              "A little before ten tonight",
+              "By midnight tonight",
+              "Early the following morning"
             ],
             "answer": 1
           },
           {
-            "num": 7,
-            "text": "What does the airline offer for delivery of delayed bags?",
+            "num": 5,
+            "text": "Where will the bag be sent once it turns up?",
             "skill": "detail_recall",
             "options": [
-              "A discounted courier service",
-              "Pick-up at the airport the next day",
-              "Free delivery to the passenger's location",
-              "A taxi voucher to collect the bag"
+              "To a downtown Hilton",
+              "To a rented apartment midtown",
+              "To the downtown Fairmont",
+              "To a friend's place near the airport"
             ],
             "answer": 2
           },
           {
-            "num": 8,
-            "text": "What additional thing does the agent offer David?",
-            "skill": "decision_tracking",
+            "num": 6,
+            "text": "If the bag fails to arrive, how much can David claim for essentials?",
+            "skill": "detail_recall",
             "options": [
-              "A reference number to track the bag online",
-              "A voucher for airport shopping",
-              "A seat upgrade on his next flight",
-              "Loyalty points for the inconvenience"
+              "Up to one hundred dollars",
+              "Up to one hundred and fifty dollars",
+              "Up to two hundred and fifty dollars",
+              "Up to two hundred dollars"
+            ],
+            "answer": 3
+          },
+          {
+            "num": 7,
+            "text": "What does the airline provide for delayed baggage?",
+            "skill": "detail_recall",
+            "options": [
+              "Free delivery to wherever he is staying",
+              "A courier service at a reduced rate",
+              "A taxi voucher so he can fetch it himself",
+              "Collection from the airport the next day"
             ],
             "answer": 0
+          },
+          {
+            "num": 8,
+            "text": "What else does the agent give David?",
+            "skill": "decision_tracking",
+            "options": [
+              "Air miles to make up for the trouble",
+              "A reference number so he can track it online",
+              "A complimentary upgrade on his next flight",
+              "A voucher to spend at the airport shops"
+            ],
+            "answer": 1
           }
         ]
       },
@@ -802,19 +802,19 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "Why is Aisha calling?",
+            "text": "Why has Aisha got in touch with the company?",
             "skill": "main_idea",
             "options": [
-              "She thinks she's paying too much for her plan",
-              "To cancel her phone service",
-              "To add a family member to her plan",
-              "To report a problem with her phone"
+              "She feels her plan costs more than it's worth",
+              "She wants to cancel her service altogether",
+              "She hopes to add another person to her account",
+              "She is reporting a fault with her handset"
             ],
             "answer": 0
           },
           {
             "num": 2,
-            "text": "How much is Aisha currently paying per month?",
+            "text": "How much is Aisha paying each month at the moment?",
             "skill": "detail_recall",
             "options": [
               "Forty-five dollars",
@@ -826,55 +826,55 @@ export const LISTENING_DATA = {
           },
           {
             "num": 3,
-            "text": "How much data did Aisha use last month?",
+            "text": "How much data did she actually use the previous month?",
             "skill": "detail_recall",
             "options": [
-              "About fifteen gigabytes",
-              "About four gigabytes",
-              "About two gigabytes",
-              "About ten gigabytes"
+              "Around twenty gigabytes",
+              "Around four gigabytes",
+              "Around ten gigabytes",
+              "Around two gigabytes"
             ],
             "answer": 1
           },
           {
             "num": 4,
-            "text": "How much does the Essential plan cost?",
+            "text": "What is the monthly price of the Essential plan?",
             "skill": "detail_recall",
             "options": [
-              "Fifty-five dollars",
+              "Thirty-five dollars",
               "Sixty dollars",
               "Forty-five dollars",
-              "Thirty-five dollars"
+              "Fifty-five dollars"
             ],
             "answer": 2
           },
           {
             "num": 5,
-            "text": "Why does Ryan mention the Mid-Range plan?",
+            "text": "Why does Ryan bring up the Mid-Range plan at all?",
             "skill": "speaker_intent",
             "options": [
-              "It is the cheapest option available",
-              "It includes international calling",
-              "It offers extra data as a safety cushion",
-              "The Essential plan is not available in her area"
+              "It is the cheapest of all the options",
+              "It throws in some international calling",
+              "It leaves spare data in case her needs change",
+              "The Essential plan isn't sold in her area"
             ],
             "answer": 2
           },
           {
             "num": 6,
-            "text": "Why does Aisha choose the Essential plan over the Mid-Range?",
+            "text": "Why does she go for the Essential plan rather than the Mid-Range?",
             "skill": "implied_meaning",
             "options": [
-              "She doesn't travel or stream much on her phone",
-              "Ryan recommended the Essential plan specifically",
-              "She plans to switch carriers soon anyway",
-              "The Mid-Range plan doesn't include texting"
+              "She rarely travels or streams on her phone",
+              "Ryan told her to pick that one specifically",
+              "She intends to change providers soon anyway",
+              "The Mid-Range plan leaves out texting"
             ],
             "answer": 0
           },
           {
             "num": 7,
-            "text": "How much would Aisha save per month with the new plan?",
+            "text": "How much will the switch save her each month?",
             "skill": "decision_tracking",
             "options": [
               "Twenty-five dollars",
@@ -886,13 +886,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "When will the plan change take effect?",
+            "text": "When will the new plan actually start?",
             "skill": "detail_recall",
             "options": [
-              "Immediately",
-              "On the next billing cycle",
-              "Within twenty-four hours",
-              "At the end of the current month"
+              "Straight away",
+              "From the start of her next billing period",
+              "Within the next twenty-four hours",
+              "At the close of the current month"
             ],
             "answer": 1
           }
@@ -978,97 +978,97 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "What is Lily's main problem?",
+            "text": "What is Lily contacting Greg about?",
             "skill": "main_idea",
             "options": [
-              "Her phone line is not working",
-              "Her internet connection is down",
-              "Her heating is not working",
-              "Her electricity keeps going out"
+              "A phone line that has gone dead",
+              "A loss of her internet connection",
+              "A heating system that has stopped",
+              "Power that keeps cutting out"
             ],
             "answer": 1
           },
           {
             "num": 2,
-            "text": "Why is this problem particularly urgent for Lily?",
+            "text": "Why does she treat the problem as urgent?",
             "skill": "implied_meaning",
             "options": [
-              "She needs to file taxes online",
-              "She is expecting a delivery notification",
-              "She works from home",
-              "She has children doing online school"
+              "She is in the middle of filing her taxes",
+              "She is waiting on a delivery update",
+              "She relies on it to do her job from home",
+              "Her children need it for online lessons"
             ],
             "answer": 2
           },
           {
             "num": 3,
-            "text": "What did Lily already try before calling Greg?",
+            "text": "What had Lily already done before contacting Greg?",
             "skill": "detail_recall",
             "options": [
-              "Restarting her router",
-              "Calling the internet provider directly",
-              "Using her phone as a hotspot",
-              "Going to a coffee shop to work"
+              "She power-cycled her router",
+              "She rang the internet provider herself",
+              "She set her phone up as a hotspot",
+              "She went to a café to work"
             ],
             "answer": 0
           },
           {
             "num": 4,
-            "text": "What does the blinking orange light indicate?",
+            "text": "What does the flashing orange light actually mean?",
             "skill": "detail_recall",
             "options": [
-              "There is a virus on her computer",
-              "The router needs to be replaced",
-              "The password needs to be reset",
-              "The router is not getting a signal from the building"
+              "Her computer has picked up a virus",
+              "The router will have to be replaced",
+              "Her network password needs resetting",
+              "The router isn't receiving a signal from the building"
             ],
             "answer": 3
           },
           {
             "num": 5,
-            "text": "What caused the outage?",
+            "text": "What turns out to be behind the problem?",
             "skill": "main_idea",
             "options": [
-              "The building is doing renovations",
-              "The provider cancelled the building's account",
-              "Lily's router is broken",
-              "A service outage affecting the east side of the building"
+              "Renovation work going on in the building",
+              "The provider closing the building's account",
+              "A fault in Lily's own router",
+              "A provider outage affecting one side of the building"
             ],
             "answer": 3
           },
           {
             "num": 6,
-            "text": "When is the technician expected to arrive?",
+            "text": "When is the technician due to come?",
             "skill": "detail_recall",
             "options": [
               "Between nine and eleven in the morning",
-              "Between one and three in the afternoon",
+              "Sometime in the early afternoon",
               "Between three and five in the afternoon",
-              "By the end of the day"
+              "By the very end of the day"
             ],
             "answer": 1
           },
           {
             "num": 7,
-            "text": "Where can Lily access Wi-Fi in the meantime?",
+            "text": "Where can Lily get online in the meantime?",
             "skill": "decision_tracking",
             "options": [
-              "In the gym on the basement level",
-              "In Greg's office on the first floor",
-              "In the common room on the second floor",
-              "In the lobby near the front desk"
+              "In the basement gym",
+              "In Greg's first-floor office",
+              "In the second-floor common room",
+              "In the lobby by the front desk"
             ],
             "answer": 2
           },
           {
             "num": 8,
-            "text": "What will Greg do once the internet is fixed?",
+            "text": "What does Greg say he will do once it's fixed?",
             "skill": "detail_recall",
             "options": [
-              "Send an email to all affected units",
-              "Post a notice in the elevator",
-              "Knock on each door to let tenants know",
-              "Call each affected tenant individually"
+              "Email everyone whose unit was affected",
+              "Put a notice up in the elevator",
+              "Knock on doors to tell tenants",
+              "Phone each affected tenant in turn"
             ],
             "answer": 0
           }
@@ -1162,73 +1162,73 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "What is the main problem in this conversation?",
+            "text": "What problem do the two colleagues discover?",
             "skill": "main_idea",
             "options": [
-              "Two meetings are booked in the same room at the same time",
-              "The projector in the meeting room is broken",
-              "The clients have cancelled the meeting",
-              "The office manager made an error with the schedule"
+              "The same room has been booked for two meetings at once",
+              "The projector in the meeting room has stopped working",
+              "Their clients have called off the meeting",
+              "The office manager mixed up the schedule"
             ],
             "answer": 0
           },
           {
             "num": 2,
-            "text": "Why does Raj say he cannot move his meeting?",
+            "text": "Why does Raj say he is unable to move his meeting?",
             "skill": "speaker_intent",
             "options": [
-              "His team has prepared materials for that room",
-              "The VP required that specific room",
-              "The Hudson room is already booked",
-              "He has already sent calendar invites to clients"
+              "His team has set up materials in that room",
+              "The VP insisted on that particular room",
+              "Every other room is already taken",
+              "He has already emailed the room and time to clients"
             ],
             "answer": 3
           },
           {
             "num": 3,
-            "text": "Why does Nina initially reject the Hudson room?",
+            "text": "Why does Nina turn down the Hudson room at first?",
             "skill": "detail_recall",
             "options": [
-              "It's on the wrong floor",
-              "It's too small for twelve people",
-              "It's already booked by another team",
-              "It doesn't have a projector"
+              "It is on an inconvenient floor",
+              "It can't comfortably hold her group",
+              "Another team has already reserved it",
+              "It has no projector"
             ],
             "answer": 1
           },
           {
             "num": 4,
-            "text": "Who ends up moving to the Hudson room?",
+            "text": "Who ends up shifting to the Hudson room?",
             "skill": "decision_tracking",
             "options": [
-              "Nina's marketing team",
-              "Neither — they split the time",
-              "Raj's sales presentation",
-              "Both meetings are postponed"
+              "Nina's marketing team does",
+              "They agree to share the time slot",
+              "Raj moves his sales presentation there",
+              "Both meetings are put off"
             ],
             "answer": 2
           },
           {
             "num": 5,
-            "text": "How many people total will attend Raj's meeting?",
+            "text": "How many people in total will be at Raj's meeting?",
             "skill": "detail_recall",
             "options": [
               "Twelve people",
               "Six people",
-              "Nine people",
-              "Eight people"
+              "Eight people",
+              "Nine people"
             ],
-            "answer": 2
+            "answer": 3
           },
           {
             "num": 6,
             "text": "What does Nina offer to do in return for Raj's flexibility?",
             "skill": "decision_tracking",
             "options": [
-              "Call facilities to set up the Hudson room for Raj",
-              "Invite Raj's clients to the Lakeview room",
-              "Send an apology email to Raj's clients",
-              "Reschedule her meeting to a different day"
+              "Arrange for facilities to prepare the Hudson room for him",
+              "Bring Raj's clients into the Lakeview room",
+              "Send an apology to Raj's clients",
+              "Move her own meeting to another day"
             ],
             "answer": 0
           },
@@ -1237,22 +1237,22 @@ export const LISTENING_DATA = {
             "text": "What do they both agree to do about the booking system?",
             "skill": "decision_tracking",
             "options": [
-              "Switch to a different booking platform",
-              "Ask IT to fix the system immediately",
-              "Stop using the online booking system",
-              "Report the double-booking issue to the office manager"
+              "Move to a different booking platform",
+              "Ask IT to repair it at once",
+              "Stop using the online system entirely",
+              "Raise the double-booking with the office manager"
             ],
             "answer": 3
           },
           {
             "num": 8,
-            "text": "What can be inferred about the relationship between Nina and Raj?",
+            "text": "What can be inferred about how Nina and Raj work together?",
             "skill": "implied_meaning",
             "options": [
-              "They barely know each other",
-              "They are cooperative colleagues who communicate well",
-              "They frequently argue over resources",
-              "They are in a manager-employee relationship"
+              "They hardly know one another",
+              "They work together well and communicate openly",
+              "They often clash over shared resources",
+              "One of them clearly manages the other"
             ],
             "answer": 1
           }
@@ -1337,21 +1337,21 @@ export const LISTENING_DATA = {
             "text": "Why is Elena contacting Steve?",
             "skill": "main_idea",
             "options": [
-              "To give notice that she's moving out",
-              "To discuss the rent increase in her lease renewal",
-              "To ask about a parking spot",
-              "To report a maintenance issue"
+              "To give notice that she is leaving",
+              "To question the rent rise in her renewal",
+              "To request an additional parking space",
+              "To report something that needs repair"
             ],
             "answer": 1
           },
           {
             "num": 2,
-            "text": "How much was the proposed new rent?",
+            "text": "What new monthly rent did the letter propose?",
             "skill": "detail_recall",
             "options": [
               "Thirteen hundred dollars",
               "Thirteen fifty dollars",
-              "Fourteen fifty dollars",
+              "Fourteen hundred and fifty dollars",
               "Thirteen seventy-five dollars"
             ],
             "answer": 2
@@ -1361,52 +1361,52 @@ export const LISTENING_DATA = {
             "text": "What reasons does Steve give for the increase?",
             "skill": "detail_recall",
             "options": [
-              "Higher property taxes and building upgrades",
-              "Rising utility costs and staff wages",
-              "Increased demand for units in the area",
-              "New government regulations on rental properties"
+              "Higher property taxes and money spent on building upgrades",
+              "Rising utility bills and staff wages",
+              "Growing demand for units in the area",
+              "New rules brought in by the government"
             ],
             "answer": 0
           },
           {
             "num": 4,
-            "text": "What does Elena offer to get a lower rate?",
+            "text": "What does Elena suggest in order to lower the rate?",
             "skill": "decision_tracking",
             "options": [
-              "To do minor repairs herself",
-              "To give up her parking spot",
-              "To pay several months in advance",
-              "To sign a two-year lease instead of one year"
+              "To carry out small repairs herself",
+              "To give up her parking space",
+              "To pay several months up front",
+              "To commit to a two-year lease rather than one"
             ],
             "answer": 3
           },
           {
             "num": 5,
-            "text": "What is the agreed rent for the first year of the new lease?",
+            "text": "What will the rent be for the first year under the new deal?",
             "skill": "decision_tracking",
             "options": [
               "Thirteen hundred dollars",
               "Thirteen seventy-five dollars",
-              "Fourteen hundred dollars",
+              "Fourteen hundred and fifty dollars",
               "Thirteen fifty dollars"
             ],
             "answer": 3
           },
           {
             "num": 6,
-            "text": "What extra benefit does Steve offer Elena?",
+            "text": "What additional perk does Steve throw in?",
             "skill": "detail_recall",
             "options": [
-              "A discount on her internet bill",
-              "A free reserved parking spot",
-              "A free month of rent",
-              "A new appliance for her kitchen"
+              "Money off her internet bill",
+              "A reserved parking space at no charge",
+              "One month's free rent",
+              "A new kitchen appliance"
             ],
             "answer": 1
           },
           {
             "num": 7,
-            "text": "How much does Elena currently pay for parking?",
+            "text": "How much is Elena paying for parking at the moment?",
             "skill": "detail_recall",
             "options": [
               "Thirty dollars a month",
@@ -1418,13 +1418,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "What does Elena's calculation imply about the deal?",
+            "text": "What does Elena's own calculation suggest about the deal?",
             "skill": "implied_meaning",
             "options": [
-              "She realizes the effective increase is much smaller than originally proposed",
-              "She thinks it's still too expensive",
-              "She plans to negotiate further before signing",
-              "She's unhappy but accepts out of necessity"
+              "The real increase is far smaller than first proposed",
+              "She still finds it too expensive",
+              "She intends to bargain further before signing",
+              "She accepts reluctantly despite being unhappy"
             ],
             "answer": 0
           }
@@ -1525,64 +1525,64 @@ export const LISTENING_DATA = {
             "text": "What are Carlos and Jen planning?",
             "skill": "main_idea",
             "options": [
-              "A surprise birthday party for Maya",
-              "A housewarming party at Jen's",
-              "A going-away party",
-              "An anniversary celebration"
+              "A surprise birthday celebration for Maya",
+              "A housewarming at Jen's place",
+              "A farewell party",
+              "An anniversary dinner"
             ],
             "answer": 0
           },
           {
             "num": 2,
-            "text": "Why was The Rooftop Lounge unavailable?",
+            "text": "Why couldn't they use The Rooftop Lounge?",
             "skill": "detail_recall",
             "options": [
-              "It was too expensive",
-              "It doesn't allow private events",
-              "It was under renovation",
-              "There is a wedding reception that night"
+              "It was beyond their budget",
+              "It doesn't host private functions",
+              "It was closed for refurbishment",
+              "Another event was booked there that night"
             ],
             "answer": 3
           },
           {
             "num": 3,
-            "text": "What is the problem with Cucina's offer?",
+            "text": "What is wrong with what Cucina can offer?",
             "skill": "decision_tracking",
             "options": [
-              "The food is too expensive for their budget",
-              "The five thirty time slot is too early",
-              "They can't accommodate twenty-five people",
-              "Maya doesn't like Italian food"
+              "Its food costs too much for them",
+              "The only available time is far too early",
+              "It cannot seat twenty-five guests",
+              "Maya isn't keen on Italian"
             ],
             "answer": 1
           },
           {
             "num": 4,
-            "text": "Where do they decide to have the party?",
+            "text": "Where do they decide to hold it in the end?",
             "skill": "decision_tracking",
             "options": [
-              "Carlos's apartment",
-              "The Rooftop Lounge",
-              "Jen's backyard",
-              "Cucina restaurant"
+              "At Carlos's flat",
+              "On the Rooftop Lounge terrace",
+              "In Jen's back garden",
+              "At the Cucina restaurant"
             ],
             "answer": 2
           },
           {
             "num": 5,
-            "text": "How many people have confirmed they are coming?",
+            "text": "How many guests have so far confirmed?",
             "skill": "detail_recall",
             "options": [
-              "Twenty",
-              "Thirty",
-              "Twenty-five",
-              "Fifteen"
+              "Around twenty",
+              "Around thirty",
+              "Around twenty-five",
+              "Around fifteen"
             ],
             "answer": 2
           },
           {
             "num": 6,
-            "text": "How much is each person expected to contribute?",
+            "text": "How much is each guest being asked to put in?",
             "skill": "detail_recall",
             "options": [
               "Fifteen dollars",
@@ -1594,25 +1594,25 @@ export const LISTENING_DATA = {
           },
           {
             "num": 7,
-            "text": "What excuse will Carlos use to bring Maya to the party?",
+            "text": "What story will Carlos use to get Maya there?",
             "skill": "detail_recall",
             "options": [
-              "He'll say he left something at Jen's house",
-              "He'll say Jen needs help with furniture",
-              "He'll pretend they're going to dinner at a restaurant",
-              "He'll say he needs help picking a gift for his mom"
+              "That he left something at Jen's",
+              "That Jen needs help moving furniture",
+              "That they are going out for dinner",
+              "That he needs help choosing a gift for his mum"
             ],
             "answer": 3
           },
           {
             "num": 8,
-            "text": "Why does Jen think Carlos's excuse will work?",
+            "text": "Why does Jen think the story will work?",
             "skill": "implied_meaning",
             "options": [
-              "Maya has been wanting to go shopping anyway",
-              "The anniversary story is partially true",
-              "Jen will distract Maya with a phone call",
-              "Maya never questions Carlos's plans"
+              "Maya already wanted to go shopping",
+              "Part of the story is genuinely true",
+              "Jen will keep Maya busy by phone",
+              "Maya never questions Carlos"
             ],
             "answer": 1
           }
@@ -1706,15 +1706,15 @@ export const LISTENING_DATA = {
             "skill": "main_idea",
             "options": [
               "A water leak from the unit above",
-              "Ongoing noise from a neighbouring unit",
-              "Cigarette smoke coming through the vents",
-              "Damage to her parking spot"
+              "Persistent noise from a nearby unit",
+              "Smoke drifting through the vents",
+              "Damage to her parking space"
             ],
             "answer": 1
           },
           {
             "num": 2,
-            "text": "When does the noise usually start?",
+            "text": "When does the noise typically begin?",
             "skill": "detail_recall",
             "options": [
               "Around eleven at night",
@@ -1726,73 +1726,73 @@ export const LISTENING_DATA = {
           },
           {
             "num": 3,
-            "text": "What happened when Fatima spoke to Tyler directly?",
+            "text": "What happened when Fatima spoke to Tyler herself?",
             "skill": "decision_tracking",
             "options": [
-              "He apologized and the noise improved temporarily",
-              "He denied making any noise",
+              "He apologised and things got better for a while",
+              "He denied being noisy at all",
               "He offered to pay for soundproofing",
-              "He was rude and slammed the door"
+              "He was rude and shut the door"
             ],
             "answer": 0
           },
           {
             "num": 4,
-            "text": "What is Doug's first planned action?",
+            "text": "What is the first thing Doug plans to do?",
             "skill": "decision_tracking",
             "options": [
               "Call a condo board meeting",
-              "Fine unit 306 immediately",
-              "Install soundproofing between the units",
-              "Send a formal written notice to unit 306"
+              "Fine the unit right away",
+              "Put soundproofing between the units",
+              "Send a formal written notice to the unit"
             ],
             "answer": 3
           },
           {
             "num": 5,
-            "text": "What could happen if the noise continues after the written notice?",
+            "text": "What could happen if the noise carries on after the notice?",
             "skill": "detail_recall",
             "options": [
-              "The building will install soundproofing",
-              "Tyler could be asked to move out immediately",
-              "The police will be contacted",
-              "A formal complaint and fines through the condo board"
+              "The building will fit soundproofing",
+              "Tyler would be made to move out at once",
+              "The police would be called in",
+              "A formal complaint and possible fines through the board"
             ],
             "answer": 3
           },
           {
             "num": 6,
-            "text": "Why does Doug think the written notice will likely work?",
+            "text": "Why does Doug expect the written notice to work?",
             "skill": "implied_meaning",
             "options": [
-              "The fines are extremely expensive",
-              "People tend to change when they know there's a paper trail",
-              "Fatima will also speak to Tyler again",
-              "Tyler is a generally respectful person"
+              "The fines involved are extremely high",
+              "People tend to change once a record exists",
+              "Fatima will also confront Tyler again",
+              "Tyler is a respectful person by nature"
             ],
             "answer": 1
           },
           {
             "num": 7,
-            "text": "What does Doug say about soundproofing Fatima's wall?",
+            "text": "What does Doug say about soundproofing her wall?",
             "skill": "detail_recall",
             "options": [
-              "The building will pay for it",
-              "It is not allowed under any circumstances",
-              "She can add panels as long as they don't damage the wall",
-              "She needs written permission from the condo board first"
+              "The building will cover the cost",
+              "It is never permitted",
+              "She may add panels as long as they don't damage the wall",
+              "She first needs written approval from the board"
             ],
             "answer": 2
           },
           {
             "num": 8,
-            "text": "What does Doug ask Fatima to do going forward?",
+            "text": "What does Doug ask Fatima to do from now on?",
             "skill": "detail_recall",
             "options": [
-              "Keep a log of noise incidents with dates and times",
+              "Keep a record of each incident with dates and times",
               "Attend the next condo board meeting",
               "Record the noise on her phone",
-              "Avoid all contact with Tyler"
+              "Avoid Tyler completely"
             ],
             "answer": 0
           }
@@ -1885,10 +1885,10 @@ export const LISTENING_DATA = {
             "text": "What is wrong with Sam's order?",
             "skill": "main_idea",
             "options": [
-              "The jacket is the wrong size",
-              "The jacket is the wrong colour",
-              "The jacket was never delivered",
-              "The jacket arrived damaged"
+              "He was sent the wrong size",
+              "The colour was not what he ordered",
+              "The package never arrived",
+              "The item came damaged"
             ],
             "answer": 0
           },
@@ -1897,28 +1897,28 @@ export const LISTENING_DATA = {
             "text": "What caused the size mix-up?",
             "skill": "detail_recall",
             "options": [
-              "Sam ordered the wrong size by mistake",
-              "The website showed incorrect size charts",
-              "The courier swapped the packages",
-              "The jacket was mislabelled at the warehouse"
+              "He selected the wrong size when ordering",
+              "The size chart on the site was wrong",
+              "The courier swapped the parcels",
+              "The item was labelled incorrectly at the warehouse"
             ],
             "answer": 3
           },
           {
             "num": 3,
-            "text": "Why does Sam reject the first return option?",
+            "text": "Why does Sam turn down the first option?",
             "skill": "speaker_intent",
             "options": [
               "He doesn't trust the return process",
-              "It would take too long and he needs the jacket soon",
-              "He doesn't want to pay for shipping",
-              "He wants a refund instead of an exchange"
+              "The wait is too long for his upcoming trip",
+              "He objects to paying for postage",
+              "He'd rather have his money back"
             ],
             "answer": 1
           },
           {
             "num": 4,
-            "text": "By what day will Sam receive the correct jacket?",
+            "text": "By which day will Sam get the correct jacket?",
             "skill": "detail_recall",
             "options": [
               "Wednesday",
@@ -1930,7 +1930,7 @@ export const LISTENING_DATA = {
           },
           {
             "num": 5,
-            "text": "How long does Sam have to return the wrong jacket?",
+            "text": "How long does Sam have to send the wrong jacket back?",
             "skill": "detail_recall",
             "options": [
               "Fourteen days",
@@ -1942,25 +1942,25 @@ export const LISTENING_DATA = {
           },
           {
             "num": 6,
-            "text": "Who pays for the express shipping?",
+            "text": "Who ends up paying for the express shipping?",
             "skill": "detail_recall",
             "options": [
-              "The company covers it because it was their error",
-              "Sam pays and will be reimbursed later",
-              "Sam pays a discounted rate",
-              "The cost is split between Sam and the company"
+              "The retailer, since the error was theirs",
+              "Sam, who is reimbursed afterwards",
+              "Sam, at a reduced rate",
+              "The cost is shared between them"
             ],
             "answer": 0
           },
           {
             "num": 7,
-            "text": "What issue does Sam mention about his hiking boots?",
+            "text": "What does Sam point out about his hiking boots?",
             "skill": "detail_recall",
             "options": [
-              "The laces are fraying",
+              "The laces are coming apart",
               "They are the wrong colour",
-              "They are too tight in the toe area",
-              "The sole has a small scuff mark"
+              "They pinch at the toes",
+              "There is a small scuff on the sole"
             ],
             "answer": 3
           },
@@ -1969,10 +1969,10 @@ export const LISTENING_DATA = {
             "text": "What does Claire offer for the boot issue?",
             "skill": "decision_tracking",
             "options": [
-              "A full replacement pair",
-              "A ten percent discount",
-              "A free repair service",
-              "A store credit for future purchases"
+              "A replacement pair",
+              "Ten percent off",
+              "A free repair",
+              "Store credit for a future order"
             ],
             "answer": 1
           }
@@ -2062,15 +2062,15 @@ export const LISTENING_DATA = {
             "skill": "main_idea",
             "options": [
               "She is taking evening classes at college",
-              "Her husband is away and she works night shifts",
-              "She is going on a business trip",
-              "Both children are sick and need supervision"
+              "Her husband is away while she works nights",
+              "She herself is going on a business trip",
+              "Both children are unwell and need watching"
             ],
             "answer": 1
           },
           {
             "num": 2,
-            "text": "What time does Deepa's shift end?",
+            "text": "What time does Deepa's shift finish?",
             "skill": "detail_recall",
             "options": [
               "One in the morning",
@@ -2082,7 +2082,7 @@ export const LISTENING_DATA = {
           },
           {
             "num": 3,
-            "text": "Which evenings can Laura help?",
+            "text": "Which evenings is Laura able to help?",
             "skill": "detail_recall",
             "options": [
               "Tuesday and Wednesday",
@@ -2094,61 +2094,61 @@ export const LISTENING_DATA = {
           },
           {
             "num": 4,
-            "text": "Why can't Laura help on Thursday?",
+            "text": "Why is Thursday a problem for Laura?",
             "skill": "detail_recall",
             "options": [
               "She also works a night shift",
               "She has a doctor's appointment",
               "She is visiting family out of town",
-              "She is hosting her book club"
+              "It is her turn to host book club"
             ],
             "answer": 3
           },
           {
             "num": 5,
-            "text": "Who will likely watch the children on Thursday?",
+            "text": "Who will probably mind the children on Thursday?",
             "skill": "decision_tracking",
             "options": [
-              "A professional babysitter",
+              "A hired babysitter",
               "Laura's teenage daughter",
               "Deepa's mother",
-              "Deepa's sister Anita"
+              "Deepa's sister"
             ],
             "answer": 3
           },
           {
             "num": 6,
-            "text": "What has Deepa arranged regarding dinner?",
+            "text": "What has Deepa arranged about dinner?",
             "skill": "detail_recall",
             "options": [
-              "She will order delivery each night",
-              "She will leave prepped meals in the fridge",
-              "Laura will cook at her own house",
+              "She will order takeaway each night",
+              "She will leave meals ready in the fridge",
+              "Laura will cook at her own home",
               "The children will eat at the after-school program"
             ],
             "answer": 1
           },
           {
             "num": 7,
-            "text": "What should Laura do if a child has a medical issue?",
+            "text": "What should Laura do if a child has a medical problem?",
             "skill": "decision_tracking",
             "options": [
               "Give the child medicine from the cabinet",
-              "Drive directly to the hospital",
-              "Call Deepa first, or go to the walk-in clinic if urgent",
+              "Drive straight to the hospital",
+              "Phone Deepa first, or use the walk-in clinic if it's serious",
               "Call Deepa's husband in Calgary"
             ],
             "answer": 2
           },
           {
             "num": 8,
-            "text": "What detail suggests Deepa is a well-organized planner?",
+            "text": "What detail shows that Deepa has planned carefully?",
             "skill": "implied_meaning",
             "options": [
-              "She prepares meals, leaves health cards out, and has a backup plan",
+              "She preps meals, leaves out health cards, and has a backup person",
               "She has hired a professional agency as a third option",
-              "She has written down every instruction in a notebook",
-              "She has already spoken to her boss about missing work"
+              "She has written every instruction in a notebook",
+              "She has already told her boss she will miss work"
             ],
             "answer": 0
           }
@@ -2245,7 +2245,7 @@ export const LISTENING_DATA = {
             "text": "What is Mike concerned about?",
             "skill": "main_idea",
             "options": [
-              "An unexpected charge of a hundred and twenty dollars",
+              "A surprise charge larger than his usual fee",
               "His gym is closing down",
               "His personal trainer cancelled on him",
               "His credit card was stolen"
@@ -2257,34 +2257,34 @@ export const LISTENING_DATA = {
             "text": "What is the extra seventy dollars for?",
             "skill": "detail_recall",
             "options": [
-              "A class enrollment fee",
-              "A locker rental fee",
-              "A late payment penalty",
-              "An annual maintenance fee"
+              "Signing up for a class",
+              "Renting a locker",
+              "Paying a fee late",
+              "A yearly maintenance charge"
             ],
             "answer": 3
           },
           {
             "num": 3,
-            "text": "Why did Mike not know about the fee in advance?",
+            "text": "Why was Mike unaware of the fee in advance?",
             "skill": "decision_tracking",
             "options": [
-              "The email was sent to the wrong address",
-              "He missed the email while on vacation over Christmas",
-              "He had cancelled his email account",
-              "The gym never sent any notification"
+              "The email went to the wrong address",
+              "He overlooked the email while away at Christmas",
+              "He had closed his email account",
+              "No notice was ever sent"
             ],
             "answer": 1
           },
           {
             "num": 4,
-            "text": "Can Tanya waive the fee?",
+            "text": "Can Tanya cancel the fee?",
             "skill": "detail_recall",
             "options": [
-              "Yes, she waives it immediately",
-              "Yes, but only with a manager's approval",
-              "No, because it's part of the contract",
-              "No, but she offers a full refund in store credit"
+              "Yes, she removes it on the spot",
+              "Yes, with a manager's sign-off",
+              "No, because it's written into the contract",
+              "No, but she gives a full store-credit refund"
             ],
             "answer": 2
           },
@@ -2295,32 +2295,32 @@ export const LISTENING_DATA = {
             "options": [
               "A free gym bag and water bottle",
               "One month of free membership",
-              "Two free personal training sessions",
+              "Two complimentary training sessions",
               "A discount on next year's fee"
             ],
             "answer": 2
           },
           {
             "num": 6,
-            "text": "How much are the training sessions normally worth?",
+            "text": "How much is each training session normally worth?",
             "skill": "detail_recall",
             "options": [
               "Forty dollars each",
               "Thirty dollars each",
               "Fifty dollars each",
-              "Twenty dollars each"
+              "Seventy dollars each"
             ],
             "answer": 0
           },
           {
             "num": 7,
-            "text": "What does Mike request to avoid this situation next year?",
+            "text": "What does Mike ask for to avoid this next year?",
             "skill": "detail_recall",
             "options": [
-              "To cancel his membership before the next fee",
-              "To switch to a plan without the maintenance fee",
-              "To pay the fee in monthly instalments",
-              "A reminder notification well in advance"
+              "To cancel before the next fee",
+              "To switch to a plan without the fee",
+              "To pay the fee in instalments",
+              "An advance reminder before the charge"
             ],
             "answer": 3
           },
@@ -2329,10 +2329,10 @@ export const LISTENING_DATA = {
             "text": "What broader suggestion does Mike make to the gym?",
             "skill": "speaker_intent",
             "options": [
-              "Allow members to opt out of the fee",
-              "Be more upfront about the fee during sign-up",
-              "Lower the maintenance fee significantly",
-              "Offer a fee-free membership tier"
+              "Let members opt out of the fee",
+              "Make the fee clearer when people join",
+              "Cut the maintenance fee sharply",
+              "Add a fee-free membership tier"
             ],
             "answer": 1
           }
@@ -2427,31 +2427,31 @@ export const LISTENING_DATA = {
             "options": [
               "A tire rotation",
               "An oil change",
-              "A strange noise",
+              "An odd noise",
               "A brake inspection"
             ],
             "answer": 1
           },
           {
             "num": 2,
-            "text": "What two additional issues were found during the inspection?",
+            "text": "What two extra problems turned up during the inspection?",
             "skill": "detail_recall",
             "options": [
-              "Engine leak and worn tires",
-              "Dead battery and cracked windshield",
+              "An engine leak and worn tires",
+              "A dead battery and a cracked windshield",
               "Worn brake pads and low rear tire tread",
-              "Transmission issue and brake fluid leak"
+              "A transmission fault and a brake-fluid leak"
             ],
             "answer": 2
           },
           {
             "num": 3,
-            "text": "How much would the brake repair cost?",
+            "text": "How much would the brake work cost?",
             "skill": "detail_recall",
             "options": [
               "Four hundred and fifty dollars",
-              "Five hundred dollars",
               "Three hundred and twenty dollars",
+              "Five hundred dollars",
               "Three hundred and fifty dollars"
             ],
             "answer": 0
@@ -2461,10 +2461,10 @@ export const LISTENING_DATA = {
             "text": "What does Rosa say about the urgency of the brakes versus the tires?",
             "skill": "decision_tracking",
             "options": [
-              "The tires are more urgent than the brakes",
+              "The tires matter more than the brakes",
               "Neither is urgent — both can wait",
-              "Both need to be done immediately",
-              "The brakes are a safety priority; the tires can wait a bit"
+              "Both must be done at once",
+              "The brakes are a safety priority; the tires can wait a while"
             ],
             "answer": 3
           },
@@ -2474,9 +2474,9 @@ export const LISTENING_DATA = {
             "skill": "decision_tracking",
             "options": [
               "Fix everything today",
-              "Wait on everything until next month",
-              "Fix the tires now and delay the brakes",
-              "Fix the brakes now and come back for tires later"
+              "Postpone everything to next month",
+              "Do the tires now and delay the brakes",
+              "Do the brakes today and return for tires later"
             ],
             "answer": 3
           },
@@ -2617,22 +2617,22 @@ export const LISTENING_DATA = {
             "text": "Why was Patricia's insurance claim denied?",
             "skill": "main_idea",
             "options": [
-              "The damage was classified as gradual seepage, not sudden",
-              "The damage amount exceeded her policy limit",
-              "She missed the filing deadline",
+              "The damage was judged to be gradual rather than sudden",
+              "The repair cost was above her policy limit",
+              "She filed after the deadline",
               "Her policy had lapsed before the incident"
             ],
             "answer": 0
           },
           {
             "num": 2,
-            "text": "What evidence did the adjuster find to support the denial?",
+            "text": "What evidence did the adjuster cite to support the denial?",
             "skill": "detail_recall",
             "options": [
-              "Previous claims for water damage at the same address",
-              "Testimony from a neighbour about ongoing drainage issues",
-              "A broken pipe that had been leaking for months",
-              "Discolouration on walls and mold behind baseboards"
+              "Earlier water-damage claims at the same address",
+              "A neighbour's account of ongoing drainage trouble",
+              "A pipe that had been leaking for months",
+              "Wall staining and mould behind the baseboards"
             ],
             "answer": 3
           },
@@ -2641,10 +2641,10 @@ export const LISTENING_DATA = {
             "text": "What argument does Patricia make in her defence?",
             "skill": "speaker_intent",
             "options": [
-              "She had regular home inspections that showed no issues",
-              "She had no reasonable way of knowing about the hidden moisture",
+              "Regular home inspections had shown no problems",
+              "She could not reasonably have known about the hidden moisture",
               "Her neighbour's home also flooded the same day",
-              "The adjuster made errors in the inspection report"
+              "The adjuster's report contained errors"
             ],
             "answer": 1
           },
@@ -2654,9 +2654,9 @@ export const LISTENING_DATA = {
             "skill": "decision_tracking",
             "options": [
               "File a complaint with the insurance ombudsman",
-              "Hire a lawyer to challenge the insurance company",
+              "Hire a lawyer to challenge the insurer",
               "Get an independent assessment from a plumber or specialist",
-              "Contact the city to inspect the building's drainage system"
+              "Ask the city to inspect the building's drainage"
             ],
             "answer": 2
           },
@@ -2666,8 +2666,8 @@ export const LISTENING_DATA = {
             "skill": "detail_recall",
             "options": [
               "The cost is split equally",
-              "The plumber offers it for free as part of the appeal process",
-              "Patricia pays upfront but may be reimbursed if the appeal succeeds",
+              "The plumber does it free as part of the process",
+              "Patricia pays first but may be repaid if the appeal wins",
               "The insurance company covers it upfront"
             ],
             "answer": 2
@@ -2679,8 +2679,8 @@ export const LISTENING_DATA = {
             "options": [
               "About four thousand dollars",
               "About two thousand dollars",
-              "About three thousand dollars",
-              "About five thousand dollars"
+              "About three thousand five hundred dollars",
+              "About five hundred dollars"
             ],
             "answer": 0
           },
@@ -2691,7 +2691,7 @@ export const LISTENING_DATA = {
             "options": [
               "Forty-five hundred dollars",
               "Four thousand dollars",
-              "Three thousand dollars",
+              "Five hundred dollars",
               "Thirty-five hundred dollars"
             ],
             "answer": 3
@@ -2810,9 +2810,9 @@ export const LISTENING_DATA = {
             "skill": "main_idea",
             "options": [
               "Alex forgot to RSVP for the wedding",
-              "A conference and a wedding fall on the same weekend",
+              "A work conference and a wedding clash on the same weekend",
               "Hannah booked the wrong flights",
-              "The couple disagrees about attending a family event"
+              "The couple disagree about attending a family event"
             ],
             "answer": 1
           },
@@ -2823,7 +2823,7 @@ export const LISTENING_DATA = {
             "options": [
               "Bad weather was forecast for the original date",
               "A family member had a scheduling conflict",
-              "The venue had a cancellation and offered a better deal",
+              "The venue had a cancellation and a better price came up",
               "The bride's work schedule changed unexpectedly"
             ],
             "answer": 2
@@ -2833,7 +2833,7 @@ export const LISTENING_DATA = {
             "text": "Why didn't Alex know about the date change?",
             "skill": "detail_recall",
             "options": [
-              "He doesn't check the family group chat",
+              "He doesn't follow the family group chat",
               "The message was sent to the wrong number",
               "His phone was broken at the time",
               "Hannah forgot to tell him"
@@ -2893,7 +2893,7 @@ export const LISTENING_DATA = {
             "text": "What does Alex's comment about the sticky note imply?",
             "skill": "implied_meaning",
             "options": [
-              "He prefers simple, direct communication over digital messages",
+              "He prefers simple, direct reminders over digital messages",
               "He doesn't own a smartphone",
               "He wants Hannah to stop using group chats entirely",
               "He is angry at Hannah for not telling him sooner"
@@ -2987,7 +2987,7 @@ export const LISTENING_DATA = {
             "text": "What is the main issue in this meeting?",
             "skill": "main_idea",
             "options": [
-              "Two departments want funding from a limited budget",
+              "Two departments are competing for a limited budget",
               "A new department needs to be created",
               "An employee has filed a complaint about working conditions",
               "The company is facing bankruptcy"
@@ -3011,8 +3011,8 @@ export const LISTENING_DATA = {
             "text": "What is Marcus's main argument for the server upgrade?",
             "skill": "speaker_intent",
             "options": [
-              "The IT team threatened to resign without better equipment",
-              "Recent outages could lead to a much bigger cost if they happen during year-end",
+              "The IT team threatened to quit without better equipment",
+              "Recent outages could cost far more if one hits during year-end",
               "The servers are outdated and slow",
               "Competitors have already upgraded their systems"
             ],
@@ -3025,7 +3025,7 @@ export const LISTENING_DATA = {
             "options": [
               "Sick days have doubled compared to last year",
               "Productivity is down twelve percent across all departments",
-              "Turnover has risen eighteen percent this year",
+              "Staff turnover has climbed eighteen percent this year",
               "Employee satisfaction dropped by twenty percent"
             ],
             "answer": 2
@@ -3037,7 +3037,7 @@ export const LISTENING_DATA = {
             "options": [
               "He dismisses it as unimportant",
               "He suggests combining both budgets under IT",
-              "He acknowledges its importance but argues that IT affects everyone's ability to work",
+              "He grants its importance but argues IT underpins everyone's ability to work",
               "He offers to share his budget with HR"
             ],
             "answer": 2
@@ -3047,7 +3047,7 @@ export const LISTENING_DATA = {
             "text": "What compromise does Sharon propose?",
             "skill": "decision_tracking",
             "options": [
-              "Fund the critical parts of both requests and revisit the rest next quarter",
+              "Fund the essential parts of both requests and revisit the rest next quarter",
               "Ask both departments to resubmit smaller requests",
               "Give all the funding to IT and delay the wellness program",
               "Split the budget equally between both departments"
@@ -3056,7 +3056,7 @@ export const LISTENING_DATA = {
           },
           {
             "num": 7,
-            "text": "How much will Marcus's phased server upgrade cost in this quarter?",
+            "text": "How much will Marcus's phased server upgrade cost this quarter?",
             "skill": "detail_recall",
             "options": [
               "Thirty-five thousand dollars",
@@ -3072,7 +3072,7 @@ export const LISTENING_DATA = {
             "skill": "speaker_intent",
             "options": [
               "She wants a guaranteed larger budget next year",
-              "She wants it documented that the full program may need to be accelerated if turnover continues",
+              "She wants it on record that the full program may be sped up if turnover keeps rising",
               "She wants the pilot to start within two weeks",
               "She wants Marcus to contribute funds from his IT budget"
             ],
@@ -3189,7 +3189,7 @@ export const LISTENING_DATA = {
             "options": [
               "He blames the granite supplier",
               "He offers to replace it immediately",
-              "He says it's within industry tolerance",
+              "He calls the slope within industry tolerance",
               "He admits it's a serious defect"
             ],
             "answer": 2
@@ -3199,7 +3199,7 @@ export const LISTENING_DATA = {
             "text": "Why does Christine reject Tony's initial response about the countertop?",
             "skill": "implied_meaning",
             "options": [
-              "She paid for premium quality, not minimum tolerance",
+              "She paid for premium quality, not the bare minimum",
               "The inspector said it was dangerous",
               "She plans to sell the house and needs perfection",
               "Her husband insisted on getting it redone"
@@ -3363,7 +3363,7 @@ export const LISTENING_DATA = {
             "text": "Why was Mei called in to meet with Frank?",
             "skill": "main_idea",
             "options": [
-              "An unauthorized person has been living in her unit",
+              "Someone not on the lease has been living in her unit",
               "She has overdue rent payments",
               "There was a noise complaint from her neighbours",
               "She damaged the common areas"
@@ -3378,7 +3378,7 @@ export const LISTENING_DATA = {
               "She is temporarily working near Mei's building",
               "She is Mei's new roommate",
               "She is visiting from another country",
-              "She lost her apartment when her landlord sold the building"
+              "Her building was sold and she lost her apartment"
             ],
             "answer": 3
           },
@@ -3722,7 +3722,7 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "Where do they plan to hike?",
+            "text": "Which trail do they settle on?",
             "skill": "detail_comprehension",
             "options": [
               "Algonquin Provincial Park",
@@ -3734,49 +3734,49 @@ export const LISTENING_DATA = {
           },
           {
             "num": 2,
-            "text": "How long is the trail?",
+            "text": "Roughly how long will the loop take?",
             "skill": "detail_comprehension",
             "options": [
-              "A two-hour loop",
-              "A ninety-minute loop",
-              "A three-hour loop",
-              "A one-hour loop"
+              "About two hours",
+              "About ninety minutes",
+              "About three hours",
+              "About one hour"
             ],
             "answer": 0
           },
           {
             "num": 3,
-            "text": "Why does Sara recommend hiking boots?",
+            "text": "Why does Sara say Ben needs proper boots?",
             "skill": "detail_comprehension",
             "options": [
-              "The trail is muddy from recent rain",
-              "There are stream crossings",
-              "The trail is very steep throughout",
-              "The last section is rocky"
+              "Recent rain has left the trail muddy",
+              "There are streams to cross",
+              "The whole trail is steep",
+              "The final stretch is rough and rocky"
             ],
             "answer": 3
           },
           {
             "num": 4,
-            "text": "Who is driving?",
+            "text": "Who will drive to the trailhead?",
             "skill": "detail_comprehension",
             "options": [
-              "They haven't decided yet",
+              "It's still undecided",
               "Ben",
               "Sara",
-              "They are taking transit"
+              "They'll take transit"
             ],
             "answer": 1
           },
           {
             "num": 5,
-            "text": "Why is Sara bringing bug spray?",
+            "text": "Why is Sara packing bug spray?",
             "skill": "inference",
             "options": [
-              "The park website warned about ticks",
-              "She had a bad experience with mosquitoes on a previous hike",
-              "It's required equipment on the Bruce Trail",
-              "Ben is allergic to insect bites"
+              "The park site warned of ticks",
+              "Mosquitoes troubled her on an earlier hike",
+              "It's mandatory gear on the Bruce Trail",
+              "Ben reacts badly to insect bites"
             ],
             "answer": 1
           }
@@ -3846,61 +3846,61 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "Where did Robert get Maple?",
+            "text": "Where did Maple come from?",
             "skill": "detail_comprehension",
             "options": [
-              "From a breeder",
-              "From a friend",
-              "From the Humane Society",
-              "From a pet store"
+              "A breeder",
+              "A friend",
+              "The Humane Society",
+              "A pet store"
             ],
             "answer": 2
           },
           {
             "num": 2,
-            "text": "What breed is Maple?",
+            "text": "What is Maple's likely breed mix?",
             "skill": "detail_comprehension",
             "options": [
-              "A lab and collie mix",
-              "A German shepherd mix",
-              "Purebred Labrador",
+              "Mostly Labrador with some collie",
+              "A German shepherd cross",
+              "A purebred Labrador",
               "A golden retriever"
             ],
             "answer": 0
           },
           {
             "num": 3,
-            "text": "How did Maple behave during the first few nights?",
+            "text": "How did Maple act during her first nights at home?",
             "skill": "detail_comprehension",
             "options": [
               "She chewed up the furniture",
               "She refused to eat",
               "She barked all night",
-              "She was nervous and hid under the kitchen table"
+              "She was anxious and hid under the kitchen table"
             ],
             "answer": 3
           },
           {
             "num": 4,
-            "text": "What does Amy's offer to help suggest about her?",
+            "text": "What does Amy's offer reveal about her?",
             "skill": "speaker_attitude",
             "options": [
-              "She wants to adopt a dog herself",
-              "She is a professional dog sitter",
-              "She is worried about the dog being alone",
-              "She is friendly and neighbourly"
+              "She wants a dog of her own",
+              "She works as a dog sitter",
+              "She is worried the dog is left alone",
+              "She is warm and neighbourly"
             ],
             "answer": 3
           },
           {
             "num": 5,
-            "text": "When might Robert need Amy's help with Maple?",
+            "text": "When does Robert think he'll need Amy's help?",
             "skill": "detail_comprehension",
             "options": [
-              "During the winter holidays",
-              "During the summer vacation in August",
-              "When the kids are at school",
-              "On weekends when Robert works"
+              "Over the winter holidays",
+              "During his August vacation",
+              "While the kids are at school",
+              "On the weekends he works"
             ],
             "answer": 1
           }
@@ -3970,31 +3970,31 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "How does Kim feel about the recipe?",
+            "text": "How did Kim feel about the dish?",
             "skill": "speaker_attitude",
             "options": [
-              "She thought it was average",
+              "She thought it was just okay",
               "She found it too spicy",
-              "She was extremely impressed",
-              "She was disappointed"
+              "She was blown away by it",
+              "She was let down"
             ],
             "answer": 2
           },
           {
             "num": 2,
-            "text": "What does Darren say is the key to the recipe?",
+            "text": "What does Darren say makes the recipe work?",
             "skill": "detail_comprehension",
             "options": [
               "The yogurt marinade",
               "Using a slow cooker",
-              "Adding extra cream at the end",
-              "Using boneless thighs instead of breast"
+              "Stirring in extra cream at the end",
+              "Choosing thighs over breast"
             ],
             "answer": 0
           },
           {
             "num": 3,
-            "text": "How long did Kim marinate the chicken?",
+            "text": "How long did Kim leave the chicken to marinate?",
             "skill": "detail_comprehension",
             "options": [
               "Overnight",
@@ -4006,25 +4006,25 @@ export const LISTENING_DATA = {
           },
           {
             "num": 4,
-            "text": "What does Darren recommend for next time?",
+            "text": "What does Darren suggest she do differently next time?",
             "skill": "detail_comprehension",
             "options": [
-              "Adding cashew paste to the sauce",
-              "Cooking it at a lower temperature",
-              "Using less yogurt in the marinade",
-              "Buying garam masala from the Indian grocery on Gerrard Street"
+              "Add cashew paste to the sauce",
+              "Cook it at a lower heat",
+              "Use less yogurt in the marinade",
+              "Get her garam masala from the Gerrard Street shop"
             ],
             "answer": 3
           },
           {
             "num": 5,
-            "text": "How do we know Kim's husband enjoyed the meal?",
+            "text": "How can we tell Kim's husband liked the meal?",
             "skill": "inference",
             "options": [
-              "He called Darren to thank him",
-              "He asked Kim to make it again this weekend",
-              "He posted about it on social media",
-              "He suggested they open a restaurant"
+              "He phoned Darren to thank him",
+              "He asked her to cook it again this weekend",
+              "He posted about it online",
+              "He suggested opening a restaurant"
             ],
             "answer": 1
           }
@@ -4099,7 +4099,7 @@ export const LISTENING_DATA = {
             "options": [
               "It has an outdoor rooftop patio",
               "It has private meeting rooms",
-              "It has big communal tables for working",
+              "It has large shared tables suited to working",
               "It's very small and cozy"
             ],
             "answer": 2
@@ -4111,7 +4111,7 @@ export const LISTENING_DATA = {
             "options": [
               "They offer free refills",
               "They use a unique brewing method",
-              "They roast their own beans in-house",
+              "They roast their beans on the premises",
               "They import beans from Colombia"
             ],
             "answer": 2
@@ -4121,7 +4121,7 @@ export const LISTENING_DATA = {
             "text": "What does Olivia say about the food menu?",
             "skill": "detail_comprehension",
             "options": [
-              "It's small with about eight or nine items",
+              "It's limited, with only eight or nine choices",
               "It's very large with many options",
               "They only serve desserts",
               "The food quality is poor"
@@ -4146,7 +4146,7 @@ export const LISTENING_DATA = {
             "skill": "speaker_attitude",
             "options": [
               "He thinks it's too expensive",
-              "He is interested and plans to visit",
+              "He's curious and intends to go",
               "He prefers Tim Hortons",
               "He is uninterested"
             ],
@@ -4222,7 +4222,7 @@ export const LISTENING_DATA = {
             "skill": "speaker_attitude",
             "options": [
               "She is bored and uninterested",
-              "She is more nervous than excited",
+              "She is more anxious than thrilled",
               "She is completely confident",
               "She wants to quit"
             ],
@@ -4235,7 +4235,7 @@ export const LISTENING_DATA = {
             "options": [
               "A background dancer",
               "A supporting character",
-              "Anne in Anne of Green Gables",
+              "Anne, the lead, in Anne of Green Gables",
               "The narrator"
             ],
             "answer": 2
@@ -4245,7 +4245,7 @@ export const LISTENING_DATA = {
             "text": "What problem is Emma having with her lines?",
             "skill": "detail_comprehension",
             "options": [
-              "She keeps forgetting one specific line during her big scene",
+              "She keeps losing one line during her key scene",
               "She mixes up the order of her lines",
               "She refuses to practise at home",
               "She speaks too quietly during rehearsal"
@@ -4260,7 +4260,7 @@ export const LISTENING_DATA = {
               "Write the lines on index cards",
               "Record yourself and listen back",
               "Practise in front of a mirror",
-              "Picture something silly when saying the line"
+              "Imagine something silly while saying the line"
             ],
             "answer": 3
           },
@@ -4272,7 +4272,7 @@ export const LISTENING_DATA = {
               "Parking is very limited",
               "Parents need to help set up the stage",
               "There is a pre-show reception",
-              "The gym fills up fast"
+              "Seats in the gym go quickly"
             ],
             "answer": 3
           }
@@ -4355,7 +4355,7 @@ export const LISTENING_DATA = {
             "options": [
               "Furniture and books",
               "Tools and electronics",
-              "Kids' toys, clothes, and kitchen appliances",
+              "Children's toys, clothing and kitchen gadgets",
               "Exercise equipment and clothing"
             ],
             "answer": 2
@@ -4365,7 +4365,7 @@ export const LISTENING_DATA = {
             "text": "What does Derek joke about?",
             "skill": "tone_recognition",
             "options": [
-              "Everyone owning a treadmill that collects dust",
+              "How nearly everyone owns a treadmill gathering dust",
               "His bookshelf being too heavy to move",
               "Connie having too many kitchen gadgets",
               "The early bird shoppers being too aggressive"
@@ -4377,7 +4377,7 @@ export const LISTENING_DATA = {
             "text": "What will Connie do to advertise the sale?",
             "skill": "detail_comprehension",
             "options": [
-              "Make a sign and post on the neighbourhood Facebook group",
+              "Make a sign and post in the neighbourhood Facebook group",
               "Hand out flyers at the community centre",
               "Ask the school to send a notice home",
               "Put an ad in the local newspaper"
@@ -4392,7 +4392,7 @@ export const LISTENING_DATA = {
               "Making price tags for all items",
               "Renting extra tables",
               "Buying snacks for shoppers",
-              "Getting change from the bank"
+              "Picking up change from the bank"
             ],
             "answer": 3
           }
@@ -4487,7 +4487,7 @@ export const LISTENING_DATA = {
             "options": [
               "He received a large inheritance",
               "His wife got a higher-paying job",
-              "He was moved into a role he hated",
+              "He was reassigned to a job he disliked",
               "He was fired during layoffs"
             ],
             "answer": 2
@@ -4524,7 +4524,7 @@ export const LISTENING_DATA = {
               "He is resigned to the idea that it will fail",
               "He plans to return to the bank if things don't work out",
               "He is overconfident and hasn't considered failure",
-              "He has accepted the risk and would rather try than live with regret"
+              "He would rather try than live with regret"
             ],
             "answer": 3
           }
@@ -4606,7 +4606,7 @@ export const LISTENING_DATA = {
             "skill": "speaker_attitude",
             "options": [
               "A culturally rich city trip",
-              "A relaxing beach vacation",
+              "A relaxing beach holiday",
               "An adventure and hiking holiday",
               "A road trip through multiple countries"
             ],
@@ -4618,7 +4618,7 @@ export const LISTENING_DATA = {
             "skill": "inference",
             "options": [
               "He doesn't like beaches",
-              "He tends to turn vacations into sightseeing marathons",
+              "He tends to turn trips into exhausting sightseeing",
               "He doesn't like Portuguese food",
               "He always picks the most expensive option"
             ],
@@ -4631,7 +4631,7 @@ export const LISTENING_DATA = {
             "options": [
               "He's worried about safety",
               "He doesn't like all-inclusive resorts",
-              "They already went to Mexico recently",
+              "They were in Mexico not long ago",
               "He thinks it's too far"
             ],
             "answer": 2
@@ -4726,13 +4726,13 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "What is the main complaint about the construction?",
-            "skill": "detail_comprehension",
+            "text": "What is the neighbours' main complaint about the construction?",
+            "skill": "inference",
             "options": [
-              "The construction materials are hazardous",
-              "Workers are parking on residents' driveways",
-              "It's blocking traffic on Elm Street",
-              "The noise starts too early in the morning"
+              "That the project is months behind schedule",
+              "That workers park on residents' driveways",
+              "That it's blocking traffic on Elm Street",
+              "That the drilling begins earlier than the rules permit"
             ],
             "answer": 3
           },
@@ -6302,13 +6302,13 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "What are the new Monday to Thursday hours?",
-            "skill": "detail_recall",
+            "text": "How do the new weekday hours differ from before?",
+            "skill": "inference",
             "options": [
-              "Nine a.m. to seven p.m.",
-              "Nine a.m. to eight p.m.",
-              "Ten a.m. to eight p.m.",
-              "Eight a.m. to seven p.m."
+              "The library now opens an hour earlier",
+              "The library now stays open an hour later",
+              "The library now closes an hour earlier",
+              "The weekday hours are unchanged"
             ],
             "answer": 1
           },
