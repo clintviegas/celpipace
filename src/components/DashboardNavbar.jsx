@@ -48,13 +48,18 @@ const NAV_LINKS = [
     ],
   },
   {
-    id: 'learn', label: 'Learn', path: '/blog', color: '#6B4FAF', colorLight: '#F3EFFF',
+    id: 'tools', label: 'My Tools', path: '/study-plan', color: '#0E7C66', colorLight: '#E8F7F2',
     parts: [
       { label: 'Study Plan', desc: 'Your adaptive week-by-week plan toward your target CLB', path: '/study-plan' },
       { label: 'Synonym Match', desc: 'Fast-paced vocabulary game — pick the right synonym', path: '/flashcards' },
       { label: 'Review Your Mistakes', desc: 'Spaced-repetition review of every question you missed', path: '/review' },
       { label: 'Progress Charts', desc: 'See your CLB band trend over time across all sections', path: '/progress' },
       { label: 'Band Prediction', desc: 'Estimate the CLB band you\u2019re likely to score', path: '/predict' },
+    ],
+  },
+  {
+    id: 'learn', label: 'Learn', path: '/blog', color: '#6B4FAF', colorLight: '#F3EFFF',
+    parts: [
       { label: 'CLB Scoring Guide', desc: 'Understand CLB levels and how scores map to CRS', path: '/scores' },
       { label: 'CRS Calculator', desc: 'Calculate your Express Entry CRS score instantly', path: '/crs-score-calculator' },
       { label: 'CELPIP Resources', desc: 'Section-by-section tips and training to boost your band', path: '/celpip-resources' },
@@ -63,7 +68,10 @@ const NAV_LINKS = [
   },
 ]
 
-const LEARN_PATHS = new Set(['celpip-resources', 'scores', 'crs-score-calculator', 'blog', 'review', 'study-plan', 'flashcards', 'progress', 'predict'])
+const RESOURCE_MENU_IDS = new Set(['tools', 'learn'])
+
+const TOOLS_PATHS = new Set(['review', 'study-plan', 'flashcards', 'progress', 'predict'])
+const LEARN_PATHS = new Set(['celpip-resources', 'scores', 'crs-score-calculator', 'blog'])
 const SECTION_ROUTE_IDS = {
   'celpip-listening-practice': 'listening',
   'celpip-reading-practice': 'reading',
@@ -92,7 +100,7 @@ export default function DashboardNavbar({ onSignIn }) {
   const location = useLocation()
 
   const routeId = location.pathname.split('/').filter(Boolean)[0] || 'dashboard'
-  const currentPath = LEARN_PATHS.has(routeId) ? 'learn' : (SECTION_ROUTE_IDS[routeId] || routeId)
+  const currentPath = TOOLS_PATHS.has(routeId) ? 'tools' : LEARN_PATHS.has(routeId) ? 'learn' : (SECTION_ROUTE_IDS[routeId] || routeId)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -193,7 +201,7 @@ export default function DashboardNavbar({ onSignIn }) {
                 {hasDrop && open && (
                   <div className="dbn-dropdown" style={{ '--dbn-drop-color': link.color, '--dbn-drop-light': link.colorLight }}>
                     <div className="dbn-drop-header" style={{ background: link.colorLight, color: link.color }}>
-                      {link.label} — {link.parts.length} {link.id === 'learn' ? 'resources' : 'parts'}
+                      {link.label} — {link.parts.length} {RESOURCE_MENU_IDS.has(link.id) ? 'resources' : 'parts'}
                     </div>
                     <div className="dbn-drop-list">
                       {link.parts.map(item => (
@@ -203,7 +211,7 @@ export default function DashboardNavbar({ onSignIn }) {
                         </button>
                       ))}
                     </div>
-                    {link.id !== 'learn' && (
+                    {!RESOURCE_MENU_IDS.has(link.id) && (
                       <div className="dbn-drop-footer">
                         <button className="dbn-drop-cta" style={{ background: link.color }} onClick={() => goToPath(link.path)}>
                           Practice {link.label} →

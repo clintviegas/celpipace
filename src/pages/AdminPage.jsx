@@ -43,11 +43,57 @@ function PlanCell({ row, showStatus = false }) {
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
       <Chip color="#ffd66a" text={planLabel(row).toUpperCase()} />
+      {row.cancel_at_period_end && <Chip color="#ff9a9a" text="CANCELING" />}
       {showStatus && row.subscription_status && row.subscription_status !== 'none' && (
         <span style={{ color: '#98a2b5', fontSize: 12 }}>{row.subscription_status}</span>
       )}
     </span>
   )
+}
+
+function fmtDate(value) {
+  if (!value) return null
+  const d = new Date(value)
+  return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString()
+}
+
+// Describe the renewal lifecycle state of a premium row so admins can tell at a
+// glance whether a subscriber will renew, is winding down (cancel-at-period-end),
+// is an admin/coupon grant with an expiry, or has lifetime access.
+function renewalInfo(row) {
+  if (!row?.is_premium) return { state: 'none', label: '—', color: '#667' }
+  const paid = isPaidPremiumSource(row.premium_source)
+  const expLabel = fmtDate(row.premium_expires_at)
+  if (row.cancel_at_period_end) {
+    return { state: 'canceling', label: 'Canceling', sub: expLabel ? `ends ${expLabel}` : 'ends at period end', color: '#ff9a9a' }
+  }
+  if (paid) {
+    return { state: 'renewing', label: 'Renews', sub: expLabel || 'auto', color: '#7dffb0' }
+  }
+  if (expLabel) {
+    return { state: 'expiring', label: 'Expires', sub: expLabel, color: '#ffd66a' }
+  }
+  return { state: 'lifetime', label: 'Lifetime', color: '#7dffb0' }
+}
+
+function RenewalBadge({ row }) {
+  const info = renewalInfo(row)
+  if (info.state === 'none') return <span style={{ color: '#667', fontSize: 12 }}>—</span>
+  return (
+    <span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.35 }}>
+      <span style={{ color: info.color, fontSize: 12, fontWeight: 600 }}>{info.label}</span>
+      {info.sub && <span style={{ color: '#98a2b5', fontSize: 11 }}>{info.sub}</span>}
+    </span>
+  )
+}
+
+// MRR counts only recurring paid subscribers — admin grants, coupons and
+// lifetime access are not recurring revenue and would inflate the figure.
+function countPaidPremium(rows) {
+  return rows.filter(r => r.is_premium && isPaidPremiumSource(r.premium_source)).length
+}
+function countCanceling(rows) {
+  return rows.filter(r => r.is_premium && r.cancel_at_period_end).length
 }
 
 function getAdminRedirectUrl() {
@@ -173,7 +219,8 @@ export default function AdminPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0B1626', color: '#E6ECF5', padding: '32px 20px' }}>
+    <div className="admin-root" style={{ minHeight: '100vh', background: '#0B1626', color: '#E6ECF5', padding: '32px 20px' }}>
+      <style>{ADMIN_RESPONSIVE_CSS}</style>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
@@ -188,7 +235,7 @@ export default function AdminPage() {
         </div>
 
         {/* Tab bar */}
-        <div style={{ display: 'flex', gap: 6, borderBottom: '1px solid #1d3152', marginBottom: 24, overflowX: 'auto' }}>
+        <div className="admin-tabbar" style={{ display: 'flex', gap: 6, borderBottom: '1px solid #1d3152', marginBottom: 24, overflowX: 'auto' }}>
           {[
             ['overview', 'Overview'],
             ['acquisition', 'Acquisition'],
@@ -333,8 +380,11 @@ function OverviewTab() {
   const free = total - premium
   const last7d = rows.filter(r => r.created_at && Date.now() - new Date(r.created_at).getTime() < 7 * 864e5).length
   const last30d = rows.filter(r => r.created_at && Date.now() - new Date(r.created_at).getTime() < 30 * 864e5).length
-  const mrr = premium * MRR_PER_PREMIUM
+  const paidPremium = countPaidPremium(rows)
+  const canceling = countCanceling(rows)
+  const mrr = paidPremium * MRR_PER_PREMIUM
   const arr = mrr * 12
+  const churnRisk = paidPremium ? Math.round((canceling / paidPremium) * 100) : 0
 
   const recent = rows.slice(0, 8)
 
@@ -343,10 +393,13 @@ function OverviewTab() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
         <StatCard label="Total Users"  value={total} />
         <StatCard label="Premium"      value={premium} accent="#ffd66a" />
+        <StatCard label="Paid subs"    value={paidPremium} accent="#7dffb0" />
+        <StatCard label="Canceling"    value={canceling} accent={canceling ? '#ff9a9a' : '#E6ECF5'} />
         <StatCard label="Free"         value={free} />
         <StatCard label="New (7d)"     value={last7d} accent="#7dc8ff" />
         <StatCard label="New (30d)"    value={last30d} accent="#7dc8ff" />
         <StatCard label="Conversion"   value={total ? `${Math.round(premium/total*100)}%` : '–'} />
+        <StatCard label="Churn risk"   value={`${churnRisk}%`} accent={churnRisk >= 20 ? '#ff9a9a' : '#E6ECF5'} />
         <StatCard label="Est. MRR"     value={`$${mrr.toFixed(0)}`} accent="#7dffb0" />
         <StatCard label="Est. ARR"     value={`$${arr.toFixed(0)}`} accent="#7dffb0" />
       </div>
@@ -394,6 +447,10 @@ function UsersTab() {
     return rows.filter(r => {
       if (filter === 'premium' && !r.is_premium) return false
       if (filter === 'free' && r.is_premium) return false
+      if (filter === 'canceling' && !(r.is_premium && r.cancel_at_period_end)) return false
+      if (filter === 'paid' && !(r.is_premium && isPaidPremiumSource(r.premium_source))) return false
+      if (filter === 'admin' && r.premium_source !== 'admin') return false
+      if (filter === 'coupon' && !String(r.premium_source || '').startsWith('coupon')) return false
       if (!q) return true
       return (r.email ?? '').toLowerCase().includes(q) || (r.full_name ?? '').toLowerCase().includes(q)
     })
@@ -438,17 +495,21 @@ function UsersTab() {
     <>
       <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
         <input placeholder="Search email or name…" value={query} onChange={e => setQuery(e.target.value)} style={{ ...inputStyle, flex: 1, minWidth: 240, margin: 0 }} />
-        <select value={filter} onChange={e => setFilter(e.target.value)} style={{ ...inputStyle, margin: 0, width: 140 }}>
-          <option value="all">All</option>
+        <select value={filter} onChange={e => setFilter(e.target.value)} style={{ ...inputStyle, margin: 0, width: 160 }}>
+          <option value="all">All users</option>
           <option value="premium">Premium</option>
           <option value="free">Free</option>
+          <option value="paid">Paid subs</option>
+          <option value="canceling">Canceling</option>
+          <option value="admin">Admin grant</option>
+          <option value="coupon">Coupon</option>
         </select>
         <button onClick={downloadCsv} style={btnPrimaryCompact}>⇣ Export CSV</button>
       </div>
 
       <Panel>
         <Table
-          cols={['Email', 'Name', 'Source', 'Location', 'Joined', 'Plan', 'Actions']}
+          cols={['Email', 'Name', 'Source', 'Location', 'Joined', 'Plan', 'Renewal', 'Actions']}
           rows={filtered.map(r => [
             r.email,
             r.full_name || <span style={{ color: '#667' }}>—</span>,
@@ -467,6 +528,7 @@ function UsersTab() {
             </div>,
             r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
             <PlanCell row={r} showStatus />,
+            <RenewalBadge row={r} />,
             <div style={{ display: 'flex', gap: 6 }}>
               <button
                 onClick={() => setSelectedUser(selectedUser?.id === r.id ? null : r)}
@@ -815,7 +877,16 @@ function SubscriptionsTab() {
     if (source === 'coupon') return (r.premium_source || '').startsWith('coupon')
     if (source === 'admin') return r.premium_source === 'admin'
     if (source === 'paid') return isPaidPremiumSource(r.premium_source)
+    if (source === 'canceling') return !!r.cancel_at_period_end
     return true
+  })
+
+  // Surface canceling subscribers first — they're the rows that need attention.
+  const sorted = [...filtered].sort((a, b) => {
+    if (!!b.cancel_at_period_end !== !!a.cancel_at_period_end) return a.cancel_at_period_end ? -1 : 1
+    const ax = a.premium_expires_at ? new Date(a.premium_expires_at).getTime() : Infinity
+    const bx = b.premium_expires_at ? new Date(b.premium_expires_at).getTime() : Infinity
+    return ax - bx
   })
 
   const bySource = subs.reduce((acc, r) => {
@@ -824,10 +895,22 @@ function SubscriptionsTab() {
     return acc
   }, {})
 
+  const paidCount = countPaidPremium(subs)
+  const cancelingCount = countCanceling(subs)
+  const mrr = paidCount * MRR_PER_PREMIUM
+  const churnRisk = paidCount ? Math.round((cancelingCount / paidCount) * 100) : 0
+
   return (
     <>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 14, marginBottom: 18 }}>
         <StatCard label="Total Premium" value={subs.length} accent="#ffd66a" />
+        <StatCard label="Paid subs" value={paidCount} accent="#7dffb0" />
+        <StatCard label="Canceling" value={cancelingCount} accent={cancelingCount ? '#ff9a9a' : '#E6ECF5'} />
+        <StatCard label="Churn risk" value={`${churnRisk}%`} accent={churnRisk >= 20 ? '#ff9a9a' : '#E6ECF5'} />
+        <StatCard label="Est. MRR" value={`$${mrr.toFixed(0)}`} accent="#7dffb0" />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 14, marginBottom: 24 }}>
         {Object.entries(bySource).map(([k, v]) => (
           <StatCard key={k} label={k} value={v} />
         ))}
@@ -836,21 +919,23 @@ function SubscriptionsTab() {
       <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
         <select value={source} onChange={e => setSource(e.target.value)} style={{ ...inputStyle, margin: 0, width: 180 }}>
           <option value="all">All sources</option>
+          <option value="paid">Paid</option>
+          <option value="canceling">Canceling</option>
           <option value="coupon">Coupon</option>
           <option value="admin">Admin grant</option>
-          <option value="paid">Paid</option>
         </select>
       </div>
 
       <Panel>
         <Table
-          cols={['Email', 'Name', 'Plan', 'Source', 'Status', 'Granted', 'Expires']}
-          rows={filtered.map(r => [
+          cols={['Email', 'Name', 'Plan', 'Source', 'Status', 'Renewal', 'Granted', 'Expires']}
+          rows={sorted.map(r => [
             r.email,
             r.full_name || '—',
             <PlanCell row={r} />,
             <span style={{ color: '#ffd66a', fontSize: 12 }}>{r.premium_source || '—'}</span>,
             r.subscription_status || '—',
+            <RenewalBadge row={r} />,
             r.premium_granted_at ? new Date(r.premium_granted_at).toLocaleDateString() : '—',
             r.premium_expires_at ? new Date(r.premium_expires_at).toLocaleDateString() : <span style={{ color: '#7dffb0' }}>lifetime</span>,
           ])}
@@ -2006,13 +2091,17 @@ function RefundsTab() {
   const refundedCount = refundedEvents.length
   const pendingCount  = pendingRequests.length
   const refundedTotal = refundedEvents.reduce((sum, e) => sum + (e.amount_cents || 0), 0)
+  const refundableCount = paidPayments.filter(p => p.stripe_payment_intent_id || p.stripe_session_id?.startsWith('in_')).length
+  const avgRefund = refundedCount ? refundedTotal / refundedCount : 0
 
   return (
     <>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
-        <StatCard label="Pending requests" value={pendingCount} accent="#ffd66a" />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Pending requests" value={pendingCount} accent={pendingCount ? '#ffd66a' : '#E6ECF5'} />
+        <StatCard label="Refundable payments" value={refundableCount} accent="#7dc8ff" />
         <StatCard label="Refunds issued" value={refundedCount} accent="#ff9a9a" />
         <StatCard label="Refunded total" value={`$${(refundedTotal / 100).toFixed(2)}`} />
+        <StatCard label="Avg refund" value={`$${(avgRefund / 100).toFixed(2)}`} />
       </div>
 
       {toast && (
@@ -2030,7 +2119,7 @@ function RefundsTab() {
           rows={pendingRequests.map(r => [
             r.email || '—',
             r.reason || '—',
-            r.plan_at_cancel || '—',
+            r.plan_at_cancel ? <Chip color="#ffd66a" text={r.plan_at_cancel} /> : '—',
             (r.free_text || '').slice(0, 80) || <span style={{ color: '#5b6781' }}>—</span>,
             new Date(r.created_at).toLocaleString(),
           ])}
@@ -2044,7 +2133,7 @@ function RefundsTab() {
             cols={['Email', 'Plan', 'Amount', 'Created', 'Action']}
             rows={paidPayments.map(p => [
               p.email || '—',
-              p.plan,
+              p.plan ? <Chip color="#ffd66a" text={p.plan} /> : '—',
               `${(p.amount_cents / 100).toFixed(2)} ${p.currency.toUpperCase()}`,
               new Date(p.created_at).toLocaleDateString(),
               <button
@@ -2450,3 +2539,20 @@ const btnSmallStyle = {
 }
 const thStyle = { padding: '12px 14px', fontSize: 11, color: '#98a2b5', fontWeight: 600, letterSpacing: '.04em', textTransform: 'uppercase' }
 const tdStyle = { padding: '12px 14px', color: '#E6ECF5', verticalAlign: 'middle' }
+
+// Injected once into the admin shell. Inline styles can't express media
+// queries, so this handles the small-screen layout (tighter padding, compact
+// tab bar, and a sensible table min-width so columns stay readable + scroll).
+const ADMIN_RESPONSIVE_CSS = `
+.admin-root table { min-width: 580px; }
+.admin-root .admin-tabbar { -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.admin-root .admin-tabbar::-webkit-scrollbar { height: 4px; }
+.admin-root .admin-tabbar::-webkit-scrollbar-thumb { background: #1d3152; border-radius: 4px; }
+@media (max-width: 720px) {
+  .admin-root { padding: 18px 12px !important; }
+  .admin-root .admin-tabbar button { padding: 9px 13px !important; font-size: 13px !important; }
+}
+@media (max-width: 480px) {
+  .admin-root { padding: 14px 10px !important; }
+}
+`

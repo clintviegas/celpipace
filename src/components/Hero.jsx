@@ -73,6 +73,11 @@ export default function Hero() {
           </button>
         </div>
 
+        <div className="hp-hero-trust">
+          <span className="hp-hero-trust-stars" aria-hidden="true">★★★★★</span>
+          <span>Trusted by Canadian PR &amp; citizenship applicants · No credit card to start</span>
+        </div>
+
         <div className="hp-hero-sections">
           {SECTIONS.map((s) => (
             <button

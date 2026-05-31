@@ -2,6 +2,18 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef } f
 import { AUTH_CONSENT_STORAGE_KEY, PUBLIC_SITE_URL, TERMS_VERSION } from '../data/constants'
 import { getStoredAttribution } from '../lib/attribution.js'
 
+export const PENDING_EXAM_DATE_KEY = 'celpipace_pending_exam_date'
+
+function readPendingExamDate() {
+  if (typeof window === 'undefined') return null
+  try { return window.localStorage.getItem(PENDING_EXAM_DATE_KEY) || null } catch { return null }
+}
+
+function clearPendingExamDate() {
+  if (typeof window === 'undefined') return
+  try { window.localStorage.removeItem(PENDING_EXAM_DATE_KEY) } catch { void 0 }
+}
+
 let supabaseClientPromise
 
 function getSupabaseClient() {
@@ -30,19 +42,21 @@ async function maybeSyncNewUser(profile) {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.access_token) return
     const attribution = getStoredAttribution()
+    const examDate = readPendingExamDate()
     const res = await fetch('/api/on-signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify({ attribution: attribution || null }),
+      body: JSON.stringify({ attribution: attribution || null, examDate: examDate || undefined }),
     })
     const data = await res.json().catch(() => ({}))
     if (!res.ok) {
       console.warn('[auth] signup/geo sync failed:', data.error || res.status)
       return
     }
+    if (examDate) clearPendingExamDate()
     if (isNew) sessionStorage.setItem(signupFlag, '1')
   } catch (error) {
     console.warn('[auth] signup/geo sync exception:', error?.message || error)
