@@ -7,6 +7,7 @@
 //   { "path": "/api/cron?job=sweep",     "schedule": "0 0 * * *"  }
 //   { "path": "/api/cron?job=marketing", "schedule": "0 10 * * *" }
 //   { "path": "/api/cron?job=winback",   "schedule": "0 11 * * *" }
+//   { "path": "/api/cron?job=reminders", "schedule": "0 16 * * *" }
 //
 // Manual trigger (admin / dev):
 //   POST /api/cron?job=sweep
@@ -15,11 +16,13 @@
 import sweepHandler    from './_lib/job-sweep.js'
 import marketingHandler from './_lib/job-marketing.js'
 import winbackHandler  from './_lib/job-winback.js'
+import remindersHandler from './_lib/job-reminders.js'
 
 const JOBS = {
   sweep:     sweepHandler,
   marketing: marketingHandler,
   winback:   winbackHandler,
+  reminders: remindersHandler,
 }
 
 export default async function handler(req, res) {
@@ -27,7 +30,7 @@ export default async function handler(req, res) {
 
   if (!job) {
     return res.status(400).json({
-      error: 'Missing ?job= param. Valid values: sweep, marketing, winback',
+      error: 'Missing ?job= param. Valid values: sweep, marketing, winback, reminders',
       available: Object.keys(JOBS),
     })
   }

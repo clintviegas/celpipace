@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useProgress } from '../hooks/useProgress'
 import { supabase } from '../lib/supabase'
+import { getReviewSummary } from '../lib/reviewQueue'
+import { loadPlanConfig, fetchPlanConfigCloud, savePlanConfigLocal, generatePlan, daysUntil } from '../lib/studyPlan'
+import { getFlashcardSummary } from '../lib/flashcards'
+import { fetchBandPrediction } from '../lib/bandPrediction'
 import SEO from '../components/SEO'
 
 /* ── section config ── */
@@ -83,6 +87,46 @@ const DashboardPage = () => {
     return () => { cancelled = true }
   }, [user?.id])
 
+  // ── Review queue summary (spaced repetition) ────────────────────────
+  const [reviewSummary, setReviewSummary] = useState({ due: 0, learning: 0, mastered: 0, total: 0 })
+  useEffect(() => {
+    if (!user?.id) { setReviewSummary({ due: 0, learning: 0, mastered: 0, total: 0 }); return }
+    let cancelled = false
+    getReviewSummary().then(s => { if (!cancelled) setReviewSummary(s) }).catch(() => {})
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  // ── Study plan config (adaptive plan) ───────────────────────────────
+  const [planConfig, setPlanConfig] = useState(() => loadPlanConfig(user?.id || null))
+  useEffect(() => {
+    if (!user?.id) { setPlanConfig(loadPlanConfig(null)); return }
+    let cancelled = false
+    ;(async () => {
+      const cloud = await fetchPlanConfigCloud()
+      if (cancelled) return
+      if (cloud) { savePlanConfigLocal(user.id, cloud); setPlanConfig(cloud) }
+      else setPlanConfig(loadPlanConfig(user.id))
+    })()
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  // ── Flashcard summary (vocab/grammar drills) ────────────────────────
+  const [flashSummary, setFlashSummary] = useState({ total: 0, due: 0, mastered: 0 })
+  useEffect(() => {
+    let cancelled = false
+    getFlashcardSummary().then(s => { if (!cancelled) setFlashSummary(s) }).catch(() => {})
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  // ── Band prediction (estimated CLB from practice history) ───────────
+  const [prediction, setPrediction] = useState(null)
+  useEffect(() => {
+    if (!user?.id) { setPrediction(null); return }
+    let cancelled = false
+    fetchBandPrediction().then(p => { if (!cancelled) setPrediction(p) }).catch(() => {})
+    return () => { cancelled = true }
+  }, [user?.id])
+
   const resumeSession = (s) => {
     if (s.kind === 'mock') {
       navigate(`/mock-test/${s.exam_number || 1}`)
@@ -113,6 +157,22 @@ const DashboardPage = () => {
     return { text: 'Continue practising', route: '/exam', icon: '📝' }
   }
   const nextAction = getNextAction()
+
+  // Study plan dashboard summary
+  const planSummary = (() => {
+    if (!planConfig) return { text: 'Build your personalised week-by-week plan' }
+    const dLeft = daysUntil(planConfig.targetDate)
+    const plan = generatePlan(planConfig, stats.sections || {})
+    const week = plan.weeks[0]
+    const focusLabels = (week?.focus || [])
+      .map(k => SECTIONS.find(s => s.key === k)?.label)
+      .filter(Boolean)
+      .join(' & ')
+    if (plan.overdue) return { text: 'Test date passed — review or set a new date' }
+    return {
+      text: `Week 1 of ${plan.weeksLeft} · ${dLeft} day${dLeft === 1 ? '' : 's'} left${focusLabels ? ` · focus: ${focusLabels}` : ''}`,
+    }
+  })()
 
   const handleRetrySync = async () => {
     setRetrying(true)
@@ -291,6 +351,144 @@ const DashboardPage = () => {
             Go →
           </button>
         </motion.div>
+
+        {/* ── Study Plan ── */}
+        <motion.div
+          className="db-next-action"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.32 }}
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/study-plan')}
+        >
+          <div className="db-next-action-left">
+            <span className="db-next-action-icon">🗓️</span>
+            <div>
+              <span className="db-next-action-label">Study Plan</span>
+              <span className="db-next-action-text">{planSummary.text}</span>
+            </div>
+          </div>
+          <button
+            className="db-next-action-btn"
+            onClick={(e) => { e.stopPropagation(); navigate('/study-plan') }}
+          >
+            {planConfig ? 'Open →' : 'Build →'}
+          </button>
+        </motion.div>
+
+        {/* ── Flashcard Drills ── */}
+        <motion.div
+          className="db-next-action"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.34 }}
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/flashcards')}
+        >
+          <div className="db-next-action-left">
+            <span className="db-next-action-icon">🃏</span>
+            <div>
+              <span className="db-next-action-label">Flashcard Drills</span>
+              <span className="db-next-action-text">
+                {flashSummary.due > 0
+                  ? `${flashSummary.due} card${flashSummary.due === 1 ? '' : 's'} ready · ${flashSummary.mastered} mastered`
+                  : `Vocabulary, idioms & grammar · ${flashSummary.mastered}/${flashSummary.total} mastered`}
+              </span>
+            </div>
+          </div>
+          <button
+            className="db-next-action-btn"
+            onClick={(e) => { e.stopPropagation(); navigate('/flashcards') }}
+            style={flashSummary.due > 0 ? { background: '#2D8A56' } : undefined}
+          >
+            {flashSummary.due > 0 ? `Study ${flashSummary.due} →` : 'Open →'}
+          </button>
+        </motion.div>
+
+        {/* ── Progress Charts ── */}
+        {stats.totalCompleted > 0 && (
+          <motion.div
+            className="db-next-action"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.36 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/progress')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">📈</span>
+              <div>
+                <span className="db-next-action-label">Progress Charts</span>
+                <span className="db-next-action-text">See your CLB band trend over time across all sections</span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/progress') }}
+            >
+              View →
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── Band Prediction (estimated CLB) ── */}
+        {prediction?.overall?.predictedBand != null && (
+          <motion.div
+            className="db-next-action"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.38 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/predict')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">🔮</span>
+              <div>
+                <span className="db-next-action-label">Predicted band · CLB {prediction.overall.predictedBand}</span>
+                <span className="db-next-action-text">
+                  {`Estimated from your recent practice across ${prediction.overall.sectionsCovered} section${prediction.overall.sectionsCovered === 1 ? '' : 's'}`}
+                </span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/predict') }}
+            >
+              View →
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── Review Mistakes (spaced repetition) ── */}
+        {reviewSummary.total > 0 && (
+          <motion.div
+            className="db-next-action"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.35 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/review')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">🔁</span>
+              <div>
+                <span className="db-next-action-label">Review Your Mistakes</span>
+                <span className="db-next-action-text">
+                  {reviewSummary.due > 0
+                    ? `${reviewSummary.due} question${reviewSummary.due === 1 ? '' : 's'} due for review`
+                    : `${reviewSummary.mastered} mastered · nothing due right now`}
+                </span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/review') }}
+              style={reviewSummary.due > 0 ? { background: '#C8102E' } : undefined}
+            >
+              {reviewSummary.due > 0 ? `Review ${reviewSummary.due} →` : 'Open →'}
+            </button>
+          </motion.div>
+        )}
 
         {/* ── Practice by Section (LIVE) ── */}
         <section className="db-section">

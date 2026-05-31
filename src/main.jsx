@@ -4,8 +4,10 @@ import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import App from './App.jsx'
 import { captureAttribution } from './lib/attribution.js'
+import { registerSW } from './lib/registerSW.js'
 
 captureAttribution()
+registerSW()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

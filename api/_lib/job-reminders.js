@@ -1,39 +1,37 @@
 /* global process */
-// /api/cron-winback.js
-// Daily win-back sequence for cancelled/expired Premium users.
+// /api/_lib/job-reminders.js
+// Daily study-reminder / re-engagement sequence for learners who practised
+// before but have gone quiet. Dispatched via /api/cron?job=reminders.
 //
-//   day 3  → renderWinbackDay3   (your progress is saved)
-//   day 14 → renderWinbackDay14  (value recap + CELPIP25 coupon)
-//   day 30 → renderWinbackDay30  (final check-in)
+//   day 3  → renderStudyReminderD3   (keep your momentum)
+//   day 7  → renderStudyReminderD7   (a week off…)
+//   day 14 → renderStudyReminderD14  (back on track — take a mock)
 //
-// Eligibility (all must be true):
+// Eligibility (enforced in the reminder_candidates RPC + here):
 //   - profiles.marketing_consent = true
 //   - profiles.marketing_unsubscribed_at is null
-//   - profiles.is_premium = false
-//   - profiles.subscription_status IN ('expired', 'canceled', 'refunded')
-//   - profiles.premium_expires_at in the right window for that step (±1 day)
+//   - has at least one practice_attempt
+//   - most-recent practice_attempt falls in the window for that step (±1 day)
 //   - no prior row in marketing_sends for (user_id, campaign_key)
 //
-// Idempotency: marketing_sends has UNIQUE(user_id, campaign_key). The INSERT
-// happens BEFORE the actual send so a second cron run can never double-send.
+// Idempotency: marketing_sends has UNIQUE(user_id, campaign_key). The lock
+// INSERT happens BEFORE the send, so a second cron run can never double-send.
 
 import { createClient } from '@supabase/supabase-js'
 import {
   sendEmail,
-  renderWinbackDay3,
-  renderWinbackDay14,
-  renderWinbackDay30,
+  renderStudyReminderD3,
+  renderStudyReminderD7,
+  renderStudyReminderD14,
 } from './email.js'
 
 const STEPS = [
-  { key: 'winback_d3',  daysSinceExpiry: 3,  render: renderWinbackDay3  },
-  { key: 'winback_d14', daysSinceExpiry: 14, render: renderWinbackDay14 },
-  { key: 'winback_d30', daysSinceExpiry: 30, render: renderWinbackDay30 },
+  { key: 'reminder_d3',  daysInactive: 3,  render: renderStudyReminderD3  },
+  { key: 'reminder_d7',  daysInactive: 7,  render: renderStudyReminderD7  },
+  { key: 'reminder_d14', daysInactive: 14, render: renderStudyReminderD14 },
 ]
 
 const MAX_SENDS_PER_RUN = 200
-
-const WINBACK_STATUSES = ['expired', 'canceled', 'refunded']
 
 export default async function handler(req, res) {
   const supaUrl    = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
@@ -58,23 +56,19 @@ export default async function handler(req, res) {
   for (const step of STEPS) {
     const stepResult = { eligible: 0, sent: 0, skipped: 0, failed: 0 }
 
-    // Window: premium expired between (now - day - 1) and (now - day).
-    const upperIso = new Date(Date.now() - step.daysSinceExpiry * 86400_000).toISOString()
-    const lowerIso = new Date(Date.now() - (step.daysSinceExpiry + 1) * 86400_000).toISOString()
+    // Window: last attempt between (now - day - 1) and (now - day) so a daily
+    // cron tick catches users regardless of the time of day they last practised.
+    const upperIso = new Date(Date.now() - step.daysInactive * 86400_000).toISOString()
+    const lowerIso = new Date(Date.now() - (step.daysInactive + 1) * 86400_000).toISOString()
 
-    const { data: candidates, error: selErr } = await supabase
-      .from('profiles')
-      .select('id, email, full_name, marketing_consent, marketing_unsubscribed_at, is_premium, subscription_status, premium_expires_at')
-      .eq('marketing_consent', true)
-      .is('marketing_unsubscribed_at', null)
-      .eq('is_premium', false)
-      .in('subscription_status', WINBACK_STATUSES)
-      .gte('premium_expires_at', lowerIso)
-      .lt('premium_expires_at', upperIso)
-      .limit(budget)
+    const { data: candidates, error: selErr } = await supabase.rpc('reminder_candidates', {
+      p_lower: lowerIso,
+      p_upper: upperIso,
+      p_limit: budget,
+    })
 
     if (selErr) {
-      console.error('[cron-winback] candidate select failed:', selErr.message, 'step=', step.key)
+      console.error('[cron-reminders] candidate select failed:', selErr.message, 'step=', step.key)
       summary.steps[step.key] = { ...stepResult, error: selErr.message }
       continue
     }
@@ -88,26 +82,26 @@ export default async function handler(req, res) {
       if (!dryRun) {
         const { error: lockErr, data: locked } = await supabase
           .from('marketing_sends')
-          .insert({ user_id: profile.id, campaign_key: step.key, metadata: { step: step.key } })
+          .insert({ user_id: profile.user_id, campaign_key: step.key, metadata: { step: step.key } })
           .select('id')
           .maybeSingle()
 
         if (lockErr) {
-          if (lockErr.code === '23505') { stepResult.skipped++; continue }
-          console.error('[cron-winback] lock insert failed:', lockErr.message)
+          if (lockErr.code === '23505') { stepResult.skipped++; continue } // already sent
+          console.error('[cron-reminders] lock insert failed:', lockErr.message)
           stepResult.failed++; continue
         }
         if (!locked) { stepResult.skipped++; continue }
 
-        const { subject, html } = step.render({ name: profile.full_name, userId: profile.id })
+        const { subject, html } = step.render({ name: profile.full_name, userId: profile.user_id })
         const sendResult = await sendEmail({
           supabase,
-          userId:   profile.id,
+          userId:   profile.user_id,
           toEmail:  profile.email,
           kind:     step.key,
           subject,
           html,
-          metadata: { campaign: 'winback', step: step.key },
+          metadata: { campaign: 'reminders', step: step.key },
         })
 
         if (sendResult.ok) {
@@ -115,15 +109,17 @@ export default async function handler(req, res) {
           budget--
           if (sendResult.logId) {
             await supabase.from('marketing_sends').update({ email_log_id: sendResult.logId })
-              .eq('user_id', profile.id).eq('campaign_key', step.key).catch(() => {})
+              .eq('user_id', profile.user_id).eq('campaign_key', step.key).catch(() => {})
           }
         } else {
           stepResult.failed++
+          // Roll back the lock so the user can be retried on the next tick if
+          // this was a transient send failure.
           await supabase.from('marketing_sends').delete()
-            .eq('user_id', profile.id).eq('campaign_key', step.key).catch(() => {})
+            .eq('user_id', profile.user_id).eq('campaign_key', step.key).catch(() => {})
         }
       } else {
-        stepResult.sent++
+        stepResult.sent++ // dry-run: count what would have been sent
       }
     }
 

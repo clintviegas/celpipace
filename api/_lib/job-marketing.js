@@ -25,7 +25,7 @@ import {
   renderFreeNudgeDay2,
   renderFreeNudgeDay5,
   renderFreeNudgeDay14,
-} from './_lib/email.js'
+} from './email.js'
 
 const STEPS = [
   { key: 'free2premium_d2',  daysSinceSignup: 2,  render: renderFreeNudgeDay2  },

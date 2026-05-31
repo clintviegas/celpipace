@@ -5,6 +5,7 @@
 ══════════════════════════════════════════════════════════════ */
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { supabase } from '../lib/supabase'
+import { syncMissedFromAttempt } from '../lib/reviewQueue'
 
 const STORAGE_KEY = 'celpipiq_progress'
 const STREAK_KEY  = 'celpipiq_streak'
@@ -381,6 +382,10 @@ export function useProgress() {
     saveAttemptToCloud({ section, partId, setNum, score: safeScore, total, pct, details })
       .catch(err => console.warn('[practice_attempts] unexpected:', err?.message || err))
       .finally(() => refreshPendingSync())
+
+    // ── Add any missed MCQs to the spaced-repetition review queue ──
+    syncMissedFromAttempt(section, partId, setNum, details)
+      .catch(err => console.warn('[reviewQueue] sync failed:', err?.message || err))
   }, [refreshPendingSync])
 
   /* ── Save progress to Supabase ── */

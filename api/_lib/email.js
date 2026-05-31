@@ -343,6 +343,39 @@ export function renderPastDue({ name, amountCents, currency, hostedInvoiceUrl })
   return { subject, html: shell({ heading, body, ctaUrl: `${SITE}/subscription`, ctaLabel: 'Update Payment Method' }) }
 }
 
+// ─── Study reminder / re-engagement (days 3 / 7 / 14 since last practice) ────
+// Short, encouraging nudges for learners who practised before but went quiet.
+
+// Day 3 — gentle, momentum-focused.
+export function renderStudyReminderD3({ name, userId }) {
+  const subject = `Keep your CELPIP streak going`
+  const heading = `One set today keeps your momentum`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>You were making real progress — don't let it cool off. A single 10-minute practice set today keeps your skills sharp and your score climbing.</p>
+    <p>Pick the section you find hardest. That's where the fastest gains are.</p>`
+  return { subject, html: marketingShell({ heading, body, ctaUrl: `${SITE}/practice`, ctaLabel: 'Practise 10 minutes', userId }) }
+}
+
+// Day 7 — re-engagement with a concrete reason to return.
+export function renderStudyReminderD7({ name, userId }) {
+  const subject = `Your CELPIP score won't wait`
+  const heading = `A week off is a week your competition gained`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>It's been a week since your last practice. Language skills fade fast when they're idle — but they come back even faster once you restart.</p>
+    <p>Jump back in with one quick set today. Your saved progress and CLB reports are exactly where you left them.</p>`
+  return { subject, html: marketingShell({ heading, body, ctaUrl: `${SITE}/dashboard`, ctaLabel: 'Resume practising', userId }) }
+}
+
+// Day 14 — stronger nudge, points at mock + progress proof.
+export function renderStudyReminderD14({ name, userId }) {
+  const subject = `Still aiming for that CELPIP band?`
+  const heading = `Two weeks out — let's get you back on track`
+  const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
+    <p>Your target band is still within reach, but it gets harder the longer you wait. The quickest way to restart is a full timed mock — it shows you exactly which section needs the most work right now.</p>
+    <p>30–60 minutes today can put you right back on pace.</p>`
+  return { subject, html: marketingShell({ heading, body, ctaUrl: `${SITE}/exam`, ctaLabel: 'Take a mock exam', userId }) }
+}
+
 // ─── Win-back sequence (days 3 / 14 / 30 after premium_expires_at) ────────────
 
 // Day 3 — empathy + "your progress is saved"

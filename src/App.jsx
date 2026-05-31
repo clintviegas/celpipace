@@ -16,6 +16,7 @@ import Footer from './components/Footer'
 import SEO from './components/SEO'
 const AuthModal = lazy(() => import('./components/AuthModal'))
 const ChatWidget = lazy(() => import('./components/ChatWidget'))
+const InstallPrompt = lazy(() => import('./components/InstallPrompt'))
 const HomeDesktopSections = lazy(() => import('./components/HomeDesktopSections'))
 const Pricing = lazy(() => import('./components/Pricing'))
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -34,6 +35,11 @@ const WritingPage = lazy(() => import('./pages/WritingPage'))
 const SpeakingPage = lazy(() => import('./pages/SpeakingPage'))
 const PracticeSetPage = lazy(() => import('./pages/PracticeSetPage'))
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
+const ReviewPage = lazy(() => import('./pages/ReviewPage'))
+const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage'))
+const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage'))
+const ProgressPage = lazy(() => import('./pages/ProgressPage'))
+const PredictionPage = lazy(() => import('./pages/PredictionPage'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
 const WritingPracticePage = lazy(() => import('./pages/WritingPracticePage'))
 const MockTestPage = lazy(() => import('./pages/MockTestPage'))
@@ -364,7 +370,7 @@ export function AppInner() {
   const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
   // Keep public learning pages on the original site navbar so dropdown behavior stays consistent after navigation.
-  const innerPaths = ['/dashboard','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription','/crs-score-calculator']
+  const innerPaths = ['/dashboard','/review','/study-plan','/flashcards','/progress','/predict','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription','/crs-score-calculator']
   const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
   const isPaymentRoute = location.pathname === '/payment'
 
@@ -397,6 +403,11 @@ export function AppInner() {
         <Routes>
           <Route path="/" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/review" element={<ReviewPage />} />
+          <Route path="/study-plan" element={<StudyPlanPage />} />
+          <Route path="/flashcards" element={<FlashcardsPage />} />
+          <Route path="/progress" element={<ProgressPage />} />
+          <Route path="/predict" element={<PredictionPage />} />
           <Route path="/practice" element={<PracticePage />} />
           <Route path="/celpip-practice-test" element={<SEOLandingPage type="practice" />} />
           <Route path="/celpip-mock-test" element={<SEOLandingPage type="mock" />} />
@@ -451,6 +462,9 @@ export function AppInner() {
           <ChatWidget />
         </Suspense>
       )}
+      <Suspense fallback={null}>
+        <InstallPrompt />
+      </Suspense>
     </>
   )
 }

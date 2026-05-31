@@ -50,6 +50,11 @@ const NAV_LINKS = [
   {
     id: 'learn', label: 'Learn', path: '/blog', color: '#6B4FAF', colorLight: '#F3EFFF',
     parts: [
+      { label: 'Study Plan', desc: 'Your adaptive week-by-week plan toward your target CLB', path: '/study-plan' },
+      { label: 'Flashcard Drills', desc: 'Vocabulary, idioms & grammar with spaced repetition', path: '/flashcards' },
+      { label: 'Progress Charts', desc: 'See your CLB band trend over time across all sections', path: '/progress' },
+      { label: 'Band Prediction', desc: 'Estimate the CLB band you\u2019re likely to score', path: '/predict' },
+      { label: 'Review Your Mistakes', desc: 'Spaced-repetition review of every question you missed', path: '/review' },
       { label: 'CLB Scoring Guide', desc: 'Understand CLB levels and how scores map to CRS', path: '/scores' },
       { label: 'CRS Calculator', desc: 'Calculate your Express Entry CRS score instantly', path: '/crs-score-calculator' },
       { label: 'CELPIP Resources', desc: 'Section-by-section tips and training to boost your CLB band', path: '/celpip-resources' },
@@ -59,7 +64,7 @@ const NAV_LINKS = [
   },
 ]
 
-const LEARN_PATHS = new Set(['celpip-resources', 'scores', 'crs-score-calculator', 'blog'])
+const LEARN_PATHS = new Set(['celpip-resources', 'scores', 'crs-score-calculator', 'blog', 'review', 'study-plan', 'flashcards', 'progress', 'predict'])
 const SECTION_ROUTE_IDS = {
   'celpip-listening-practice': 'listening',
   'celpip-reading-practice': 'reading',

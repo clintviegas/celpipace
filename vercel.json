@@ -6,7 +6,8 @@
   "crons": [
     { "path": "/api/cron?job=sweep",     "schedule": "0 0 * * *"  },
     { "path": "/api/cron?job=marketing", "schedule": "0 10 * * *" },
-    { "path": "/api/cron?job=winback",   "schedule": "0 11 * * *" }
+    { "path": "/api/cron?job=winback",   "schedule": "0 11 * * *" },
+    { "path": "/api/cron?job=reminders", "schedule": "0 16 * * *" }
   ],
   "redirects": [
     { "source": "/writing",              "destination": "/celpip-writing-practice",       "permanent": true },
