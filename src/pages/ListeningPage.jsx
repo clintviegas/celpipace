@@ -32,7 +32,7 @@ const PARTS = [
     duration: '5–7 min',
     difficulty: 'Intermediate',
     description:
-      'A casual, real-life exchange between two people — a phone call, a chat with a neighbour, a discussion at work. The tone is informal and the language reflects everyday Canadian English. Questions test your grasp of the main topic and specific details mentioned in the conversation.',
+      'A casual, real-life exchange between two people — a phone call, a chat with a neighbour, a discussion at work. The tone is informal and the language reflects everyday English. Questions test your grasp of the main topic and specific details mentioned in the conversation.',
     tip: 'Pay attention to how the speakers feel about the topic — opinion and attitude questions are common in this part. Key words like "love it", "a bit worried", or "honestly" signal emotional tone.',
     skills: ['Detail comprehension', 'Speaker attitude', 'Tone recognition', 'Inference'],
   },
@@ -58,7 +58,7 @@ const PARTS = [
     duration: '5–7 min',
     difficulty: 'Upper Intermediate',
     description:
-      'A short audio clip styled like a Canadian radio or TV news report. The language is formal, paced, and precise. Questions focus on the key facts, the topic of the report, and the significance of events described.',
+      'A short audio clip styled like a radio or TV news report. The language is formal, paced, and precise. Questions focus on the key facts, the topic of the report, and the significance of events described.',
     tip: 'News items often begin with the most important fact. If you catch the opening sentence clearly, you will have the main idea. Questions about "what happened" or "why this matters" are based on the opening and closing lines.',
     skills: ['Main topic', 'Fact extraction', 'Formal language', 'Context inference'],
   },
@@ -214,8 +214,8 @@ export default function ListeningPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(74,144,217,.2)', border: '1px solid rgba(74,144,217,.4)', color: '#7db8f0' }}>
             🎧 CELPIP Listening
           </div>
-          <h1 className="lp-hero-title">Train your ear for real Canadian conversations.</h1>
-          <p className="lp-hero-subtitle">Six parts of real-world Canadian English — phone calls, news, debates and more.<br/>38 questions · 47–55 minutes · CLB 4–12</p>
+          <h1 className="lp-hero-title">Train your ear for real-world conversations.</h1>
+          <p className="lp-hero-subtitle">Six parts of authentic, real-world English — phone calls, news, debates and more.<br/>38 questions · 47–55 minutes · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>6</strong><span>Parts</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>38</strong><span>Questions</span></div>
@@ -253,8 +253,8 @@ export default function ListeningPage() {
                 Part 5 is a multi-speaker discussion. Part 6 is a viewpoints debate.
               </p>
               <p style={{ marginTop: 10 }}>
-                All audio reflects real-life Canadian English — accents, idioms, and vocabulary you would
-                genuinely encounter working, studying, or living in Canada.
+                All audio reflects authentic, real-life English — the accents, idioms, and everyday
+                vocabulary you would genuinely encounter at work, in study, and in daily life.
               </p>
             </div>
             <div className="lp-info-block">

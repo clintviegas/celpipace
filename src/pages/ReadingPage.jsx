@@ -175,8 +175,8 @@ export default function ReadingPage() {
           <div className="lp-hero-badge" style={{ background: 'rgba(45,138,86,.2)', border: '1px solid rgba(45,138,86,.4)', color: '#7dcfa0' }}>
             📖 CELPIP Reading
           </div>
-          <h1 className="lp-hero-title">Read between the Canadian lines.</h1>
-          <p className="lp-hero-subtitle">Emails, diagrams, features and viewpoints — the way real Canadian text actually shows up.<br/>4 parts · 38 questions · 55–60 minutes · CLB 4–12</p>
+          <h1 className="lp-hero-title">Read between the lines.</h1>
+          <p className="lp-hero-subtitle">Emails, diagrams, features and viewpoints — the way real-world text actually shows up.<br/>4 parts · 38 questions · 55–60 minutes · CLB 4–12</p>
           <div className="lp-hero-stats">
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>4</strong><span>Parts</span></div>
             <div className="lp-hero-stat"><strong style={{ color: COLOR }}>38</strong><span>Questions</span></div>
@@ -202,7 +202,7 @@ export default function ReadingPage() {
               <div className="lp-info-icon">📋</div>
               <h3>What the Test Includes</h3>
               <p>The Reading test covers four distinct text types in 55 to 60 minutes. R1 is a written correspondence — an email or letter. R2 pairs a passage with a diagram, form, or table. R3 is a longer informational passage on a general topic. R4 presents two contrasting viewpoints on the same subject.</p>
-              <p style={{ marginTop: 10 }}>All passages use Canadian English and cover topics relevant to everyday life, work, and community settings. No specialist knowledge is required — only reading comprehension.</p>
+              <p style={{ marginTop: 10 }}>All passages use real-world English and cover topics relevant to everyday life, work, and community settings. No specialist knowledge is required — only reading comprehension.</p>
             </div>
             <div className="lp-info-block">
               <div className="lp-info-icon">📊</div>

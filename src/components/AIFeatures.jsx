@@ -28,9 +28,9 @@ const features = [
     desc: 'Expert strategies, vocabulary lists, scoring rubrics, and common mistakes.',
   },
   {
-    icon: '🍁',
-    title: 'Canadian Context',
-    desc: 'All scenarios use authentic Canadian workplace, community, and everyday settings.',
+    icon: '�',
+    title: 'Real-World Context',
+    desc: 'Every scenario uses authentic workplace, community, and everyday settings — just like the real test.',
   },
 ]
 
