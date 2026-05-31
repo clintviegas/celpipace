@@ -6528,13 +6528,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "What discount do members get at the smoothie bar?",
-            "skill": "detail_recall",
+            "text": "What does Marcus advise members who are new to free weights to do?",
+            "skill": "inference",
             "options": [
-              "Fifteen percent",
-              "Ten percent",
-              "Twenty percent",
-              "Five percent"
+              "Avoid the free weights area until they gain experience",
+              "Book the complimentary thirty-minute trainer assessment",
+              "Watch the guided workout on the machine screens first",
+              "Start with the cardio zone before lifting"
             ],
             "answer": 1
           }
@@ -6728,15 +6728,15 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "How many stairwells does the building have?",
-            "skill": "specific_fact",
+            "text": "Why does Paul insist residents never re-enter the building once outside?",
+            "skill": "inference",
             "options": [
-              "Two",
-              "Three",
-              "Four",
-              "One"
+              "Re-entry will set off the alarm a second time",
+              "No possession or pet is worth risking one's life for",
+              "The fire department needs the lobby kept clear",
+              "The doors lock automatically during an alarm"
             ],
-            "answer": 0
+            "answer": 1
           },
           {
             "num": 2,
@@ -6954,15 +6954,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "Which camp fills up the fastest?",
-            "skill": "detail_recall",
+            "text": "Why does the coordinator advise registering early?",
+            "skill": "inference",
             "options": [
-              "STEM Discovery Camp",
-              "Creative Arts Camp",
-              "All three fill equally fast",
-              "Adventure Camp"
+              "Because online registration closes at the end of March",
+              "Because spots fill quickly, especially for STEM camp",
+              "Because prices rise after the opening week",
+              "Because the discount only applies to early sign-ups"
             ],
-            "answer": 0
+            "answer": 1
           }
         ]
       },
@@ -7234,15 +7234,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "When will the first quarterly check-in take place?",
-            "skill": "specific_fact",
+            "text": "Under what circumstances can remote work privileges be revoked?",
+            "skill": "inference",
             "options": [
-              "August",
-              "June",
-              "July",
-              "September"
+              "If an employee misses the quarterly check-in",
+              "If there are documented performance concerns",
+              "If an employee lives too far from the office",
+              "If an employee fails to buy an ergonomic chair"
             ],
-            "answer": 0
+            "answer": 1
           }
         ]
       },
@@ -7518,15 +7518,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "When will the full meeting minutes be available?",
-            "skill": "detail_recall",
+            "text": "Why is the upcoming reserve fund study especially important?",
+            "skill": "inference",
             "options": [
-              "By Friday",
-              "At the next board meeting",
-              "By Wednesday",
-              "By next Monday"
+              "Because monthly maintenance fees are rising",
+              "Because major repairs such as the aging roof are approaching",
+              "Because two new board members have joined",
+              "Because insurance premiums increased this year"
             ],
-            "answer": 0
+            "answer": 1
           }
         ]
       },
@@ -7798,15 +7798,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "What is the minimum monthly volunteer commitment?",
-            "skill": "detail_recall",
+            "text": "Why does the coordinator emphasize client confidentiality?",
+            "skill": "inference",
             "options": [
-              "Four hours",
-              "Eight hours",
-              "Twelve hours",
-              "Two hours"
+              "Because the funding agency requires it",
+              "Because clients are often in vulnerable situations and deserve privacy",
+              "Because volunteers could otherwise be sued",
+              "Because client names are needed for the database"
             ],
-            "answer": 0
+            "answer": 1
           }
         ]
       },
@@ -8148,15 +8148,15 @@ export const LISTENING_DATA = {
         "questions": [
           {
             "num": 1,
-            "text": "How long is the entire project expected to take?",
-            "skill": "detail_recall",
+            "text": "Why will some residents receive forty-eight hours' advance notice during phase two?",
+            "skill": "inference",
             "options": [
-              "Eighteen months",
-              "Twenty-four months",
-              "Twelve months",
-              "Fifteen months"
+              "Because on-street parking will be suspended",
+              "Because night work may be required for the sewer installation",
+              "Because the streetcar will be diverted to Queen Street",
+              "Because the road will be resurfaced overnight"
             ],
-            "answer": 0
+            "answer": 1
           },
           {
             "num": 2,
@@ -8658,15 +8658,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 7,
-            "text": "Who is the evacuation warden for this section?",
-            "skill": "specific_fact",
+            "text": "Why does Dave stress not waiting for a supervisor to file an injury report?",
+            "skill": "inference",
             "options": [
-              "It rotates weekly",
-              "Dave Kowalski",
-              "Fiona Chen",
-              "The shift supervisor on duty"
+              "Because supervisors are usually unavailable",
+              "Because every worker has both the right and the responsibility to report",
+              "Because supervisors often forget to file",
+              "Because reports can only be submitted online"
             ],
-            "answer": 2
+            "answer": 1
           },
           {
             "num": 8,
@@ -8812,13 +8812,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "In how many languages are services available at the centre?",
-            "skill": "specific_fact",
+            "text": "Why does Amara recommend buying interim private health insurance?",
+            "skill": "inference",
             "options": [
-              "Eight",
-              "Six",
-              "Four",
-              "Five"
+              "Because OHIP never covers newcomers",
+              "Because there is a three-month OHIP waiting period after establishing residency",
+              "Because private insurance is cheaper than OHIP",
+              "Because family doctors require it before registration"
             ],
             "answer": 1
           }
@@ -9104,13 +9104,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 8,
-            "text": "How often can a business receive an OSBIG grant?",
-            "skill": "detail_recall",
+            "text": "A project costing sixty thousand dollars would qualify for a maximum grant of how much?",
+            "skill": "inference",
             "options": [
-              "Once every three years",
-              "Once every five years",
-              "Only once ever",
-              "Once every two years"
+              "Sixty thousand dollars",
+              "Forty-five thousand dollars",
+              "Fifty thousand dollars",
+              "Thirty thousand dollars"
             ],
             "answer": 1
           }
@@ -9196,13 +9196,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 5,
-            "text": "What does the expanded walking trail now connect to?",
-            "skill": "fact_extraction",
+            "text": "What does the report suggest about the park before the renovation?",
+            "skill": "context_inference",
             "options": [
-              "The Waterfront Trail network",
-              "The Royal Botanical Gardens",
-              "The downtown shopping district",
-              "The Burlington Transit terminal"
+              "It had gone more than two decades without a major upgrade",
+              "It was the busiest park in Burlington",
+              "It had been permanently closed for safety reasons",
+              "It was built entirely with private donations"
             ],
             "answer": 0
           }
@@ -9442,15 +9442,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 5,
-            "text": "How many employees are affected by the closure?",
-            "skill": "fact_extraction",
+            "text": "What is the owner's attitude following the fire?",
+            "skill": "context_inference",
             "options": [
-              "Seventeen",
-              "Twenty-two",
-              "Twelve",
-              "Fifteen"
+              "He plans to retire and close permanently",
+              "He is devastated but determined to rebuild",
+              "He blames the fire department's slow response",
+              "He intends to relocate to a different neighbourhood"
             ],
-            "answer": 0
+            "answer": 1
           }
         ]
       },
@@ -9852,13 +9852,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 5,
-            "text": "When is hiring expected to begin?",
-            "skill": "fact_extraction",
+            "text": "How significant is this announcement for the town of Cobourg?",
+            "skill": "context_inference",
             "options": [
-              "July",
-              "September",
-              "January of next year",
-              "June"
+              "It will make Cobourg the province's tech capital",
+              "It is the town's most significant economic announcement in a decade",
+              "It will replace every manufacturing job lost in 2019",
+              "It guarantees lower property taxes for residents"
             ],
             "answer": 1
           }
@@ -10098,13 +10098,13 @@ export const LISTENING_DATA = {
           },
           {
             "num": 5,
-            "text": "What will happen to rural delivery schedules?",
-            "skill": "fact_extraction",
+            "text": "Why will package delivery remain at five days a week?",
+            "skill": "context_inference",
             "options": [
-              "They will increase to five days a week",
-              "They will not change",
-              "They will be replaced by private couriers",
-              "They will also move to three days a week"
+              "Because parcels are more profitable than letters",
+              "Because demand has shifted from letter mail to e-commerce parcels",
+              "Because the postal union insisted on it",
+              "Because rural areas require daily parcel service"
             ],
             "answer": 1
           }
@@ -10754,15 +10754,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 5,
-            "text": "By what year does the government aim to meet the two percent target?",
-            "skill": "fact_extraction",
+            "text": "Why do critics argue the government's timelines are inadequate?",
+            "skill": "context_inference",
             "options": [
-              "2032",
-              "2028",
-              "2030",
-              "2035"
+              "Because spending is being wasted on the wrong equipment",
+              "Because the deteriorating global security environment demands faster action",
+              "Because NATO is about to raise its target above two percent",
+              "Because the army cannot recruit enough new soldiers"
             ],
-            "answer": 0
+            "answer": 1
           }
         ]
       }
@@ -10918,15 +10918,15 @@ export const LISTENING_DATA = {
           },
           {
             "num": 5,
-            "text": "Who suggests Noodle House?",
-            "skill": "multi_speaker_tracking",
+            "text": "Why is Noodle House chosen over the other options?",
+            "skill": "inference",
             "options": [
-              "Kyle",
-              "All three suggest it together",
-              "Priya",
-              "Dana"
+              "It is the cheapest of all the options",
+              "It is fast and handles large groups, fitting their time limit",
+              "It is the closest restaurant to the office",
+              "It has the best online reviews"
             ],
-            "answer": 2
+            "answer": 1
           },
           {
             "num": 6,
