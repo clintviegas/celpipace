@@ -160,17 +160,22 @@ const MOBILE_HOME_LINKS = [
   { label: 'Premium', path: '/pricing', Icon: Trophy },
 ]
 
+// Keep this exactly in sync with the .home-mobile-only / .home-desktop-flow
+// media query in index.css so the rendered branch always matches what CSS
+// displays (prevents a mobile->desktop flash on first paint).
+const MOBILE_VIEWPORT_QUERY = '(max-width: 767px), (max-width: 1024px) and (hover: none) and (pointer: coarse)'
+
 function getInitialMobileViewport() {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia('(max-width: 767px)').matches
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  return window.matchMedia(MOBILE_VIEWPORT_QUERY).matches
 }
 
 function useIsMobileViewport() {
   const [isMobile, setIsMobile] = useState(getInitialMobileViewport)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined
-    const query = window.matchMedia('(max-width: 767px)')
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return undefined
+    const query = window.matchMedia(MOBILE_VIEWPORT_QUERY)
     const handleChange = () => setIsMobile(query.matches)
     handleChange()
     query.addEventListener?.('change', handleChange)

@@ -51,14 +51,13 @@ const NAV_LINKS = [
     id: 'learn', label: 'Learn', path: '/blog', color: '#6B4FAF', colorLight: '#F3EFFF',
     parts: [
       { label: 'Study Plan', desc: 'Your adaptive week-by-week plan toward your target CLB', path: '/study-plan' },
-      { label: 'Flashcard Drills', desc: 'Vocabulary, idioms & grammar with spaced repetition', path: '/flashcards' },
+      { label: 'Synonym Match', desc: 'Fast-paced vocabulary game — pick the right synonym', path: '/flashcards' },
+      { label: 'Review Your Mistakes', desc: 'Spaced-repetition review of every question you missed', path: '/review' },
       { label: 'Progress Charts', desc: 'See your CLB band trend over time across all sections', path: '/progress' },
       { label: 'Band Prediction', desc: 'Estimate the CLB band you\u2019re likely to score', path: '/predict' },
-      { label: 'Review Your Mistakes', desc: 'Spaced-repetition review of every question you missed', path: '/review' },
       { label: 'CLB Scoring Guide', desc: 'Understand CLB levels and how scores map to CRS', path: '/scores' },
       { label: 'CRS Calculator', desc: 'Calculate your Express Entry CRS score instantly', path: '/crs-score-calculator' },
-      { label: 'CELPIP Resources', desc: 'Section-by-section tips and training to boost your CLB band', path: '/celpip-resources' },
-      { label: 'Score Tracker', desc: 'Track your CLB progress across all 4 sections', path: '/scores' },
+      { label: 'CELPIP Resources', desc: 'Section-by-section tips and training to boost your band', path: '/celpip-resources' },
       { label: 'Blog & Articles', desc: 'Expert tips, strategies and immigration guides', path: '/blog' },
     ],
   },
@@ -190,6 +189,7 @@ export default function DashboardNavbar({ onSignIn }) {
                   {link.label}
                   {hasDrop && <ChevronDown className="dbn-link-chevron" size={14} style={{ transform: open ? 'rotate(180deg)' : 'none' }} />}
                 </button>
+                {hasDrop && open && !menuOpen && <span className="dbn-drop-bridge" aria-hidden="true" />}
                 {hasDrop && open && (
                   <div className="dbn-dropdown" style={{ '--dbn-drop-color': link.color, '--dbn-drop-light': link.colorLight }}>
                     <div className="dbn-drop-header" style={{ background: link.colorLight, color: link.color }}>

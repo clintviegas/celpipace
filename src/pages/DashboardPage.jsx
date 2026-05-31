@@ -6,7 +6,7 @@ import { useProgress } from '../hooks/useProgress'
 import { supabase } from '../lib/supabase'
 import { getReviewSummary } from '../lib/reviewQueue'
 import { loadPlanConfig, fetchPlanConfigCloud, savePlanConfigLocal, generatePlan, daysUntil } from '../lib/studyPlan'
-import { getFlashcardSummary } from '../lib/flashcards'
+import { getSynonymSummary } from '../lib/synonymGame'
 import { fetchBandPrediction } from '../lib/bandPrediction'
 import SEO from '../components/SEO'
 
@@ -110,12 +110,10 @@ const DashboardPage = () => {
     return () => { cancelled = true }
   }, [user?.id])
 
-  // ── Flashcard summary (vocab/grammar drills) ────────────────────────
-  const [flashSummary, setFlashSummary] = useState({ total: 0, due: 0, mastered: 0 })
+  // ── Synonym Match game summary ──────────────────────────────────────
+  const [flashSummary, setFlashSummary] = useState({ wordBank: 0, gamesPlayed: 0, bestStreak: 0, accuracy: 0 })
   useEffect(() => {
-    let cancelled = false
-    getFlashcardSummary().then(s => { if (!cancelled) setFlashSummary(s) }).catch(() => {})
-    return () => { cancelled = true }
+    try { setFlashSummary(getSynonymSummary()) } catch { /* ignore */ }
   }, [user?.id])
 
   // ── Band prediction (estimated CLB from practice history) ───────────
@@ -376,7 +374,7 @@ const DashboardPage = () => {
           </button>
         </motion.div>
 
-        {/* ── Flashcard Drills ── */}
+        {/* ── Synonym Match ── */}
         <motion.div
           className="db-next-action"
           initial={{ opacity: 0, y: 10 }}
@@ -386,22 +384,22 @@ const DashboardPage = () => {
           onClick={() => navigate('/flashcards')}
         >
           <div className="db-next-action-left">
-            <span className="db-next-action-icon">🃏</span>
+            <span className="db-next-action-icon">�</span>
             <div>
-              <span className="db-next-action-label">Flashcard Drills</span>
+              <span className="db-next-action-label">Synonym Match</span>
               <span className="db-next-action-text">
-                {flashSummary.due > 0
-                  ? `${flashSummary.due} card${flashSummary.due === 1 ? '' : 's'} ready · ${flashSummary.mastered} mastered`
-                  : `Vocabulary, idioms & grammar · ${flashSummary.mastered}/${flashSummary.total} mastered`}
+                {flashSummary.gamesPlayed > 0
+                  ? `${flashSummary.accuracy}% accuracy · best streak 🔥 ${flashSummary.bestStreak}`
+                  : `Guess the synonym · ${flashSummary.wordBank} high-band words`}
               </span>
             </div>
           </div>
           <button
             className="db-next-action-btn"
             onClick={(e) => { e.stopPropagation(); navigate('/flashcards') }}
-            style={flashSummary.due > 0 ? { background: '#2D8A56' } : undefined}
+            style={{ background: '#2D8A56' }}
           >
-            {flashSummary.due > 0 ? `Study ${flashSummary.due} →` : 'Open →'}
+            {flashSummary.gamesPlayed > 0 ? 'Play →' : 'Play now →'}
           </button>
         </motion.div>
 
