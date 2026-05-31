@@ -1984,6 +1984,7 @@ function RefundsTab() {
           action: 'refund',
           payment_intent_id: payment.stripe_payment_intent_id || null,
           charge_id: null,
+          stripe_session_id: payment.stripe_session_id || null,
           reason: 'requested_by_customer',
         }),
       })

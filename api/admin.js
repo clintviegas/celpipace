@@ -133,13 +133,49 @@ export default async function handler(req, res) {
       const stripe = new Stripe(stripeSecret, { apiVersion: '2024-06-20' })
 
       const { payment_intent_id, charge_id, reason } = body
-      if (!payment_intent_id && !charge_id) {
+      const sessionId = String(body.stripe_session_id || '').trim()
+
+      // Resolve a payment_intent / charge to refund. Subscription renewals only
+      // store the invoice id (in_…) on the payment row, so fall back to looking
+      // it up from the invoice or the original Checkout Session.
+      let resolvedPaymentIntent = payment_intent_id || null
+      let resolvedCharge = charge_id || null
+
+      try {
+        if (!resolvedPaymentIntent && !resolvedCharge && sessionId) {
+          if (sessionId.startsWith('in_')) {
+            const invoice = await stripe.invoices.retrieve(sessionId)
+            resolvedPaymentIntent = typeof invoice.payment_intent === 'string'
+              ? invoice.payment_intent
+              : invoice.payment_intent?.id || null
+            if (!resolvedPaymentIntent) {
+              resolvedCharge = typeof invoice.charge === 'string'
+                ? invoice.charge
+                : invoice.charge?.id || null
+            }
+          } else if (sessionId.startsWith('cs_')) {
+            const checkout = await stripe.checkout.sessions.retrieve(sessionId)
+            resolvedPaymentIntent = typeof checkout.payment_intent === 'string'
+              ? checkout.payment_intent
+              : checkout.payment_intent?.id || null
+          } else if (sessionId.startsWith('pi_')) {
+            resolvedPaymentIntent = sessionId
+          } else if (sessionId.startsWith('ch_')) {
+            resolvedCharge = sessionId
+          }
+        }
+      } catch (lookupErr) {
+        console.error('[admin/refund] lookup error:', lookupErr?.message || lookupErr)
+        return res.status(400).json({ error: `Could not resolve a charge to refund: ${lookupErr?.message || lookupErr}` })
+      }
+
+      if (!resolvedPaymentIntent && !resolvedCharge) {
         return res.status(400).json({ error: 'Need payment_intent_id or charge_id' })
       }
 
       try {
         const refund = await stripe.refunds.create({
-          ...(payment_intent_id ? { payment_intent: payment_intent_id } : { charge: charge_id }),
+          ...(resolvedPaymentIntent ? { payment_intent: resolvedPaymentIntent } : { charge: resolvedCharge }),
           reason: reason || 'requested_by_customer',
           metadata: { issued_by: authData.user.email, source: 'admin_panel' },
         })
