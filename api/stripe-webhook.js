@@ -513,8 +513,26 @@ export default async function handler(req, res) {
           const { error: refundErr } = await supabase.from('payments').update({ status: 'refunded' }).eq('stripe_payment_intent_id', pi)
           if (refundErr) console.error('[stripe-webhook] payments refund update error:', refundErr.message)
         }
+
+        // Detect an admin-issued cancellation refund. These deduct the Stripe
+        // fee, so they're *partial* (c.refunded stays false) but should still
+        // end Premium access. Read the latest refund's metadata to identify them.
+        let adminRefund = (c.refunds?.data || []).find(r => r?.metadata?.source === 'admin_panel') || null
+        if (!adminRefund) {
+          try {
+            const list = await stripe.refunds.list({ charge: c.id, limit: 1 })
+            const latest = list.data?.[0]
+            if (latest?.metadata?.source === 'admin_panel') adminRefund = latest
+          } catch (e) {
+            console.error('[stripe-webhook] refund list error:', e?.message)
+          }
+        }
+        const shouldRevoke = c.refunded || !!adminRefund
+        const feeCents = adminRefund ? Number(adminRefund.metadata?.fee_cents || 0) : 0
+        const grossCents = adminRefund ? Number(adminRefund.metadata?.gross_cents || c.amount || 0) : (c.amount || 0)
+
         const profile = customerId ? await findProfile(supabase, { customerId }) : null
-        if (profile && c.refunded) {
+        if (profile && shouldRevoke) {
           const { error: revokeErr } = await supabase.from('profiles').update({
             is_premium: false,
             subscription_status: 'refunded',
@@ -532,17 +550,22 @@ export default async function handler(req, res) {
           amount_cents:           c.amount_refunded ?? 0,
           currency:               (c.currency || 'usd').toLowerCase(),
           stripe_customer_id:     customerId,
-          metadata:               { payment_intent: pi, charge_id: c.id },
+          metadata:               { payment_intent: pi, charge_id: c.id, fee_cents: feeCents, admin_refund: !!adminRefund },
         })
 
         // Refund confirmation email — fires for both full and partial refunds.
         if (profile?.email) {
-          const isPartial = !c.refunded // c.refunded=true only on full refund
+          // An admin cancellation refund ends access even though it's partial,
+          // so message it as a clean refund with the processing fee noted.
+          const accessEnded = shouldRevoke
+          const isPartial = !accessEnded
           const { subject, html } = renderRefundProcessed({
             name:        profile.full_name,
             amountCents: c.amount_refunded ?? 0,
             currency:    (c.currency || 'usd').toLowerCase(),
             isPartial,
+            grossCents:  adminRefund ? grossCents : null,
+            feeCents:    adminRefund ? feeCents : null,
           })
           try {
             await sendEmail({
@@ -552,7 +575,7 @@ export default async function handler(req, res) {
               kind:     'refund_processed',
               subject,
               html,
-              metadata: { charge_id: c.id, payment_intent: pi, amount_refunded: c.amount_refunded, is_partial: isPartial },
+              metadata: { charge_id: c.id, payment_intent: pi, amount_refunded: c.amount_refunded, is_partial: isPartial, fee_cents: feeCents },
             })
           } catch (err) {
             console.error('[stripe-webhook] refund email failed:', err?.message)

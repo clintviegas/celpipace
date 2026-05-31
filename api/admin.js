@@ -174,11 +174,86 @@ export default async function handler(req, res) {
       }
 
       try {
+        // Load the underlying charge + its balance transaction so we know the
+        // exact, non-refundable Stripe processing fee. Stripe does NOT return
+        // the original fee on a refund, so we deduct it from what we send back
+        // to the customer to keep the platform whole.
+        let charge = null
+        if (resolvedCharge) {
+          charge = await stripe.charges.retrieve(resolvedCharge, { expand: ['balance_transaction'] })
+        } else {
+          const pi = await stripe.paymentIntents.retrieve(resolvedPaymentIntent, {
+            expand: ['latest_charge.balance_transaction'],
+          })
+          charge = typeof pi.latest_charge === 'object' ? pi.latest_charge : null
+          if (!charge && pi.latest_charge) {
+            charge = await stripe.charges.retrieve(pi.latest_charge, { expand: ['balance_transaction'] })
+          }
+        }
+        if (!charge) return res.status(400).json({ error: 'Could not load the charge to refund' })
+        if (!resolvedCharge) resolvedCharge = charge.id
+        if (!resolvedPaymentIntent) {
+          resolvedPaymentIntent = typeof charge.payment_intent === 'string'
+            ? charge.payment_intent
+            : charge.payment_intent?.id || null
+        }
+
+        const bt = typeof charge.balance_transaction === 'object' ? charge.balance_transaction : null
+        const stripeFee = Math.max(0, bt?.fee || 0)
+        const alreadyRefunded = charge.amount_refunded || 0
+        const refundable = Math.max(0, charge.amount - alreadyRefunded)
+        // Deduct the fee from the refundable balance; never go below zero.
+        const refundAmount = Math.max(0, refundable - stripeFee)
+
+        if (refundAmount <= 0) {
+          return res.status(400).json({
+            error: `Nothing to refund after the $${(stripeFee / 100).toFixed(2)} processing fee (refundable was $${(refundable / 100).toFixed(2)}).`,
+          })
+        }
+
         const refund = await stripe.refunds.create({
           ...(resolvedPaymentIntent ? { payment_intent: resolvedPaymentIntent } : { charge: resolvedCharge }),
+          amount: refundAmount,
           reason: reason || 'requested_by_customer',
-          metadata: { issued_by: authData.user.email, source: 'admin_panel' },
+          metadata: {
+            issued_by: authData.user.email,
+            source: 'admin_panel',
+            kind: 'cancellation_refund',
+            gross_cents: String(charge.amount),
+            fee_cents: String(stripeFee),
+          },
         })
+
+        // Revoke premium + mark the payment refunded immediately. A fee-deducted
+        // refund is technically a *partial* refund (charge.refunded stays false),
+        // so we can't rely on the webhook's full-refund check alone.
+        const customerId = typeof charge.customer === 'string' ? charge.customer : charge.customer?.id || null
+        try {
+          if (resolvedPaymentIntent) {
+            await supabase.from('payments').update({ status: 'refunded' }).eq('stripe_payment_intent_id', resolvedPaymentIntent)
+          }
+          let profile = null
+          if (customerId) {
+            const { data } = await supabase.from('profiles').select('id').eq('stripe_customer_id', customerId).maybeSingle()
+            profile = data || null
+          }
+          if (!profile && charge.billing_details?.email) {
+            const { data } = await supabase.from('profiles').select('id').eq('email', charge.billing_details.email).maybeSingle()
+            profile = data || null
+          }
+          if (profile) {
+            await supabase.from('profiles').update({
+              is_premium: false,
+              subscription_status: 'refunded',
+              current_plan: 'free',
+              premium_source: 'refund',
+              premium_expires_at: new Date().toISOString(),
+              cancel_at_period_end: true,
+            }).eq('id', profile.id)
+          }
+        } catch (revokeErr) {
+          console.error('[admin/refund] revoke error:', revokeErr?.message || revokeErr)
+        }
 
         return res.status(200).json({
           ok: true,
@@ -186,6 +261,9 @@ export default async function handler(req, res) {
           amount: refund.amount,
           currency: refund.currency,
           status: refund.status,
+          gross_cents: charge.amount,
+          fee_cents: stripeFee,
+          net_refunded_cents: refundAmount,
         })
       } catch (err) {
         console.error('[admin/refund] stripe error:', err?.message || err)

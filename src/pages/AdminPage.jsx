@@ -1972,7 +1972,7 @@ function RefundsTab() {
       setToast({ type: 'err', msg: `No payment_intent on row — cannot refund automatically. Refund in Stripe dashboard instead.` })
       return
     }
-    if (!window.confirm(`Refund ${(payment.amount_cents / 100).toFixed(2)} ${payment.currency.toUpperCase()} to ${payment.email}? This will end their Premium access immediately.`)) return
+    if (!window.confirm(`Refund ${(payment.amount_cents / 100).toFixed(2)} ${payment.currency.toUpperCase()} (minus the non-refundable Stripe processing fee) to ${payment.email}? This will end their Premium access immediately.`)) return
     setBusyId(payment.id)
     setToast(null)
     try {
@@ -1990,7 +1990,8 @@ function RefundsTab() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Refund failed')
-      setToast({ type: 'ok', msg: `Refunded ${(data.amount / 100).toFixed(2)} ${data.currency?.toUpperCase()} — Stripe will push the webhook in a few seconds.` })
+      const fee = typeof data.fee_cents === 'number' ? ` (Stripe fee $${(data.fee_cents / 100).toFixed(2)} deducted)` : ''
+      setToast({ type: 'ok', msg: `Refunded ${(data.amount / 100).toFixed(2)} ${data.currency?.toUpperCase()}${fee} — Premium ended. Stripe webhook confirms in a few seconds.` })
       setTimeout(load, 4000)
     } catch (e) {
       setToast({ type: 'err', msg: e.message })

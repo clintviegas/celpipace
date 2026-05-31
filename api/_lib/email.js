@@ -252,12 +252,16 @@ export function renderCancelFinal({ name }) {
   return { subject, html: shell({ heading, body, ctaUrl: `${SITE}/pricing`, ctaLabel: 'See Plans' }) }
 }
 
-export function renderRefundProcessed({ name, amountCents, currency, isPartial }) {
+export function renderRefundProcessed({ name, amountCents, currency, isPartial, grossCents = null, feeCents = null }) {
   const label = isPartial ? `A partial refund of ${fmtMoney(amountCents, currency)}` : `Your refund of ${fmtMoney(amountCents, currency)}`
   const subject = `${isPartial ? 'Partial refund' : 'Refund'} processed — ${fmtMoney(amountCents, currency)}`
   const heading = isPartial ? `Partial refund processed` : `Refund processed`
+  const feeNote = (feeCents && feeCents > 0 && grossCents)
+    ? `<p style="font-size:14px;color:#475569">Original charge ${fmtMoney(grossCents, currency)} − non-refundable payment processing fee ${fmtMoney(feeCents, currency)} = ${fmtMoney(amountCents, currency)} refunded.</p>`
+    : ``
   const body = `<p>Hi ${escapeHtml(name || 'there')},</p>
     <p>${label} has been processed back to your original payment method. Most banks and card issuers post the credit within 3–4 business days — some take up to 10 days depending on the bank.</p>
+    ${feeNote}
     ${isPartial
       ? `<p>Your Premium access remains active until the end of your current billing period. We've kept your progress and CLB reports either way.</p>`
       : `<p>Your Premium access has been ended and your account is back on the free plan. We've kept your progress and CLB reports — sign in any time to pick up where you left off.</p>`
