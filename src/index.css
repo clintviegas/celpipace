@@ -7908,6 +7908,19 @@ img { display: block; max-width: 100%; }
   .dbn-upgrade-btn { display: none; }
 }
 
+/* Laptop band: 8 top-level items + logo + account cluster get tight here.
+   Tighten spacing so the full horizontal nav fits without crowding/overflow
+   before the hamburger takes over at 1024px. */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .dbn-inner { padding: 0 16px; }
+  .dbn-logo { margin-right: 4px; padding-right: 4px; }
+  .dbn-logo img, .dbn-logo svg { max-width: 134px; }
+  .dbn-links { gap: 0; }
+  .dbn-link { padding: 6px 9px; font-size: 0.84rem; }
+  .dbn-link-drop { gap: 2px; }
+  .dbn-upgrade-btn { padding: 7px 12px; font-size: 0.82rem; }
+}
+
 .mobile-app-tabs { display: none; }
 
 @media (max-width: 1024px) {
