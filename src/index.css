@@ -352,7 +352,7 @@ img { display: block; max-width: 100%; }
     transform: none;
     min-width: 0;
     width: 100%;
-    max-height: 46vh;
+    max-height: 72vh;
     overflow-y: auto;
     box-shadow: 0 12px 30px -24px rgba(15,31,61,.38);
     border: 1px solid #dfe6f1;
@@ -7443,7 +7443,7 @@ img { display: block; max-width: 100%; }
   display: grid;
   gap: 2px;
   padding: 7px;
-  max-height: min(64vh, 460px);
+  max-height: min(82vh, 640px);
   overflow-y: auto;
   overscroll-behavior: contain;
 }

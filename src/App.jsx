@@ -51,7 +51,12 @@ const ContactPage = lazy(() => import('./pages/ContactPage'))
 const SEOLandingPage = lazy(() => import('./pages/SEOLandingPage'))
 
 function RouteLoader() {
-  return <main className="route-loader" aria-label="Loading page">Loading...</main>
+  return (
+    <main className="route-loader" aria-label="Loading page" role="status" aria-live="polite">
+      <span className="route-loader-spinner" aria-hidden="true" />
+      <span className="route-loader-text">Loading…</span>
+    </main>
+  )
 }
 
 function RedirectWithParam({ to }) {

@@ -166,6 +166,24 @@ export default async function handler(req, res) {
         },
       },
     })
+    // Record the checkout intent so the abandoned-checkout recovery job can
+    // re-engage users who start but don't finish. Fire-and-forget: never block
+    // or fail the checkout on a logging error.
+    if (supaUrl && svcKey) {
+      try {
+        const supabase = createClient(supaUrl, svcKey, {
+          auth: { persistSession: false, autoRefreshToken: false },
+        })
+        await supabase.from('checkout_intents').insert({
+          user_id:           userId,
+          email,
+          plan,
+          stripe_session_id: session.id,
+        })
+      } catch (e) {
+        console.warn('[checkout] intent log failed:', e?.message)
+      }
+    }
     return res.status(200).json({ url: session.url, id: session.id })
   } catch (err) {
     console.error('[stripe checkout] error:', err)

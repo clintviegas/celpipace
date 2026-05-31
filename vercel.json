@@ -4,10 +4,14 @@
   "framework": "vite",
   "installCommand": "npm install --legacy-peer-deps",
   "crons": [
-    { "path": "/api/cron?job=sweep",     "schedule": "0 0 * * *"  },
-    { "path": "/api/cron?job=marketing", "schedule": "0 10 * * *" },
-    { "path": "/api/cron?job=winback",   "schedule": "0 11 * * *" },
-    { "path": "/api/cron?job=reminders", "schedule": "0 16 * * *" }
+    { "path": "/api/cron?job=sweep",         "schedule": "0 0 * * *"  },
+    { "path": "/api/cron?job=marketing",     "schedule": "0 10 * * *" },
+    { "path": "/api/cron?job=winback",       "schedule": "0 11 * * *" },
+    { "path": "/api/cron?job=examcountdown", "schedule": "0 13 * * *" },
+    { "path": "/api/cron?job=digest",        "schedule": "0 14 * * *" },
+    { "path": "/api/cron?job=abandoned",     "schedule": "0 15 * * *" },
+    { "path": "/api/cron?job=reminders",     "schedule": "0 16 * * *" },
+    { "path": "/api/cron?job=broadcast",     "schedule": "0 17 * * *" }
   ],
   "redirects": [
     { "source": "/writing",              "destination": "/celpip-writing-practice",       "permanent": true },

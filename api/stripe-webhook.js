@@ -255,6 +255,13 @@ export default async function handler(req, res) {
         }, { onConflict: 'stripe_session_id' })
         if (payErr) console.error('[stripe-webhook] payments upsert error (checkout):', payErr.message)
 
+        // Close the abandoned-checkout loop: mark this intent converted so the
+        // recovery job never emails a user who actually paid. Non-blocking.
+        await supabase.from('checkout_intents')
+          .update({ converted_at: new Date().toISOString() })
+          .eq('stripe_session_id', s.id)
+          .catch(() => {})
+
         await logSubEvent({
           user_id:                profile.id,
           email,

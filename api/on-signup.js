@@ -191,6 +191,32 @@ export default async function handler(req, res) {
     })
   }
 
+  // Set / clear the learner's exam date (drives the countdown sequence).
+  // Body: { examDate: 'YYYY-MM-DD' | null }
+  if (Object.hasOwn(body || {}, 'examDate')) {
+    let examDate = null
+    if (body.examDate) {
+      const d = new Date(body.examDate)
+      if (Number.isNaN(d.getTime())) return res.status(400).json({ error: 'invalid_exam_date' })
+      examDate = d.toISOString().slice(0, 10)
+      // Guard against obviously-wrong dates: today .. +18 months.
+      const today = new Date().toISOString().slice(0, 10)
+      const maxDate = new Date(Date.now() + 18 * 30 * 86400_000).toISOString().slice(0, 10)
+      if (examDate < today || examDate > maxDate) {
+        return res.status(400).json({ error: 'exam_date_out_of_range' })
+      }
+    }
+    const { error: examErr } = await auth.supabase
+      .from('profiles')
+      .update({ exam_date: examDate })
+      .eq('id', userId)
+    if (examErr) {
+      console.error('[on-signup] exam date update failed:', examErr.message)
+      return res.status(500).json({ error: examErr.message })
+    }
+    return res.status(200).json({ examDate })
+  }
+
   const attribution = sanitizeAttribution(body.attribution)
 
   const { data: profile, error: profErr } = await auth.supabase

@@ -145,8 +145,9 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
           if (mobileOpen) {
             setOpenId(open ? null : item.id)
           } else if (item.id === 'learn') {
-            window.open('https://www.celpipace.ca/blog', '_self')
-            setOpenId(null)
+            // Toggle the dropdown on click instead of navigating away,
+            // so all Learn resources are reachable on desktop.
+            setOpenId(open ? null : item.id)
           } else {
             navigate('/' + (item.link || item.id))
             setOpenId(null)

@@ -1,9 +1,12 @@
 /* global process */
 // /api/cron-marketing.js
 // Daily marketing scheduler. Drives the Free → Premium nudge sequence:
+//   day 1  → renderFreeNudgeDay1   (orientation / first action)
 //   day 2  → renderFreeNudgeDay2   (study tips)
 //   day 5  → renderFreeNudgeDay5   (mock report sample)
+//   day 7  → renderFreeNudgeDay7   (how serious learners study)
 //   day 14 → renderFreeNudgeDay14  (CELPIP25 coupon)
+//   day 21 → renderFreeNudgeDay21  (final coupon nudge)
 //
 // Eligibility (all must be true):
 //   - profiles.marketing_consent = true
@@ -22,15 +25,21 @@
 import { createClient } from '@supabase/supabase-js'
 import {
   sendEmail,
+  renderFreeNudgeDay1,
   renderFreeNudgeDay2,
   renderFreeNudgeDay5,
+  renderFreeNudgeDay7,
   renderFreeNudgeDay14,
+  renderFreeNudgeDay21,
 } from './email.js'
 
 const STEPS = [
+  { key: 'free2premium_d1',  daysSinceSignup: 1,  render: renderFreeNudgeDay1  },
   { key: 'free2premium_d2',  daysSinceSignup: 2,  render: renderFreeNudgeDay2  },
   { key: 'free2premium_d5',  daysSinceSignup: 5,  render: renderFreeNudgeDay5  },
+  { key: 'free2premium_d7',  daysSinceSignup: 7,  render: renderFreeNudgeDay7  },
   { key: 'free2premium_d14', daysSinceSignup: 14, render: renderFreeNudgeDay14 },
+  { key: 'free2premium_d21', daysSinceSignup: 21, render: renderFreeNudgeDay21 },
 ]
 
 // Per-cron safety cap so a misconfiguration can't blast thousands of users

@@ -4,10 +4,14 @@
 // This keeps us under Vercel Hobby's 12-function limit.
 //
 // Vercel cron entries in vercel.json:
-//   { "path": "/api/cron?job=sweep",     "schedule": "0 0 * * *"  }
-//   { "path": "/api/cron?job=marketing", "schedule": "0 10 * * *" }
-//   { "path": "/api/cron?job=winback",   "schedule": "0 11 * * *" }
-//   { "path": "/api/cron?job=reminders", "schedule": "0 16 * * *" }
+//   { "path": "/api/cron?job=sweep",         "schedule": "0 0 * * *"  }
+//   { "path": "/api/cron?job=marketing",     "schedule": "0 10 * * *" }
+//   { "path": "/api/cron?job=winback",       "schedule": "0 11 * * *" }
+//   { "path": "/api/cron?job=reminders",     "schedule": "0 16 * * *" }
+//   { "path": "/api/cron?job=examcountdown", "schedule": "0 13 * * *" }
+//   { "path": "/api/cron?job=abandoned",     "schedule": "0 15 * * *" }
+//   { "path": "/api/cron?job=digest",        "schedule": "0 14 * * *" }
+//   { "path": "/api/cron?job=broadcast",     "schedule": "0 17 * * *" }
 //
 // Manual trigger (admin / dev):
 //   POST /api/cron?job=sweep
@@ -17,12 +21,20 @@ import sweepHandler    from './_lib/job-sweep.js'
 import marketingHandler from './_lib/job-marketing.js'
 import winbackHandler  from './_lib/job-winback.js'
 import remindersHandler from './_lib/job-reminders.js'
+import examCountdownHandler from './_lib/job-examcountdown.js'
+import abandonedHandler from './_lib/job-abandoned.js'
+import digestHandler   from './_lib/job-digest.js'
+import broadcastHandler from './_lib/job-broadcast.js'
 
 const JOBS = {
-  sweep:     sweepHandler,
-  marketing: marketingHandler,
-  winback:   winbackHandler,
-  reminders: remindersHandler,
+  sweep:         sweepHandler,
+  marketing:     marketingHandler,
+  winback:       winbackHandler,
+  reminders:     remindersHandler,
+  examcountdown: examCountdownHandler,
+  abandoned:     abandonedHandler,
+  digest:        digestHandler,
+  broadcast:     broadcastHandler,
 }
 
 export default async function handler(req, res) {
@@ -30,7 +42,7 @@ export default async function handler(req, res) {
 
   if (!job) {
     return res.status(400).json({
-      error: 'Missing ?job= param. Valid values: sweep, marketing, winback, reminders',
+      error: 'Missing ?job= param. Valid values: ' + Object.keys(JOBS).join(', '),
       available: Object.keys(JOBS),
     })
   }
