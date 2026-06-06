@@ -1633,4 +1633,230 @@ export const BLOG_ARTICLES = [
       },
     ],
   },
+
+  /* ── paa-1 ── */
+  {
+    slug: 'is-celpip-harder-than-ielts',
+    title: 'Is CELPIP Harder Than IELTS? Honest Comparison for 2026',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#2563eb',
+    tagColorLight: '#eff6ff',
+    readTime: '7 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'CELPIP and IELTS test the same four skills but feel very different on test day. Most Canadian-based candidates find CELPIP easier — but the reasons why depend on your background. Here is the honest answer.',
+    sections: [
+      {
+        heading: 'Is CELPIP Harder Than IELTS?',
+        body: `For most candidates applying through Canada's Express Entry system, CELPIP is considered easier than IELTS General Training — but this depends on your specific strengths and weaknesses.\n\nCELPIP tends to be easier for candidates already living in Canada (familiar with Canadian English accents), people who are comfortable typing quickly (Writing is done on a keyboard), and candidates who find computer-based tests less stressful than paper-and-pencil.\n\nIELTS tends to be easier for candidates trained in traditional academic writing, people who score highly in face-to-face speaking (IELTS Speaking is with a live examiner), and candidates outside Canada more familiar with British Council test formats.`,
+      },
+      {
+        heading: 'Key Differences That Affect Difficulty',
+        body: `Speaking format: IELTS Speaking is a 15-minute face-to-face interview with a human examiner. CELPIP Speaking is recorded into a microphone — no human present. Many candidates find the CELPIP format less anxiety-inducing.\n\nWriting format: IELTS Writing Task 2 asks for a 250-word essay. CELPIP Writing Task 2 is a survey response — simpler in structure but requiring a clear position and reasons.\n\nListening accents: IELTS Listening uses British, Australian, and North American accents. CELPIP Listening uses exclusively Canadian English accents throughout. If you live in Canada, CELPIP Listening is significantly easier.`,
+      },
+      {
+        heading: 'Score Comparison: CELPIP vs IELTS for Express Entry',
+        body: `Both tests are accepted for Express Entry and mapped to CLB levels. The approximate equivalents:`,
+        list: [
+          'CELPIP 10–12 ≈ IELTS 8.0–9.0 per skill → CLB 10',
+          'CELPIP 9 ≈ IELTS 7.5 per skill → CLB 9',
+          'CELPIP 8 ≈ IELTS 6.5–7.0 per skill → CLB 8',
+          'CELPIP 7 ≈ IELTS 6.0 per skill → CLB 7',
+        ],
+        body2: `The conversion goes through the shared CLB level, not a formula. A CELPIP 9 and an IELTS 7.5 are treated identically by IRCC — you earn the same CRS points regardless of which test you took.`,
+      },
+      {
+        heading: 'Which Test Should You Take?',
+        body: `Take CELPIP if you are currently living in Canada and used to Canadian English, prefer computer-based testing with keyboard typing, or want results faster (CELPIP results in ~8 business days vs up to 13 for IELTS).\n\nTake IELTS if you are outside Canada and more familiar with British or international English, write better by hand or prefer essay-style tasks, or want global flexibility (IELTS is accepted for immigration, study, and work in over 140 countries).`,
+      },
+      {
+        heading: 'Can You Take Both Tests?',
+        body: `Yes — both scores are valid for two years and both are accepted for Express Entry simultaneously. Some candidates take both tests to see which gives them higher CRS points. If your IELTS score gives you CLB 8 but you think you could achieve CLB 9 on CELPIP, booking a CELPIP attempt is worth it — you keep whichever score is higher for your Express Entry profile.`,
+      },
+      {
+        heading: 'Fastest Way to Prepare for CELPIP',
+        body: `If you have decided on CELPIP, the fastest improvement path is targeted section practice — not general English study. Identify which of the four skills is your lowest CLB, practice that section specifically with timed questions, and take a full mock exam before booking your real test.\n\nCELPIPACE offers section-by-section practice for all four CELPIP skills with instant scoring, plus full-length mock exams that simulate real test conditions.`,
+      },
+    ],
+  },
+
+  /* ── paa-2 ── */
+  {
+    slug: 'is-celpip-7-a-good-score',
+    title: 'Is 7 a Good CELPIP Score? What CLB 7 Gets You in 2026',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#2563eb',
+    tagColorLight: '#eff6ff',
+    readTime: '6 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'CELPIP 7 meets the minimum threshold for Express Entry eligibility — but in 2026, most draws require CLB 9+ to receive an ITA. Here is exactly what a score of 7 gets you, and whether you should retest.',
+    sections: [
+      {
+        heading: 'Is CELPIP 7 a Good Score?',
+        body: `CELPIP 7 is a passing score for Express Entry eligibility — but it is not a competitive score for receiving an Invitation to Apply (ITA) in 2026.\n\nCELPIP 7 means CLB 7. It enters you into the Express Entry pool for FSW, CEC, and FST programs. However most draws in 2026 have cleared at CRS 510+, which requires CLB 9 language scores in combination with other factors. For most candidates, CELPIP 7 is a starting point, not a finishing line.`,
+      },
+      {
+        heading: 'CRS Points: CELPIP 7 vs CELPIP 9',
+        body: `The difference between CELPIP 7 and CELPIP 9 in CRS points is significant:`,
+        list: [
+          'CELPIP 7 (CLB 7) in all four skills: approximately 68 CRS core language points (CEC category)',
+          'CELPIP 9 (CLB 9) in all four skills: approximately 100 CRS core language points (CEC category)',
+          'Difference: +32 CRS points from improving CLB 7 to CLB 9 across all four skills',
+          'CELPIP 10 (CLB 10) in all four skills: approximately 128 CRS core language points — the maximum',
+        ],
+        body2: `In a recent draw environment where the cut-off is 514, those 32 points can be the difference between receiving an ITA or remaining in the pool indefinitely.`,
+      },
+      {
+        heading: 'What Pathways Accept CELPIP 7?',
+        body: `CELPIP 7 (CLB 7) meets the minimum language threshold for Express Entry pool entry for FSW, CEC, and FST programs. It also meets most Provincial Nominee Program minimums, though many prefer CLB 8 or higher. It does not qualify for full skill transferability bonus (requires CLB 9) and is not competitive for most 2026 ITA draws without a very high overall CRS from other factors.`,
+      },
+      {
+        heading: 'Should You Retest If You Got CELPIP 7?',
+        body: `In most cases, yes — if you are targeting Express Entry under current draw conditions. The ROI on improving your CELPIP score is higher than most other CRS strategies:\n\nAdding a year of Canadian work experience adds approximately 40–80 CRS points — but requires a year of waiting. Improving from CLB 7 to CLB 9 adds approximately 32 CRS points — achievable in 4–8 weeks of targeted preparation. Getting a provincial nomination adds 600 points — but requires meeting provincial criteria outside your direct control.\n\nFor candidates with a strong base score (450–500 CRS) who are just below the draw cut-off, improving language scores is the fastest controllable path to an ITA.`,
+      },
+      {
+        heading: 'How to Improve From CELPIP 7 to CELPIP 9',
+        body: `The jump from 7 to 9 is two CLB levels per skill. Most candidates improve 1–2 levels in 4–6 weeks with structured practice:`,
+        list: [
+          '1. Identify which skill is lowest — focus disproportionately on that one first',
+          '2. Practice with timed, scored questions — not passive review',
+          '3. Take a full mock exam after 2 weeks to gauge improvement accurately',
+          '4. Focus on Speaking and Writing first — these have the most room for improvement through technique',
+          '5. Re-book your test when mock scores consistently show CLB 8.5+',
+        ],
+        body2: `CELPIPACE provides section-specific practice sets organized by CLB level, so you can target CLB 8 drills before moving to CLB 9 difficulty.`,
+      },
+    ],
+  },
+
+  /* ── paa-3 ── */
+  {
+    slug: 'how-to-practice-for-celpip',
+    title: 'How to Practice for CELPIP: A Section-by-Section Study Method',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#2563eb',
+    tagColorLight: '#eff6ff',
+    readTime: '8 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'The most effective CELPIP preparation is not general English study — it is targeted, timed practice by section. This guide explains exactly how to practice for each of the four CELPIP skills to maximize your CLB score.',
+    sections: [
+      {
+        heading: 'How to Practice for CELPIP Effectively',
+        body: `The biggest mistake candidates make is treating CELPIP preparation like general English practice — reading novels, watching TV, or doing grammar exercises. While those activities improve your English over years, they do not specifically prepare you for the CELPIP test format.\n\nEffective CELPIP preparation focuses on three things: understanding how each section is scored, practicing under real time pressure, and getting feedback specific to the CELPIP rubric.`,
+      },
+      {
+        heading: 'How to Practice CELPIP Listening',
+        body: `Listening is scored across 6 parts. Each audio plays only once — there is no replay. Best practice method:`,
+        list: [
+          'Practice with audio-first questions — listen without reading along to build real-time comprehension',
+          'Preview the questions before each clip begins (allowed on the real test)',
+          'Focus on Parts 3 and 6 — the news item and viewpoints tasks have the most difficult vocabulary',
+          'Practice with Canadian English audio specifically — the accent in CELPIP is consistently Canadian',
+          'After each practice set, review the questions you missed and identify the reason',
+        ],
+      },
+      {
+        heading: 'How to Practice CELPIP Reading',
+        body: `Reading has 4 parts and is the most time-pressured section. 55 minutes for 34 questions means under 100 seconds per question. Best practice method:`,
+        list: [
+          'Skim the passage for the main idea before reading any questions — 30 seconds upfront saves 2 minutes overall',
+          'For Part 2 (diagram tasks), study the visual first before reading the text',
+          'For Part 4 (viewpoints), identify the author\'s position in the first paragraph',
+          'Time yourself strictly — if a question takes more than 90 seconds, mark your best guess and move on',
+          'Do full timed practice sets, not individual questions — pacing is the main skill being tested',
+        ],
+      },
+      {
+        heading: 'How to Practice CELPIP Writing',
+        body: `Writing has two tasks: an email (Task 1, 27 minutes) and a survey response (Task 2, 26 minutes). Best practice method:`,
+        list: [
+          'Write at least 2 timed emails per week — not reading about emails, actually writing them to the clock',
+          'Use a checklist after each email: addressed all 3 bullet points? Correct tone? 150+ words? Varied vocabulary?',
+          'Read your response aloud — if it sounds awkward, it reads awkward to the examiner',
+          'Study one high-scoring sample response per session and annotate what makes it CLB 9',
+          'Focus on openings and closings — these two sentences create first and last impressions',
+        ],
+      },
+      {
+        heading: 'How to Practice CELPIP Speaking',
+        body: `Speaking has 8 tasks, all recorded. The main challenges are running out of time, repeating vocabulary, and shallow idea development. Best practice method:`,
+        list: [
+          'Record yourself every session — listening back is the single most effective way to identify weaknesses',
+          'Practice filling the full speaking time — if you stop at 45 seconds for a 90-second task, you are underpreparing',
+          'Build a vocabulary bank for common CELPIP topics: work, community, technology, environment, health',
+          'For Task 5 (comparison), always use a contrast connector: "whereas", "on the other hand", "by contrast"',
+          'Practice Tasks 1 and 8 most heavily — advice and opinion tasks have the most speaking time and are most underperformed',
+        ],
+      },
+      {
+        heading: 'How Much Should You Practice Each Day?',
+        body: `Quality beats quantity in CELPIP preparation. 45–60 minutes of focused practice per day is more effective than 3-hour passive study sessions. A realistic schedule:`,
+        list: [
+          'Week 1–2: One section per day, full timed practice set, review all errors',
+          'Week 3: Full mock exam (all 4 sections), diagnose weakest skill, target it intensively',
+          'Week 4: Mixed practice sets + second full mock exam, then book the real test',
+        ],
+        body2: `If you have only 1–2 weeks before your test, focus exclusively on your two weakest skills and take one full mock exam in the final 48 hours. On the day before your test, review strategy notes only — no new practice.`,
+      },
+    ],
+  },
+
+  /* ── paa-4 ── */
+  {
+    slug: 'celpip-score-required-express-entry-pr',
+    title: 'What CELPIP Score Do You Need for Express Entry and Canadian PR?',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '6 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'CELPIP 7 is the Express Entry minimum — but current 2026 draw cut-offs require CLB 9 to be competitive. Here is the exact score you need for eligibility, competitiveness, and maximum CRS points.',
+    sections: [
+      {
+        heading: 'What CELPIP Score Do You Need for Express Entry?',
+        body: `The minimum CELPIP score for Express Entry eligibility is CELPIP 7 (CLB 7) in all four skills — Listening, Reading, Writing, and Speaking.\n\nHowever, the minimum for eligibility is very different from the score needed to actually receive an Invitation to Apply (ITA). In 2026, most Express Entry draws have cleared at CRS scores above 510 for the Canadian Experience Class — and achieving that CRS score almost always requires CLB 9 language scores.`,
+      },
+      {
+        heading: 'CELPIP Score Requirements by Purpose',
+        body: `Here is exactly what each CELPIP score level does for your Canadian immigration application:`,
+        list: [
+          'CELPIP 4 (CLB 4) in Reading and Listening: Meets the minimum for Canadian citizenship application only',
+          'CELPIP 7 (CLB 7) in all four skills: Minimum score to enter the Express Entry pool (FSW, CEC, FST)',
+          'CELPIP 8 (CLB 8) in all four skills: Qualifies for partial skill transferability bonus (+25 to +50 CRS points)',
+          'CELPIP 9 (CLB 9) in all four skills: Qualifies for full skill transferability bonus; competitive for current draw cut-offs',
+          'CELPIP 10–12 (CLB 10) in all four skills: Maximum core language CRS points; strongest competitive profile',
+        ],
+      },
+      {
+        heading: 'How Many CRS Points Does Each CELPIP Score Give You?',
+        body: `CRS language points for a single applicant under the Canadian Experience Class (CEC):`,
+        list: [
+          'CELPIP 7 (CLB 7) in all four skills: approximately 68 CRS core language points total',
+          'CELPIP 8 (CLB 8) in all four skills: approximately 88 CRS core language points total',
+          'CELPIP 9 (CLB 9) in all four skills: approximately 100 CRS core language points total',
+          'CELPIP 10–12 (CLB 10+) in all four skills: approximately 128 CRS core language points total (maximum)',
+        ],
+        body2: `The jump from CLB 8 to CLB 9 adds approximately 12 additional core language points, plus up to 25 additional skill transferability points — for a total potential gain of +37 CRS points.`,
+      },
+      {
+        heading: 'What Is a Competitive CELPIP Score in 2026?',
+        body: `Based on 2025–2026 Express Entry draw data, CLB 9 in all four skills is the competitive baseline for candidates without a provincial nomination. A candidate with 3+ years of Canadian work experience, a bachelor's degree, and CLB 9 language scores typically sits around 500–520 CRS — near or above the draw cut-off. The same candidate with CLB 7 language scores sits approximately 32 points lower, typically below the cut-off.`,
+      },
+      {
+        heading: 'Minimum CELPIP Score for Canadian Citizenship',
+        body: `For Canadian citizenship, the language requirement is much lower than for Express Entry. You need CLB 4 in Listening and Reading only — CELPIP 4 in those two skills. Writing and Speaking are not tested for citizenship. This requirement can be met through a CELPIP General or CELPIP General-LS score, or through a language interview with a citizenship officer.`,
+      },
+      {
+        heading: 'How to Reach CELPIP 9 for Express Entry',
+        body: `If your current CELPIP score is 7 or 8, improving to 9 is achievable in 4–8 weeks with targeted practice. Identify your weakest skill, practice with timed scored questions, take a full mock exam after 2–3 weeks to verify improvement, and rebook when mock scores consistently show 8.5+.\n\nCELPIPACE offers CLB-targeted practice sets for all four skills and a score calculator that shows exactly how your current CELPIP scores convert to CRS points.`,
+      },
+    ],
+  },
 ]

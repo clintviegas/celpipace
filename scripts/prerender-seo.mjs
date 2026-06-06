@@ -243,6 +243,25 @@ function articleJsonLd(article) {
   }
 }
 
+function articleFaqJsonLd(article) {
+  const items = (article.sections || [])
+    .filter(s => s.heading && s.body)
+    .map(s => ({
+      '@type': 'Question',
+      name: s.heading,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: stripHtml([s.body, (s.list || []).join('. '), s.body2].filter(Boolean).join(' ')).slice(0, 600),
+      },
+    }))
+  if (!items.length) return null
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items,
+  }
+}
+
 function renderBlogIndex() {
   return `    <main class="seo-page prerender-page">
       <section class="seo-hero">
@@ -435,7 +454,7 @@ async function main() {
         title: article.title,
         description: article.excerpt,
         canonical: `/blog/${article.slug}`,
-        jsonLd: articleJsonLd(article),
+        jsonLd: [articleJsonLd(article), articleFaqJsonLd(article)].filter(Boolean),
       },
       body: renderBlogArticle(article),
     })),
