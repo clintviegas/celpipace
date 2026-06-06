@@ -1328,4 +1328,309 @@ export const BLOG_ARTICLES = [
       },
     ],
   },
+
+  /* ── new-1 ── */
+  {
+    slug: 'celpip-writing-task-1-email-tips',
+    title: 'CELPIP Writing Task 1: How to Write a High-Scoring Email (CLB 9+)',
+    category: 'writing',
+    tag: 'Writing',
+    tagColor: '#1a7f5a',
+    tagColorLight: '#e6f7f1',
+    readTime: '8 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'Writing Task 1 is a 200–400 word email you write in 27 minutes. Most candidates lose points on tone, structure, or missing bullet-point requirements. This guide shows exactly how to hit CLB 9 with a repeatable framework.',
+    sections: [
+      {
+        heading: 'What Is CELPIP Writing Task 1?',
+        body: `Writing Task 1 is an email-writing task. You are given a prompt describing a situation and three bullet points — each bullet represents a specific thing you must address in your email. You have 27 minutes and must write between 150 and 200 words (the target is 150–200; writing more is not penalized but time is limited).\n\nThe email is scored on four criteria:\n\n**Content/Coherence** — Did you address all three bullet points? Is the email logically organized?\n\n**Vocabulary** — Are you using varied, context-appropriate words rather than repeating simple ones?\n\n**Readability** — Is your writing easy to follow? Correct paragraph breaks, connectors, and sentence variety matter here.\n\n**Task Fulfilment** — Does your email match the tone and purpose described in the prompt? Formal vs. informal vs. semi-formal matters.`,
+      },
+      {
+        heading: 'The Biggest Mistake: Ignoring Tone',
+        body: `CELPIP Writing Task 1 prompts come in three relationship types, and each requires a different register:`,
+        list: [
+          'Formal — writing to a landlord, employer, company, or authority figure you do not know personally',
+          'Semi-formal — writing to a neighbour, colleague, or someone you know professionally but not closely',
+          'Informal — writing to a friend, family member, or close contact',
+        ],
+        body2: `Many candidates write every email in the same neutral tone regardless of the relationship. Examiners specifically look for tone-matching. A formal email must open with "Dear Mr./Ms. [Name]" and close with "Sincerely" or "Regards." An informal email can open with "Hi [Name]" and close with "Talk soon." Using the wrong register drops your Readability and Task Fulfilment scores significantly.`,
+      },
+      {
+        heading: 'The 5-Part Structure That Works Every Time',
+        body: `Use this framework for every Writing Task 1 email regardless of topic:`,
+        list: [
+          '1. Opening line — state the purpose of the email in one sentence (not "I am writing to you because...")',
+          '2. Bullet 1 — dedicate one clear paragraph to the first requirement',
+          '3. Bullet 2 — new paragraph, second requirement, with specific details',
+          '4. Bullet 3 — new paragraph, third requirement, extended with a reason or example',
+          '5. Closing line — appropriate sign-off matching the tone (action request or friendly wrap-up)',
+        ],
+        body2: `Each bullet point should get at least 2–3 sentences. A single-sentence answer to a bullet point signals low vocabulary range and shallow task fulfilment. Add a reason, a specific detail, or a follow-up sentence to each point.`,
+      },
+      {
+        heading: 'Vocabulary That Lifts Your Score',
+        body: `The Vocabulary criterion rewards word choice, not word count. Examiners look for whether you use the right word for the context, not just more words. High-scoring vocabulary habits include:`,
+        list: [
+          'Use topic-specific words (e.g., "reimbursement" instead of "money back", "inconvenience" instead of "problem")',
+          'Vary your sentence openers — avoid starting every sentence with "I"',
+          'Use hedging language in formal emails: "I would appreciate it if...", "I was wondering whether..."',
+          'Use connectors naturally: "As a result", "In addition", "However", "With that said"',
+          'Avoid repetition — if you used "issue" in paragraph 2, use "concern" or "matter" in paragraph 3',
+        ],
+      },
+      {
+        heading: 'Common Errors That Drop You Below CLB 9',
+        body: `These mistakes appear most often in scored Writing Task 1 responses:`,
+        list: [
+          'Missing one of the three bullet points entirely — automatic Content/Coherence penalty',
+          'Writing below 150 words — triggers a Task Fulfilment deduction',
+          'Mixing formal and informal registers in the same email ("Dear Mr. Smith... Cheers!")',
+          'Copying the prompt language word-for-word instead of paraphrasing',
+          'Writing everything as one paragraph instead of using paragraph breaks per bullet',
+          'Starting the email with "I am writing to inform you that..." — overused and signals low vocabulary',
+        ],
+      },
+      {
+        heading: 'Sample High-Scoring Opening Lines by Tone',
+        body: `Here are strong opening lines for different email types:`,
+        list: [
+          'Formal complaint: "I am contacting you regarding a significant issue I encountered with [product/service] on [date]."',
+          'Formal request: "I would like to request your assistance with [topic], as [brief reason]."',
+          'Semi-formal invitation: "I wanted to reach out to let you know about [event] and hope you can join us."',
+          'Informal apology: "I\'m really sorry about what happened — let me explain and hopefully make it right."',
+          'Informal suggestion: "I\'ve been thinking about [topic] and wanted to share a few ideas with you."',
+        ],
+        body2: `Notice that none of these use the filler phrase "I am writing to you because." That phrase wastes your opening sentence without adding score. Get to the point in the first line.`,
+      },
+      {
+        heading: 'Practice With Timed Email Prompts',
+        body: `The fastest way to improve Writing Task 1 is timed practice with real feedback — not just reading about strategies. CELPIPACE Writing practice includes Task 1 prompts across all three tone types, sample high-scoring responses with annotation, and a checklist that mirrors the CELPIP scoring rubric.\n\nFor the companion guide to Writing Task 2 (the longer survey-response task), see our guide on CELPIP Writing Task 2 tips and templates.`,
+      },
+    ],
+  },
+
+  /* ── new-2 ── */
+  {
+    slug: 'celpip-writing-task-2-tips-templates',
+    title: 'CELPIP Writing Task 2: Survey Response Tips and Templates (CLB 9)',
+    category: 'writing',
+    tag: 'Writing',
+    tagColor: '#1a7f5a',
+    tagColorLight: '#e6f7f1',
+    readTime: '7 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'Writing Task 2 is a 150–200 word survey response where you must take a position and support it with reasons and examples. Learn the exact structure, vocabulary moves, and common traps that separate CLB 8 from CLB 9.',
+    sections: [
+      {
+        heading: 'What Is CELPIP Writing Task 2?',
+        body: `Writing Task 2 is a survey-response task. You are shown a survey prompt — typically a statement or question — and asked to respond with your opinion, two or three supporting reasons, and sometimes an acknowledgement of an opposing view. You have 26 minutes and are expected to write 150–200 words.\n\nThe four scoring criteria are identical to Task 1: Content/Coherence, Vocabulary, Readability, and Task Fulfilment. However, the strategy differs because you are now writing an argument, not an email.`,
+      },
+      {
+        heading: 'The 4-Part Argument Structure',
+        body: `Every high-scoring Writing Task 2 response follows the same logical shape:`,
+        list: [
+          '1. Position statement — one sentence clearly stating your opinion on the survey topic',
+          '2. Reason 1 — one specific reason with a supporting detail or example (2–3 sentences)',
+          '3. Reason 2 — a second distinct reason, also with a detail or example (2–3 sentences)',
+          '4. Closing — a concise conclusion that restates your position in different words (1–2 sentences)',
+        ],
+        body2: `Some prompts ask you to acknowledge both sides before landing on a position. In those cases, add a brief counter-acknowledgement ("While some people argue that..., I still believe...") before your reasons. This signals analytical thinking to the examiner and usually lifts the Coherence score.`,
+      },
+      {
+        heading: 'Position Statements That Score Well',
+        body: `Your opening sentence sets the examiner's expectations for the rest of your response. Avoid vague openers like "I think this is an important topic." Instead, state your position directly and with a hint of the reason:`,
+        list: [
+          'Strong: "Remote work should be a permanent option for most office jobs because it measurably improves productivity and employee wellbeing."',
+          'Strong: "Cities should invest in public transit over road expansion, as mass transit is more cost-effective and reduces long-term congestion."',
+          'Weak: "I believe this is a very good idea and there are many reasons for this."',
+          'Weak: "In my opinion, both sides have valid points and it depends on the situation."',
+        ],
+        body2: `The strong openers signal vocabulary range (measurably, cost-effective) and coherence (you know what your reasons will be). The weak openers force the examiner to keep reading before understanding your argument — a readability penalty.`,
+      },
+      {
+        heading: 'How to Extend a Reason Without Padding',
+        body: `Many candidates write a reason and stop: "Public transit reduces congestion. This is good for cities." That earns low Vocabulary and Readability scores because it is too simple. Instead, extend each reason with one of these moves:`,
+        list: [
+          'Add a concrete example: "For instance, cities like Vancouver have seen a 20% reduction in peak-hour traffic after major transit expansion."',
+          'Add a consequence: "As a result, residents spend less time commuting, which improves both mental health and work performance."',
+          'Add a comparison: "In contrast, expanding roads has historically induced more demand rather than reducing traffic."',
+          'Add a hypothetical: "Without adequate transit, low-income residents in particular face significant barriers to employment opportunities."',
+        ],
+        body2: `One well-extended reason scores higher than three thin ones. Aim for depth over quantity.`,
+      },
+      {
+        heading: 'Vocabulary Patterns That Signal CLB 9',
+        body: `These vocabulary and grammar patterns consistently appear in CLB 9+ Writing Task 2 responses:`,
+        list: [
+          'Hedge your opinion: "I firmly believe", "In my view", "The evidence suggests"',
+          'Use academic connectors: "Furthermore", "Consequently", "Nevertheless", "By contrast"',
+          'Use precise nouns: "infrastructure" not "things", "revenue" not "money", "legislation" not "rules"',
+          'Use complex sentence structures: subordinate clauses, relative clauses, and conditional sentences',
+          'Vary your verb forms: passive voice where appropriate, modal verbs for hedging (could, would, should)',
+        ],
+      },
+      {
+        heading: 'Time Management: 26 Minutes Broken Down',
+        body: `26 minutes is tight for a well-structured response. Use this breakdown:`,
+        list: [
+          '2 minutes: Read the prompt carefully. Identify what position you will take and your two best reasons.',
+          '3 minutes: Plan — write three bullet-point notes (position + reason 1 + reason 2) before typing',
+          '18 minutes: Write your response. Do not edit as you go — finish the draft first.',
+          '3 minutes: Review — check tone, check that you addressed the prompt fully, fix any obvious grammar errors',
+        ],
+        body2: `The planning step is the most skipped — and the most valuable. Candidates who plan for 3 minutes consistently write more coherent responses than those who start typing immediately.`,
+      },
+      {
+        heading: 'Practice Task 2 With Real Prompts',
+        body: `CELPIPACE Writing practice includes Task 2 survey prompts across the most common CELPIP topics (work, technology, environment, community, education), sample CLB 9–10 responses with annotation, and a scoring checklist. For the email-writing companion guide, see CELPIP Writing Task 1: How to Write a High-Scoring Email.`,
+      },
+    ],
+  },
+
+  /* ── new-3 ── */
+  {
+    slug: 'celpip-speaking-sample-answers',
+    title: 'CELPIP Speaking Sample Answers: Tasks 1–8 Walkthrough (CLB 9)',
+    category: 'speaking',
+    tag: 'Speaking',
+    tagColor: '#c0392b',
+    tagColorLight: '#fdecea',
+    readTime: '10 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'See annotated sample answers for all 8 CELPIP Speaking tasks. Understand exactly what makes a response CLB 9 versus CLB 7, and learn the vocabulary and fluency patterns examiners reward.',
+    sections: [
+      {
+        heading: 'How CELPIP Speaking Is Scored',
+        body: `CELPIP Speaking has 8 tasks recorded in one uninterrupted session. Each task is scored on four dimensions:\n\n**Content** — Did you answer what was asked? Are your ideas relevant and developed?\n\n**Coherence** — Does your response flow logically? Are ideas connected clearly?\n\n**Vocabulary** — Do you use varied, contextually accurate words?\n\n**Listenability** — Is your pronunciation clear enough to understand? (This is about clarity, not accent — CELPIP is accent-neutral.)\n\nMost candidates score lower on Vocabulary and Content than on the other two. Understanding the difference between a CLB 7 and CLB 9 response in each task is the fastest path to improvement.`,
+      },
+      {
+        heading: 'Task 1 (Advice): CLB 7 vs CLB 9',
+        body: `Task 1 gives you a problem scenario and asks for advice. You have 30 seconds to prepare and 90 seconds to speak.\n\n**CLB 7 response:** "I think you should try to save more money. It is a good idea to make a budget. You can also spend less on things you don't need. This will help you."\n\n**CLB 9 response:** "In your situation, I would strongly recommend starting with a clear monthly budget that separates fixed expenses — like rent and utilities — from discretionary spending. Once you can see where your money is going, it's much easier to identify specific areas where you can cut back. For instance, subscription services and dining out are often the biggest unnoticed drains. Setting up an automatic transfer to a savings account on payday removes the temptation to spend that money before saving it."\n\nThe CLB 9 response is specific (identifies categories), uses precise vocabulary (discretionary, drains, automatic transfer), and develops ideas with examples rather than repeating the same point.`,
+      },
+      {
+        heading: 'Task 2 (Talking to Someone): Handling the Dialogue Format',
+        body: `Task 2 simulates a conversation — you see an image and text bubbles and respond to what another person says. You have 30 seconds to prepare and 60 seconds per turn.\n\nThe key mistake candidates make: treating it like a monologue instead of a dialogue. Your response should:\n\n1. Acknowledge what the other person said ("That's a fair point — I hadn't considered that.")\n2. Add your own perspective with reasons\n3. Leave the conversation open ("What do you think about approaching it that way?")\n\nAcknowledging the other person's point signals both Coherence and Listenability — it shows you're engaging with the conversation rather than just reciting prepared lines.`,
+      },
+      {
+        heading: 'Task 3 (Describing a Scene): What to Include',
+        body: `Task 3 shows you an image and asks you to describe what is happening. You have 30 seconds to look and 60 seconds to speak.\n\nMost candidates describe what they see literally: "I see a park. There are trees. Some people are sitting." This scores CLB 6–7.\n\nA CLB 9 description does three things: describes the setting (where), describes the people and actions (who + what), and speculates or infers (why/how):\n\n**Example:** "The image shows a busy outdoor market, likely on a weekend morning given the crowd and the daylight. In the foreground, a vendor is arranging fresh produce — I can see leafy vegetables and what appear to be root vegetables. Several shoppers are browsing nearby, and a few are engaged in conversation with the vendors, which suggests a community-oriented atmosphere rather than a purely commercial one."\n\nThe speculation ("likely on a weekend", "suggests a community-oriented atmosphere") adds inference that lifts your Content and Vocabulary scores.`,
+      },
+      {
+        heading: 'Task 5 (Comparing Two Situations): The Compare-and-Conclude Structure',
+        body: `Task 5 shows two images or scenarios and asks you to compare them. You have 60 seconds to prepare and 60–90 seconds to speak.\n\nUse this structure:\n1. Identify the core contrast between the two options in one sentence\n2. Describe the specific advantages of Option A\n3. Describe the specific advantages of Option B\n4. State which you would prefer and why (or which is better for a given context)\n\nCandidates who list features without comparing them score CLB 7. The word "whereas" or "by contrast" in your response is a signal of comparison — use it at least once.`,
+      },
+      {
+        heading: 'Fluency Patterns That Lift Your Score',
+        body: `Fluency is not speed — it is the absence of unnatural pauses and the presence of smooth transitions. These patterns help:`,
+        list: [
+          'Use filler connectors to buy time naturally: "What I find interesting about this is...", "The way I see it..."',
+          'Bridge between points: "Building on that...", "Another angle worth considering is..."',
+          'Be specific over general: say "dentist appointment" not "appointment", "downtown commute" not "travel"',
+          'Use conditionals to develop ideas: "If I were in that situation, I would likely...", "Had they considered..."',
+          'Avoid single-word answers to sub-questions — always follow with "because" or "for instance"',
+        ],
+      },
+      {
+        heading: 'Task 8 (Expressing Opinions): The Task Most Candidates Underperform',
+        body: `Task 8 is the opinion task — you are given a statement and must agree, disagree, or present a nuanced view in 90 seconds.\n\nHigh scorers structure Task 8 like a mini-essay spoken aloud: position → reason 1 with example → reason 2 with example → brief conclusion. Low scorers restate the prompt, say "I agree" or "I disagree," then run out of things to say before the 90 seconds is up.\n\nPractice filling all 90 seconds. If you finish early, you likely gave shallow reasons. Go back and extend one of them with "For example..." or "This is especially relevant because..."`,
+      },
+      {
+        heading: 'Practice All 8 Speaking Tasks',
+        body: `CELPIPACE Speaking practice covers all 8 task types with recorded sample responses, examiner-style annotation, and a self-assessment rubric. Practicing with the rubric in hand is the fastest way to internalize what CLB 9 looks and sounds like before your test day.\n\nFor targeted fluency strategies, see the companion guide: CELPIP Speaking Fluency Tips That Actually Work.`,
+      },
+    ],
+  },
+
+  /* ── new-4 ── */
+  {
+    slug: 'celpip-test-format-complete-guide',
+    title: 'CELPIP Test Format: Complete Guide to Every Section (2026)',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#2563eb',
+    tagColorLight: '#eff6ff',
+    readTime: '9 min read',
+    date: 'Jun 6, 2026',
+    excerpt:
+      'A complete breakdown of the CELPIP General test: how many parts, how long each section takes, what each task looks like, and what score you need for Express Entry and citizenship. Updated for 2026.',
+    sections: [
+      {
+        heading: 'CELPIP General vs CELPIP General-LS: Which Do You Need?',
+        body: `There are two versions of CELPIP:\n\n**CELPIP General** tests all four skills: Listening, Reading, Writing, and Speaking. It is required for Express Entry (Federal Skilled Worker, Canadian Experience Class, Federal Skilled Trades), most Provincial Nominee Programs, and Canadian citizenship.\n\n**CELPIP General-LS** tests only Listening and Speaking. It is accepted for Canadian citizenship only — not for Express Entry or PR applications.\n\nIf you are applying for permanent residency under Express Entry or any PNP stream, you need the CELPIP General. The CELPIP-LS is only useful for candidates who already hold PR and are applying specifically for citizenship.`,
+      },
+      {
+        heading: 'Test Duration: How Long Is CELPIP?',
+        body: `The CELPIP General test takes approximately 3 hours from check-in to finish. The actual timed test portion is roughly 2.5 hours. Here is how the time breaks down by section:`,
+        list: [
+          'Listening: 47–55 minutes (6 parts, varies slightly by form)',
+          'Reading: 55–60 minutes (4 parts)',
+          'Writing: 53 minutes total (Task 1: 27 min, Task 2: 26 min)',
+          'Speaking: 15–20 minutes (8 tasks, each with preparation + speaking time)',
+        ],
+        body2: `Unlike IELTS, CELPIP is entirely computer-based — you type your written responses and record your speaking into a headset microphone. There is no paper-and-pencil option and no human examiner present during the test.`,
+      },
+      {
+        heading: 'Listening Section: 6 Parts Explained',
+        body: `The Listening section has 6 parts, each testing a different listening context:`,
+        list: [
+          'Part 1: Listening to a Problem Conversation — daily life conversation with a problem to solve (7 questions)',
+          'Part 2: Listening to a Daily Life Conversation — casual conversation between two people (8 questions)',
+          'Part 3: Listening to a News Item — short news broadcast, factual comprehension (6 questions)',
+          'Part 4: Listening to a Discussion — multi-person discussion, often two opinions (8 questions)',
+          'Part 5: Listening for Information — information-heavy conversation like a phone inquiry (8 questions)',
+          'Part 6: Listening to Viewpoints — longer monologue with an argument or opinion (9 questions)',
+        ],
+        body2: `Each audio clip plays once. You cannot replay it. Questions appear on screen as you listen and some are available to preview before the audio begins — always preview the questions before the clip starts.`,
+      },
+      {
+        heading: 'Reading Section: 4 Parts Explained',
+        body: `The Reading section has 4 parts across different text types:`,
+        list: [
+          'Part 1: Reading Correspondence — an email, letter, or message (8 questions)',
+          'Part 2: Reading to Apply a Diagram — a visual (chart, floor plan, schedule) paired with a text (8 questions)',
+          'Part 3: Reading for Information — a longer factual passage (9 questions)',
+          'Part 4: Reading for Viewpoints — an opinion or argument passage with inference questions (9 questions)',
+        ],
+        body2: `Reading is the most time-pressured section for most candidates. 55 minutes for 34 questions means under 100 seconds per question on average, while also reading dense passages. Skimming for the main idea before reading questions saves significant time in Parts 3 and 4.`,
+      },
+      {
+        heading: 'Writing Section: 2 Tasks Explained',
+        body: `The Writing section has two tasks:\n\n**Task 1 (27 minutes):** Write an email of 150–200 words. The prompt gives you a situation and three bullet points you must address. Tone — formal, semi-formal, or informal — is specified and must match your response.\n\n**Task 2 (26 minutes):** Write a survey response of 150–200 words. You are given a statement or question and must provide your opinion with reasons and examples. No specific tone is required — use a clear, organized argumentative style.\n\nBoth tasks are scored on Content/Coherence, Vocabulary, Readability, and Task Fulfilment. There is a small penalty for responses under 150 words.`,
+      },
+      {
+        heading: 'Speaking Section: 8 Tasks Explained',
+        body: `The Speaking section has 8 tasks, each with preparation time before you begin recording:`,
+        list: [
+          'Task 1 — Giving Advice (30s prep, 90s speaking)',
+          'Task 2 — Talking to Someone (30s prep, 60s speaking per turn)',
+          'Task 3 — Describing a Scene (30s prep, 60s speaking)',
+          'Task 4 — Making Predictions (30s prep, 60s speaking)',
+          'Task 5 — Comparing Two Situations (60s prep, 60s–90s speaking)',
+          'Task 6 — Dealing with a Difficult Situation (60s prep, 60s speaking)',
+          'Task 7 — Expressing Opinions (30s prep, 90s speaking)',
+          'Task 8 — Describing an Unusual Situation (30s prep, 90s speaking)',
+        ],
+        body2: `Speaking is scored on Content, Coherence, Vocabulary, and Listenability (clarity of speech — not accent). The biggest scoring gap is typically on Task 5 (comparison) and Task 7–8 (opinion), where preparation time is sufficient but most candidates still speak in shallow, underdeveloped responses.`,
+      },
+      {
+        heading: 'Score Scale and CLB Equivalents',
+        body: `CELPIP uses a 1–12 scale per skill. The CLB equivalents (used by IRCC for Express Entry) are:`,
+        list: [
+          'CELPIP 10, 11, or 12 → CLB 10 (maximum language points in Express Entry)',
+          'CELPIP 9 → CLB 9 (target for competitive Express Entry profiles)',
+          'CELPIP 8 → CLB 8 (minimum for significant skill transferability bonus)',
+          'CELPIP 7 → CLB 7 (minimum for Express Entry eligibility)',
+          'CELPIP 4 → CLB 4 (minimum for Canadian citizenship in Listening and Reading only)',
+        ],
+        body2: `For most Express Entry candidates in 2026, CLB 9 across all four skills is the competitive target. The gap between CLB 8 and CLB 9 is worth approximately 32 CRS points total — enough to move from below the draw cut-off to above it in many recent draws.`,
+      },
+      {
+        heading: 'Where to Take the CELPIP Test',
+        body: `CELPIP is administered by Paragon Testing Enterprises at designated test centres across Canada and internationally. Test dates are available year-round and results are typically delivered within 8 business days online.\n\nBefore booking, confirm that the CELPIP score will be accepted for your specific immigration pathway and verify the score validity window (2 years from test date) aligns with your application timeline.\n\nFor preparation that covers all four sections with real practice questions, timed mocks, and section-specific strategies, explore the CELPIPACE practice sets — structured by section, CLB level, and task type.`,
+      },
+    ],
+  },
 ]
