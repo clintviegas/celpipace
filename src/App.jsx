@@ -11,7 +11,7 @@ import { BookOpen, CheckCircle2, ClipboardCheck, Gauge, Headphones, LockKeyhole,
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
-import Hero from './components/Hero'
+import JourneyHero from './components/JourneyHero'
 import Footer from './components/Footer'
 import SEO from './components/SEO'
 const AuthModal = lazy(() => import('./components/AuthModal'))
@@ -296,13 +296,13 @@ function HomePage({ onSignIn }) {
         canonical="/"
         jsonLd={homeFaqs}
       />
+      <JourneyHero onSignIn={onSignIn} />
       {isMobile ? (
         <div className="home-mobile-only">
           <MobileHomeApp onSignIn={onSignIn} />
         </div>
       ) : (
         <div className="home-desktop-flow">
-          <Hero />
           {showDesktopSections && (
             <Suspense fallback={null}>
               <HomeDesktopSections onSignIn={onSignIn} />
