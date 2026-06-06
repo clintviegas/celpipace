@@ -243,3 +243,84 @@ function suggestParts(section, n) {
   const parts = section.parts.slice(0, n)
   return parts.join(' & ')
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Learning-path persistence — the full journey intake + gamified
+   path progress (XP, completed step ids). Cloud rows live on the
+   same study_plans table (journey + path_progress JSONB columns),
+   with a localStorage mirror so guests and offline users keep state.
+══════════════════════════════════════════════════════════════ */
+const JOURNEY_KEY = 'celpipiq_journey'
+const PATH_KEY = 'celpipiq_pathprogress'
+
+function journeyKey(userId) { return `${JOURNEY_KEY}:${uid(userId)}` }
+function pathKey(userId) { return `${PATH_KEY}:${uid(userId)}` }
+
+function deriveTargetDate(journey) {
+  if (journey?.examDate) return journey.examDate
+  const d = new Date(); d.setDate(d.getDate() + 14)
+  return d.toISOString().slice(0, 10)
+}
+
+export function saveJourneyLocal(userId, journey) {
+  try { localStorage.setItem(journeyKey(userId), JSON.stringify(journey)) } catch { void 0 }
+}
+export function loadJourneyLocal(userId = null) {
+  try {
+    const raw = localStorage.getItem(journeyKey(userId))
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+export function savePathProgressLocal(userId, progress) {
+  try { localStorage.setItem(pathKey(userId), JSON.stringify(progress)) } catch { void 0 }
+}
+export function loadPathProgressLocal(userId = null) {
+  try {
+    const raw = localStorage.getItem(pathKey(userId))
+    return raw ? JSON.parse(raw) : { xp: 0, completed: [] }
+  } catch { return { xp: 0, completed: [] } }
+}
+
+export async function saveJourneyCloud(journey) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return
+    await supabase.from('study_plans').upsert({
+      user_id: session.user.id,
+      target_date: deriveTargetDate(journey),
+      target_clb: journey?.targetCLB || 9,
+      days_per_week: (journey?.hoursPerDay || 2) >= 2 ? 7 : 5,
+      journey,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id' })
+  } catch { void 0 }
+}
+
+export async function savePathProgressCloud(progress) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return
+    await supabase.from('study_plans')
+      .update({ path_progress: progress, updated_at: new Date().toISOString() })
+      .eq('user_id', session.user.id)
+  } catch { void 0 }
+}
+
+export async function fetchJourneyCloud() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return null
+    const { data, error } = await supabase
+      .from('study_plans')
+      .select('journey, path_progress, target_date, target_clb')
+      .eq('user_id', session.user.id)
+      .maybeSingle()
+    if (error || !data) return null
+    return {
+      journey: data.journey || null,
+      pathProgress: data.path_progress && Object.keys(data.path_progress).length
+        ? data.path_progress
+        : { xp: 0, completed: [] },
+    }
+  } catch { return null }
+}

@@ -37,6 +37,7 @@ const PracticeSetPage = lazy(() => import('./pages/PracticeSetPage'))
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
 const ReviewPage = lazy(() => import('./pages/ReviewPage'))
 const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage'))
+const LearningPathPage = lazy(() => import('./pages/LearningPathPage'))
 const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage'))
 const ProgressPage = lazy(() => import('./pages/ProgressPage'))
 const PredictionPage = lazy(() => import('./pages/PredictionPage'))
@@ -296,7 +297,7 @@ function HomePage({ onSignIn }) {
         canonical="/"
         jsonLd={homeFaqs}
       />
-      <JourneyHero onSignIn={onSignIn} />
+      <JourneyHero />
       {isMobile ? (
         <div className="home-mobile-only">
           <MobileHomeApp onSignIn={onSignIn} />
@@ -380,7 +381,7 @@ export function AppInner() {
   const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
   // Keep public learning pages on the original site navbar so dropdown behavior stays consistent after navigation.
-  const innerPaths = ['/dashboard','/review','/study-plan','/flashcards','/progress','/predict','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription','/crs-score-calculator']
+  const innerPaths = ['/dashboard','/review','/study-plan','/learning-path','/flashcards','/progress','/predict','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription','/crs-score-calculator']
   const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
   const isPaymentRoute = location.pathname === '/payment'
 
@@ -415,6 +416,7 @@ export function AppInner() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/study-plan" element={<StudyPlanPage />} />
+          <Route path="/learning-path" element={<LearningPathPage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/flashcards" element={<FlashcardsPage />} />
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/predict" element={<PredictionPage />} />
