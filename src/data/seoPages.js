@@ -68,7 +68,7 @@ export const LANDING_PAGES = {
       ['Is this affiliated with CELPIP?', `${BRAND_NAME} is an independent CELPIP preparation platform and is not affiliated with Paragon Testing Enterprises.`],
     ],
     siblings: siblingsExcept('practice'),
-    relatedBlogSlugs: ['celpip-8-week-study-plan', '7-days-to-crack-celpip', 'celpip-test-day-checklist'],
+    relatedBlogSlugs: ['how-to-practice-for-celpip', 'celpip-test-format-complete-guide', 'celpip-8-week-study-plan'],
   },
   mock: {
     canonical: '/celpip-mock-test',
@@ -95,7 +95,7 @@ export const LANDING_PAGES = {
       ['Can I view my previous mock score?', 'Yes. Completed mock attempts are saved so users can reopen their score report from the mock exam page.'],
     ],
     siblings: siblingsExcept('mock'),
-    relatedBlogSlugs: ['celpip-8-week-study-plan', 'celpip-test-day-checklist', 'how-to-score-clb-10-writing'],
+    relatedBlogSlugs: ['celpip-test-format-complete-guide', 'celpip-8-week-study-plan', 'celpip-test-day-checklist'],
   },
   score: {
     canonical: '/celpip-score-calculator',
@@ -122,7 +122,7 @@ export const LANDING_PAGES = {
       ['Which language score matters most?', 'All four skills matter. Improving the lowest skill can unlock eligibility or CRS gains.'],
     ],
     siblings: siblingsExcept('score'),
-    relatedBlogSlugs: ['crs-points-language-breakdown', 'express-entry-2026-language-scores', 'celpip-score-requirements-citizenship-2026'],
+    relatedBlogSlugs: ['is-celpip-7-a-good-score', 'celpip-score-required-express-entry-pr', 'crs-points-language-breakdown'],
   },
   comparison: {
     canonical: '/celpip-vs-ielts',
@@ -149,7 +149,7 @@ export const LANDING_PAGES = {
       ['Should I prepare differently for CELPIP?', 'Yes. CELPIP requires comfort with Canadian English, computer typing, recorded speaking, and the CELPIP-specific task formats.'],
     ],
     siblings: siblingsExcept('comparison'),
-    relatedBlogSlugs: ['celpip-vs-ielts-which-is-easier', 'express-entry-2026-language-scores', 'celpip-score-requirements-citizenship-2026'],
+    relatedBlogSlugs: ['is-celpip-harder-than-ielts', 'celpip-vs-ielts-which-is-easier', 'celpip-score-required-express-entry-pr'],
   },
   listening: {
     canonical: '/celpip-listening-practice',
@@ -236,7 +236,7 @@ export const LANDING_PAGES = {
       ['How do I reach CLB 9 in CELPIP Writing?', 'Hit the task requirements, organise clearly, use varied accurate vocabulary, and control grammar. Scored practice with feedback shows exactly which of these to improve.'],
     ],
     siblings: sectionSiblings('writing'),
-    relatedBlogSlugs: ['how-to-score-clb-10-writing', 'celpip-8-week-study-plan', 'celpip-test-day-checklist'],
+    relatedBlogSlugs: ['celpip-writing-task-1-email-tips', 'celpip-writing-task-2-tips-templates', 'how-to-score-clb-10-writing'],
   },
   speaking: {
     canonical: '/celpip-speaking-practice',
@@ -265,7 +265,7 @@ export const LANDING_PAGES = {
       ['How do I improve CELPIP Speaking fluency?', 'Practice the prep-then-record flow repeatedly so you organise ideas fast and speak for the full time. Feedback after each take shows what to fix.'],
     ],
     siblings: sectionSiblings('speaking'),
-    relatedBlogSlugs: ['celpip-speaking-tasks-1-to-8-guide', 'celpip-speaking-fluency-tips', 'celpip-8-week-study-plan'],
+    relatedBlogSlugs: ['celpip-speaking-sample-answers', 'celpip-speaking-tasks-1-to-8-guide', 'celpip-speaking-fluency-tips'],
   },
 }
 

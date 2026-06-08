@@ -279,6 +279,35 @@ function renderBlogIndex() {
     </main>`
 }
 
+// Pick up to 4 topically-related posts for crawlable blog-to-blog links.
+// Same category first, then fall back to strategy posts, then anything.
+function relatedBlogPosts(article) {
+  const others = BLOG_ARTICLES.filter(a => a.slug !== article.slug)
+  const sameCat = others.filter(a => a.category === article.category)
+  const strategy = others.filter(a => a.category === 'strategy' && a.category !== article.category)
+  const seen = new Set()
+  const picked = []
+  for (const a of [...sameCat, ...strategy, ...others]) {
+    if (seen.has(a.slug)) continue
+    seen.add(a.slug)
+    picked.push(a)
+    if (picked.length === 4) break
+  }
+  return picked
+}
+
+function renderRelatedArticles(article) {
+  const related = relatedBlogPosts(article)
+  if (!related.length) return ''
+  return `      <section class="seo-section seo-related-articles-section">
+        <p class="seo-section-label">Keep reading</p>
+        <h2>Related CELPIP articles</h2>
+        <div class="seo-card-grid">
+          ${related.map(a => `<a class="seo-card seo-card-link" href="/blog/${escapeHtml(a.slug)}"><h3>${escapeHtml(a.title)}</h3><p>${escapeHtml(a.excerpt)}</p><span class="seo-card-cta">Read article →</span></a>`).join('\n          ')}
+        </div>
+      </section>`
+}
+
 function renderBlogArticle(article) {
   const recs = landingsForBlogCategory(article.category)
   const recsBlock = recs.length
@@ -301,6 +330,7 @@ function renderBlogArticle(article) {
         </div>
       </article>
 ${recsBlock}
+${renderRelatedArticles(article)}
     </main>`
 }
 
@@ -469,6 +499,38 @@ async function main() {
   written.forEach(route => console.log(`  - ${route}`))
 
   await writeSitemap()
+  await pingIndexNow()
+}
+
+// IndexNow: notify Google & Bing the moment new content deploys so it gets
+// crawled in hours instead of waiting for the next organic crawl. Only fires
+// on real deploys (Vercel sets VERCEL=1); skipped on local builds.
+const INDEXNOW_KEY = '45681f953f7fdcb8ba99e6dbbfb1cebd'
+async function pingIndexNow() {
+  if (!process.env.VERCEL && !process.env.CI) {
+    console.log('IndexNow: skipped (not a CI/production build).')
+    return
+  }
+  const host = PUBLIC_SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '')
+  const urlList = [
+    ...STATIC_SITEMAP_ROUTES.map(r => `${PUBLIC_SITE_URL}${r.path}`),
+    ...BLOG_ARTICLES.map(a => `${PUBLIC_SITE_URL}/blog/${a.slug}`),
+  ]
+  try {
+    const res = await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        host,
+        key: INDEXNOW_KEY,
+        keyLocation: `${PUBLIC_SITE_URL}/${INDEXNOW_KEY}.txt`,
+        urlList,
+      }),
+    })
+    console.log(`IndexNow: submitted ${urlList.length} URLs — HTTP ${res.status}`)
+  } catch (e) {
+    console.warn('IndexNow: ping failed (non-fatal):', e?.message)
+  }
 }
 
 // Static (non-blog) URLs included in sitemap.xml. Blog URLs come from the DB.
