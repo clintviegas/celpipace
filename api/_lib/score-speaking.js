@@ -104,6 +104,10 @@ export default async function handler(req, res) {
   const isPremium = !!(profile?.is_premium &&
     (profile?.subscription_status || 'active') !== 'expired' &&
     (!profile?.premium_expires_at || new Date(profile.premium_expires_at) > new Date()));
+  // Free tier: 2 AI speaking evaluations (lifetime). Two — not one — so a free
+  // user can record, retry, and re-score to SEE their CLB improve. That
+  // "it actually works" moment is the strongest driver of upgrades.
+  const FREE_SPEAKING_EVALS = 2;
   if (!isPremium) {
     const { count } = await auth.supabase
       .from('essay_embeddings')
@@ -111,11 +115,11 @@ export default async function handler(req, res) {
       .eq('user_id', userId)
       .eq('section', 'speaking')
       .eq('source', 'submission');
-    if ((count ?? 0) >= 1) {
+    if ((count ?? 0) >= FREE_SPEAKING_EVALS) {
       return res.status(403).json({
         error: 'free_limit_reached',
         section: 'speaking',
-        message: 'You\'ve used your 1 free AI speaking evaluation. Upgrade to Premium for unlimited scoring.',
+        message: `You've used your ${FREE_SPEAKING_EVALS} free AI speaking evaluations. Upgrade to Premium for unlimited scoring.`,
       });
     }
   }

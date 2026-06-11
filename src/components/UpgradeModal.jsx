@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Lock, Sparkles, Check, X } from 'lucide-react'
+import { Lock, Sparkles, Check, X, Flame } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
+import { useAuth } from '../context/AuthContext'
+import { daysUntil } from '../lib/studyPlan'
 
 /* ─────────────────────────────────────────────────────────────
    UpgradeModal — elegant paywall prompt
@@ -9,6 +11,19 @@ import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
 ───────────────────────────────────────────────────────────── */
 export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 'Practice' }) {
   const navigate = useNavigate()
+  const { profile } = useAuth()
+
+  // Exam-date urgency: if the user told us their test date and it's coming up,
+  // turn the generic paywall into a deadline-aware nudge. Only fire inside a
+  // 60-day window so it feels real rather than nagging.
+  const examDate = profile?.exam_date || null
+  const daysLeft = examDate ? daysUntil(examDate) : null
+  const showUrgency = daysLeft != null && daysLeft >= 0 && daysLeft <= 60
+  const urgencyText = daysLeft === 0
+    ? 'Your test is today — make this session count.'
+    : daysLeft === 1
+      ? 'Your test is tomorrow — make every set count.'
+      : `Your test is in ${daysLeft} days — make every practice set count.`
 
   return (
     <AnimatePresence>
@@ -43,6 +58,22 @@ export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 
               <Sparkles size={14} />
               Premium Content
             </div>
+
+            {showUrgency && (
+              <div
+                className="upg-urgency"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  justifyContent: 'center', margin: '4px auto 14px',
+                  padding: '8px 14px', borderRadius: 999,
+                  background: 'rgba(200,16,46,0.08)', color: '#C8102E',
+                  fontSize: 13, fontWeight: 600, maxWidth: 'fit-content',
+                }}
+              >
+                <Flame size={15} strokeWidth={2.5} />
+                {urgencyText}
+              </div>
+            )}
 
             <h2 className="upg-title">
               {setNumber ? `Set ${setNumber} is locked` : 'This content is locked'}

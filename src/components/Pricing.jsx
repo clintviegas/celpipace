@@ -31,6 +31,13 @@ const FREE_SECTIONS = [
   { icon: '🎤', section: 'Speaking',  desc: '1st question free' },
 ]
 
+// ⚠️ REAL TESTIMONIALS ONLY. Fake reviews are deceptive and illegal under the
+// FTC's 2024 fake-review rule. This array is intentionally EMPTY so nothing
+// fabricated ships — the testimonials section below only renders once you add
+// genuine, verifiable quotes from real users. Shape:
+//   { quote: 'Their writing feedback...', name: 'A. Sharma', detail: 'CLB 9 · Vancouver' }
+const TESTIMONIALS = []
+
 const FAQS = [
   {
     q: 'What do I get with the free plan?',
@@ -61,7 +68,7 @@ const FAQS = [
 export default function Pricing({ onSignIn, showFaq = true }) {
   const { user, isPremium, isAdmin, currentPlan, premiumExpiresAt, cancelAtPeriodEnd, refreshProfile } = useAuth()
   const navigate = useNavigate()
-  const [selected, setSelected] = useState('annual')
+  const [selected, setSelected] = useState('monthly')
   const [openFaq, setOpenFaq]   = useState(null)
   const [coupon, setCoupon]     = useState(WELCOME_COUPON_CODE)
   const [couponApplied, setCouponApplied] = useState(false)
@@ -260,6 +267,19 @@ export default function Pricing({ onSignIn, showFaq = true }) {
               </motion.div>
             </AnimatePresence>
 
+            <div
+              className="pricing-trust-badges"
+              style={{
+                display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
+                gap: '8px 16px', margin: '4px 0 14px', fontSize: 12.5,
+                color: '#4b5563', fontWeight: 600,
+              }}
+            >
+              <span>🔒 Secure Stripe checkout</span>
+              <span>↩️ 7-day refund window</span>
+              <span>✕ Cancel anytime</span>
+            </div>
+
             <button
               className="btn pricing-cta pricing-cta-green"
               onClick={handleCheckout}
@@ -334,6 +354,43 @@ export default function Pricing({ onSignIn, showFaq = true }) {
             Trusted by CELPIP test-takers worldwide · <strong>Secure Stripe checkout and self-serve billing</strong>
           </span>
         </motion.div>
+
+        {/* Testimonials — renders only when real quotes exist in TESTIMONIALS */}
+        {TESTIMONIALS.length > 0 && (
+          <motion.div
+            className="pricing-testimonials"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: 16, marginTop: 32,
+            }}
+          >
+            {TESTIMONIALS.map((t, i) => (
+              <figure
+                key={i}
+                style={{
+                  margin: 0, padding: '20px 22px', borderRadius: 16,
+                  background: '#fff', border: '1px solid #eef0f3',
+                  boxShadow: '0 4px 16px rgba(15,23,42,0.05)',
+                  display: 'flex', flexDirection: 'column', gap: 12,
+                }}
+              >
+                <div aria-hidden="true" style={{ color: '#f59e0b', letterSpacing: 2 }}>★★★★★</div>
+                <blockquote style={{ margin: 0, fontSize: 14.5, lineHeight: 1.55, color: '#1f2937' }}>
+                  “{t.quote}”
+                </blockquote>
+                <figcaption style={{ fontSize: 13, color: '#6b7280' }}>
+                  <strong style={{ color: '#111827' }}>{t.name}</strong>
+                  {t.detail ? ` · ${t.detail}` : ''}
+                </figcaption>
+              </figure>
+            ))}
+          </motion.div>
+        )}
 
         {showFaq && (
           <motion.div

@@ -3,6 +3,16 @@ import { PRODUCT_STATS } from './constants'
 export const WELCOME_COUPON_CODE = 'CELPIP25'
 export const WELCOME_DISCOUNT = 0.25
 
+// ⚠️ STRIPE WIRING: `price` here is DISPLAY ONLY. The amount actually charged
+// comes from the Stripe Price object referenced by STRIPE_PRICE_WEEKLY /
+// STRIPE_PRICE_MONTHLY / STRIPE_PRICE_ANNUAL (see api/create-checkout-session.js).
+// If you change a `price` below, create a matching Stripe Price and point the
+// env var at it, or customers will see one number and be charged another.
+// Existing subscribers stay on their old Price IDs and are unaffected.
+//
+// Pricing strategy: CELPIP is a short-lived need (people prep 4–8 weeks, take
+// the test, leave). Monthly is the natural fit and is the hero. Annual is
+// priced as a real long-haul/retaker plan so it no longer undercuts monthly.
 export const BILLING_PLANS = [
   {
     id: 'weekly',
@@ -12,8 +22,8 @@ export const BILLING_PLANS = [
     period: '/week',
     cadence: 'Weekly billing',
     days: 7,
-    badge: 'Short sprint',
-    blurb: 'Best for last-minute focused prep',
+    badge: 'Final-week sprint',
+    blurb: 'For last-minute cramming in the days before test day',
   },
   {
     id: 'monthly',
@@ -23,8 +33,9 @@ export const BILLING_PLANS = [
     period: '/month',
     cadence: 'Monthly billing',
     days: 30,
-    badge: 'Flexible month',
-    blurb: 'A full study cycle with room to review',
+    badge: 'Most popular',
+    blurb: 'The full prep window — most test-takers are ready in 4–8 weeks',
+    popular: true,
   },
   {
     id: 'annual',
@@ -35,8 +46,7 @@ export const BILLING_PLANS = [
     cadence: 'Annual billing',
     days: 365,
     badge: 'Best value',
-    blurb: 'A full year of prep, retakes, score tracking, and review',
-    popular: true,
+    blurb: 'For retakers and long-haul preppers — a full year of access',
   },
 ]
 
@@ -54,6 +64,6 @@ export const PREMIUM_FEATURES = [
 
 export const formatPlanPrice = (price) => `$${price.toFixed(2).replace(/\.00$/, '')}`
 
-export function getBillingPlan(planId, fallback = 'annual') {
+export function getBillingPlan(planId, fallback = 'monthly') {
   return BILLING_PLANS.find(plan => plan.id === planId) || BILLING_PLANS.find(plan => plan.id === fallback) || BILLING_PLANS[0]
 }
