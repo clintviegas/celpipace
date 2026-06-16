@@ -422,11 +422,24 @@ img { display: block; max-width: 100%; }
   pointer-events: none;
 }
 .hp-hero-inner {
-  max-width: 780px;
+  max-width: 1080px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
   text-align: center;
+}
+.hp-hero-top {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+  text-align: left;
+  margin-bottom: 40px;
+}
+.hp-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .hp-hero-badge {
   display: flex;
@@ -587,6 +600,112 @@ img { display: block; max-width: 100%; }
   font-size: 13px;
 }
 
+/* Left-align the pitch column (base rules center it for the legacy layout) */
+.hp-hero-copy .hp-hero-badge,
+.hp-hero-copy .hp-hero-offer { margin-left: 0; margin-right: 0; }
+.hp-hero-copy .hp-hero-title { text-align: left; }
+.hp-hero-copy .hp-hero-desc { margin-left: 0; margin-right: 0; text-align: left; }
+.hp-hero-copy .hp-hero-ctas { justify-content: flex-start; margin-bottom: 22px; }
+.hp-hero-copy .hp-hero-trust { justify-content: flex-start; margin: 0; }
+
+/* Rotating headline word — fixed-ish slot so the line doesn't jump */
+.hp-hero-rotate {
+  display: inline-flex;
+  position: relative;
+  vertical-align: bottom;
+}
+
+/* Sample AI score report — the unique, believable proof element */
+.hp-hero-visual {
+  display: flex;
+  justify-content: center;
+}
+.hp-score-card {
+  width: 100%;
+  max-width: 380px;
+  text-align: left;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 30px 60px rgba(0,0,0,.38);
+  backdrop-filter: blur(8px);
+}
+.hp-score-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.hp-score-head-title { font-size: 14px; font-weight: 700; color: #fff; }
+.hp-score-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+}
+.hp-score-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3fbd7a;
+  animation: hp-score-pulse 1.8s infinite;
+}
+@keyframes hp-score-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(63,189,122,.5); }
+  70%  { box-shadow: 0 0 0 8px rgba(63,189,122,0); }
+  100% { box-shadow: 0 0 0 0 rgba(63,189,122,0); }
+}
+.hp-score-band {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(45,138,86,.24), rgba(45,138,86,.06));
+  border: 1px solid rgba(45,138,86,.42);
+}
+.hp-score-band-num { font-size: 40px; font-weight: 800; line-height: 1; color: #3fbd7a; }
+.hp-score-band-meta { display: flex; flex-direction: column; gap: 3px; }
+.hp-score-band-meta span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: rgba(255,255,255,.55);
+}
+.hp-score-band-meta strong { font-size: 15px; font-weight: 700; color: #fff; }
+.hp-score-dims { display: flex; flex-direction: column; gap: 11px; margin-bottom: 16px; }
+.hp-score-dim-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,.82);
+}
+.hp-score-dim-track {
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255,255,255,.1);
+  overflow: hidden;
+}
+.hp-score-dim-fill { height: 100%; border-radius: 4px; }
+.hp-score-foot {
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-style: italic;
+  line-height: 1.5;
+  color: rgba(255,255,255,.72);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+}
+
 /* Credibility band */
 .hp-credibility {
   background: #fff;
@@ -741,6 +860,22 @@ img { display: block; max-width: 100%; }
 @media (max-width: 768px) {
   .hp-countdown-card { grid-template-columns: 1fr; padding: 28px 22px; gap: 24px; }
   .hp-countdown-copy h2 { font-size: 23px; }
+}
+
+@media (max-width: 860px) {
+  .hp-hero-top {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+  }
+  .hp-hero-copy { align-items: center; }
+  .hp-hero-copy .hp-hero-badge,
+  .hp-hero-copy .hp-hero-offer { margin-left: auto; margin-right: auto; }
+  .hp-hero-copy .hp-hero-title,
+  .hp-hero-copy .hp-hero-desc { text-align: center; }
+  .hp-hero-copy .hp-hero-ctas,
+  .hp-hero-copy .hp-hero-trust { justify-content: center; }
+  .hp-score-card { max-width: 360px; }
 }
 
 @media (max-width: 768px) {
