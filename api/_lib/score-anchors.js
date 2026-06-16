@@ -49,7 +49,7 @@ const W2_ANCHORS = [
     response:
       "I want to live in big city. Big city is good because there are many jobs and many things to do. You can go to mall, restaurant, and cinema. Also transportation is good, there are buses and trains. Small town is quiet but boring. There is no much things. So I prefer big city for my life and my future.",
     scores: { taskFulfillment: 6, coherence: 6, vocabulary: 6, readability: 6 },
-    note: 'Position stated, two reasons given. Article and plural errors ("big city" without "a", "no much things"). Limited elaboration.',
+    note: 'Position stated, two reasons given — but DEVELOPMENT is shallow: each reason is a bare list ("malls, restaurants, cinemas") with no specific detail or personal example. Article and plural errors ("big city" without "a", "no much things"). The flat development, as much as the grammar, holds this at CLB 6.',
   },
   {
     clb: 8,
@@ -57,7 +57,7 @@ const W2_ANCHORS = [
     response:
       "I would prefer to live in a big city rather than a small town. The main reason is opportunity. Cities offer a much wider range of jobs, especially in technology and finance, which are the fields I want to work in. It would be difficult to find similar positions in a small town.\n\nSecondly, cities have better access to services like hospitals, universities, and entertainment. I enjoy going to concerts and trying different restaurants, and these are not easily available in small towns.\n\nOf course, small towns are quieter and the cost of living is lower, but for me the career and lifestyle benefits of a big city are more important. That is why I would choose a big city.",
     scores: { taskFulfillment: 8, coherence: 8, vocabulary: 8, readability: 8 },
-    note: 'Clear position, two developed reasons, brief acknowledgment of the other side. Functional cohesion, accurate grammar.',
+    note: 'Clear position with two DEVELOPED reasons — each moves past the claim to a reason plus a supporting detail (specific fields like technology/finance; specific services like hospitals/concerts), and a brief acknowledgment of the other side. Functional cohesion, accurate grammar. The added development, not just correctness, is what lifts this from CLB 6 to CLB 8.',
   },
   {
     clb: 9,
@@ -65,7 +65,7 @@ const W2_ANCHORS = [
     response:
       "Although both big cities and small towns have their merits, I personally prefer life in a big city for two compelling reasons: professional opportunity and cultural variety.\n\nFirst, large cities are economic engines. They concentrate industries, employers, and networking events, which makes career growth significantly faster. As someone pursuing a career in software, I find that the density of tech companies in a city like Toronto offers access to mentors, meet-ups, and roles that would simply not exist in a small town.\n\nSecond, cities are culturally rich. The ability to attend a film festival on Friday and a Filipino food market on Saturday genuinely improves my quality of life. Small towns, while peaceful, tend to offer a narrower range of experiences.\n\nI acknowledge that the trade-offs — higher rent and a faster pace — are real, but for me they are worth paying. Overall, the energy and possibilities of a big city outweigh the comfort of a small town.",
     scores: { taskFulfillment: 9, coherence: 9, vocabulary: 9, readability: 9 },
-    note: 'Strong thesis, two well-developed body paragraphs with concrete examples, balanced acknowledgment, confident conclusion. Sophisticated phrasing.',
+    note: 'Strong thesis; two body paragraphs that complete the full development arc — claim → reason → concrete personal detail (Toronto tech density, mentors/meet-ups; the Friday film festival → Saturday food market) → example → link. Balanced acknowledgment, confident conclusion, sophisticated phrasing. Complete development on every point.',
   },
   {
     clb: 11,
@@ -84,7 +84,7 @@ const SPEAKING_ANCHORS = [
     transcript:
       "Okay um I like to go to the park near my house. It is a big park. There is grass and trees and a small lake. I go there on weekend with my family. We bring food and we eat outside. Sometimes I walk with my dog. The park is quiet and I feel relax. Also there is a playground for children. Many people come there. I like the park because it is close and free.",
     scores: { taskFulfillment: 6, coherence: 6, vocabulary: 6, listenability: 6 },
-    note: 'Addresses task, simple list of details. Frequent "and" linkage, minor grammar ("on weekend", "feel relax"). Natural pacing, no major fluency breaks.',
+    note: 'Addresses task, but DEVELOPMENT is shallow — points are listed (claim + one reason) and never extended with specific detail or a personal example. Frequent "and" linkage, minor grammar ("on weekend", "feel relax"). Natural pacing, no major fluency breaks. The flat development, not the grammar, is what holds this at CLB 6.',
   },
   {
     clb: 8,
@@ -92,7 +92,7 @@ const SPEAKING_ANCHORS = [
     transcript:
       "One place I really enjoy spending time at is the local library downtown. It's a quiet, well-lit building with comfortable seating and a great selection of books. I usually go there on Saturday mornings to read or to catch up on personal projects. What I like most is the atmosphere — it's calm but not empty, so I can focus without feeling isolated. They also have a small cafe on the first floor, which is perfect when I need a break. Honestly, it has become my favorite weekend spot.",
     scores: { taskFulfillment: 8, coherence: 8, vocabulary: 8, listenability: 8 },
-    note: 'Clear topic + reasons + supporting details. Natural transitions ("What I like most", "Honestly"). No grammar issues, conversational flow.',
+    note: 'DEVELOPED answer: each point moves past the claim to a reason AND a supporting detail (the cafe, the Saturday-morning routine, the atmosphere), with a near-example. Natural transitions ("What I like most", "Honestly"). No grammar issues, conversational flow. The added development — not fancier vocabulary — is what lifts this from CLB 6 to CLB 8.',
   },
   {
     clb: 9,
@@ -100,7 +100,7 @@ const SPEAKING_ANCHORS = [
     transcript:
       "If I had to pick one place, it would definitely be a small café called Pilot Coffee on Queen Street. It's the kind of place where I lose track of time. The interior has these big windows that flood the space with natural light, exposed brick walls, and quiet jazz playing in the background — it just feels designed for thinking. I usually go there on Sunday mornings with a book or my laptop, order a flat white, and settle in for two or three hours. What makes it special isn't really the coffee, though it's great — it's that I always leave feeling more focused than when I arrived. It's become my unofficial weekend office.",
     scores: { taskFulfillment: 9, coherence: 9, vocabulary: 9, listenability: 9 },
-    note: 'Vivid concrete details, smooth pacing, idiomatic language ("lose track of time", "unofficial weekend office"). Strong listenability.',
+    note: 'Fully developed: claim → reason → vivid concrete details (windows, exposed brick, flat white, two-or-three hours) → an example of the payoff ("leave more focused than when I arrived") → a closing link ("unofficial weekend office"). Smooth pacing, idiomatic language ("lose track of time"). Strong listenability. Complete development arc on every point.',
   },
   {
     clb: 11,

@@ -127,6 +127,22 @@ export default async function handler(req, res) {
   const exemplarBlock = buildExemplarBlock(exemplars);
   const weaknessBlock = buildWeaknessBlock(weaknessProfile);
 
+  // W2 (opinion) only — answer development is the biggest score lever on opinion
+  // tasks. Emails (W1) are scored on covering required points, not this arc.
+  const developmentBlock = normalisedTaskType === 'W2' ? `ANSWER DEVELOPMENT — THE SINGLE BIGGEST SCORING LEVER:
+Most test-takers lose marks not because their English is weak, but because they STATE an opinion without DEVELOPING it. A bare answer ("I prefer online learning because it's convenient.") shows far less language than a developed one. A fully developed point follows this arc:
+  1. CLAIM — state the position or main idea.
+  2. REASON — explain WHY.
+  3. SUPPORTING DETAIL — add specifics that flesh out the reason.
+  4. EXAMPLE — a concrete, personal example.
+  5. LINK — connect back to the prompt or transition to the next idea.
+Check each body point against this arc:
+- A response whose points stop at CLAIM + REASON (no detail, no example) cannot exceed 7 on Task Fulfillment, no matter how accurate the grammar — there isn't enough language on display.
+- A response where most points reach DETAIL or a concrete EXAMPLE can earn 8+.
+- Under-development also drags down Coherence (ideas feel listy and abrupt) and Vocabulary (fewer openings to show range), so weak development should pull multiple dimensions down, not just Task Fulfillment.
+
+` : '';
+
   // ── 2. Build prompt ───────────────────────────────────────────────────────
   const systemPrompt = `You are a certified CELPIP Writing examiner with 10+ years of experience. You evaluate responses using the official CELPIP-General scoring scale (3–12). You are rigorous and conservative — when in doubt, score lower rather than higher.
 
@@ -151,10 +167,11 @@ LENGTH RULES (strict):
 - 100–139 words: Task Fulfillment cannot exceed 7.
 - 140+ words: full range available based on quality.
 
-SCORING METHOD:
+${developmentBlock}SCORING METHOD:
 - Anchor your scores to the calibration anchors below. Match the response to whichever anchor it most resembles.
 - Be conservative: a response only earns CLB 9+ when its weakest dimension matches the CLB 9 anchor.
-- Each suggestion must reference a specific phrase or sentence in the student's response (quote it).
+- Each suggestion must reference a specific phrase or sentence in the student's response (quote it).${normalisedTaskType === 'W2' ? `
+- AT LEAST ONE suggestion must target the LEAST-developed point: quote the student's bare claim verbatim, then model how to extend it with a reason, a specific supporting detail, AND a personal example.` : ''}
 - Feedback should be 2–3 sentences, concrete, and reference the actual text.
 
 ${anchorBlock}${weaknessBlock ? '\n\n' + weaknessBlock : ''}${exemplarBlock ? '\n\n' + exemplarBlock : ''}`;
@@ -168,7 +185,7 @@ ${(criteria || ['Task Fulfillment', 'Coherence', 'Vocabulary', 'Grammar']).join(
 STUDENT'S RESPONSE (${wordCount} words):
 ${responseText}
 
-Score this response against the calibration anchors. Return scores as integers 3–12 for each of: taskFulfillment, coherence, vocabulary, readability. Provide 2–3 sentences of feedback and 3–4 specific suggestions, each quoting a fragment from the student's response.`;
+Score this response against the calibration anchors. Return scores as integers 3–12 for each of: taskFulfillment, coherence, vocabulary, readability. Provide 2–3 sentences of feedback and 3–4 specific suggestions, each quoting a fragment from the student's response.${normalisedTaskType === 'W2' ? ' At least one suggestion MUST show how to DEVELOP an under-developed point: quote the bare claim, then model it extended with a reason + a specific detail + a personal example.' : ''}`;
 
   // ── 3. Dual-pass scoring ──────────────────────────────────────────────────
   try {

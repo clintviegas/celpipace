@@ -212,11 +212,24 @@ LENGTH RULES (strict — speaking tasks run 60–90 seconds):
 - 60–89 words: Task Fulfillment cannot exceed 7.
 - 90+ words: full range available based on quality.
 
+ANSWER DEVELOPMENT — THE SINGLE BIGGEST SCORING LEVER:
+Most test-takers lose marks not because their English is weak, but because they ANSWER the prompt without DEVELOPING the answer. A bare answer ("I prefer online learning because it's convenient.") shows far less language than a developed one. A fully developed point follows this arc:
+  1. CLAIM — state the position or main idea.
+  2. REASON — explain WHY.
+  3. SUPPORTING DETAIL — add specifics that flesh out the reason.
+  4. EXAMPLE — a concrete, personal example.
+  5. LINK — connect back to the prompt or transition to the next idea.
+Check each main point in the transcript against this arc:
+- A response whose points stop at CLAIM + REASON (no detail, no example) cannot exceed 7 on Task Fulfillment, no matter how accurate the grammar — there simply isn't enough language on display.
+- A response where most points reach DETAIL or a concrete EXAMPLE can earn 8+.
+- Under-development also drags down Coherence (ideas feel listy and abrupt) and Vocabulary (fewer openings to show range), so weak development should pull multiple dimensions down, not just Task Fulfillment.
+
 SCORING METHOD:
 - Anchor your scores to the calibration anchors below. Match the transcript to whichever anchor it most resembles in fluency, organization, vocabulary, and task coverage.
 - Be conservative: a transcript only earns CLB 9+ when its weakest dimension matches the CLB 9 anchor.
 - Each suggestion must reference a specific phrase or sentence from the student's transcript (quote it).
-- Feedback should be 2–3 sentences, concrete, and reference the actual transcript.
+- AT LEAST ONE suggestion must target the LEAST-developed point: quote the student's bare claim verbatim, then model how to extend it with a reason, a specific supporting detail, AND a personal example — so the student can hear the difference between answering and developing.
+- Feedback should be 2–3 sentences, concrete, and reference the actual transcript. If under-development is the main thing holding the score back, say so plainly — it is the most actionable fix.
 
 ${anchorBlock}${fluencyBlock ? '\n\n' + fluencyBlock : ''}${weaknessBlock ? '\n\n' + weaknessBlock : ''}${exemplarBlock ? '\n\n' + exemplarBlock : ''}`;
 
@@ -228,7 +241,7 @@ TASK TYPE: ${normalisedTaskType}${topic ? `\nSCENE TOPIC: ${topic}` : ''}
 STUDENT'S SPOKEN RESPONSE TRANSCRIPT (${wordCount} words):
 ${responseText}
 
-Score this transcript against the calibration anchors. Return scores as integers 3–12 for each of: taskFulfillment, coherence, vocabulary, listenability. Provide 2–3 sentences of feedback and 3–4 specific suggestions, each quoting a fragment from the student's transcript.`;
+Score this transcript against the calibration anchors. Return scores as integers 3–12 for each of: taskFulfillment, coherence, vocabulary, listenability. Provide 2–3 sentences of feedback and 3–4 specific suggestions, each quoting a fragment from the student's transcript. At least one suggestion MUST show how to DEVELOP an under-developed point: quote the bare claim, then model it extended with a reason + a specific detail + a personal example.`;
 
   // ── 3. Dual-pass scoring ──────────────────────────────────────────────────
   try {
