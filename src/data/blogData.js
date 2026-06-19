@@ -1547,7 +1547,7 @@ export const BLOG_ARTICLES = [
   /* ── new-4 ── */
   {
     slug: 'celpip-test-format-complete-guide',
-    title: 'CELPIP Test Format: Complete Guide to Every Section (2026)',
+    title: 'CELPIP Test Format 2026 – Sections, Timing & Question Types',
     category: 'strategy',
     tag: 'Strategy',
     tagColor: '#2563eb',
@@ -1555,7 +1555,7 @@ export const BLOG_ARTICLES = [
     readTime: '9 min read',
     date: 'Jun 6, 2026',
     excerpt:
-      'A complete breakdown of the CELPIP General test: how many parts, how long each section takes, what each task looks like, and what score you need for Express Entry and citizenship. Updated for 2026.',
+      'How long is the CELPIP test? Full 2026 format guide: 4 sections, all parts, timing, question types, and what to expect on test day for CELPIP General.',
     sections: [
       {
         heading: 'CELPIP General vs CELPIP General-LS: Which Do You Need?',
@@ -1637,7 +1637,7 @@ export const BLOG_ARTICLES = [
   /* ── paa-1 ── */
   {
     slug: 'is-celpip-harder-than-ielts',
-    title: 'Is CELPIP Harder Than IELTS? Honest Comparison for 2026',
+    title: 'Is CELPIP Harder Than IELTS? 2026 Comparison for Canadian PR',
     category: 'strategy',
     tag: 'Strategy',
     tagColor: '#2563eb',
@@ -1645,11 +1645,11 @@ export const BLOG_ARTICLES = [
     readTime: '7 min read',
     date: 'Jun 6, 2026',
     excerpt:
-      'CELPIP and IELTS test the same four skills but feel very different on test day. Most Canadian-based candidates find CELPIP easier — but the reasons why depend on your background. Here is the honest answer.',
+      'Is CELPIP harder than IELTS for Canadian PR? Compare difficulty, format, scoring, and speaking/writing tasks side by side — plus which test most candidates find easier in 2026.',
     sections: [
       {
         heading: 'Is CELPIP Harder Than IELTS?',
-        body: `For most candidates applying through Canada's Express Entry system, CELPIP is considered easier than IELTS General Training — but this depends on your specific strengths and weaknesses.\n\nCELPIP tends to be easier for candidates already living in Canada (familiar with Canadian English accents), people who are comfortable typing quickly (Writing is done on a keyboard), and candidates who find computer-based tests less stressful than paper-and-pencil.\n\nIELTS tends to be easier for candidates trained in traditional academic writing, people who score highly in face-to-face speaking (IELTS Speaking is with a live examiner), and candidates outside Canada more familiar with British Council test formats.`,
+        body: `For most candidates applying through Canada's Express Entry system, CELPIP is considered easier than IELTS General Training — but this depends on your specific strengths and weaknesses.\n\nIf you have not tried CELPIP yet, start with a free CELPIP practice test to see your baseline CLB level before choosing between the two exams.\n\nCELPIP tends to be easier for candidates already living in Canada (familiar with Canadian English accents), people who are comfortable typing quickly (Writing is done on a keyboard), and candidates who find computer-based tests less stressful than paper-and-pencil.\n\nIELTS tends to be easier for candidates trained in traditional academic writing, people who score highly in face-to-face speaking (IELTS Speaking is with a live examiner), and candidates outside Canada more familiar with British Council test formats.`,
       },
       {
         heading: 'Key Differences That Affect Difficulty',
@@ -1684,7 +1684,7 @@ export const BLOG_ARTICLES = [
   /* ── paa-2 ── */
   {
     slug: 'is-celpip-7-a-good-score',
-    title: 'Is 7 a Good CELPIP Score? What CLB 7 Gets You in 2026',
+    title: 'Is CLB 7 a Good CELPIP Score for PR? (2026 Guide)',
     category: 'strategy',
     tag: 'Strategy',
     tagColor: '#2563eb',
@@ -1735,7 +1735,7 @@ export const BLOG_ARTICLES = [
   /* ── paa-3 ── */
   {
     slug: 'how-to-practice-for-celpip',
-    title: 'How to Practice for CELPIP: A Section-by-Section Study Method',
+    title: 'How to Prepare for CELPIP – Section-by-Section Practice Guide',
     category: 'strategy',
     tag: 'Strategy',
     tagColor: '#2563eb',
@@ -1743,7 +1743,7 @@ export const BLOG_ARTICLES = [
     readTime: '8 min read',
     date: 'Jun 6, 2026',
     excerpt:
-      'The most effective CELPIP preparation is not general English study — it is targeted, timed practice by section. This guide explains exactly how to practice for each of the four CELPIP skills to maximize your CLB score.',
+      'CELPIP exam preparation plan: how to practice Listening, Reading, Writing & Speaking with timed drills, mock exams, and CLB-focused study methods that actually raise your score.',
     sections: [
       {
         heading: 'How to Practice for CELPIP Effectively',
@@ -1809,7 +1809,7 @@ export const BLOG_ARTICLES = [
   /* ── paa-4 ── */
   {
     slug: 'celpip-score-required-express-entry-pr',
-    title: 'What CELPIP Score Do You Need for Express Entry and Canadian PR?',
+    title: 'Minimum CELPIP Score for Express Entry & PR (2026 CLB Guide)',
     category: 'immigration',
     tag: 'Immigration',
     tagColor: '#6B4FAF',
@@ -1817,10 +1817,10 @@ export const BLOG_ARTICLES = [
     readTime: '6 min read',
     date: 'Jun 6, 2026',
     excerpt:
-      'CELPIP 7 is the Express Entry minimum — but current 2026 draw cut-offs require CLB 9 to be competitive. Here is the exact score you need for eligibility, competitiveness, and maximum CRS points.',
+      'Minimum CELPIP score for Express Entry and Canadian PR in 2026: CLB 7 eligibility vs CLB 9 competitiveness. Exact scores for FSW, CEC, PNP, and how many CRS points each CLB level adds.',
     sections: [
       {
-        heading: 'What CELPIP Score Do You Need for Express Entry?',
+        heading: 'Minimum CELPIP Score for Express Entry (2026)',
         body: `The minimum CELPIP score for Express Entry eligibility is CELPIP 7 (CLB 7) in all four skills — Listening, Reading, Writing, and Speaking.\n\nHowever, the minimum for eligibility is very different from the score needed to actually receive an Invitation to Apply (ITA). In 2026, most Express Entry draws have cleared at CRS scores above 510 for the Canadian Experience Class — and achieving that CRS score almost always requires CLB 9 language scores.`,
       },
       {

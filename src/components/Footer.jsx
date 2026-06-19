@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { BRAND_NAME, SUPPORT_EMAIL } from '../data/constants'
+import { CORE_PRODUCT_LINKS, FEATURED_BLOG_LINKS, TOOL_RESOURCE_LINKS } from '../data/crawlLinks'
 import CelpipAceLogo from './CelpipAceLogo'
 
 export default function Footer() {
@@ -8,34 +9,15 @@ export default function Footer() {
   const cols = [
     {
       heading: 'Practice Tests',
-      links: [
-        { label: 'CELPIP Practice Test', to: '/celpip-practice-test' },
-        { label: 'CELPIP Mock Test',     to: '/celpip-mock-test' },
-        { label: 'Listening Practice',   to: '/listening' },
-        { label: 'Reading Practice',     to: '/reading' },
-        { label: 'Writing Practice',     to: '/celpip-writing-practice' },
-        { label: 'Speaking Practice',    to: '/celpip-speaking-practice' },
-      ],
+      links: CORE_PRODUCT_LINKS,
     },
     {
-      heading: 'Learn',
-      links: [
-        { label: 'Study Guides & Courses', to: '/celpip-resources' },
-        { label: 'Tips & Strategies',      to: '/celpip-resources' },
-        { label: 'Vocabulary Builder',     to: '/celpip-resources' },
-        { label: 'Score Tracker',          to: '/scores' },
-        { label: 'CLB to CRS Chart',       to: '/celpip-score-calculator' },
-      ],
+      heading: 'Tools & Resources',
+      links: TOOL_RESOURCE_LINKS,
     },
     {
-      heading: 'Resources',
-      links: [
-        { label: 'CELPIP vs IELTS',           to: '/celpip-vs-ielts' },
-        { label: 'CELPIP for Immigration',    to: '/crs-score-calculator' },
-        { label: 'CRS Calculator',            to: '/crs-score-calculator' },
-        { label: 'Blog & Articles',           to: '/blog' },
-        { label: 'Pricing',                   to: '/pricing' },
-      ],
+      heading: 'Study Guides',
+      links: FEATURED_BLOG_LINKS,
     },
     {
       heading: 'Company',

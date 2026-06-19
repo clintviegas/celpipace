@@ -17,6 +17,7 @@ import { createClient } from '@supabase/supabase-js'
   }
 }
 import { BLOG_ARTICLES as FALLBACK_ARTICLES } from '../src/data/blogData.js'
+import { CORE_PRODUCT_LINKS, FEATURED_BLOG_LINKS, TOOL_RESOURCE_LINKS } from '../src/data/crawlLinks.js'
 import { BRAND_NAME, PRODUCT_STATS, PUBLIC_SITE_URL } from '../src/data/constants.js'
 import { LANDING_PAGES, faqJsonLd, softwareJsonLd, landingsForBlogCategory } from '../src/data/seoPages.js'
 
@@ -198,16 +199,38 @@ ${relatedBlock}
     </main>`
 }
 
+function renderLinkColumn(heading, links) {
+  return `        <div class="seo-link-col">
+          <h2>${escapeHtml(heading)}</h2>
+          <ul class="seo-link-list">
+            ${links.map(link => `<li><a href="${escapeHtml(link.to)}">${escapeHtml(link.label)}</a></li>`).join('\n            ')}
+          </ul>
+        </div>`
+}
+
+function renderHomeInternalLinks() {
+  return `      <nav class="seo-section seo-internal-links" aria-label="CELPIP practice tests, tools, and study guides">
+        <p class="seo-section-label">Explore CELPIPACE</p>
+        <div class="seo-link-columns">
+          ${renderLinkColumn('Practice tests', CORE_PRODUCT_LINKS)}
+          ${renderLinkColumn('Tools & resources', TOOL_RESOURCE_LINKS)}
+          ${renderLinkColumn('Popular study guides', FEATURED_BLOG_LINKS)}
+        </div>
+      </nav>`
+}
+
 function renderHomePage() {
   return `    <main class="seo-page prerender-page">
       <section class="seo-hero">
         <div class="seo-hero-copy">
           <p class="seo-eyebrow">CELPIP practice with AI scoring</p>
-          <h1>CELPIPACE – CELPIP Mock Tests, Practice, and AI Scoring</h1>
-          <p class="seo-subhead">CELPIPACE helps Canadian PR applicants prepare with full-length CELPIP mock exams, section practice, instant AI scoring, and saved CLB reports.</p>
+          <h1>CELPIP Mock Test & Practice Tests Online – Free AI Scoring</h1>
+          <p class="seo-subhead">Free CELPIP mock tests and section practice with instant AI scoring. Full-length exams for Listening, Reading, Writing & Speaking.</p>
           <div class="seo-actions">
-            <a class="seo-primary" href="/exam">Start Free Diagnostic</a>
-            <a class="seo-secondary" href="/celpip-mock-test">See Mock Tests</a>
+            <a class="seo-primary" href="/celpip-practice-test">CELPIP Practice Test</a>
+            <a class="seo-secondary" href="/celpip-mock-test">CELPIP Mock Test</a>
+            <a class="seo-secondary" href="/blog">Study Guides</a>
+            <a class="seo-secondary" href="/pricing">Pricing</a>
           </div>
         </div>
         <div class="seo-proof-panel" aria-label="CELPIPACE proof points">
@@ -221,12 +244,13 @@ function renderHomePage() {
           <p>Use practice sets to find weak skills, mock exams to simulate test day, and score reports to decide what to improve next.</p>
         </div>
         <div class="seo-card-grid">
-          <article class="seo-card"><h3>Listening</h3><p>${PRODUCT_STATS.listeningSets} listening sets with Canadian English practice.</p></article>
-          <article class="seo-card"><h3>Reading</h3><p>${PRODUCT_STATS.readingSets} reading sets across correspondence, diagrams, information, and viewpoints.</p></article>
-          <article class="seo-card"><h3>Writing</h3><p>${PRODUCT_STATS.writingSets} prompts for email and survey response practice.</p></article>
-          <article class="seo-card"><h3>Speaking</h3><p>${PRODUCT_STATS.speakingPrompts} prompts covering all 8 CELPIP Speaking tasks.</p></article>
+          <a class="seo-card seo-card-link" href="/celpip-listening-practice"><h3>Listening</h3><p>${PRODUCT_STATS.listeningSets} listening sets with Canadian English practice.</p></a>
+          <a class="seo-card seo-card-link" href="/celpip-reading-practice"><h3>Reading</h3><p>${PRODUCT_STATS.readingSets} reading sets across correspondence, diagrams, information, and viewpoints.</p></a>
+          <a class="seo-card seo-card-link" href="/celpip-writing-practice"><h3>Writing</h3><p>${PRODUCT_STATS.writingSets} prompts for email and survey response practice.</p></a>
+          <a class="seo-card seo-card-link" href="/celpip-speaking-practice"><h3>Speaking</h3><p>${PRODUCT_STATS.speakingPrompts} prompts covering all 8 CELPIP Speaking tasks.</p></a>
         </div>
       </section>
+${renderHomeInternalLinks()}
     </main>`
 }
 
@@ -425,8 +449,8 @@ async function main() {
     {
       path: '/',
       meta: {
-        title: 'CELPIPACE – CELPIP Mock Tests, Practice, and AI Scoring',
-        description: 'CELPIPACE helps Canadian PR applicants prepare with full-length CELPIP mock exams, section practice, instant AI scoring, and saved CLB reports.',
+        title: 'CELPIP Mock Test & Practice Tests Online – Free AI Scoring',
+        description: 'Free CELPIP mock tests and section practice with instant AI scoring. Full-length exams for Listening, Reading, Writing & Speaking. Start free today.',
         canonical: '/',
         jsonLd: [
           {

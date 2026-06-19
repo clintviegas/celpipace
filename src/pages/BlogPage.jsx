@@ -7,6 +7,24 @@ import SEO from '../components/SEO'
 import { BRAND_NAME } from '../data/constants'
 import { landingsForBlogCategory } from '../data/seoPages'
 
+const INTRO_CTAS = {
+  'is-celpip-harder-than-ielts': {
+    text: 'Compare formats here, then try a free CELPIP practice test to see your CLB baseline before booking either exam.',
+    to: '/celpip-practice-test',
+    label: 'Free CELPIP Practice Test →',
+  },
+  'how-to-practice-for-celpip': {
+    text: 'Use this study method with real timed questions — start on the free CELPIP practice test hub.',
+    to: '/celpip-practice-test',
+    label: 'Start CELPIP Practice Test →',
+  },
+  'celpip-test-format-complete-guide': {
+    text: 'Know the format — then practice each section with timed drills and instant scoring.',
+    to: '/celpip-practice-test',
+    label: 'CELPIP Practice Test →',
+  },
+}
+
 // Map snake_case DB row -> camelCase shape used throughout the page.
 function rowToArticle(r) {
   return {
@@ -86,6 +104,14 @@ function ArticleView({ article, onBack, relatedArticles }) {
         </div>
         <h1 className="blog-art-title">{article.title}</h1>
         <p className="blog-art-excerpt">{article.excerpt}</p>
+        {INTRO_CTAS[article.slug] && (
+          <div className="blog-art-intro-cta">
+            <p>{INTRO_CTAS[article.slug].text}</p>
+            <Link to={INTRO_CTAS[article.slug].to} className="blog-art-intro-cta-link">
+              {INTRO_CTAS[article.slug].label}
+            </Link>
+          </div>
+        )}
       </header>
 
       {/* Layout: body + sidebar */}
@@ -117,7 +143,7 @@ function ArticleView({ article, onBack, relatedArticles }) {
               <strong>Practice makes the difference.</strong>
               <span> Use {BRAND_NAME}'s instant-scored practice questions to put these strategies into action.</span>
             </div>
-            <a href="/exam" className="blog-art-cta-btn">Start Practising →</a>
+            <Link to="/celpip-practice-test" className="blog-art-cta-btn">Start Practising →</Link>
           </div>
 
           {/* Contextual landing-page links based on article category */}
@@ -169,7 +195,7 @@ function ArticleView({ article, onBack, relatedArticles }) {
             <div className="blog-sidebar-cta-icon">🎯</div>
             <h4 className="blog-sidebar-cta-title">Ready to Practice?</h4>
             <p className="blog-sidebar-cta-sub">Apply these strategies with real CELPIP-style questions and instant scoring.</p>
-            <a href="/exam" className="blog-sidebar-cta-btn">Try a Mock Exam</a>
+            <Link to="/celpip-mock-test" className="blog-sidebar-cta-btn">Try a Mock Exam</Link>
           </div>
         </aside>
       </div>

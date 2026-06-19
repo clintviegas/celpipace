@@ -11,7 +11,6 @@
 //   5. A browser window opens → sign in with your GSC-owner Google account
 //   6. Token is saved to .gsc-token.json (gitignored). Future runs are silent.
 
-import { google } from 'googleapis'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
@@ -22,10 +21,11 @@ import { exec } from 'node:child_process'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT      = path.resolve(__dirname, '..')
 const OUT_DIR   = path.join(ROOT, 'docs', 'gsc')
+const SCOPE     = 'https://www.googleapis.com/auth/webmasters.readonly'
 
-const SITE       = process.env.GSC_SITE
-const CLIENT_FILE = process.env.GSC_CLIENT  || path.join(ROOT, '.gsc-oauth-client.json')
-const TOKEN_FILE  = process.env.GSC_TOKEN   || path.join(ROOT, '.gsc-token.json')
+const SITE        = process.env.GSC_SITE
+const CLIENT_FILE = process.env.GSC_CLIENT || path.join(ROOT, '.gsc-oauth-client.json')
+const TOKEN_FILE  = process.env.GSC_TOKEN  || path.join(ROOT, '.gsc-token.json')
 const DAYS        = Number(process.env.GSC_DAYS || 90)
 const ROW_LIMIT   = 25000
 
@@ -44,40 +44,35 @@ if (!existsSync(CLIENT_FILE)) {
   process.exit(1)
 }
 
-// ── OAuth ─────────────────────────────────────────────────────────────────────
-
 const clientSecret = JSON.parse(await readFile(CLIENT_FILE, 'utf8'))
-const { client_id, client_secret, redirect_uris } = clientSecret.installed || clientSecret.web
+const { client_id, client_secret } = clientSecret.installed || clientSecret.web
 const REDIRECT = 'http://localhost:4242/oauth2callback'
 
-const oauth2 = new google.auth.OAuth2(client_id, client_secret, REDIRECT)
+// ── OAuth (native fetch — no googleapis) ─────────────────────────────────────
 
-async function getToken() {
-  if (existsSync(TOKEN_FILE)) {
-    const saved = JSON.parse(await readFile(TOKEN_FILE, 'utf8'))
-    oauth2.setCredentials(saved)
-    // Refresh automatically if expired
-    const { credentials } = await oauth2.refreshAccessToken()
-    await writeFile(TOKEN_FILE, JSON.stringify(credentials, null, 2))
-    oauth2.setCredentials(credentials)
-    return
+async function tokenRequest(body) {
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(body),
+  })
+  const data = await res.json()
+  if (!res.ok) {
+    throw new Error(data.error_description || data.error || `Token request failed (${res.status})`)
   }
+  return data
+}
 
-  // First run — open browser and capture code via local server
-  const authUrl = oauth2.generateAuthUrl({
+function authUrl() {
+  const params = new URLSearchParams({
+    client_id,
+    redirect_uri: REDIRECT,
+    response_type: 'code',
+    scope: SCOPE,
     access_type: 'offline',
-    scope: ['https://www.googleapis.com/auth/webmasters.readonly'],
     prompt: 'consent',
   })
-
-  console.log('\nOpening your browser to sign in with your GSC Google account...')
-  openBrowser(authUrl)
-
-  const code = await waitForCode()
-  const { tokens } = await oauth2.getToken(code)
-  oauth2.setCredentials(tokens)
-  await writeFile(TOKEN_FILE, JSON.stringify(tokens, null, 2))
-  console.log('Token saved to .gsc-token.json (future runs will be silent)\n')
+  return `https://accounts.google.com/o/oauth2/v2/auth?${params}`
 }
 
 function openBrowser(url) {
@@ -112,7 +107,45 @@ function waitForCode() {
   })
 }
 
-// ── Fetch & write ──────────────────────────────────────────────────────────────
+async function getAccessToken() {
+  if (existsSync(TOKEN_FILE)) {
+    const saved = JSON.parse(await readFile(TOKEN_FILE, 'utf8'))
+    if (saved.refresh_token) {
+      try {
+        const refreshed = await tokenRequest({
+          client_id,
+          client_secret,
+          refresh_token: saved.refresh_token,
+          grant_type: 'refresh_token',
+        })
+        const merged = { ...saved, ...refreshed }
+        await writeFile(TOKEN_FILE, JSON.stringify(merged, null, 2))
+        return merged.access_token
+      } catch (err) {
+        console.warn('Token refresh failed — starting new sign-in:', err.message)
+      }
+    }
+  }
+
+  const url = authUrl()
+  console.log('\nOpening your browser to sign in with your GSC Google account...')
+  openBrowser(url)
+  console.log('\nIf the browser did not open, paste this URL manually:\n', url, '\n')
+
+  const code = await waitForCode()
+  const tokens = await tokenRequest({
+    client_id,
+    client_secret,
+    code,
+    redirect_uri: REDIRECT,
+    grant_type: 'authorization_code',
+  })
+  await writeFile(TOKEN_FILE, JSON.stringify(tokens, null, 2))
+  console.log('Token saved to .gsc-token.json (future runs will be silent)\n')
+  return tokens.access_token
+}
+
+// ── Fetch & write ─────────────────────────────────────────────────────────────
 
 function dateString(d) {
   return d.toISOString().slice(0, 10)
@@ -123,22 +156,33 @@ endDate.setUTCDate(endDate.getUTCDate() - 1)
 const startDate = new Date(endDate)
 startDate.setUTCDate(startDate.getUTCDate() - DAYS)
 
-async function fetchRows(sc, dimensions) {
+async function fetchRows(accessToken, dimensions) {
   const rows = []
   let startRow = 0
+  const siteEnc = encodeURIComponent(SITE)
+  const url = `https://www.googleapis.com/webmasters/v3/sites/${siteEnc}/searchAnalytics/query`
+
   while (true) {
-    const res = await sc.searchanalytics.query({
-      siteUrl: SITE,
-      requestBody: {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         startDate: dateString(startDate),
         endDate: dateString(endDate),
         dimensions,
         rowLimit: ROW_LIMIT,
         startRow,
         dataState: 'final',
-      },
+      }),
     })
-    const batch = res.data.rows || []
+    const data = await res.json()
+    if (!res.ok) {
+      throw new Error(data.error?.message || `GSC query failed (${res.status})`)
+    }
+    const batch = data.rows || []
     rows.push(...batch)
     if (batch.length < ROW_LIMIT) break
     startRow += batch.length
@@ -158,9 +202,7 @@ function shape(rows, dimensions) {
   })
 }
 
-await getToken()
-
-const sc = google.searchconsole({ version: 'v1', auth: oauth2 })
+const accessToken = await getAccessToken()
 
 await mkdir(OUT_DIR, { recursive: true })
 
@@ -186,7 +228,7 @@ const summary = {
 }
 
 for (const { name, dims } of datasets) {
-  const rows  = await fetchRows(sc, dims)
+  const rows = await fetchRows(accessToken, dims)
   const shaped = shape(rows, dims)
   if (name === 'queries') {
     summary.totals.clicks      = shaped.reduce((s, r) => s + r.clicks, 0)

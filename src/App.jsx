@@ -11,8 +11,9 @@ import { BookOpen, CheckCircle2, ClipboardCheck, Gauge, Headphones, LockKeyhole,
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
-import JourneyHero from './components/JourneyHero'
+import Hero from './components/Hero'
 import Footer from './components/Footer'
+import HomeInternalLinks from './components/HomeInternalLinks'
 import SEO from './components/SEO'
 const AuthModal = lazy(() => import('./components/AuthModal'))
 const ChatWidget = lazy(() => import('./components/ChatWidget'))
@@ -292,12 +293,12 @@ function HomePage({ onSignIn }) {
   return (
     <main className="home-page">
       <SEO
-        title="CELPIP Mock Test – Free Practice Tests & AI Scoring"
-        description={`Ace CELPIP with full-length mock exams, section practice, and instant AI scoring. Trusted by Canadian PR applicants. Start free today.`}
+        title="CELPIP Mock Test & Practice Tests Online – Free AI Scoring"
+        description="Free CELPIP mock tests and section practice with instant AI scoring. Full-length exams for Listening, Reading, Writing & Speaking. Start free today."
         canonical="/"
         jsonLd={homeFaqs}
       />
-      <JourneyHero />
+      <Hero />
       {isMobile ? (
         <div className="home-mobile-only">
           <MobileHomeApp onSignIn={onSignIn} />
@@ -311,6 +312,7 @@ function HomePage({ onSignIn }) {
           )}
         </div>
       )}
+      <HomeInternalLinks />
     </main>
   )
 }
