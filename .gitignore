@@ -21,6 +21,11 @@ dist
 dist-ssr
 *.local
 
+# Legacy directories — no longer in use
+.wrangler
+django_api
+.venv
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
