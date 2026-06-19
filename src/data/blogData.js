@@ -1859,4 +1859,382 @@ export const BLOG_ARTICLES = [
       },
     ],
   },
+
+  /* ── NEW BATCH ── */
+
+  {
+    slug: 'celpip-listening-parts-1-to-6-guide',
+    title: 'CELPIP Listening Test: Parts 1–6 Explained (With Strategies for Each)',
+    category: 'listening',
+    tag: 'Listening',
+    tagColor: '#1255A9',
+    tagColorLight: '#E6EEFF',
+    readTime: '9 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      'The CELPIP Listening test has six distinct parts, each testing a different real-world scenario. This guide breaks down every part — what you hear, what the questions look like, and the strategies that push your score from CLB 7 to CLB 9+.',
+    sections: [
+      {
+        heading: 'How the CELPIP Listening Test Is Structured',
+        body: `The CELPIP Listening test runs for approximately 47–55 minutes and contains six parts. Every part plays audio only once — there is no rewind, no pause, and no transcript provided. You must read the questions before the audio starts, then track the speaker as it plays.\n\nThe six parts progress from short, concrete conversations (Parts 1–3) to longer, more abstract discussions and viewpoint-based content (Parts 4–6). This mirrors how language difficulty scales in real Canadian workplaces and daily life — easy familiarity first, then sustained analytical listening.`,
+      },
+      {
+        heading: 'Part 1: Listening to Problem Solving',
+        body: `Part 1 plays a short conversation — typically two people discussing a problem and working toward a solution. Scenarios include things like a tenant calling a landlord about a repair, a customer service call, or two colleagues figuring out a schedule conflict.\n\nYou will answer 5–6 multiple-choice questions focused on the problem, the proposed solution, and the speakers' attitudes. The key strategy: read all questions before the audio starts. Each question usually aligns with a specific moment in the conversation, so knowing Question 3 is about the proposed solution tells you exactly when to lock in.`,
+      },
+      {
+        heading: 'Part 2: Listening to a Daily Life Conversation',
+        body: `Part 2 features a longer two-person conversation on an everyday topic — booking a service, planning a trip, discussing a community event. The conversation is casual and fast-paced, closer to how Canadians actually speak.\n\nThis part trips up many test-takers because the speakers use contractions, informal phrasing, and occasionally speak over each other. Practice listening to Canadian radio or podcasts at 1x speed to build comfort with this register. In the test, focus on facts and decisions — the questions almost always ask what was decided, agreed, or planned.`,
+      },
+      {
+        heading: 'Part 3: Listening for Information',
+        body: `Part 3 plays a monologue or announcement — think a recorded voicemail, a public address system message, or a radio announcement. You are expected to extract specific facts: times, locations, prices, instructions, or steps.\n\nThe questions here are the most straightforward in the test, but they are answered incorrectly surprisingly often. The trap: the audio often mentions similar-sounding numbers or places as distractors. Write down key facts as you hear them. For this part specifically, having a pencil ready to note figures pays off.`,
+      },
+      {
+        heading: 'Part 4: Listening to a News Item',
+        body: `Part 4 plays a short news report — typically 60–90 seconds covering a local or national topic. The language is more formal than Parts 1–3 and moves quickly. Questions test comprehension of the main topic, supporting details, and the purpose of statements made by interviewed sources.\n\nThe most common mistake in Part 4 is confusing the reporter's words with the interviewee's words — they often present contrasting viewpoints. Pay attention to who is speaking at each moment. Phrases like "but critics argue" or "the spokesperson said" signal a viewpoint shift that the questions almost certainly target.`,
+      },
+      {
+        heading: 'Part 5: Listening to a Discussion',
+        body: `Part 5 is a multi-speaker panel or group discussion — usually three or more people debating a topic. Speakers express opinions, agree, disagree, and qualify each other's points. This is the most cognitively demanding part of the listening test because you must track which speaker said what.\n\nBefore the audio starts, scan the questions and note whether they ask about a specific speaker or the group overall. Develop a note-taking shorthand: initials for speakers, arrows for agreement/disagreement. At CLB 9+, speed of note synthesis matters more than perfect transcription.`,
+      },
+      {
+        heading: 'Part 6: Listening to Viewpoints',
+        body: `Part 6 is the final and longest part. A single speaker delivers a monologue presenting a position on a topic — similar to an opinion editorial or a short lecture. The speaker makes claims, provides evidence, and draws conclusions. Questions test inference, main argument identification, and the speaker's implied meaning.\n\nHigh scorers treat this part like a reading comprehension task that happens to be audio. The structure of an opinion piece is predictable: topic introduction → supporting arguments → counterargument acknowledgment → final position. Map this structure as you listen and the questions become much easier to locate answers for.`,
+      },
+      {
+        heading: 'General Strategy: What Separates CLB 7 from CLB 9',
+        body: `At CLB 7, test-takers answer most literal recall questions correctly but struggle with inference — what the speaker implied but did not directly state. At CLB 9, you need to correctly interpret tone, purpose, and inferred meaning consistently across all six parts.\n\nThree habits that close this gap: (1) Pre-read every question before the audio plays — this focuses your attention on what matters. (2) Eliminate obviously wrong answers immediately — CELPIP uses plausible distractors, and narrowing to two before hearing the audio is faster than choosing from four after. (3) Trust your first answer — hesitation and second-guessing in a no-rewind test almost always costs points.\n\nPractice all six parts with timed drills on CELPIPACE to calibrate which part type costs you the most marks — that is where your study time should go.`,
+      },
+    ],
+  },
+
+  {
+    slug: 'celpip-reading-parts-1-to-4-guide',
+    title: 'CELPIP Reading Test: Parts 1–4 Explained (Section-by-Section Strategy)',
+    category: 'reading',
+    tag: 'Reading',
+    tagColor: '#C47A1F',
+    tagColorLight: '#FFF3E0',
+    readTime: '8 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      'The CELPIP Reading test gives you 55 minutes and four very different parts. Most test-takers spend too long on Part 1 and run out of time on Part 4 — the section that carries the most weight. Here is how to tackle all four parts strategically.',
+    sections: [
+      {
+        heading: 'Overview: Four Parts, One Strategy Problem',
+        body: `The CELPIP Reading test is 55 minutes and contains four parts. Each part uses a different text type and tests a different skill — from reading short correspondence to analysing conflicting viewpoints. The parts are not equal in difficulty, and they are not equal in the time they demand.\n\nThe most common error test-takers make is treating the four parts as identical and splitting their time evenly. Part 1 (correspondence) can be handled in 8–10 minutes. Part 4 (viewpoints) often needs 15–18 minutes. Calibrating your pace per part is the single highest-leverage timing improvement you can make.`,
+      },
+      {
+        heading: 'Part 1: Reading Correspondence',
+        body: `Part 1 presents an email, letter, memo, or online message and asks 8–11 questions. The questions focus on the writer's purpose, factual details, tone, and what can be inferred from specific lines.\n\nThe text is relatively short and the questions are grounded in explicit detail. Your strategy here should be to read the questions first, then skim the text for the relevant sections rather than reading the whole passage top to bottom. This cuts 3–4 minutes off your Part 1 time and banks it for Part 4.`,
+      },
+      {
+        heading: 'Part 2: Reading to Apply a Diagram',
+        body: `Part 2 is unique to CELPIP and confuses many first-time test-takers. You receive a diagram — typically a map, floor plan, seating chart, or process diagram — alongside a written text. The questions require you to reconcile information from both the diagram and the written passage simultaneously.\n\nThe skill tested is applying written instructions to a visual layout. For example, the text might describe how to arrange furniture and the diagram shows a room — you must determine if the arrangement described matches, and how. Practise by slowing down and annotating the diagram as you read the text. Do not attempt to hold both in memory — mark directly on the image if you can.`,
+      },
+      {
+        heading: 'Part 3: Reading for Information',
+        body: `Part 3 presents a longer informational passage — an article, report, or guide — with 8–11 questions. The questions test comprehension of specific facts, the purpose of paragraphs, and the meaning of vocabulary in context.\n\nThis part rewards skimming and paragraph mapping. Read the first sentence of each paragraph before looking at the questions — this gives you a mental map of where different information lives. When a question asks about a specific term or claim, you can locate the relevant paragraph quickly rather than re-reading the whole text.`,
+      },
+      {
+        heading: 'Part 4: Reading for Viewpoints',
+        body: `Part 4 is the most demanding part of the Reading test. It presents a longer opinionated text — often an editorial, opinion piece, or letter to the editor — and asks 8–11 questions about the author's argument, evidence, tone, and implied meaning.\n\nThe questions here include a high proportion of inference questions: "What does the author imply?", "Why does the author use this example?", "What would the author most likely agree with?" These require understanding not just what is said but what it means in context. At CLB 9+, this is where the points are won or lost.`,
+      },
+      {
+        heading: 'Vocabulary-in-Context: The Question Type Most People Get Wrong',
+        body: `Across all four parts, CELPIP regularly asks what a word or phrase means as used in a specific sentence. The trap: the correct answer is rarely the dictionary definition of the word. It is the meaning that fits the sentence's specific context.\n\nFor example, the word "draw" in "the study draws on five years of data" means "uses" — not "sketches" or "pulls." Always read two sentences before and after the highlighted word before choosing an answer. Context almost always narrows it to one clear choice.`,
+      },
+      {
+        heading: 'Time Management Across All Four Parts',
+        body: `A reliable time allocation for 55 minutes: Part 1 — 10 minutes, Part 2 — 12 minutes, Part 3 — 13 minutes, Part 4 — 18 minutes, review buffer — 2 minutes. If you finish a part early, bank the time — do not linger re-checking answers on easier parts.\n\nIf you hit the 40-minute mark and are still in Part 3, immediately skim Part 4's questions before reading the text. Getting to Part 4 with 12 minutes is much better than reaching it with 5 — the inference questions cannot be rushed.`,
+      },
+      {
+        heading: 'How to Move From CLB 7 to CLB 9 in Reading',
+        body: `CLB 7 readers can handle literal comprehension but lose marks on inference, purpose, and tone questions. The gap is closed through two habits: (1) practising with timed Part 4 passages weekly until inference becomes instinctive, and (2) reviewing every wrong answer immediately to understand the reasoning — not just the correct answer.\n\nCELPIPACE's reading drills are organised by part type and CLB level, so you can target exactly the section costing you the most marks. Run timed full reading tests every two weeks to track whether your pace is improving alongside your accuracy.`,
+      },
+    ],
+  },
+
+  {
+    slug: 'celpip-score-validity-expiry',
+    title: 'How Long Is a CELPIP Score Valid? Expiry Rules for PR, Citizenship, and Jobs',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0A7B7B',
+    tagColorLight: '#E0F7F7',
+    readTime: '6 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      "Your CELPIP score doesn't last forever — and using an expired score in an Express Entry application can trigger a refusal. Here's exactly how long your score is valid, when the clock starts, and what to do if yours is about to expire.",
+    sections: [
+      {
+        heading: 'The Standard Rule: Two Years From Test Date',
+        body: `For the vast majority of CELPIP purposes — Express Entry, Provincial Nominee Programs, and most permanent residence pathways — your score is valid for two years from the date of your test. This is not two years from when you receive your results. The clock starts on the actual day you sat the exam.\n\nThis means if you wrote CELPIP on June 15, 2024, your score expires on June 15, 2026, regardless of when you received your score report or when you used it in an application. Planning your timeline around the test date — not the report date — is essential.`,
+      },
+      {
+        heading: 'Express Entry: The Two-Year Rule in Practice',
+        body: `When you submit a profile to the Express Entry pool, IRCC (Immigration, Refugees and Citizenship Canada) requires that your language test results be valid at the time of both your profile submission and your Invitation to Apply (ITA). If your score expires while your profile is in the pool, you must update or withdraw your profile.\n\nThis is a real-world risk for candidates who wrote the CELPIP test early in their preparation, entered the pool, and waited longer than expected for an ITA. If your score expires with 3–4 months remaining in what could be a valid draw window, you face a difficult choice: withdraw and retest, or wait and risk an expired score at ITA.`,
+      },
+      {
+        heading: 'Provincial Nominee Programs: Check Each Province',
+        body: `Most Provincial Nominee Programs (PNPs) follow the IRCC two-year standard. However, some provinces have their own requirements:\n\nBritish Columbia's BC PNP Skills Immigration stream requires language results to be less than two years old at the time of application. Ontario's OINP generally aligns with two years. Saskatchewan's SINP requires scores to be valid at time of ITA, not just profile submission. Quebec (not technically a PNP but relevant) uses its own COFAQ language test, not CELPIP.\n\nAlways verify the specific province's current language validity requirement on their official program website before submitting — these policies update periodically.`,
+      },
+      {
+        heading: 'Canadian Citizenship: Different Rules Apply',
+        body: `For Canadian citizenship, the language requirement is CLB 4 in Listening and Reading (Writing and Speaking are not tested). CELPIP General-LS (the shorter version) is accepted for citizenship applications.\n\nCitizenship and Immigration Canada evaluates language at the time of the citizenship application, not at a fixed two-year window. However, a score that is more than five years old may be questioned or supplemented by an interview. For most citizenship applicants, a score taken within the past two to three years is cleanly accepted.`,
+      },
+      {
+        heading: 'Employment and Professional Licensing: No Standard Expiry',
+        body: `When CELPIP scores are used for employment — particularly in regulated professions like nursing, engineering, or teaching — the accepting body sets its own validity rules.\n\nThe National Nursing Assessment Service (NNAS) requires a language test taken within the last five years for most provincial colleges. NNAS also accepts the result as part of an ongoing credential assessment, so a five-year window gives nurses significant flexibility. Engineering bodies and teaching colleges vary by province — contact the relevant licensing body directly to confirm their current policy before booking a test.`,
+      },
+      {
+        heading: 'What to Do If Your Score Is Expiring Soon',
+        body: `If your CELPIP score expires within the next 3–6 months and you have not yet received an ITA or completed your application, you have three options:\n\n(1) Rebook immediately and aim to write the test before your current score expires. Centres book up weeks in advance, especially in Toronto, Vancouver, and Calgary.\n\n(2) Withdraw your Express Entry profile and resubmit after getting a new score. This resets your profile entry date but preserves your CRS points.\n\n(3) If your score expires but you are mid-application, contact IRCC immediately to understand the impact — in some cases, a Procedural Fairness Letter gives you a window to submit updated results.\n\nThe safest approach: never let your score drop within 90 days of expiry without a clear plan for renewal.`,
+      },
+      {
+        heading: 'How to Rebook Efficiently and Score Higher the Second Time',
+        body: `Retaking CELPIP is not just about maintaining a score — it is an opportunity to improve it. Many test-takers who rebook after 18–24 months find they score 1–2 CLB levels higher simply because their English has improved through Canadian work or study experience.\n\nSet your rebook date 3–4 months before your current score expires to give yourself time to prepare, take a mock exam, identify weak sections, and still sit the test with weeks to spare. Use CELPIPACE's full mock exam and section drills to benchmark your current level before booking — this prevents the costly mistake of rebooking before you are ready.`,
+      },
+    ],
+  },
+
+  {
+    slug: 'how-to-book-celpip-test-2026',
+    title: 'How to Book the CELPIP Test: Registration, Centres, Dates, and Costs (2026)',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0A7B7B',
+    tagColorLight: '#E0F7F7',
+    readTime: '7 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      "Booking the CELPIP test isn't complicated — but popular centres fill up 4–6 weeks in advance, and choosing the wrong test type can cost you the application. Here's a step-by-step guide to registration, fees, and what to expect on test day.",
+    sections: [
+      {
+        heading: 'CELPIP General vs CELPIP General-LS: Which One Do You Need?',
+        body: `Before booking, you must choose the correct test type. There are two versions:\n\n**CELPIP General** tests all four skills — Listening, Reading, Writing, and Speaking. This is required for Express Entry, most Provincial Nominee Programs, and permanent residence applications through IRCC.\n\n**CELPIP General-LS** tests only Listening and Speaking. This is accepted for Canadian citizenship applications and some employer-specific requirements. It is shorter (about 90 minutes vs. 3 hours) and less expensive.\n\nIf you are applying for permanent residence through any IRCC pathway, you almost certainly need CELPIP General — not the LS version. Booking the wrong test means your results are not accepted for your application, and you must pay to rebook.`,
+      },
+      {
+        heading: 'How to Register: Step by Step',
+        body: `CELPIP is delivered exclusively by Paragon Testing Enterprises. Registration is done online at the official CELPIP website (celpip.ca). You will need a valid government-issued photo ID — the same ID you bring on test day.\n\nSteps: (1) Create an account on celpip.ca. (2) Select your test type (General or General-LS). (3) Choose your test centre and date. (4) Complete the registration form and pay the fee. (5) Receive your confirmation and admission ticket by email — save this; you need it on test day.\n\nYour ID on test day must exactly match the name you registered under. Any discrepancy — even a missing middle name — can result in being turned away. Use the name exactly as it appears on your passport.`,
+      },
+      {
+        heading: 'Test Centre Availability: Where and When',
+        body: `CELPIP test centres are located across Canada in cities including Toronto, Vancouver, Calgary, Edmonton, Ottawa, Winnipeg, Montreal, Halifax, and others. There are also international test centres in select cities abroad.\n\nAvailability varies significantly by location. Toronto and Vancouver — by far the highest-demand cities — frequently show dates booked out 4–6 weeks in advance. Smaller centres in cities like Saskatoon or Halifax often have dates available within 1–2 weeks.\n\nIf your first-choice city is fully booked, check nearby centres — many test-takers travel 1–2 hours to a less busy location to get an earlier date. Seats also open up due to cancellations, so checking the booking portal periodically (especially early in the week) can surface unexpected availability.`,
+      },
+      {
+        heading: 'How Much Does CELPIP Cost?',
+        body: `As of 2026, CELPIP General costs approximately $280 CAD. CELPIP General-LS costs approximately $200 CAD. International centre fees may differ slightly.\n\nThe fee includes one score report, which is submitted directly to IRCC if you designate them as a score recipient during registration. You can add additional score recipients (such as provincial governments or licensing bodies) for an additional fee per recipient. Score reports are typically available online within 4–8 business days of the test.\n\nScore review and remark requests are available post-test for an additional fee — typically $50–$80 CAD per skill. Remarks rarely result in significant score changes but are worth considering if you believe an error occurred in Writing or Speaking scoring.`,
+      },
+      {
+        heading: 'Rescheduling and Cancellation Policies',
+        body: `You can reschedule your CELPIP test up to 7 days before your scheduled date with a rescheduling fee (approximately $50 CAD). Cancellations made within 7 days of the test forfeit the full registration fee.\n\nIf you need to reschedule, do it as early as possible — popular centres fill up quickly and waiting until 6 days before your test to reschedule can leave you scrambling for a date weeks away. Set a calendar reminder 10 days before your test: if you are not confident you are ready, reschedule then rather than on day 6.`,
+      },
+      {
+        heading: 'What to Bring on Test Day',
+        body: `You must bring: (1) your government-issued photo ID (passport is strongly recommended), exactly matching your registration name; (2) your admission ticket (printed or on your phone); (3) nothing else — no bags, phones, food, notes, or personal items are permitted in the test room. Lockers are provided at most centres.\n\nCELPIP is a computer-delivered test. You are given a headset for the Listening and Speaking sections. Speaking responses are recorded through a microphone — there is no human examiner present during the Speaking section, which many test-takers find less stressful than a live interview format.`,
+      },
+      {
+        heading: 'How Far in Advance Should You Book?',
+        body: `The optimal booking window depends on your current English level and preparation timeline. If you need the score within 6 weeks, book immediately regardless of your preparation status — waiting for the "right" preparation level and missing dates is worse than having a booked date to work toward.\n\nFor most candidates: book 6–8 weeks out, spend the first 3–4 weeks on structured preparation, take a full mock exam at week 4 to verify you are tracking for your target CLB, and fine-tune in the final 2–3 weeks. CELPIPACE's mock exams score each section instantly and flag your weakest parts — running one before you book is the most efficient way to calibrate your timeline.`,
+      },
+    ],
+  },
+
+  {
+    slug: 'celpip-writing-common-mistakes',
+    title: '10 CELPIP Writing Mistakes That Drop Your CLB Score (and How to Fix Each One)',
+    category: 'writing',
+    tag: 'Writing',
+    tagColor: '#1A8054',
+    tagColorLight: '#E6F5EE',
+    readTime: '10 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      'Most CELPIP Writing scores stall at CLB 7–8 because of the same recurring errors — vague responses, time mismanagement, and misunderstanding what the rubric actually rewards. Here are the 10 mistakes examiners see most, with specific fixes for each.',
+    sections: [
+      {
+        heading: 'Why Writing Is the Hardest Skill to Self-Assess',
+        body: `Writing is the CELPIP skill where test-takers most consistently overestimate their own performance. A response that feels complete and fluent to the writer may still score CLB 7 because it lacks task fulfillment — it did not address the required bullet points specifically enough — or because its vocabulary, while correct, lacks the range expected at CLB 9.\n\nThe CELPIP Writing rubric evaluates four dimensions: Content/Coherence, Vocabulary Range, Readability, and Task Fulfillment. Most CLB 7 writers score well on Readability (their grammar is decent) but drop marks on Vocabulary Range and Task Fulfillment. Understanding this structure is the first step to fixing it.`,
+      },
+      {
+        heading: 'Mistake 1: Not Addressing All the Bullet Points',
+        body: `Task 1 (the email) gives you 3 bullet points to cover. Task 2 (the survey response) gives you a series of questions or prompts to respond to. The single fastest way to drop your Task Fulfillment score is to omit or only partially address one of these requirements.\n\nFix: Before writing a single word, read the task twice and write the bullet points in your scratch work. Check them off as you write. A partial response to three bullet points outscores a brilliant response to two.`,
+      },
+      {
+        heading: 'Mistake 2: Using the Same Vocabulary as the Prompt',
+        body: `Many test-takers copy language directly from the task prompt into their response. "Write to your neighbour about the noise" leads to responses that say "I am writing about the noise." This signals a limited vocabulary range — you are using words you have been given, not words you own.\n\nFix: Paraphrase the prompt's key terms. "Noise" becomes "disturbance" or "disruption." "Tell them what you want" becomes "outline your expectations." "Explain why you are upset" becomes "convey the impact this situation has had on you." Synonyms demonstrate range — which is exactly what the rubric rewards.`,
+      },
+      {
+        heading: 'Mistake 3: Writing Too Short — or Too Long',
+        body: `Task 1 asks for approximately 150–200 words. Task 2 asks for approximately 150–200 words. Both parts together should be completed in 53 minutes (27 for Task 1, 26 for Task 2). Responses under 120 words almost always lose Task Fulfillment marks. Responses over 250 words risk running over time and may contain padding that hurts Coherence.\n\nFix: Practise hitting the 150–180 word range within your time limit. Timed practice — not untimed drafting — is the only way to build this precision.`,
+      },
+      {
+        heading: 'Mistake 4: Starting Every Sentence the Same Way',
+        body: `A common pattern in CLB 7 writing: "I am writing to... I would like to... I think that... I believe that..." Every sentence leads with "I" and a flat verb. This creates monotonous sentence structure and caps your Readability score regardless of how accurate the grammar is.\n\nFix: Vary your sentence openers. Start sentences with time expressions ("Since the construction began…"), subordinate clauses ("Although I understand your position…"), or participial phrases ("Having experienced this situation firsthand…"). Variety is the signal examiners look for.`,
+      },
+      {
+        heading: 'Mistake 5: Using Informal or Unclear Tone for the Wrong Register',
+        body: `Task 1 specifies a recipient — a supervisor, a landlord, a classmate — and the correct register changes significantly between them. Writing "Hey, I just wanted to say that I'm kinda frustrated about this" to a supervisor will cost you on register appropriateness. Writing in an overly stiff, formal tone to a friend ("Dear acquaintance, I am writing to formally express my dissatisfaction…") scores equally poorly.\n\nFix: Before writing, identify the relationship: formal (manager, building manager, professor), semi-formal (colleague, neighbour, company), or informal (friend, family). Use vocabulary and opening/closing phrases appropriate to that register.`,
+      },
+      {
+        heading: 'Mistake 6: Weak or Missing Cohesion Between Paragraphs',
+        body: `Each bullet point in your response should flow logically from the last. Test-takers who write three disconnected paragraphs — each addressing a bullet point in isolation with no linking language — lose marks on Coherence and Cohesion even if each paragraph individually is strong.\n\nFix: Use transitional phrases to connect your paragraphs: "In addition to this…", "As a result of the above…", "While I appreciate…", "Furthermore, I would like to point out…". These transitions are not filler — they are evidence of the logical organisation the rubric specifically rewards.`,
+      },
+      {
+        heading: 'Mistake 7: Ignoring the Survey Context in Task 2',
+        body: `Task 2 is a survey response — your character in the scenario is responding to specific questions asked by an organisation (a company, a community group, a school). Many test-takers ignore this context and write a generic essay instead of a targeted survey response.\n\nFix: Address each survey question directly and specifically. If the survey asks "What improvements would you suggest?", do not write a general paragraph about improvements — name 2–3 specific suggestions linked to the scenario. Concreteness is rewarded; vagueness is penalised.`,
+      },
+      {
+        heading: 'Mistake 8: Repeating the Same Words Multiple Times',
+        body: `Repetition is the most visible signal of limited vocabulary range. Using the word "important" five times in a 180-word response signals to the examiner that you do not have alternatives. The same applies to verbs like "get," "make," and "have" — overusing simple verbs when more precise options exist caps your Vocabulary score.\n\nFix: For each task, identify your central nouns and verbs and prepare at least two alternatives. "Important" → "critical," "essential," "significant." "Problem" → "issue," "challenge," "concern," "difficulty." Rotating through these alternatives signals the range examiners look for at CLB 9.`,
+      },
+      {
+        heading: 'Mistake 9: Not Checking Your Work in the Final 2 Minutes',
+        body: `With 27 minutes for Task 1 and 26 minutes for Task 2, most test-takers can finish with 2–3 minutes remaining. Almost nobody uses this time effectively. They re-read their work casually, spot nothing, and submit — even when a careful read would reveal a missing bullet point, a repeated word, or a tense inconsistency.\n\nFix: In your final 2 minutes, read your response for one thing only: task fulfillment. Have you addressed every required point? Every line you added that hits a required point is a guaranteed Task Fulfillment mark. Grammar errors you catch are a bonus.`,
+      },
+      {
+        heading: 'Mistake 10: Practising Without Timed Conditions',
+        body: `The most predictive factor for a higher CELPIP Writing score is not knowing grammar rules — it is writing complete, high-quality responses under time pressure. Test-takers who practice in untimed conditions consistently underperform on test day because they have not calibrated their pace.\n\nFix: Every practice session should be timed: 27 minutes for Task 1, 26 minutes for Task 2. Use CELPIPACE's scored writing practice to get instant feedback on your CLB level after each attempt. After 8–10 timed attempts with feedback, most test-takers increase their writing score by 1–2 CLB levels.`,
+      },
+    ],
+  },
+
+  {
+    slug: 'celpip-speaking-common-mistakes',
+    title: '7 CELPIP Speaking Mistakes That Kill Your Score — and the Fixes That Work',
+    category: 'speaking',
+    tag: 'Speaking',
+    tagColor: '#A91212',
+    tagColorLight: '#FFE6E6',
+    readTime: '8 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      "The CELPIP Speaking test has no human examiner in the room — just you, a microphone, and a countdown clock. That format eliminates nerves about eye contact but introduces different mistakes. Here are the 7 most damaging ones, with practical fixes for each.",
+    sections: [
+      {
+        heading: 'How the CELPIP Speaking Test Works',
+        body: `The CELPIP Speaking test consists of 8 tasks delivered by computer. You are shown a prompt on screen — an image, a scenario, or a question — read the instructions, use a brief preparation period (8–30 seconds depending on the task), and then record your spoken response within a set time limit (60–90 seconds per task).\n\nThere is no human examiner present. Your responses are recorded and scored by trained CELPIP raters using a four-dimension rubric: Vocabulary Range, Listenability (fluency and naturalness), Coherence and Delivery, and Task Fulfillment. Understanding this rubric before your test is non-negotiable.`,
+      },
+      {
+        heading: 'Mistake 1: Treating Every Task the Same Way',
+        body: `The 8 tasks are not the same. Task 1 is a personal narrative (describe a scene from your life). Task 3 is a problem-solving scenario. Task 5 is comparing two images. Task 7 involves expressing an opinion and supporting it. Each task has a specific structure that the rubric expects you to follow.\n\nFix: Learn the structure of each task type before the test. For opinion tasks, use: State position → Give reason 1 → Give reason 2 → Conclude. For compare tasks: Similarity or difference → why it matters → preference. Matching your structure to the task type is a quick Task Fulfillment gain.`,
+      },
+      {
+        heading: 'Mistake 2: Starting Your Response Too Late',
+        body: `Many test-takers use their entire preparation window thinking, then spend the first 5–10 seconds of recording time deciding what to say. This costs actual spoken content time and signals to raters that your delivery is hesitant.\n\nFix: Use the preparation time to outline — not script — your response. Jot 3 keywords on your scratch paper: one for the opening, one for the middle point, one for the close. Start speaking within the first 2 seconds of the recording window. Raters hear your opening word and immediately assess your delivery confidence.`,
+      },
+      {
+        heading: 'Mistake 3: Repeating Filler Phrases',
+        body: `"You know," "like," "basically," "so yeah," "um, I think," "as I mentioned before" — these filler phrases are the Listenability equivalent of repeated vocabulary in Writing. One or two per response is normal. Five or six signals a lack of fluency at the CLB 9 level.\n\nFix: Replace fillers with purposeful pause-fillers: "That's an interesting point to consider…", "What I find most relevant here is…", "To put it another way…" These buy the same processing time but signal vocabulary range rather than hesitation.`,
+      },
+      {
+        heading: 'Mistake 4: Running Out of Time or Finishing Too Early',
+        body: `Each task has a fixed recording window. Finishing 20+ seconds early signals either under-development (you did not address the task fully) or under-preparation (you ran out of things to say). Both cap your Task Fulfillment and Coherence scores.\n\nFix: In practice, track your response time. For a 90-second task, your response should fill 75–88 seconds. Develop a "expansion habit" — after making a point, automatically add one elaborating sentence before moving on. "I prefer working from home. It saves me two hours of commuting daily, which I use for exercise and meal preparation — both of which improve my focus during work hours." That is one point expanded to three linked ideas.`,
+      },
+      {
+        heading: 'Mistake 5: Using Basic Vocabulary When More Precise Words Exist',
+        body: `"Good," "bad," "nice," "big," "a lot" — these words are grammatically correct but signal a limited vocabulary range at the CELPIP level. CLB 9 speaking requires you to use the more precise, nuanced word that fits the specific context.\n\nFix: Build a mental thesaurus for common adjectives. "Good" → "effective," "reliable," "compelling," "beneficial." "Problem" → "challenge," "obstacle," "complication," "drawback." You do not need to use every advanced word — the rubric rewards range, meaning you need to demonstrate that you have alternatives and choose among them.`,
+      },
+      {
+        heading: 'Mistake 6: Describing Images Literally Instead of Analytically',
+        body: `Tasks 1 and 5 both involve images. Many test-takers simply describe what they see: "There is a man. He is wearing a blue shirt. There is a tree on the left." This is a CLB 6–7 response — it demonstrates basic observation but no depth.\n\nFix: Move from description to inference and opinion. "The man appears to be in his mid-thirties, and from his relaxed expression and casual clothing, he seems to be on a day off rather than at work. The park setting behind him suggests this might be a weekend afternoon." This is the same image described at CLB 9 — not more facts, but more analysis.`,
+      },
+      {
+        heading: 'Mistake 7: Not Practising With a Microphone',
+        body: `Practising CELPIP Speaking by thinking responses in your head, or even saying them aloud without recording, is fundamentally different from speaking into a microphone and hearing yourself played back. Many test-takers are shocked by how different their voice sounds in a recording, how often they use filler words, or how quickly they run out of things to say.\n\nFix: Record yourself on your phone for every practice response. Play it back. Count your fillers. Time the response. Assess whether you addressed the task. This takes 5 minutes per task and is the fastest improvement method available. CELPIPACE's speaking practice scores your responses with AI-powered feedback so you do not have to self-assess from scratch.`,
+      },
+    ],
+  },
+
+  {
+    slug: 'celpip-score-requirements-nurses-nnas',
+    title: 'CELPIP Score Requirements for Nurses: NNAS, NCLEX, and Provincial Registration (2026)',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#6B4FAF',
+    tagColorLight: '#F3EFFF',
+    readTime: '8 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      "Internationally educated nurses in Canada face multiple language hurdles — NNAS assessment, NCLEX-RN eligibility, and provincial nursing college registration. Each body has its own CELPIP requirements. Here's what you need, by province and pathway.",
+    sections: [
+      {
+        heading: 'Why Nurses Face Multiple Language Assessments',
+        body: `Internationally educated nurses (IENs) applying to work in Canada must navigate a more complex language testing landscape than most immigrants. Unlike Express Entry — where one CELPIP General score serves IRCC — nurses typically need to satisfy three separate bodies: the National Nursing Assessment Service (NNAS), the provincial nursing regulatory college, and sometimes the NCLEX-RN registration process.\n\nEach body sets its own CLB threshold and accepts scores within its own validity window. It is possible for a nurse to have a score that satisfies NNAS but falls short of the provincial college requirement — or vice versa. Understanding each threshold before you test saves both time and money.`,
+      },
+      {
+        heading: 'NNAS Language Requirements',
+        body: `The National Nursing Assessment Service (NNAS) conducts the initial credential assessment for IENs in most provinces (British Columbia, Alberta, Saskatchewan, Manitoba, Ontario, and the Atlantic provinces). NNAS does not itself require a specific CELPIP score — it collects and reviews your nursing credentials and forwards them to the provincial college.\n\nHowever, NNAS requests proof of English language proficiency as part of the advisory report. Most provincial colleges that work with NNAS have adopted a minimum of CLB 7 in all four skills as the baseline for initial eligibility consideration. Some require CLB 8 or higher for registration. NNAS accepts scores within the past five years — a notably more generous validity window than the IRCC two-year standard.`,
+      },
+      {
+        heading: 'Provincial College Requirements by Province',
+        body: `Language requirements vary by province. As of 2026:\n\n**Ontario (CNO — College of Nurses of Ontario):** Requires CLB 7 in all four skills for initial registration. Many nurses who passed with CLB 7 report that clinical practice communication expectations align more closely with CLB 8–9, so targeting CLB 8 is advisable.\n\n**British Columbia (BCCNM):** Requires CLB 7 in Listening and Reading, CLB 8 in Writing and Speaking. Speaking and Writing are the harder skills to achieve at CLB 8 — plan preparation accordingly.\n\n**Alberta (CARNA):** Requires CLB 7 in all four skills. CARNA accepts CELPIP General and reviews the full score report.\n\n**Saskatchewan (SRNA):** Requires CLB 6 minimum, with some registration pathways requiring CLB 7. Saskatchewan has one of the lower thresholds among provinces.\n\n**Manitoba (CRNM):** Requires CLB 7 in all four skills.\n\n**Atlantic Provinces:** Requirements mirror CNO/CARNA thresholds in most cases — CLB 7 in all skills.`,
+      },
+      {
+        heading: 'NCLEX-RN Eligibility and Language',
+        body: `The NCLEX-RN is the licensure examination required for registered nurse status in most Canadian provinces (Ontario transitioned to NCLEX-RN in 2015; other provinces followed). While the NCLEX-RN itself does not require a separate language test, you cannot sit the NCLEX-RN until your provincial college has approved your application — which includes the language requirement.\n\nIn other words, your CELPIP score gates your NCLEX-RN eligibility indirectly. If your college application is pending a language score, your NCLEX-RN registration is also pending. Nurses who experience long credential assessment delays often find that an insufficient or expired language score is the root cause. Address this first in your timeline.`,
+      },
+      {
+        heading: 'Which CELPIP Test Do Nurses Need?',
+        body: `Nurses applying through nursing college pathways need **CELPIP General** — all four skills (Listening, Reading, Writing, Speaking). The CELPIP General-LS (Listening and Speaking only) is not accepted for nursing registration purposes, as colleges require all four skills.\n\nFor Express Entry purposes (if you are also applying for PR), the same CELPIP General score used for your nursing college can be submitted to IRCC — provided it is within the two-year validity window for immigration. This dual-use is one reason why CELPIP is strategically attractive for nurses compared to IELTS Academic, which is also accepted by nursing colleges but requires a separate version from the IELTS General used for immigration.`,
+      },
+      {
+        heading: 'Target Scores: What to Actually Aim For',
+        body: `The minimum CLB is not the target — it is the floor. Most provincial nursing colleges assess language as one component of a broader credential review, and meeting the minimum in all four skills puts you at the lower edge of acceptance.\n\nFor nurses, the practical target is CLB 8 across all four skills. This provides:\n- Eligibility for all provincial college pathways, including those with CLB 8 Speaking/Writing requirements\n- A strong Express Entry CRS score alongside your nursing NOC code\n- A buffer against single-skill weakness (many nurses score higher in Listening/Reading than Writing/Speaking)\n\nNurses with CLB 9 in all skills become highly competitive in Express Entry draws that have favoured healthcare occupations, particularly under healthcare-specific PNP streams.`,
+      },
+      {
+        heading: 'How to Prepare for the CELPIP as a Nurse',
+        body: `Nurses often have strong clinical English vocabulary but struggle with the specific writing register and speaking formality CELPIP expects. Common challenges include Task 1 email writing (which differs from clinical documentation style), and Speaking tasks that require opinion expression rather than clinical reporting.\n\nFocus your preparation on: (1) Writing Task 1 emails with non-clinical scenarios — practice personal and semi-formal registers. (2) Speaking tasks 6 and 7, which require opinion expression and structured argument — a skill that does not come naturally from clinical communication patterns. (3) Listening Part 4 and 5, which feature news and discussion content rather than medical scenarios.\n\nCELPIPACE's CLB 8-targeted practice sets are structured to build exactly these skills with timed scored practice and instant feedback.`,
+      },
+    ],
+  },
+
+  {
+    slug: 'celpip-retake-strategy-score-improvement',
+    title: 'How to Improve Your CELPIP Score on a Retake: A Step-by-Step Strategy Guide',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0A7B7B',
+    tagColorLight: '#E0F7F7',
+    readTime: '9 min read',
+    date: 'June 19, 2026',
+    excerpt:
+      "A disappointing CELPIP score is not the end — but retaking without a strategy almost always produces the same result. Here's a structured approach to diagnosing what went wrong, building a targeted study plan, and actually scoring higher the second time.",
+    sections: [
+      {
+        heading: 'Why Most Retakes Do Not Improve the Score',
+        body: `A significant number of CELPIP retakes result in the same score — or even a slightly lower one. The most common reason is that test-takers rebook too quickly, without understanding which specific skills cost them marks or why.\n\nIf you scored CLB 7 overall but have not identified whether that 7 came from one weak skill pulling down a strong average, or from uniform CLB 7 performance across all four skills, your preparation strategy will be wrong. These two scenarios require completely different approaches. The first step in any retake strategy is diagnostic, not corrective.`,
+      },
+      {
+        heading: 'Step 1: Get and Read Your Score Report Carefully',
+        body: `CELPIP provides a detailed score report that breaks down your performance in each of the four skills — Listening, Reading, Writing, and Speaking — and often provides sub-dimension feedback for Writing and Speaking (Content, Vocabulary, Readability, Task Fulfillment).\n\nRead your report before doing anything else. Identify: (1) Which skill(s) scored lowest? (2) Is the gap between your highest and lowest skill 2 or more CLB levels? (3) For Writing and Speaking, which rubric dimension scored lowest — Vocabulary, Task Fulfillment, or Coherence?\n\nThe answer to these questions determines your entire preparation plan. A test-taker whose lowest skill is Speaking needs a fundamentally different study plan than one whose lowest skill is Reading.`,
+      },
+      {
+        heading: 'Step 2: Run a Diagnostic Mock Exam',
+        body: `Before you start studying, take a full mock exam under real test conditions — no pausing, no looking things up, all four skills back-to-back. Your mock exam score gives you a current baseline: where are you today, not where you were on test day (which may have been affected by anxiety, fatigue, or an off day).\n\nIf your mock exam score is the same as your official score, your preparation gap is real and must be addressed with structured study. If your mock exam score is higher than your official score, test-day performance factors (nerves, timing, unfamiliar format) may have been the primary cause — and your preparation should focus on test-taking strategy and simulation rather than language skill building.`,
+      },
+      {
+        heading: 'Step 3: Identify Your Lowest-ROI Skill and Fix It First',
+        body: `Not all skills are created equal for a retake. Focus on the skill with the largest gap between your current score and your target — this is where each hour of study produces the most CRS points gained.\n\nFor most test-takers retaking for Express Entry, the goal is CLB 9 in all skills. If you have CLB 9 in Listening and Reading but CLB 7 in Writing and Speaking, every study hour should go to Writing and Speaking — improving Listening from 9 to 10 adds almost nothing to your CRS score, while improving Writing from 7 to 9 adds significant points.\n\nDo not spread your preparation evenly across all four skills unless they are genuinely evenly weak. Targeted preparation produces faster results.`,
+      },
+      {
+        heading: 'How Long Should You Wait Before Retaking?',
+        body: `There is no enforced waiting period between CELPIP attempts — you can rebook as soon as a date is available. However, the practical minimum for meaningful improvement is 4–6 weeks of structured daily practice.\n\nFor Writing and Speaking score improvement, 4 weeks of daily 45-minute timed practice with feedback typically moves most test-takers 1 CLB level. Moving 2 CLB levels (e.g., from CLB 7 to CLB 9) reliably takes 8–12 weeks for most learners.\n\nFor Listening and Reading, improvement is often faster if the weakness is strategic (timing, question types) rather than comprehension-based. Strategic fixes — pre-reading questions, pace management, targeted skimming — can improve scores in 3–4 weeks. Comprehension-based gaps take longer to close.`,
+      },
+      {
+        heading: 'The Role of Timed Practice and Why It Is Non-Negotiable',
+        body: `The single most predictive factor in retake score improvement is weekly full timed practice — not grammar study, not vocabulary memorisation, not reading about CELPIP strategies. The test is a performance under time pressure, and the only way to improve under time pressure is to practice under time pressure.\n\nAt minimum, run one full timed practice section per skill per week. At the 3-week mark, run a full four-skill mock exam under real conditions. At the 6-week mark, run another. If your mock exam score at week 6 consistently shows your target CLB, book the test. If it does not, extend your timeline rather than booking prematurely — repeating the same score a third time is costly in both money and application delays.`,
+      },
+      {
+        heading: 'Managing Test Anxiety on a Retake',
+        body: `A failed first attempt adds a psychological dimension to retaking. Many candidates experience heightened anxiety, over-analysis during the test, or a tendency to second-guess answers they would otherwise answer confidently.\n\nThe most effective anxiety mitigation strategy is over-preparation: when you have taken 10+ full timed practice sessions and consistently scored your target CLB on mock exams, test-day confidence is structural rather than motivational. You know you can hit the score because you have already done it repeatedly.\n\nOn test day itself: do not review notes in the waiting room. Eat a proper meal beforehand. For the Speaking section, remind yourself that there is no human examiner — you are speaking to a machine, and your job is simply to speak clearly and completely within the time limit.`,
+      },
+      {
+        heading: 'When to Consider a Score Review Instead of a Retake',
+        body: `If your score seems inconsistent with your language ability — particularly in Writing or Speaking — you have the option to request a score review (remark) for a fee. Remarks are most appropriate when: (1) your score is 1–2 CLB levels below your consistent mock exam performance; (2) your Writing score is significantly lower than your Speaking score despite similar preparation; or (3) a technical issue occurred during your Speaking recording.\n\nScore reviews rarely result in large changes, but a 0.5 CLB difference in a remarked skill can sometimes push an overall score across a critical threshold. Request a review within the official window (typically 20 business days from score release). If the review does not change your score, a retake with targeted preparation is the definitive path forward.`,
+      },
+    ],
+  },
 ]
