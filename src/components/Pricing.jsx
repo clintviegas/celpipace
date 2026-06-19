@@ -341,7 +341,7 @@ export default function Pricing({ onSignIn, showFaq = true }) {
             <div className="pricing-coupon-text">
               {WEEKLY_PROMO.active ? (
                 <>
-                  <strong>Founding offer: 50% off your first week.</strong> Use{' '}
+                  <strong>50% off your first week.</strong> Use{' '}
                   <span className="pricing-coupon-code">{WEEKLY_PROMO.code}</span> on the Weekly plan —{' '}
                   <span className="pricing-coupon-spots">only {weeklyPromoSpotsLeft()} of {WEEKLY_PROMO.totalSpots} spots left</span>.
                   Prefer another plan? <span className="pricing-coupon-code">{WELCOME_COUPON_CODE}</span> takes 25% off any first subscription.

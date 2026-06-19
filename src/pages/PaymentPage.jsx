@@ -239,7 +239,7 @@ export default function PaymentPage({ onSignIn }) {
               <div className="payment-coupon-copy">
                 <Tag size={18} />
                 {WEEKLY_PROMO.active
-                  ? <span><strong>Founding offer</strong> 50% off Weekly with {WEEKLY_PROMO.code} · or 25% off any plan with {WELCOME_COUPON_CODE}</span>
+                  ? <span><strong>50% off your first week</strong> with {WEEKLY_PROMO.code} · or 25% off any plan with {WELCOME_COUPON_CODE}</span>
                   : <span><strong>First-time offer</strong> 25% off with {WELCOME_COUPON_CODE}</span>}
               </div>
               <div className="payment-coupon-control">
