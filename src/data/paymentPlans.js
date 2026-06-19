@@ -23,8 +23,8 @@ export const WEEKLY_PROMO = {
   // Pretend a few spots are already gone so the urgency reads as real.
   // Drives the "X of 20 left" copy; purely cosmetic.
   spotsClaimed: 13,
-  headline: 'Launch offer — 50% off your first week',
-  subline: 'First 20 users only · ends soon',
+  headline: 'Founding offer — 50% off your first week',
+  subline: 'First 20 users only · limited spots',
 }
 
 export const weeklyPromoSpotsLeft = () =>

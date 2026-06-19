@@ -97,31 +97,7 @@ function SampleScoreCard() {
   )
 }
 
-// Counts down to the next midnight (viewer's local time) so the launch offer
-// always reads as "ending today". Resets every day — keeps the urgency alive
-// without ever actually expiring the gimmick.
-function useDailyCountdown() {
-  const [left, setLeft] = useState(() => msUntilMidnight())
-  useEffect(() => {
-    const t = setInterval(() => setLeft(msUntilMidnight()), 1000)
-    return () => clearInterval(t)
-  }, [])
-  const totalSec = Math.max(0, Math.floor(left / 1000))
-  const hh = String(Math.floor(totalSec / 3600)).padStart(2, '0')
-  const mm = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0')
-  const ss = String(totalSec % 60).padStart(2, '0')
-  return { hh, mm, ss }
-}
-
-function msUntilMidnight() {
-  const now = new Date()
-  const midnight = new Date(now)
-  midnight.setHours(24, 0, 0, 0)
-  return midnight - now
-}
-
 function PromoBanner({ onClaim }) {
-  const { hh, mm, ss } = useDailyCountdown()
   const spotsLeft = weeklyPromoSpotsLeft()
 
   return (
@@ -151,11 +127,6 @@ function PromoBanner({ onClaim }) {
       <span className="hp-promo-meta" aria-hidden="true">
         <span className="hp-promo-spots">
           🔥 Only <strong>{spotsLeft}</strong> of {WEEKLY_PROMO.totalSpots} left
-        </span>
-        <span className="hp-promo-timer">
-          <span className="hp-promo-time">{hh}</span>:
-          <span className="hp-promo-time">{mm}</span>:
-          <span className="hp-promo-time">{ss}</span>
         </span>
       </span>
 
