@@ -3,6 +3,33 @@ import { PRODUCT_STATS } from './constants'
 export const WELCOME_COUPON_CODE = 'CELPIP25'
 export const WELCOME_DISCOUNT = 0.25
 
+// ── Launch promo: 50% off the Weekly plan ──────────────────────────────────
+// Marketing gimmick: "First 20 users get 50% off Weekly" with CELPIP50.
+// The "spots left" counter is DISPLAY ONLY — there is no hard cap, everyone
+// who enters CELPIP50 on the Weekly plan gets it. To actually retire the
+// promo, set `active: false` (the hero/pricing banners and server-side
+// validation all read this single source of truth).
+//
+// ⚠️ STRIPE WIRING: the real 50% comes from a Stripe promotion code named
+// CELPIP50 (or STRIPE_PROMOTION_CODE_CELPIP50). Create an active 50%-off,
+// duration=once coupon restricted to the Weekly Price in Stripe, or the API
+// will reject the code rather than charge the wrong amount.
+export const WEEKLY_PROMO = {
+  active: true,
+  code: 'CELPIP50',
+  discount: 0.5,
+  planId: 'weekly',
+  totalSpots: 20,
+  // Pretend a few spots are already gone so the urgency reads as real.
+  // Drives the "X of 20 left" copy; purely cosmetic.
+  spotsClaimed: 13,
+  headline: 'Launch offer — 50% off your first week',
+  subline: 'First 20 users only · ends soon',
+}
+
+export const weeklyPromoSpotsLeft = () =>
+  Math.max(1, WEEKLY_PROMO.totalSpots - WEEKLY_PROMO.spotsClaimed)
+
 // ⚠️ STRIPE WIRING: `price` here is DISPLAY ONLY. The amount actually charged
 // comes from the Stripe Price object referenced by STRIPE_PRICE_WEEKLY /
 // STRIPE_PRICE_MONTHLY / STRIPE_PRICE_ANNUAL (see api/create-checkout-session.js).
@@ -22,7 +49,7 @@ export const BILLING_PLANS = [
     period: '/week',
     cadence: 'Weekly billing',
     days: 7,
-    badge: 'Final-week sprint',
+    badge: '50% off — CELPIP50',
     blurb: 'For last-minute cramming in the days before test day',
   },
   {

@@ -688,6 +688,29 @@
 	line-height: 1.65;
 }
 
+.payment-promo-strip {
+	display: flex;
+	align-items: center;
+	gap: 11px;
+	margin-bottom: 22px;
+	padding: 13px 18px;
+	border-radius: 14px;
+	background: linear-gradient(135deg, #c8102e 0%, #9b1b30 100%);
+	color: #fff;
+	font-size: 14.5px;
+	line-height: 1.45;
+	box-shadow: 0 12px 30px rgba(200, 16, 46, 0.28);
+}
+
+.payment-promo-strip svg {
+	flex-shrink: 0;
+	color: #ffd67a;
+}
+
+.payment-promo-strip strong {
+	font-weight: 800;
+}
+
 .payment-layout {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) 360px;

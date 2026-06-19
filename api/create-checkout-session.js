@@ -7,6 +7,7 @@
 //   STRIPE_PRICE_MONTHLY         price_xxx (recurring monthly)
 //   STRIPE_PRICE_ANNUAL          price_xxx (recurring yearly)
 //   STRIPE_PROMOTION_CODE_CELPIP25 promo_xxx (optional; otherwise looked up by code)
+//   STRIPE_PROMOTION_CODE_CELPIP50 promo_xxx (optional; 50% off Weekly, otherwise looked up by code)
 //   PUBLIC_SITE_URL              e.g. https://celpipace.ca (no trailing slash)
 //   SUPABASE_URL
 //   SUPABASE_SERVICE_ROLE_KEY    server-side only
@@ -26,6 +27,14 @@ const PLAN_ALIASES = {
 
 const WELCOME_COUPON_CODE = 'CELPIP25'
 
+// Launch promo: 50% off the Weekly plan only, available to everyone (not
+// first-purchase restricted). The "first 20 users" urgency is a marketing
+// gimmick handled entirely on the front end — there is no server-side cap.
+const WEEKLY_PROMO_CODE = 'CELPIP50'
+const WEEKLY_PROMO_PLAN = 'weekly'
+
+const SUPPORTED_COUPONS = new Set([WELCOME_COUPON_CODE, WEEKLY_PROMO_CODE])
+
 function normalizePlan(plan) {
   const cleanPlan = String(plan || '').trim().toLowerCase()
   return PLAN_PRICE_ENV[cleanPlan] ? cleanPlan : PLAN_ALIASES[cleanPlan]
@@ -39,13 +48,15 @@ function getPlanPriceId(plan) {
   return null
 }
 
-async function getWelcomePromotionCodeId(stripe) {
-  if (process.env.STRIPE_PROMOTION_CODE_CELPIP25) {
-    return process.env.STRIPE_PROMOTION_CODE_CELPIP25
-  }
+// Resolves a coupon code to a Stripe promotion code id. Prefers an explicit
+// env override (STRIPE_PROMOTION_CODE_CELPIP25 / _CELPIP50) and falls back to
+// looking the active promotion code up by its name in Stripe.
+async function getPromotionCodeId(stripe, code) {
+  const envName = `STRIPE_PROMOTION_CODE_${code}`
+  if (process.env[envName]) return process.env[envName]
 
   const promotionCodes = await stripe.promotionCodes.list({
-    code: WELCOME_COUPON_CODE,
+    code,
     active: true,
     limit: 1,
   })
@@ -66,8 +77,11 @@ export default async function handler(req, res) {
 
   if (!plan) return res.status(400).json({ error: 'Invalid plan' })
   if (!userId || !email) return res.status(400).json({ error: 'Missing user info' })
-  if (couponCode && couponCode !== WELCOME_COUPON_CODE) {
+  if (couponCode && !SUPPORTED_COUPONS.has(couponCode)) {
     return res.status(400).json({ error: 'invalid_coupon', message: 'This coupon code is not supported here. You can enter other Stripe promotion codes at checkout.' })
+  }
+  if (couponCode === WEEKLY_PROMO_CODE && plan !== WEEKLY_PROMO_PLAN) {
+    return res.status(400).json({ error: 'coupon_weekly_only', message: 'CELPIP50 applies to the Weekly plan only.' })
   }
 
   const priceId = getPlanPriceId(plan)
@@ -129,21 +143,35 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'coupon_validation_failed', message: 'Coupon validation requires Supabase service configuration.' })
   }
 
-  let welcomePromotionCodeId = null
+  let promotionCodeId = null
+  let appliedCouponCode = ''
   if (couponCode === WELCOME_COUPON_CODE) {
+    // CELPIP25 — first-time subscribers only.
     if (!firstPurchaseEligible) {
       return res.status(409).json({
         error: 'coupon_first_purchase_only',
         message: 'CELPIP25 is only available on your first subscription purchase.',
       })
     }
-    welcomePromotionCodeId = await getWelcomePromotionCodeId(stripe)
-    if (!welcomePromotionCodeId) {
+    promotionCodeId = await getPromotionCodeId(stripe, WELCOME_COUPON_CODE)
+    if (!promotionCodeId) {
       return res.status(500).json({
         error: 'coupon_not_configured',
         message: 'CELPIP25 is not configured in Stripe yet. Create an active 25% promotion code named CELPIP25.',
       })
     }
+    appliedCouponCode = WELCOME_COUPON_CODE
+  } else if (couponCode === WEEKLY_PROMO_CODE) {
+    // CELPIP50 — 50% off the Weekly plan, open to everyone (no first-purchase
+    // gate). Plan eligibility was already enforced above.
+    promotionCodeId = await getPromotionCodeId(stripe, WEEKLY_PROMO_CODE)
+    if (!promotionCodeId) {
+      return res.status(500).json({
+        error: 'coupon_not_configured',
+        message: 'CELPIP50 is not configured in Stripe yet. Create an active 50%-off promotion code named CELPIP50 restricted to the Weekly price.',
+      })
+    }
+    appliedCouponCode = WEEKLY_PROMO_CODE
   }
 
   try {
@@ -151,15 +179,15 @@ export default async function handler(req, res) {
       mode: 'subscription',
       ...(customerId ? { customer: customerId } : { customer_email: email }),
       line_items: [{ price: priceId, quantity: 1 }],
-      ...(welcomePromotionCodeId
-        ? { discounts: [{ promotion_code: welcomePromotionCodeId }] }
+      ...(promotionCodeId
+        ? { discounts: [{ promotion_code: promotionCodeId }] }
         : { allow_promotion_codes: true }),
       success_url: `${siteUrl}/subscription?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:  `${siteUrl}/pricing?checkout=cancelled`,
       client_reference_id: userId,
-      metadata: { user_id: userId, email, plan, coupon_code: welcomePromotionCodeId ? WELCOME_COUPON_CODE : '' },
+      metadata: { user_id: userId, email, plan, coupon_code: appliedCouponCode },
       subscription_data: {
-        metadata: { user_id: userId, email, plan, coupon_code: welcomePromotionCodeId ? WELCOME_COUPON_CODE : '' },
+        metadata: { user_id: userId, email, plan, coupon_code: appliedCouponCode },
         description: `celpipAce Premium — ${plan}`,
         payment_settings: {
           save_default_payment_method: 'on_subscription',

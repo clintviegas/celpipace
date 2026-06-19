@@ -7,6 +7,8 @@ import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
 import {
   BILLING_PLANS,
   PREMIUM_FEATURES,
+  WEEKLY_PROMO,
+  weeklyPromoSpotsLeft,
   WELCOME_COUPON_CODE,
   WELCOME_DISCOUNT,
   formatPlanPrice,
@@ -75,7 +77,15 @@ export default function Pricing({ onSignIn, showFaq = true }) {
   const [couponMsg, setCouponMsg] = useState('')
   const [checkoutMsg, setCheckoutMsg]   = useState('')
   const plan = PLANS.find(p => p.id === selected)
-  const discountPrice = couponApplied ? plan.price * (1 - WELCOME_DISCOUNT) : null
+
+  // The Weekly launch promo (CELPIP50) auto-applies whenever Weekly is the
+  // selected plan — that's the "everyone gets the deal" gimmick. For every
+  // other plan the user can still apply CELPIP25 manually in the coupon box.
+  const weeklyPromoOn = WEEKLY_PROMO.active && selected === WEEKLY_PROMO.planId
+  const activeCoupon = weeklyPromoOn
+    ? { code: WEEKLY_PROMO.code, discount: WEEKLY_PROMO.discount }
+    : (couponApplied ? { code: WELCOME_COUPON_CODE, discount: WELCOME_DISCOUNT } : null)
+  const discountPrice = activeCoupon ? plan.price * (1 - activeCoupon.discount) : null
 
   /* Show success / cancel banner after returning from Stripe */
   useEffect(() => {
@@ -90,7 +100,9 @@ export default function Pricing({ onSignIn, showFaq = true }) {
     }
 
     const incomingCoupon = params.get('coupon')?.trim().toUpperCase()
-    if (incomingCoupon === WELCOME_COUPON_CODE) {
+    if (WEEKLY_PROMO.active && incomingCoupon === WEEKLY_PROMO.code) {
+      setSelected(WEEKLY_PROMO.planId)
+    } else if (incomingCoupon === WELCOME_COUPON_CODE) {
       setCoupon(WELCOME_COUPON_CODE)
       setCouponApplied(true)
       setCouponMsg('CELPIP25 is ready for Stripe checkout.')
@@ -102,6 +114,11 @@ export default function Pricing({ onSignIn, showFaq = true }) {
     if (!code) return
     if (!user) { onSignIn?.(); return }
     setCouponMsg('')
+    if (WEEKLY_PROMO.active && code === WEEKLY_PROMO.code) {
+      setSelected(WEEKLY_PROMO.planId)
+      setCouponMsg('CELPIP50 applied — 50% off the Weekly plan.')
+      return
+    }
     if (code !== WELCOME_COUPON_CODE) {
       setCouponApplied(false)
       setCouponMsg('Enter CELPIP25 here, or enter another Stripe promotion code during checkout.')
@@ -114,7 +131,7 @@ export default function Pricing({ onSignIn, showFaq = true }) {
   const handleCheckout = async () => {
     if (!user) { onSignIn?.(); return }
     const params = new URLSearchParams({ plan: selected })
-    if (couponApplied) params.set('coupon', WELCOME_COUPON_CODE)
+    if (activeCoupon) params.set('coupon', activeCoupon.code)
     navigate(`/payment?${params.toString()}`)
   }
 
@@ -234,6 +251,9 @@ export default function Pricing({ onSignIn, showFaq = true }) {
                     type="button"
                   >
                     {p.popular && <span className="plan-tile-ribbon">RECOMMENDED</span>}
+                    {WEEKLY_PROMO.active && p.id === WEEKLY_PROMO.planId && (
+                      <span className="plan-tile-ribbon plan-tile-ribbon--promo">50% OFF</span>
+                    )}
                     <Icon size={18} className="plan-tile-icon" />
                     <div className="plan-tile-name">{p.label}</div>
                     <div className="plan-tile-price">{formatPlanPrice(p.price)}</div>
@@ -257,12 +277,15 @@ export default function Pricing({ onSignIn, showFaq = true }) {
                 transition={{ duration: 0.18 }}
               >
                 <div className="plan-summary-price">
-                  {couponApplied && <span className="plan-summary-strike">{formatPlanPrice(plan.price)}</span>}
+                  {activeCoupon && <span className="plan-summary-strike">{formatPlanPrice(plan.price)}</span>}
                   <span className="plan-summary-amount">{formatPlanPrice(discountPrice || plan.price)}</span>
                   <span className="plan-summary-period">{plan.period}</span>
                 </div>
                 <div className="plan-summary-blurb">
-                  {plan.blurb}{couponApplied ? ` · CELPIP25 saves 25% on this first checkout.` : ''}
+                  {plan.blurb}
+                  {weeklyPromoOn
+                    ? ` · ${WEEKLY_PROMO.code} takes 50% off your first week.`
+                    : (activeCoupon ? ` · ${WELCOME_COUPON_CODE} saves 25% on this first checkout.` : '')}
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -307,7 +330,7 @@ export default function Pricing({ onSignIn, showFaq = true }) {
 
         {/* Coupon banner */}
         <motion.div
-          className="pricing-coupon"
+          className={`pricing-coupon${WEEKLY_PROMO.active ? ' pricing-coupon--promo' : ''}`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -316,13 +339,24 @@ export default function Pricing({ onSignIn, showFaq = true }) {
           <div className="pricing-coupon-inner">
             <Tag size={20} className="pricing-coupon-icon" />
             <div className="pricing-coupon-text">
-              <strong>First-time offer: 25% off.</strong> Use <span className="pricing-coupon-code">CELPIP25</span> on your first subscription. The discount is verified and applied securely in Stripe.
+              {WEEKLY_PROMO.active ? (
+                <>
+                  <strong>Launch offer: 50% off your first week.</strong> Use{' '}
+                  <span className="pricing-coupon-code">{WEEKLY_PROMO.code}</span> on the Weekly plan —{' '}
+                  <span className="pricing-coupon-spots">only {weeklyPromoSpotsLeft()} of {WEEKLY_PROMO.totalSpots} spots left</span>.
+                  Prefer another plan? <span className="pricing-coupon-code">{WELCOME_COUPON_CODE}</span> takes 25% off any first subscription.
+                </>
+              ) : (
+                <>
+                  <strong>First-time offer: 25% off.</strong> Use <span className="pricing-coupon-code">{WELCOME_COUPON_CODE}</span> on your first subscription. The discount is verified and applied securely in Stripe.
+                </>
+              )}
             </div>
             <div className="pricing-coupon-form">
               <input
                 type="text"
                 className="pricing-coupon-input"
-                placeholder="CELPIP25"
+                placeholder={WEEKLY_PROMO.active ? WEEKLY_PROMO.code : WELCOME_COUPON_CODE}
                 value={coupon}
                 onChange={e => { setCoupon(e.target.value); setCouponApplied(false) }}
               />
@@ -330,8 +364,9 @@ export default function Pricing({ onSignIn, showFaq = true }) {
                 Apply
               </button>
             </div>
-            {couponApplied && <span className="pricing-coupon-success">✓ CELPIP25 ready for checkout</span>}
-            {!couponApplied && couponMsg && <span className="pricing-coupon-success" style={{ color: '#C8102E' }}>{couponMsg}</span>}
+            {weeklyPromoOn && <span className="pricing-coupon-success">✓ {WEEKLY_PROMO.code} applied — 50% off Weekly</span>}
+            {!weeklyPromoOn && couponApplied && <span className="pricing-coupon-success">✓ {WELCOME_COUPON_CODE} ready for checkout</span>}
+            {!weeklyPromoOn && !couponApplied && couponMsg && <span className="pricing-coupon-success" style={{ color: '#C8102E' }}>{couponMsg}</span>}
           </div>
         </motion.div>
 

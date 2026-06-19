@@ -19,6 +19,7 @@ import { useAuth } from '../context/AuthContext'
 import {
   BILLING_PLANS,
   PREMIUM_FEATURES,
+  WEEKLY_PROMO,
   WELCOME_COUPON_CODE,
   WELCOME_DISCOUNT,
   formatPlanPrice,
@@ -42,6 +43,19 @@ function normalizeCoupon(value) {
   return String(value || '').trim().toUpperCase()
 }
 
+// Resolves a coupon code to its discount + any plan restriction. Returns null
+// for unrecognised codes (those can still be entered on the Stripe screen).
+function resolveCoupon(code) {
+  const c = normalizeCoupon(code)
+  if (c === WELCOME_COUPON_CODE) {
+    return { code: c, discount: WELCOME_DISCOUNT, planId: null, label: '25% off first-time offer' }
+  }
+  if (WEEKLY_PROMO.active && c === WEEKLY_PROMO.code) {
+    return { code: c, discount: WEEKLY_PROMO.discount, planId: WEEKLY_PROMO.planId, label: '50% off your first week' }
+  }
+  return null
+}
+
 async function readApiJson(res) {
   const text = await res.text()
   if (!text) return {}
@@ -60,20 +74,36 @@ export default function PaymentPage({ onSignIn }) {
   const { user, isPremium } = useAuth()
   const requestedPlan = params.get('plan') || 'annual'
   const requestedCoupon = normalizeCoupon(params.get('coupon'))
-  const [selected, setSelected] = useState(getBillingPlan(requestedPlan).id)
+  const requestedPromo = resolveCoupon(requestedCoupon)
+  // If a coupon locks to a specific plan (CELPIP50 → weekly), honour it.
+  const initialPlan = requestedPromo?.planId
+    ? getBillingPlan(requestedPromo.planId).id
+    : getBillingPlan(requestedPlan).id
+  const [selected, setSelected] = useState(initialPlan)
   const [coupon, setCoupon] = useState(requestedCoupon || WELCOME_COUPON_CODE)
-  const [couponApplied, setCouponApplied] = useState(requestedCoupon === WELCOME_COUPON_CODE)
+  const [couponApplied, setCouponApplied] = useState(Boolean(requestedPromo))
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState('info')
   const [busy, setBusy] = useState(false)
 
   const plan = useMemo(() => getBillingPlan(selected), [selected])
-  const discountAmount = couponApplied ? plan.price * WELCOME_DISCOUNT : 0
+
+  // The discount only counts when the applied coupon is valid for the selected
+  // plan (e.g. CELPIP50 must be on Weekly). Otherwise it silently doesn't apply.
+  const activeCoupon = useMemo(() => {
+    if (!couponApplied) return null
+    const resolved = resolveCoupon(coupon)
+    if (!resolved) return null
+    if (resolved.planId && resolved.planId !== selected) return null
+    return resolved
+  }, [couponApplied, coupon, selected])
+
+  const discountAmount = activeCoupon ? plan.price * activeCoupon.discount : 0
   const dueToday = plan.price - discountAmount
 
   useEffect(() => {
-    setSelected(getBillingPlan(requestedPlan).id)
-  }, [requestedPlan])
+    setSelected(initialPlan)
+  }, [initialPlan])
 
   const handleApplyCoupon = () => {
     const code = normalizeCoupon(coupon)
@@ -83,16 +113,23 @@ export default function PaymentPage({ onSignIn }) {
       setCouponApplied(false)
       return
     }
-    if (code !== WELCOME_COUPON_CODE) {
+    const resolved = resolveCoupon(code)
+    if (!resolved) {
       setCouponApplied(false)
       setMessageType('error')
-      setMessage('Enter CELPIP25 here, or enter another Stripe promotion code on the Stripe checkout screen.')
+      setMessage('Enter a valid code here, or add another Stripe promotion code on the Stripe checkout screen.')
       return
     }
-    setCoupon(WELCOME_COUPON_CODE)
+    setCoupon(resolved.code)
     setCouponApplied(true)
+    // CELPIP50 is weekly-only — snap the selection so the discount actually applies.
+    if (resolved.planId && resolved.planId !== selected) {
+      setSelected(getBillingPlan(resolved.planId).id)
+    }
     setMessageType('success')
-    setMessage('CELPIP25 will be verified for first-time subscription eligibility in Stripe.')
+    setMessage(resolved.code === WEEKLY_PROMO.code
+      ? `${WEEKLY_PROMO.code} applied — 50% off your first week on the Weekly plan.`
+      : `${resolved.code} will be verified for first-time subscription eligibility in Stripe.`)
   }
 
   const startCheckout = async () => {
@@ -111,7 +148,7 @@ export default function PaymentPage({ onSignIn }) {
           plan: selected,
           userId: user.id,
           email: user.email,
-          couponCode: couponApplied ? WELCOME_COUPON_CODE : undefined,
+          couponCode: activeCoupon ? activeCoupon.code : undefined,
         }),
       })
       const data = await readApiJson(res)
@@ -153,8 +190,18 @@ export default function PaymentPage({ onSignIn }) {
           </button>
           <span className="payment-kicker"><ShieldCheck size={15} /> Secure Stripe payment</span>
           <h1>Complete your Premium upgrade</h1>
-          <p>Review your plan, apply your first-time offer, and continue to Stripe for card, Apple Pay, Google Pay, or Link.</p>
+          <p>Review your plan, apply your offer, and continue to Stripe for card, Apple Pay, Google Pay, or Link.</p>
         </div>
+
+        {activeCoupon?.code === WEEKLY_PROMO.code && (
+          <div className="payment-promo-strip" role="status">
+            <BadgePercent size={18} />
+            <span>
+              <strong>{WEEKLY_PROMO.code} applied.</strong> 50% off your first week — you pay{' '}
+              <strong>{formatPlanPrice(dueToday)}</strong> today instead of {formatPlanPrice(plan.price)}.
+            </span>
+          </div>
+        )}
 
         <div className="payment-layout">
           <section className="payment-main-panel">
@@ -191,14 +238,16 @@ export default function PaymentPage({ onSignIn }) {
             <div className="payment-coupon-row">
               <div className="payment-coupon-copy">
                 <Tag size={18} />
-                <span><strong>First-time offer</strong> 25% off with {WELCOME_COUPON_CODE}</span>
+                {WEEKLY_PROMO.active
+                  ? <span><strong>Launch offer</strong> 50% off Weekly with {WEEKLY_PROMO.code} · or 25% off any plan with {WELCOME_COUPON_CODE}</span>
+                  : <span><strong>First-time offer</strong> 25% off with {WELCOME_COUPON_CODE}</span>}
               </div>
               <div className="payment-coupon-control">
                 <input
                   value={coupon}
                   onChange={event => { setCoupon(event.target.value); setCouponApplied(false) }}
                   onKeyDown={event => { if (event.key === 'Enter') handleApplyCoupon() }}
-                  placeholder={WELCOME_COUPON_CODE}
+                  placeholder={WEEKLY_PROMO.active ? WEEKLY_PROMO.code : WELCOME_COUPON_CODE}
                   aria-label="Coupon code"
                 />
                 <button type="button" onClick={handleApplyCoupon}>Apply</button>
@@ -231,9 +280,9 @@ export default function PaymentPage({ onSignIn }) {
                 <span>{plan.label} plan</span>
                 <strong>{formatPlanPrice(plan.price)}</strong>
               </div>
-              {couponApplied && (
+              {activeCoupon && (
                 <div className="payment-discount-line">
-                  <span>{WELCOME_COUPON_CODE}</span>
+                  <span>{activeCoupon.code}</span>
                   <strong>-{formatPlanPrice(discountAmount)}</strong>
                 </div>
               )}

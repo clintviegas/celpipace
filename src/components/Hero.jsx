@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { PRODUCT_STATS, SECTION_LIBRARY } from '../data/constants'
+import { WEEKLY_PROMO, weeklyPromoSpotsLeft } from '../data/paymentPlans'
 
 const SECTIONS = [
   {
@@ -96,6 +97,73 @@ function SampleScoreCard() {
   )
 }
 
+// Counts down to the next midnight (viewer's local time) so the launch offer
+// always reads as "ending today". Resets every day — keeps the urgency alive
+// without ever actually expiring the gimmick.
+function useDailyCountdown() {
+  const [left, setLeft] = useState(() => msUntilMidnight())
+  useEffect(() => {
+    const t = setInterval(() => setLeft(msUntilMidnight()), 1000)
+    return () => clearInterval(t)
+  }, [])
+  const totalSec = Math.max(0, Math.floor(left / 1000))
+  const hh = String(Math.floor(totalSec / 3600)).padStart(2, '0')
+  const mm = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0')
+  const ss = String(totalSec % 60).padStart(2, '0')
+  return { hh, mm, ss }
+}
+
+function msUntilMidnight() {
+  const now = new Date()
+  const midnight = new Date(now)
+  midnight.setHours(24, 0, 0, 0)
+  return midnight - now
+}
+
+function PromoBanner({ onClaim }) {
+  const { hh, mm, ss } = useDailyCountdown()
+  const spotsLeft = weeklyPromoSpotsLeft()
+
+  return (
+    <motion.button
+      type="button"
+      className="hp-promo"
+      onClick={onClaim}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45 }}
+      aria-label={`${WEEKLY_PROMO.headline}. Use code ${WEEKLY_PROMO.code}. ${spotsLeft} spots left.`}
+    >
+      <span className="hp-promo-shine" aria-hidden="true" />
+
+      <span className="hp-promo-flag">
+        <span className="hp-promo-pulse" aria-hidden="true" />
+        50% OFF
+      </span>
+
+      <span className="hp-promo-body">
+        <span className="hp-promo-head">{WEEKLY_PROMO.headline}</span>
+        <span className="hp-promo-sub">
+          Use code <span className="hp-promo-code">{WEEKLY_PROMO.code}</span> on the Weekly plan
+        </span>
+      </span>
+
+      <span className="hp-promo-meta" aria-hidden="true">
+        <span className="hp-promo-spots">
+          🔥 Only <strong>{spotsLeft}</strong> of {WEEKLY_PROMO.totalSpots} left
+        </span>
+        <span className="hp-promo-timer">
+          <span className="hp-promo-time">{hh}</span>:
+          <span className="hp-promo-time">{mm}</span>:
+          <span className="hp-promo-time">{ss}</span>
+        </span>
+      </span>
+
+      <span className="hp-promo-cta" aria-hidden="true">Claim →</span>
+    </motion.button>
+  )
+}
+
 export default function Hero() {
   const navigate = useNavigate()
   const { isPremium } = useAuth()
@@ -117,15 +185,10 @@ export default function Hero() {
               <span aria-hidden="true">🍁</span> Built for the CELPIP-General test
             </div>
 
-            {!isPremium && (
-              <button
-                type="button"
-                className="hp-hero-offer"
-                onClick={() => navigate('/pricing?coupon=CELPIP25')}
-              >
-                <span className="hp-hero-offer-code">CELPIP25</span>
-                <span>25% off for first-time subscribers</span>
-              </button>
+            {!isPremium && WEEKLY_PROMO.active && (
+              <PromoBanner
+                onClaim={() => navigate(`/payment?plan=${WEEKLY_PROMO.planId}&coupon=${WEEKLY_PROMO.code}`)}
+              />
             )}
 
             <h1 className="hp-hero-title">
