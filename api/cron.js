@@ -12,6 +12,7 @@
 //   { "path": "/api/cron?job=abandoned",     "schedule": "0 15 * * *" }
 //   { "path": "/api/cron?job=digest",        "schedule": "0 14 * * *" }
 //   { "path": "/api/cron?job=broadcast",     "schedule": "0 17 * * *" }
+//   { "path": "/api/cron?job=gsc-summary",   "schedule": "0 14 * * 1" }
 //
 // Manual trigger (admin / dev):
 //   POST /api/cron?job=sweep
@@ -25,6 +26,7 @@ import examCountdownHandler from './_lib/job-examcountdown.js'
 import abandonedHandler from './_lib/job-abandoned.js'
 import digestHandler   from './_lib/job-digest.js'
 import broadcastHandler from './_lib/job-broadcast.js'
+import gscSummaryHandler from './_lib/job-gsc-summary.js'
 
 const JOBS = {
   sweep:         sweepHandler,
@@ -35,6 +37,7 @@ const JOBS = {
   abandoned:     abandonedHandler,
   digest:        digestHandler,
   broadcast:     broadcastHandler,
+  'gsc-summary': gscSummaryHandler,
 }
 
 export default async function handler(req, res) {

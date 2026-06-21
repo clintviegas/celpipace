@@ -11,7 +11,8 @@
     { "path": "/api/cron?job=digest",        "schedule": "0 14 * * *" },
     { "path": "/api/cron?job=abandoned",     "schedule": "0 15 * * *" },
     { "path": "/api/cron?job=reminders",     "schedule": "0 16 * * *" },
-    { "path": "/api/cron?job=broadcast",     "schedule": "0 17 * * *" }
+    { "path": "/api/cron?job=broadcast",     "schedule": "0 17 * * *" },
+    { "path": "/api/cron?job=gsc-summary",   "schedule": "0 14 * * 1" }
   ],
   "redirects": [
     { "source": "/writing",              "destination": "/celpip-writing-practice",       "permanent": true },

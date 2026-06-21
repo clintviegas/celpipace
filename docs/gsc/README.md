@@ -56,3 +56,42 @@ and produce:
 - Cannibalized queries (wrong page ranking)
 - Top-performing topics to double down on
 - Prioritized edit list
+
+## Relay.app weekly SEO workflow
+
+Production endpoint (live GSC data):
+
+```
+GET https://www.celpipace.ca/api/cron?job=gsc-summary
+Authorization: Bearer <CRON_SECRET>
+```
+
+Returns JSON with `slackMessage`, `topQueries`, `topPages`, `priorityAction`.
+
+### Vercel env vars required
+
+Copy from your local OAuth setup:
+
+| Variable | Source |
+|----------|--------|
+| `GSC_SITE` | `sc-domain:celpipace.ca` |
+| `GSC_CLIENT_ID` | `.gsc-oauth-client.json` → `installed.client_id` |
+| `GSC_CLIENT_SECRET` | `.gsc-oauth-client.json` → `installed.client_secret` |
+| `GSC_REFRESH_TOKEN` | `.gsc-token.json` → `refresh_token` |
+| `CRON_SECRET` | Same secret Relay sends in the Authorization header |
+
+Print refresh token locally:
+
+```bash
+node -e "console.log(JSON.parse(require('fs').readFileSync('.gsc-token.json','utf8')).refresh_token)"
+```
+
+### Relay.app steps
+
+1. **Trigger:** Schedule → Every Monday 9:00 AM
+2. **HTTP Request:** GET `https://www.celpipace.ca/api/cron?job=gsc-summary`
+   - Header: `Authorization: Bearer YOUR_CRON_SECRET`
+3. **Slack:** Post message → use `{{slackMessage}}` from the JSON response
+4. (Optional) **AI step:** Ask Relay to expand on `priorityAction`
+
+Vercel also runs this automatically Mondays 14:00 UTC via cron (backup if Relay is off).

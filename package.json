@@ -12,6 +12,7 @@
     "e2e:smoke": "playwright test smoke.spec.js",
     "e2e:install": "playwright install chromium",
     "gsc:pull": "node scripts/gsc-pull.mjs",
+    "gsc:setup-vercel": "node scripts/setup-gsc-vercel.mjs",
     "stripe:verify": "node scripts/verify-stripe-subscriptions.mjs"
   },
   "dependencies": {
