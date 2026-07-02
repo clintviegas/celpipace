@@ -3,7 +3,7 @@
    Persists to localStorage, syncs across tabs via storage event.
    Tracks: completed sets, scores, streaks, activity feed.
 ══════════════════════════════════════════════════════════════ */
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { syncMissedFromAttempt } from '../lib/reviewQueue'
 
@@ -17,6 +17,181 @@ const SECTION_TOTALS = {
   reading:   { sets: 46,  questions: 430, parts: { R1: 15, R2: 15, R3: 15, R4: 1 } },
   writing:   { sets: 40,  questions: 40,  parts: { W1: 20, W2: 20 } },
   speaking:  { sets: 120, questions: 120, parts: { S1: 15, S2: 15, S3: 15, S4: 15, S5: 15, S6: 15, S7: 15, S8: 15 } },
+}
+
+const CLB_SECTIONS = new Set(['writing', 'speaking'])
+
+function completionKey(section, partId, setNum) {
+  return `${String(section)}:${String(partId)}:${Number(setNum)}`
+}
+
+function resolveSetEntry(progress, section, partId, setNum) {
+  const key = completionKey(section, partId, setNum)
+  const repaired = repairClbProgress(progress)
+  let entry = repaired.completed[key] || null
+  if (!CLB_SECTIONS.has(section)) return entry
+  if (entry && isPlaceholderClbEntry(entry)) entry = null
+  if (entry) return entry
+  for (const act of progress.activity || []) {
+    if (completionKey(act.section, act.partId, act.setNum) !== key) continue
+    const candidate = clbCandidateFromRow({
+      section: act.section,
+      partId: act.partId,
+      setNum: act.setNum,
+      score: act.score,
+      total: act.total,
+      pct: act.pct,
+      ts: act.ts,
+      aiResult: act.aiResult,
+    })
+    if (candidate && (!entry || clbEntryRank(candidate) > clbEntryRank(entry))) {
+      entry = candidate
+    }
+  }
+  return entry
+}
+
+function isPlaceholderClbEntry(entry) {
+  if (!entry) return false
+  const score = Number(entry.score)
+  const total = Number(entry.total)
+  if (!Number.isFinite(score) || !Number.isFinite(total)) return false
+  // Legacy timer-end marker (1/1) saved before AI scoring — not a real CLB band.
+  return total <= 1
+}
+
+function clbBandFromAiResult(ai) {
+  if (!ai || typeof ai !== 'object') return null
+  const band = Math.round(Number(ai.clbBand ?? ai.overall))
+  return Number.isFinite(band) && band >= 1 && band <= 12 ? band : null
+}
+
+function clbCandidateFromRow({ section, partId, setNum, score, total, pct, ts, aiResult }) {
+  if (!CLB_SECTIONS.has(section)) return null
+  const aiBand = clbBandFromAiResult(aiResult)
+  if (aiBand) {
+    return {
+      score: aiBand,
+      total: 12,
+      pct: Math.round((aiBand / 12) * 100),
+      ts: ts || Date.now(),
+    }
+  }
+  const safeScore = Number(score)
+  const safeTotal = Number(total)
+  if (isPlaceholderClbEntry({ score: safeScore, total: safeTotal })) return null
+  if (safeTotal >= 12 && Number.isFinite(safeScore) && safeScore >= 1 && safeScore <= 12) {
+    return {
+      score: safeScore,
+      total: 12,
+      pct: pct ?? Math.round((safeScore / 12) * 100),
+      ts: ts || Date.now(),
+    }
+  }
+  return null
+}
+
+function clbEntryRank(entry) {
+  if (!entry || isPlaceholderClbEntry(entry)) return -1
+  return Number(entry.score) || 0
+}
+
+function shouldKeepPrevCompletion(prevEntry, safeScore, total, pct, section) {
+  if (!prevEntry) return false
+  if (CLB_SECTIONS.has(section)) {
+    const prevRank = clbEntryRank(prevEntry)
+    const newRank = isPlaceholderClbEntry({ score: safeScore, total }) ? -1 : safeScore
+    return prevRank >= newRank
+  }
+  return (prevEntry.pct ?? 0) >= pct
+}
+
+function repairClbProgress(data) {
+  if (!data) return getDefault()
+
+  // Re-key legacy completed entries to a normalized section:part:set format.
+  const completed = {}
+  for (const [rawKey, entry] of Object.entries(data.completed || {})) {
+    const parts = rawKey.split(':')
+    const key = parts.length === 3 ? completionKey(parts[0], parts[1], parts[2]) : rawKey
+    const existing = completed[key]
+    if (!existing || isPlaceholderClbEntry(existing) || clbEntryRank(entry) > clbEntryRank(existing)) {
+      if (!isPlaceholderClbEntry(entry) || !existing) completed[key] = entry
+    }
+  }
+
+  for (const entry of data.activity || []) {
+    if (!CLB_SECTIONS.has(entry.section)) continue
+    const key = completionKey(entry.section, entry.partId, entry.setNum)
+    const candidate = clbCandidateFromRow({
+      section: entry.section,
+      partId: entry.partId,
+      setNum: entry.setNum,
+      score: entry.score,
+      total: entry.total,
+      pct: entry.pct,
+      ts: entry.ts,
+    })
+    if (!candidate) continue
+    const current = completed[key]
+    if (!current || isPlaceholderClbEntry(current) || clbEntryRank(candidate) > clbEntryRank(current)) {
+      completed[key] = {
+        ...candidate,
+        attempts: current?.attempts || 1,
+        lastTs: candidate.ts,
+      }
+    }
+  }
+
+  for (const [key, entry] of Object.entries(completed)) {
+    const section = key.split(':')[0]
+    if (CLB_SECTIONS.has(section) && isPlaceholderClbEntry(entry)) {
+      delete completed[key]
+    }
+  }
+
+  return { ...data, completed }
+}
+
+async function repairFromPracticeAttempts(supabase, userId, data) {
+  if (!supabase || !userId) return repairClbProgress(data)
+  try {
+    const { data: rows, error } = await supabase
+      .from('practice_attempts')
+      .select('section, part_id, set_number, score, total, pct, payload, created_at')
+      .eq('user_id', userId)
+      .in('section', ['writing', 'speaking'])
+      .order('created_at', { ascending: false })
+      .limit(300)
+    if (error || !rows?.length) return repairClbProgress(data)
+
+    const completed = { ...(data.completed || {}) }
+    for (const row of rows) {
+      const key = completionKey(row.section, row.part_id, row.set_number)
+      const candidate = clbCandidateFromRow({
+        section: row.section,
+        partId: row.part_id,
+        setNum: row.set_number,
+        score: row.score,
+        total: row.total,
+        pct: row.pct,
+        ts: new Date(row.created_at).getTime(),
+        aiResult: row.payload?.aiResult,
+      })
+      if (!candidate) continue
+      const current = completed[key]
+      if (!current || isPlaceholderClbEntry(current) || clbEntryRank(candidate) > clbEntryRank(current)) {
+        completed[key] = {
+          ...candidate,
+          attempts: current?.attempts || 1,
+          lastTs: candidate.ts,
+        }
+      }
+    }
+    return repairClbProgress({ ...data, completed })
+  } catch {
+    return repairClbProgress(data)
+  }
 }
 
 /* ── helpers ── */
@@ -39,7 +214,7 @@ function loadProgress(userId = null) {
     // Only migrate it into a signed-in user's namespace, never into guest state.
     if (!raw && userId) raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return getDefault()
-    return { ...getDefault(), ...JSON.parse(raw) }
+    return repairClbProgress({ ...getDefault(), ...JSON.parse(raw) })
   } catch { return getDefault() }
 }
 
@@ -194,227 +369,248 @@ function getCLBFromPct(pct) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   Hook
+   Shared store — every useProgress() instance reads/writes the
+   same in-memory snapshot so parent recordCompletion() updates
+   child sidebars immediately (SpeakingLayout, WritingLayout, etc.).
 ══════════════════════════════════════════════════════════════ */
-export function useProgress() {
-  const [data, setData]     = useState(() => loadProgress(null))
-  const [streak, setStreak] = useState(() => loadStreak(null))
-  // Count of practice attempts that failed to persist to Supabase and are
-  // waiting in the localStorage retry queue. Pages can render a banner if > 0.
-  const [pendingSync, setPendingSync] = useState(() => readPendingCount())
-  const activeUserIdRef = useRef(null)
-  const dataRef = useRef(data)
-  const streakRef = useRef(streak)
-  const syncedRef = useRef(false)
+const progressStore = {
+  userId: null,
+  data: loadProgress(null),
+  streak: loadStreak(null),
+  synced: false,
+}
 
-  // Sync the pending count into React state whenever the queue changes
-  // (after each save attempt or after a flush).
-  const refreshPendingSync = useCallback(() => {
-    setPendingSync(readPendingCount())
-  }, [])
+const storeListeners = new Set()
+let authSyncStarted = false
 
-  /* Persist active namespace on change */
-  useEffect(() => {
-    dataRef.current = data
-    saveProgressLocal(activeUserIdRef.current, data)
-  }, [data])
+function notifyProgressStore() {
+  storeListeners.forEach(fn => fn())
+}
 
-  useEffect(() => {
-    streakRef.current = streak
-    saveStreakLocal(activeUserIdRef.current, streak)
-  }, [streak])
+function commitProgress(nextData, nextStreak = progressStore.streak, userId = progressStore.userId) {
+  progressStore.data = repairClbProgress(nextData)
+  progressStore.streak = nextStreak
+  progressStore.userId = userId
+  try {
+    saveProgressLocal(userId, progressStore.data)
+    saveStreakLocal(userId, progressStore.streak)
+  } catch { void 0 }
+  notifyProgressStore()
+}
 
-  /* Cross-tab sync */
-  useEffect(() => {
-    const handler = (e) => {
-      const uid = activeUserIdRef.current
-      if (e.key === progressStorageKey(uid)) setData(loadProgress(uid))
-      if (e.key === streakStorageKey(uid))  setStreak(loadStreak(uid))
-    }
-    window.addEventListener('storage', handler)
-    return () => window.removeEventListener('storage', handler)
-  }, [])
+async function saveProgressToCloud(progressData, streakData) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return
+    const uid = session.user.id
+    const currentData = progressData || loadProgress(uid)
+    const currentStreak = streakData || loadStreak(uid)
+    saveProgressLocal(uid, currentData)
+    saveStreakLocal(uid, currentStreak)
+    await supabase
+      .from('user_progress')
+      .upsert({
+        user_id: uid,
+        progress_data: currentData,
+        streak_data: currentStreak,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' })
+  } catch {
+    return
+  }
+}
 
-  /* ── Supabase: load cloud progress on login + on auth state change ── */
-  useEffect(() => {
-    const loadForSession = async (sessionArg = null) => {
-      try {
-        const session = sessionArg || (await supabase.auth.getSession()).data?.session || null
-        const uid = session?.user?.id || null
+function ensureAuthSync(refreshPendingSync) {
+  if (authSyncStarted) return
+  authSyncStarted = true
 
-        activeUserIdRef.current = uid
-        const localProgress = loadProgress(uid)
-        const localStreak = loadStreak(uid)
+  const loadForSession = async (sessionArg = null) => {
+    try {
+      const session = sessionArg || (await supabase.auth.getSession()).data?.session || null
+      const uid = session?.user?.id || null
 
-        if (!uid) {
-          dataRef.current = localProgress
-          streakRef.current = localStreak
-          setData(localProgress)
-          setStreak(localStreak)
-          syncedRef.current = false
-          return
-        }
-
-        const { data: row, error } = await supabase
-          .from('user_progress')
-          .select('progress_data, streak_data')
-          .eq('user_id', uid)
-          .maybeSingle()
-
-        if (error) throw error
-
-        const nextProgress = row?.progress_data
-          ? mergeProgress(localProgress, row.progress_data)
-          : localProgress
-        const nextStreak = row?.streak_data
-          ? mergeStreak(localStreak, row.streak_data)
-          : localStreak
-
-        dataRef.current = nextProgress
-        streakRef.current = nextStreak
-        setData(nextProgress)
-        setStreak(nextStreak)
-        saveProgressLocal(uid, nextProgress)
-        saveStreakLocal(uid, nextStreak)
-
-        // If local had progress that cloud did not, push the merge back up.
-        await supabase
-          .from('user_progress')
-          .upsert({
-            user_id: uid,
-            progress_data: nextProgress,
-            streak_data: nextStreak,
-            updated_at: new Date().toISOString(),
-          }, { onConflict: 'user_id' })
-        syncedRef.current = true
-      } catch {
-        syncedRef.current = false
-      }
-    }
-
-    // Initial load
-    loadForSession()
-
-    // Re-sync whenever auth state changes (login, token refresh, cross-tab login)
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
-        syncedRef.current = false
-        loadForSession(session)
-        // Flush any practice_attempts that failed previously
-        flushFailedAttempts()
-          .then(() => refreshPendingSync())
-          .catch(() => void 0)
-      }
-      if (event === 'SIGNED_OUT') {
-        const previousUserId = activeUserIdRef.current
-        if (previousUserId) {
-          try {
-            saveProgressLocal(previousUserId, dataRef.current)
-            saveStreakLocal(previousUserId, streakRef.current)
-          } catch { void 0 }
-        }
-        activeUserIdRef.current = null
-        syncedRef.current = false
+      if (!uid) {
         const guestProgress = loadProgress(null)
         const guestStreak = loadStreak(null)
-        dataRef.current = guestProgress
-        streakRef.current = guestStreak
-        setData(guestProgress)
-        setStreak(guestStreak)
+        commitProgress(guestProgress, guestStreak, null)
+        progressStore.synced = false
+        return
       }
-    })
-    return () => { sub?.subscription?.unsubscribe?.() }
-  }, [])
 
-  /* ── Record a set completion (best-score-wins; re-attempts never lower progress) ── */
-  const recordCompletion = useCallback((section, partId, setNum, score, total, details = null) => {
-    const key = `${section}:${partId}:${setNum}`
-    const ts  = Date.now()
-    const safeScore = Number.isFinite(score) ? score : 0
-    const pct = total > 0 ? Math.round((safeScore / total) * 100) : 0
+      const localFromDisk = loadProgress(uid)
+      const localStreak = loadStreak(uid)
+      const withMemory = mergeProgress(localFromDisk, progressStore.data)
 
-    const prev = dataRef.current || getDefault()
-    const prevEntry = prev.completed[key]
-    const keepEntry = prevEntry && (prevEntry.pct ?? 0) >= pct
-      ? { ...prevEntry, attempts: (prevEntry.attempts || 1) + 1, lastTs: ts }
-      : { score: safeScore, total, pct, ts, attempts: (prevEntry?.attempts || 0) + 1, lastTs: ts }
-    const completed = { ...prev.completed, [key]: keepEntry }
+      const { data: row, error } = await supabase
+        .from('user_progress')
+        .select('progress_data, streak_data')
+        .eq('user_id', uid)
+        .maybeSingle()
 
-    const entry = { section, partId, setNum, score: safeScore, total, pct, ts }
-    const activity = [entry, ...(prev.activity || [])].slice(0, 50)
+      if (error) throw error
 
-    const scoreKey = `${section}:${partId}`
-    const prev_score = prev.scores[scoreKey] || { best: 0, last: 0, attempts: 0 }
-    const scores = {
-      ...prev.scores,
-      [scoreKey]: {
-        best:     Math.max(prev_score.best, pct),
-        last:     pct,
-        attempts: prev_score.attempts + 1,
-      },
-    }
-    const nextData = { completed, activity, scores }
+      const merged = row?.progress_data
+        ? mergeProgress(withMemory, row.progress_data)
+        : withMemory
+      const nextProgress = await repairFromPracticeAttempts(supabase, uid, merged)
+      const nextStreak = row?.streak_data
+        ? mergeStreak(localStreak, row.streak_data)
+        : localStreak
 
-    const prevStreak = streakRef.current || defaultStreak()
-    const d = today()
-    const nextStreak = prevStreak.lastDate === d
-      ? prevStreak
-      : {
-          current: prevStreak.lastDate === yesterday() ? (prevStreak.current || 0) + 1 : 1,
-          best: Math.max(prevStreak.best || 0, prevStreak.lastDate === yesterday() ? (prevStreak.current || 0) + 1 : 1),
-          lastDate: d,
-        }
+      // In-memory state (e.g. a score saved milliseconds ago) must win over stale cloud.
+      const finalProgress = mergeProgress(nextProgress, progressStore.data)
 
-    dataRef.current = nextData
-    streakRef.current = nextStreak
-    setData(nextData)
-    setStreak(nextStreak)
-
-    // ── Write localStorage synchronously so navigation doesn't lose data ──
-    try {
-      saveProgressLocal(activeUserIdRef.current, nextData)
-      saveStreakLocal(activeUserIdRef.current, nextStreak)
-    } catch { void 0 }
-
-    // ── Supabase: save to cloud for logged-in users with the fresh data ──
-    saveToCloud(nextData, nextStreak)
-    // Now retries internally and queues failures to localStorage for re-sync on next login
-    saveAttemptToCloud({ section, partId, setNum, score: safeScore, total, pct, details })
-      .catch(err => console.warn('[practice_attempts] unexpected:', err?.message || err))
-      .finally(() => refreshPendingSync())
-
-    // ── Add any missed MCQs to the spaced-repetition review queue ──
-    syncMissedFromAttempt(section, partId, setNum, details)
-      .catch(err => console.warn('[reviewQueue] sync failed:', err?.message || err))
-  }, [refreshPendingSync])
-
-  /* ── Save progress to Supabase ── */
-  const saveToCloud = useCallback(async (progressData, streakData) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session?.user) return
-      const uid = session.user.id
-      const currentData = progressData || loadProgress(uid)
-      const currentStreak = streakData || loadStreak(uid)
-
-      saveProgressLocal(uid, currentData)
-      saveStreakLocal(uid, currentStreak)
+      commitProgress(finalProgress, nextStreak, uid)
 
       await supabase
         .from('user_progress')
         .upsert({
           user_id: uid,
-          progress_data: currentData,
-          streak_data: currentStreak,
+          progress_data: finalProgress,
+          streak_data: nextStreak,
           updated_at: new Date().toISOString(),
         }, { onConflict: 'user_id' })
+      progressStore.synced = true
     } catch {
-      return
+      progressStore.synced = false
     }
+  }
+
+  loadForSession()
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+      progressStore.synced = false
+      loadForSession(session)
+      flushFailedAttempts()
+        .then(() => refreshPendingSync?.())
+        .catch(() => void 0)
+    }
+    if (event === 'TOKEN_REFRESHED') {
+      flushFailedAttempts()
+        .then(() => refreshPendingSync?.())
+        .catch(() => void 0)
+    }
+    if (event === 'SIGNED_OUT') {
+      const previousUserId = progressStore.userId
+      if (previousUserId) {
+        try {
+          saveProgressLocal(previousUserId, progressStore.data)
+          saveStreakLocal(previousUserId, progressStore.streak)
+        } catch { void 0 }
+      }
+      progressStore.synced = false
+      commitProgress(loadProgress(null), loadStreak(null), null)
+    }
+  })
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+      const uid = progressStore.userId
+      if (e.key === progressStorageKey(uid)) {
+        commitProgress(loadProgress(uid), progressStore.streak, uid)
+      }
+      if (e.key === streakStorageKey(uid)) {
+        progressStore.streak = loadStreak(uid)
+        notifyProgressStore()
+      }
+    })
+  }
+}
+
+function recordCompletionShared(section, partId, setNum, score, total, details = null, refreshPendingSync) {
+  const key = completionKey(section, partId, setNum)
+  const ts  = Date.now()
+  let safeScore = Number(score)
+  let safeTotal = Number(total)
+  if (CLB_SECTIONS.has(section)) {
+    const aiBand = clbBandFromAiResult(details?.aiResult)
+    if (aiBand) {
+      safeScore = aiBand
+      safeTotal = 12
+    }
+    if (!Number.isFinite(safeScore)) safeScore = 0
+    if (!Number.isFinite(safeTotal)) safeTotal = 12
+    if (isPlaceholderClbEntry({ score: safeScore, total: safeTotal })) return
+  } else {
+    safeScore = Number.isFinite(safeScore) ? safeScore : 0
+    safeTotal = Number.isFinite(safeTotal) ? safeTotal : 0
+  }
+  const pct = safeTotal > 0 ? Math.round((safeScore / safeTotal) * 100) : 0
+
+  const prev = progressStore.data || getDefault()
+  const prevEntry = prev.completed[key]
+  const keepEntry = shouldKeepPrevCompletion(prevEntry, safeScore, safeTotal, pct, section)
+    ? { ...prevEntry, attempts: (prevEntry.attempts || 1) + 1, lastTs: ts }
+    : { score: safeScore, total: safeTotal, pct, ts, attempts: (prevEntry?.attempts || 0) + 1, lastTs: ts }
+  const completed = { ...prev.completed, [key]: keepEntry }
+
+  const entry = { section, partId, setNum, score: safeScore, total: safeTotal, pct, ts }
+  const activity = [entry, ...(prev.activity || [])].slice(0, 50)
+
+  const scoreKey = `${section}:${partId}`
+  const prev_score = prev.scores[scoreKey] || { best: 0, last: 0, attempts: 0 }
+  const scoreMetric = CLB_SECTIONS.has(section) && !isPlaceholderClbEntry({ score: safeScore, total: safeTotal })
+    ? safeScore
+    : pct
+  const scores = {
+    ...prev.scores,
+    [scoreKey]: {
+      best:     Math.max(prev_score.best, scoreMetric),
+      last:     scoreMetric,
+      attempts: prev_score.attempts + 1,
+    },
+  }
+  const nextData = repairClbProgress({ completed, activity, scores })
+
+  const prevStreak = progressStore.streak || defaultStreak()
+  const d = today()
+  const nextStreak = prevStreak.lastDate === d
+    ? prevStreak
+    : {
+        current: prevStreak.lastDate === yesterday() ? (prevStreak.current || 0) + 1 : 1,
+        best: Math.max(prevStreak.best || 0, prevStreak.lastDate === yesterday() ? (prevStreak.current || 0) + 1 : 1),
+        lastDate: d,
+      }
+
+  commitProgress(nextData, nextStreak, progressStore.userId)
+  saveProgressToCloud(nextData, nextStreak)
+  saveAttemptToCloud({ section, partId, setNum, score: safeScore, total: safeTotal, pct, details })
+    .catch(err => console.warn('[practice_attempts] unexpected:', err?.message || err))
+    .finally(() => refreshPendingSync?.())
+
+  syncMissedFromAttempt(section, partId, setNum, details)
+    .catch(err => console.warn('[reviewQueue] sync failed:', err?.message || err))
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hook
+══════════════════════════════════════════════════════════════ */
+export function useProgress() {
+  const [, setTick] = useState(0)
+  const [pendingSync, setPendingSync] = useState(() => readPendingCount())
+
+  const refreshPendingSync = useCallback(() => {
+    setPendingSync(readPendingCount())
   }, [])
+
+  useEffect(() => {
+    const sub = () => setTick(n => n + 1)
+    storeListeners.add(sub)
+    ensureAuthSync(refreshPendingSync)
+    return () => storeListeners.delete(sub)
+  }, [refreshPendingSync])
+
+  const data = progressStore.data
+  const streak = progressStore.streak
+
+  const recordCompletion = useCallback((section, partId, setNum, score, total, details = null) => {
+    recordCompletionShared(section, partId, setNum, score, total, details, refreshPendingSync)
+  }, [refreshPendingSync])
 
   /* ── Computed stats ── */
   const stats = useMemo(() => {
+    const progress = repairClbProgress(data)
     const sectionStats = {}
     let totalCompleted = 0
     let totalScore = 0
@@ -424,7 +620,6 @@ export function useProgress() {
 
     // Writing & Speaking store the real-time overall band (0-12 CLB scale) as "score" with total=12.
     // For these sections the average CLB is simply the mean of stored scores — NOT a pct mapping.
-    const CLB_SECTIONS = new Set(['writing', 'speaking'])
 
     for (const [section, meta] of Object.entries(SECTION_TOTALS)) {
       let done = 0
@@ -437,19 +632,18 @@ export function useProgress() {
 
       for (const [partId, partSets] of Object.entries(meta.parts)) {
         for (let s = 1; s <= partSets; s++) {
-          const key = `${section}:${partId}:${s}`
-          if (data.completed[key]) {
-            done++
-            const entry = data.completed[key]
-            sectionScore += entry.pct || 0
-            sectionScored++
-            if (typeof entry.score === 'number' && typeof entry.total === 'number' && entry.total > 0) {
-              sectionCorrect += entry.score
-              sectionQuestions += entry.total
-              if (CLB_SECTIONS.has(section)) {
-                clbSum += entry.score
-                clbCount++
-              }
+          const entry = resolveSetEntry(progress, section, partId, s)
+          if (!entry) continue
+          if (CLB_SECTIONS.has(section) && isPlaceholderClbEntry(entry)) continue
+          done++
+          sectionScore += entry.pct || 0
+          sectionScored++
+          if (typeof entry.score === 'number' && typeof entry.total === 'number' && entry.total > 0) {
+            sectionCorrect += entry.score
+            sectionQuestions += entry.total
+            if (CLB_SECTIONS.has(section)) {
+              clbSum += entry.score
+              clbCount++
             }
           }
         }
@@ -492,12 +686,12 @@ export function useProgress() {
 
   /* ── Check if a specific set is completed ── */
   const isCompleted = useCallback((section, partId, setNum) => {
-    return !!data.completed[`${section}:${partId}:${setNum}`]
+    return !!resolveSetEntry(data, section, partId, setNum)
   }, [data])
 
   /* ── Get score for a specific set ── */
   const getSetScore = useCallback((section, partId, setNum) => {
-    return data.completed[`${section}:${partId}:${setNum}`] || null
+    return resolveSetEntry(data, section, partId, setNum)
   }, [data])
 
   /* ── Part-level stats (section-aware CLB) ── */
@@ -506,15 +700,14 @@ export function useProgress() {
     const isClb = section === 'writing' || section === 'speaking'
     let done = 0, scoreSum = 0, clbSum = 0, clbCount = 0
     for (let s = 1; s <= total; s++) {
-      const key = `${section}:${partId}:${s}`
-      const entry = data.completed[key]
-      if (entry) {
-        done++
-        scoreSum += entry.pct || 0
-        if (isClb && typeof entry.score === 'number' && entry.total > 0) {
-          clbSum += entry.score
-          clbCount++
-        }
+      const entry = resolveSetEntry(data, section, partId, s)
+      if (!entry) continue
+      if (isClb && isPlaceholderClbEntry(entry)) continue
+      done++
+      scoreSum += entry.pct || 0
+      if (isClb && typeof entry.score === 'number' && entry.total > 0) {
+        clbSum += entry.score
+        clbCount++
       }
     }
     const avgPct = done > 0 ? Math.round(scoreSum / done) : null
@@ -571,15 +764,23 @@ function mergeProgress(local, cloud) {
   const mergedCompleted = { ...(local.completed || {}) }
   for (const [key, cloudEntry] of Object.entries(cloud.completed || {})) {
     const localEntry = mergedCompleted[key]
-    if (!localEntry || (cloudEntry.pct ?? 0) >= (localEntry.pct ?? 0)) {
+    const section = key.split(':')[0]
+    const keepCloud = !localEntry || !shouldKeepPrevCompletion(
+      localEntry,
+      cloudEntry.score,
+      cloudEntry.total,
+      cloudEntry.pct ?? 0,
+      section,
+    )
+    if (keepCloud) {
       mergedCompleted[key] = cloudEntry
     }
   }
-  return {
+  return repairClbProgress({
     completed: mergedCompleted,
     activity: mergeActivity(local.activity || [], cloud.activity || []),
     scores: mergeScores(local.scores || {}, cloud.scores || {}),
-  }
+  })
 }
 
 function mergeStreak(local, cloud) {

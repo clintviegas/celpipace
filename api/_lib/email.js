@@ -624,3 +624,18 @@ export function renderBroadcast({ userId, subject, preheader, heading, bodyHtml,
     }),
   }
 }
+
+export function renderAdminPasswordReset({ actionLink }) {
+  const subject = 'Reset your CELPIPACE admin password'
+  const preheader = 'Use this secure link to set a new admin console password.'
+  const heading = 'Admin password reset'
+  const body = `<p>You requested a password reset for the CELPIPACE admin console.</p>
+    <p>Click the button below to choose a new password. This link expires shortly and can only be used once.</p>
+    <p style="margin-top:16px;font-size:13px;color:#64748b">If you did not request this, you can ignore this email.</p>`
+  const text = `Reset your CELPIPACE admin password:\n\n${actionLink}\n\nIf you did not request this, ignore this email.`
+  return {
+    subject,
+    html: shell({ heading, body, ctaUrl: actionLink, ctaLabel: 'Reset Admin Password', preheader }),
+    text,
+  }
+}

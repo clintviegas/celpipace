@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { adminSupabase } from '../lib/adminSupabase'
-import { PUBLIC_SITE_URL } from '../data/constants'
 
 /* ─────────────────────────────────────────────────────────────
    Hidden admin dashboard — URL: /admin
@@ -96,11 +95,6 @@ function countCanceling(rows) {
   return rows.filter(r => r.is_premium && r.cancel_at_period_end).length
 }
 
-function getAdminRedirectUrl() {
-  if (typeof window === 'undefined') return `${PUBLIC_SITE_URL}/admin`
-  return `${window.location.origin}/admin`
-}
-
 function stripeSearchUrl(value) {
   const query = encodeURIComponent(value || '')
   return `https://dashboard.stripe.com/search?query=${query}`
@@ -136,15 +130,23 @@ export default function AdminPage() {
     setLoginErr('')
     setResetMsg('')
     setResetBusy(true)
-    const { error } = await adminSupabase.auth.resetPasswordForEmail(ADMIN_EMAIL, {
-      redirectTo: getAdminRedirectUrl(),
-    })
-    setResetBusy(false)
-    if (error) {
-      setLoginErr(error.message)
-      return
+    try {
+      const r = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request-password-reset' }),
+      })
+      const data = await r.json().catch(() => ({}))
+      if (!r.ok) {
+        setLoginErr(data.message || data.error || 'Could not send reset email.')
+        return
+      }
+      setResetMsg(data.message || `Password reset email sent to ${ADMIN_EMAIL}.`)
+    } catch {
+      setLoginErr('Could not send reset email. Check your connection and try again.')
+    } finally {
+      setResetBusy(false)
     }
-    setResetMsg(`Password reset email sent to ${ADMIN_EMAIL}.`)
   }
 
   const updateAdminPassword = async (e) => {
@@ -212,6 +214,9 @@ export default function AdminPage() {
             <button type="button" onClick={sendPasswordReset} disabled={resetBusy} style={{ ...btnGhostStyle, width: '100%', marginTop: 10 }}>
               {resetBusy ? 'Sending reset email…' : 'Forgot admin password?'}
             </button>
+            <p style={{ color: '#667', fontSize: 12, marginTop: 8, marginBottom: 0, textAlign: 'center' }}>
+              Reset link is sent to {ADMIN_EMAIL}.
+            </p>
           </form>
         </div>
       </div>

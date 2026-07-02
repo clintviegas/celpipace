@@ -1842,8 +1842,10 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
     setAiLoading(false)
     if (result?.limitReached) { setUpgradeFor(1); return }
     setAiResult(result)
-    if (result && result.overall && onComplete) {
-      onComplete('writing', q.section, q.num, Math.round(result.overall), 12, {
+    if (result && !result.error && onComplete) {
+      const band = Math.round(Number(result.clbBand ?? result.overall))
+      if (!Number.isFinite(band) || band < 1) return
+      onComplete('writing', q.section, q.num, band, 12, {
         source: 'writing-practice',
         prompt: q.prompt,
         criteria: q.criteria || null,
@@ -4294,15 +4296,6 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setPhase('done')
     if (!completedSets[activeIdx]) {
       setCompleted(c => ({ ...c, [activeIdx]: true }))
-      if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1, {
-        source: 'speaking-practice',
-        prompt: prompt.prompt,
-        taskType: meta.label,
-        topic: prompt.topic || prompt.topicName,
-        responseText: result?.text || transcripts[activeIdx] || '',
-        fluencyMetrics: result?.metrics || fluencyByIdx[activeIdx] || null,
-        completedBy: 'finish-button',
-      })
     }
   }
 
@@ -4324,15 +4317,6 @@ function SpeakingLayout({ color, partId, onComplete }) {
       setPhase('done')
       if (!completedSets[activeIdx]) {
         setCompleted(c => ({ ...c, [activeIdx]: true }))
-        if (onComplete) onComplete('speaking', partId, prompt.setId, 1, 1, {
-          source: 'speaking-practice',
-          prompt: prompt.prompt,
-          taskType: meta.label,
-          topic: prompt.topic || prompt.topicName,
-          responseText: result?.text || transcripts[activeIdx] || '',
-          fluencyMetrics: result?.metrics || fluencyByIdx[activeIdx] || null,
-          completedBy: 'timer',
-        })
       }
     })()
     return () => { cancelled = true }
@@ -4366,8 +4350,10 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setAiLoading(false)
     if (result?.limitReached) { setUpgradeFor(1); return }
     setAiResult(result)
-    if (result && result.overall && onComplete) {
-      onComplete('speaking', partId, prompt.setId, Math.round(result.overall), 12, {
+    if (result && !result.error && onComplete) {
+      const band = Math.round(Number(result.clbBand ?? result.overall))
+      if (!Number.isFinite(band) || band < 1) return
+      onComplete('speaking', partId, prompt.setId, band, 12, {
         source: 'speaking-practice',
         prompt: prompt.prompt,
         taskType: meta.label,
@@ -4866,6 +4852,10 @@ function SpeakingLayout({ color, partId, onComplete }) {
           {prompts.map((p, idx) => {
             const isActive = idx === activeIdx
             const stored = getSetScore('speaking', partId, p.setId)
+            const liveBand = isActive && aiResult && !aiResult.error
+              ? Math.round(Number(aiResult.clbBand ?? aiResult.overall))
+              : null
+            const displayClb = stored?.score ?? (Number.isFinite(liveBand) && liveBand >= 1 ? liveBand : null)
             const isDone = !!stored || !!completedSets[idx]
             const dcc = diffColor[p.difficulty] || diffColor.intermediate
             const locked = !isPremium && (!FREE_PARTS.has(partId) || idx > 0)
@@ -4884,7 +4874,7 @@ function SpeakingLayout({ color, partId, onComplete }) {
                   <span className="sl-topic-meta">
                     <span className="sl-topic-diff-dot" style={{ background: dcc }} />
                     <span style={{ color: dcc, textTransform: 'capitalize' }}>{p.difficulty}</span>
-                    {stored && <span className="sl-topic-score" style={{ color, marginLeft: 6, fontWeight: 600 }}>CLB {stored.score}</span>}
+                    {displayClb != null && <span className="sl-topic-score" style={{ color, marginLeft: 6, fontWeight: 600 }}>CLB {displayClb}</span>}
                   </span>
                 </div>
                 {locked

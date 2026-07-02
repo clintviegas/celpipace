@@ -44,3 +44,4 @@ gsc-credentials.json
 .gsc-oauth-client.json
 .gsc-token.json
 docs/gsc/*.json
+.env*

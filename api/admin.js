@@ -4,15 +4,18 @@
 // limit while still allowing one-click refunds, manual premium grants, and
 // future admin actions without adding more endpoints.
 //
-// All requests require:
+// Most requests require:
 //   Authorization: Bearer <supabase access_token>
 //   Body: { action: 'refund' | 'sync-subscription' | ..., ...action-specific fields }
 //
 // Auth model: the bearer-token user must equal ADMIN_EMAIL.
+// Exception: action=request-password-reset is public (rate-limited, admin email only).
 
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { addToBrevoList, checkBrevoConnection, getBrevoConfig, upsertBrevoContact } from './_lib/brevo.js'
+import { checkRateLimit } from './_lib/rateLimit.js'
+import { sendEmail, renderAdminPasswordReset } from './_lib/email.js'
 
 const ADMIN_EMAIL = 'clint.viegas@gmail.com'
 
@@ -28,6 +31,68 @@ function getBody(req) {
     try { return JSON.parse(req.body) } catch { return {} }
   }
   return req.body
+}
+
+function getClientIp(req) {
+  const fwd = req.headers['x-forwarded-for']
+  if (typeof fwd === 'string' && fwd.length) return fwd.split(',')[0].trim()
+  return req.headers['x-real-ip'] || req.socket?.remoteAddress || 'unknown'
+}
+
+async function handleAdminPasswordReset(req, res, supabase) {
+  const ip = getClientIp(req)
+  const rl = await checkRateLimit({ supabase, scope: 'admin_pw_reset', key: ip, limit: 3, windowSec: 3600 })
+  if (!rl.ok) {
+    return res.status(429).json({ error: 'too_many_requests', message: rl.message })
+  }
+
+  const site = (process.env.PUBLIC_SITE_URL || process.env.VITE_SITE_URL || 'https://www.celpipace.ca').replace(/\/$/, '')
+  const redirectTo = `${site}/admin`
+
+  const { data, error } = await supabase.auth.admin.generateLink({
+    type: 'recovery',
+    email: ADMIN_EMAIL,
+    options: { redirectTo },
+  })
+
+  if (error) {
+    console.error('[admin/request-password-reset] generateLink:', error.message)
+    return res.status(500).json({
+      error: 'reset_failed',
+      message: 'Could not create a password reset link. Contact support if this persists.',
+    })
+  }
+
+  const actionLink = data?.properties?.action_link
+  if (!actionLink) {
+    return res.status(500).json({ error: 'reset_failed', message: 'Reset link was not generated.' })
+  }
+
+  const { data: profile } = await supabase.from('profiles').select('id').eq('email', ADMIN_EMAIL).maybeSingle()
+  const tpl = renderAdminPasswordReset({ actionLink })
+  const sent = await sendEmail({
+    supabase,
+    userId: profile?.id || null,
+    toEmail: ADMIN_EMAIL,
+    kind: 'admin_password_reset',
+    subject: tpl.subject,
+    html: tpl.html,
+    text: tpl.text,
+    metadata: { source: 'admin_console' },
+  })
+
+  if (!sent.ok) {
+    console.error('[admin/request-password-reset] email:', sent.error)
+    return res.status(502).json({
+      error: 'email_failed',
+      message: 'Could not send the reset email. Check Brevo configuration and try again.',
+    })
+  }
+
+  return res.status(200).json({
+    ok: true,
+    message: `Password reset email sent to ${ADMIN_EMAIL}.`,
+  })
 }
 
 const PLAN_BY_PRICE = {
@@ -112,6 +177,13 @@ export default async function handler(req, res) {
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
+  const body = getBody(req)
+  const action = String(body.action || '').trim()
+
+  if (action === 'request-password-reset') {
+    return handleAdminPasswordReset(req, res, supabase)
+  }
+
   // Auth: verify bearer token and that the user is the admin.
   const token = getBearerToken(req)
   if (!token) return res.status(401).json({ error: 'Missing auth token' })
@@ -120,9 +192,6 @@ export default async function handler(req, res) {
   if ((authData.user.email || '').toLowerCase() !== ADMIN_EMAIL) {
     return res.status(403).json({ error: 'Admin only' })
   }
-
-  const body = getBody(req)
-  const action = String(body.action || '').trim()
 
   switch (action) {
     case 'refund': {

@@ -34,8 +34,14 @@ export function pctToCLB(pct) {
   return 3
 }
 
+function isPlaceholderClbAttempt(row) {
+  const total = Number(row.total)
+  return CLB_SECTIONS.has(row.section) && Number.isFinite(total) && total <= 1
+}
+
 /* Convert a raw attempt row into a CLB band (0-12) on a common scale. */
 function attemptCLB(row) {
+  if (isPlaceholderClbAttempt(row)) return null
   if (CLB_SECTIONS.has(row.section)) {
     const v = Number(row.score)
     return Number.isFinite(v) ? Math.max(0, Math.min(12, Math.round(v))) : null
