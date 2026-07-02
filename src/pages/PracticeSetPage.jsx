@@ -2102,12 +2102,16 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
    → Completion panel with CLB estimate, skill breakdown, motivation
 ══════════════════════════════════════════════════════════════ */
 function ListeningLayout({ color, partId, onComplete }) {
+  const part = LISTENING_DATA[partId]
+  if (!part) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>No data available for {partId}.</div>
+  return <ListeningLayoutInner color={color} partId={partId} part={part} onComplete={onComplete} />
+}
+
+function ListeningLayoutInner({ color, partId, part, onComplete }) {
   const { isPremium } = useAuth()
   const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to listen, start the timer, answer questions, and save your progress.')
   const { isCompleted, getSetScore, getPartStats } = useProgress()
   const [upgradeFor, setUpgradeFor] = useState(null)
-  const part = LISTENING_DATA[partId]
-  if (!part) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>No data available for {partId}.</div>
 
   const [activeSetIdx, setActiveSetIdx]     = useState(0)
   const [answers, setAnswers]               = useState({})
@@ -2131,7 +2135,10 @@ function ListeningLayout({ color, partId, onComplete }) {
   const transcriptLineRefs = useRef([])
   const activeSetRef       = useRef(activeSetIdx)
   const startTimerRef      = useRef(null)
-  activeSetRef.current     = activeSetIdx
+
+  useEffect(() => {
+    activeSetRef.current = activeSetIdx
+  }, [activeSetIdx])
 
   const set   = part.sets[activeSetIdx]
   const qs    = set.questions
