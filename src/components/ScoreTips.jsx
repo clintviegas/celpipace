@@ -163,6 +163,7 @@ export function getListeningTips(partId) {
       'Speaker intent: "I think we should" = decision, "maybe we could" = suggestion',
       'If both speakers agree, watch for the compromise version',
       'Distractor trap: early ideas that get rejected are common wrong answers',
+      'Set 1 shows an explanation after each answer — use it to spot trap patterns',
     ],
     keyPhrases: ['problem identification', 'solution tracking', 'final decision', 'speaker intent', 'compromise', 'implied meaning'],
   }

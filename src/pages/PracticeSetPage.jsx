@@ -1919,9 +1919,14 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
                 <div className="wl-topic-info">
                   <span className="wl-topic-title">{item.title}</span>
                   <span className="wl-topic-meta">
-                    <span className="wl-topic-diff-dot" style={{ background: dc }} />
-                    <span style={{ color: dc, textTransform: 'capitalize' }}>{item.difficulty}</span>
-                    {stored && <span className="wl-topic-score" style={{ color }}>CLB {stored.score}</span>}
+                    {stored ? (
+                      <span className="wl-topic-score" style={{ color }}>CLB {stored.score}</span>
+                    ) : (
+                      <>
+                        <span className="wl-topic-diff-dot" style={{ background: dc }} />
+                        <span className="wl-topic-diff-label" style={{ color: dc }}>{item.difficulty}</span>
+                      </>
+                    )}
                   </span>
                 </div>
                 {locked
@@ -2154,6 +2159,7 @@ function ListeningLayout({ color, partId, onComplete }) {
         isCorrect: selectedAnswer !== undefined && selectedAnswer === question.answer,
         options: question.options || [],
         skill: question.skill || question.questionType || null,
+        explanation: question.explanation || null,
       }
     }),
   })
@@ -2663,7 +2669,18 @@ function ListeningLayout({ color, partId, onComplete }) {
                     )
                   })}
                 </div>
-                {answered && !correct && (
+                {answered && q.explanation && (
+                  <div className={`ll-q-expl${correct ? ' ll-q-expl--ok' : ''}`}>
+                    {!correct && (
+                      <div className="ll-q-correct-ans">{'\u2713'} Correct answer: <strong>{q.options[q.answer]}</strong></div>
+                    )}
+                    <div className="ll-q-expl-body">
+                      <span className="ll-q-expl-icon">{correct ? '\u2705' : '\uD83D\uDCD8'}</span>
+                      <span>{q.explanation}</span>
+                    </div>
+                  </div>
+                )}
+                {answered && !correct && !q.explanation && (
                   <div className="ll-q-correct-ans">{'\u2713'} Correct answer: <strong>{q.options[q.answer]}</strong></div>
                 )}
               </div>
@@ -4872,9 +4889,14 @@ function SpeakingLayout({ color, partId, onComplete }) {
                 <div className="sl-topic-info">
                   <span className="sl-topic-title">{p.topicName}</span>
                   <span className="sl-topic-meta">
-                    <span className="sl-topic-diff-dot" style={{ background: dcc }} />
-                    <span style={{ color: dcc, textTransform: 'capitalize' }}>{p.difficulty}</span>
-                    {displayClb != null && <span className="sl-topic-score" style={{ color, marginLeft: 6, fontWeight: 600 }}>CLB {displayClb}</span>}
+                    {displayClb == null ? (
+                      <>
+                        <span className="sl-topic-diff-dot" style={{ background: dcc }} />
+                        <span className="sl-topic-diff-label" style={{ color: dcc }}>{p.difficulty}</span>
+                      </>
+                    ) : (
+                      <span className="sl-topic-score" style={{ color }}>CLB {displayClb}</span>
+                    )}
                   </span>
                 </div>
                 {locked

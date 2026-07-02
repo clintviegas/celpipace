@@ -83,6 +83,15 @@ for (const file of FILES) {
       js += `            skill: '${q.skill_type}',\n`
       js += `            options: [${opts.map(o => `'${escapeJS(o)}'`).join(', ')}],\n`
       js += `            answer: ${ansIdx},\n`
+      if (q.explanation) {
+        js += `            explanation: '${escapeJS(q.explanation)}',\n`
+      }
+      if (q.primary_trap) {
+        js += `            primary_trap: '${escapeJS(q.primary_trap)}',\n`
+      }
+      if (q.trap_type) {
+        js += `            trap_type: '${escapeJS(q.trap_type)}',\n`
+      }
       js += `          },\n`
     }
     js += `        ],\n`

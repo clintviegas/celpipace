@@ -51,7 +51,17 @@ function formatSets(jsonPath, partId) {
       }
       lines.push(`          ],`);
       lines.push(`          answer: ${convertAnswer(q.correct_answer)},`);
-      lines.push(`          explanation: '',`);
+      if (q.explanation) {
+        lines.push(`          explanation: \`${esc(q.explanation)}\`,`);
+      } else {
+        lines.push(`          explanation: '',`);
+      }
+      if (q.primary_trap) {
+        lines.push(`          primary_trap: '${q.primary_trap}',`);
+      }
+      if (q.trap_type) {
+        lines.push(`          trap_type: '${q.trap_type}',`);
+      }
       lines.push(`        },`);
     }
     lines.push(`      ],`);

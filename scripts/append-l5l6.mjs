@@ -81,6 +81,15 @@ for (const { file, icon, timeMins } of FILES) {
       appendBlock += `            skill: '${q.skill_type}',\n`
       appendBlock += `            options: [${opts.map(o => `'${escapeJS(o)}'`).join(', ')}],\n`
       appendBlock += `            answer: ${ansIdx},\n`
+      if (q.explanation) {
+        appendBlock += `            explanation: '${escapeJS(q.explanation)}',\n`
+      }
+      if (q.primary_trap) {
+        appendBlock += `            primary_trap: '${escapeJS(q.primary_trap)}',\n`
+      }
+      if (q.trap_type) {
+        appendBlock += `            trap_type: '${escapeJS(q.trap_type)}',\n`
+      }
       appendBlock += `          },\n`
     }
     appendBlock += `        ],\n`

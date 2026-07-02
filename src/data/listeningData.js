@@ -1,5 +1,6 @@
 // Auto-generated from listening practice data; answer option order has been balanced across A-D.
-// Original source note: run conversion scripts before regenerating this file.
+// Pilot set 1 (L1–L6) includes trap distractors + explanations — see docs/LISTENING_TRAP_PLAYBOOK.md
+// Apply pilot: node scripts/apply-listening-pilot.mjs
 
 export const LISTENING_DATA = {
   "L1": {
@@ -98,7 +99,9 @@ export const LISTENING_DATA = {
               "To ask whether a newer model has come into stock",
               "To request a replacement copy of a receipt she lost"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Sarah says the lid had a crack when she got home and she wants it handled — she ends up exchanging the blender. B is a partial-answer trap — she mentions the price ($65) but never disputes the charge. C is a near-synonym trap — she wants the same model, not a newer one. D is the primary trap — she has her receipt; she is not asking for a copy.",
+            "primary_trap": "partial_answer"
           },
           {
             "num": 2,
@@ -108,9 +111,11 @@ export const LISTENING_DATA = {
               "Thirty dollars",
               "Sixty-five dollars",
               "Seventy-five dollars",
-              "Sixteen dollars"
+              "Fifty-six dollars"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Sarah says she paid sixty-five dollars. A is a number trap — 'thirty' appears later as the return window (thirty days), not the price. C is an adjacent-number trap. D transposes digits from sixty-five (near-synonym/number trap).",
+            "primary_trap": "number_trap"
           },
           {
             "num": 3,
@@ -122,7 +127,9 @@ export const LISTENING_DATA = {
               "Repairing the cracked lid, or giving her a partial discount",
               "Swapping it for a better model, or a full refund in cash"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Mark offers a full refund to her credit card or an exchange for the same model. B is the primary trap — store credit is never offered; only card refund or exchange. C is an overstatement trap — repair and partial discount are not mentioned. D swaps 'same model' for 'better model' and 'credit card' for 'cash' (near-synonym traps).",
+            "primary_trap": "near_synonym"
           },
           {
             "num": 4,
@@ -134,7 +141,9 @@ export const LISTENING_DATA = {
               "The swap, because it is quicker than waiting for a refund",
               "The refund, because she would rather buy a different brand"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Sarah says she would prefer an exchange and that she really likes this model. B is the primary trap — refund was offered first but she rejects it. C gives a false reason (speed is never mentioned). D is a speaker-intent trap — she wants the same model, not a different brand.",
+            "primary_trap": "primary_trap"
           },
           {
             "num": 5,
@@ -146,7 +155,9 @@ export const LISTENING_DATA = {
               "He doubts the blender was actually bought at his store",
               "He thinks the lid can be repaired there and then"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Mark says it should not have left the store like that, implying a pre-sale defect. B is a speaker-swap trap — he never blames Sarah; he apologizes. C is unsupported — he checks the receipt without questioning the purchase. D is an overstatement trap — repair is never offered.",
+            "primary_trap": "speaker_swap"
           },
           {
             "num": 6,
@@ -158,7 +169,9 @@ export const LISTENING_DATA = {
               "A completed feedback form",
               "A piece of photo identification"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Mark asks her to sign to confirm the exchange. B is a partial-answer trap — she already paid; no extra fee is mentioned. C and D are common retail traps not stated in the transcript.",
+            "primary_trap": "partial_answer"
           },
           {
             "num": 7,
@@ -168,9 +181,11 @@ export const LISTENING_DATA = {
               "About a week",
               "Two weeks",
               "Around a month",
-              "Two months"
+              "Sixty days"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: Mark says she can bring it back within thirty days — roughly a month. A is the primary trap — she bought it about a week ago, but that is not the return window. B is an adjacent-number trap. D is an overstatement trap (sixty vs thirty days).",
+            "primary_trap": "number_trap"
           },
           {
             "num": 8,
@@ -182,7 +197,9 @@ export const LISTENING_DATA = {
               "She keeps the damaged blender in return for a discount",
               "She orders the same model for delivery at a later date"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Mark finds one in stock, checks the lid, and she takes the exchange. B is the primary trap — refund was offered but she chose exchange. C is unsupported — no discount to keep the damaged unit. D is a near-synonym trap — same model, but in-store exchange, not delivery.",
+            "primary_trap": "primary_trap"
           }
         ]
       },
@@ -3726,11 +3743,13 @@ export const LISTENING_DATA = {
             "skill": "detail_comprehension",
             "options": [
               "Algonquin Provincial Park",
-              "The Niagara Escarpment",
+              "The Niagara Escarpment trail system",
               "The Bruce Trail near Milton",
               "High Park in Toronto"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: Sara says they should try the Bruce Trail near Milton. A is unrelated geography. B is a near-synonym trap — the Bruce Trail runs along the Niagara Escarpment, but she names Bruce Trail specifically. D is a primary trap — a city park, not the trail they choose.",
+            "primary_trap": "near_synonym"
           },
           {
             "num": 2,
@@ -3742,7 +3761,9 @@ export const LISTENING_DATA = {
               "About three hours",
               "About one hour"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Sara describes it as about a two-hour loop. B is an adjacent-number trap. C is an overstatement trap — nothing suggests three hours. D halves the stated duration (number trap).",
+            "primary_trap": "number_trap"
           },
           {
             "num": 3,
@@ -3750,35 +3771,41 @@ export const LISTENING_DATA = {
             "skill": "detail_comprehension",
             "options": [
               "Recent rain has left the trail muddy",
-              "There are streams to cross",
-              "The whole trail is steep",
+              "There are streams to cross along the route",
+              "The entire trail is steep and difficult",
               "The final stretch is rough and rocky"
             ],
-            "answer": 3
+            "answer": 3,
+            "explanation": "D is correct: Sara says the last bit is pretty rocky and recommends proper boots. A is unsupported — rain/mud is not mentioned. B invents stream crossings. C is an overstatement trap — she says moderate with a few steep sections, not the whole trail.",
+            "primary_trap": "overstatement"
           },
           {
             "num": 4,
             "text": "Who will drive to the trailhead?",
             "skill": "detail_comprehension",
             "options": [
-              "It's still undecided",
+              "It is still undecided",
               "Ben",
               "Sara",
-              "They'll take transit"
+              "They will take public transit"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Ben says 'I'll drive.' A is the primary trap — driving is decided in the same breath. C is a speaker-swap trap. D is unsupported — no transit is mentioned.",
+            "primary_trap": "primary_trap"
           },
           {
             "num": 5,
             "text": "Why is Sara packing bug spray?",
             "skill": "inference",
             "options": [
-              "The park site warned of ticks",
-              "Mosquitoes troubled her on an earlier hike",
-              "It's mandatory gear on the Bruce Trail",
+              "The park website warned about ticks this season",
+              "Mosquitoes troubled her on an earlier June hike",
+              "Bug spray is required equipment on the Bruce Trail",
               "Ben reacts badly to insect bites"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Sara says mosquitoes were brutal the last time she hiked in June. A is a near-synonym trap — insects are mentioned, but ticks and a website are not. C is an overstatement trap — required gear is never stated. D is a speaker-swap trap — her past experience, not Ben's allergies.",
+            "primary_trap": "partial_answer"
           }
         ]
       },
@@ -6305,12 +6332,14 @@ export const LISTENING_DATA = {
             "text": "How do the new weekday hours differ from before?",
             "skill": "inference",
             "options": [
-              "The library now opens an hour earlier",
-              "The library now stays open an hour later",
-              "The library now closes an hour earlier",
-              "The weekday hours are unchanged"
+              "The library now opens an hour earlier on weekdays",
+              "The library now stays open an hour later on weekdays",
+              "The library now closes an hour earlier on weekdays",
+              "Weekday hours are unchanged from before"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Mon–Thu hours move to nine a.m.–eight p.m., one hour later than before. A reverses the direction (primary trap). C is the opposite error. D ignores the stated one-hour extension.",
+            "primary_trap": "near_synonym"
           },
           {
             "num": 2,
@@ -6322,7 +6351,9 @@ export const LISTENING_DATA = {
               "Ages three to six",
               "Ages six to ten"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: Story Circle is for children aged three to six. A and B are adjacent age-range traps. D overlaps only the upper bound (partial-answer trap).",
+            "primary_trap": "number_trap"
           },
           {
             "num": 3,
@@ -6330,11 +6361,13 @@ export const LISTENING_DATA = {
             "skill": "detail_recall",
             "options": [
               "Wednesday evenings at six thirty",
-              "Saturday mornings at eleven",
-              "Tuesday evenings at seven",
-              "Thursday evenings at seven"
+              "Saturday mornings at ten thirty",
+              "Tuesday afternoons at two o'clock",
+              "Thursday evenings at seven o'clock"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: the adult Book Club meets every Wednesday at six thirty. B is the primary trap — Saturday at ten thirty is Story Circle, not Book Club. C is a near-synonym trap — Tuesday afternoon is Digital Literacy, wrong program. D invents a Thursday slot.",
+            "primary_trap": "primary_trap"
           },
           {
             "num": 4,
@@ -6346,7 +6379,9 @@ export const LISTENING_DATA = {
               "'The Kite Runner'",
               "'The Cellist of Sarajevo'"
             ],
-            "answer": 3
+            "answer": 3,
+            "explanation": "D is correct: this month's selection is 'The Cellist of Sarajevo' by Steven Galloway. A–C are plausible literary titles but never mentioned — common title-list distractors.",
+            "primary_trap": "near_synonym"
           },
           {
             "num": 5,
@@ -6358,19 +6393,23 @@ export const LISTENING_DATA = {
               "Once a month on Saturdays",
               "The first and third Tuesday of each month"
             ],
-            "answer": 3
+            "answer": 3,
+            "explanation": "D is correct: workshops run on the first and third Tuesday of each month. A is an overstatement trap — not every Tuesday. B swaps Wednesday for Tuesday (near-synonym/day trap). C mixes in Saturday Story Circle timing.",
+            "primary_trap": "partial_answer"
           },
           {
             "num": 6,
             "text": "How many people can attend each Digital Literacy session?",
             "skill": "specific_fact",
             "options": [
-              "Fifteen",
-              "Twelve",
-              "Eight",
-              "Ten"
+              "Fifteen participants",
+              "Twelve participants",
+              "Eight participants",
+              "Ten participants"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: space is limited to twelve participants per session. A, C, and D are adjacent-number traps from the same announcement.",
+            "primary_trap": "number_trap"
           },
           {
             "num": 7,
@@ -6382,7 +6421,9 @@ export const LISTENING_DATA = {
               "They were eliminated completely",
               "They were reduced by half"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: overdue book fees have been eliminated as of January. A is a number trap (sixty vs eliminated). B and D soften the change — donation or half fees are not stated.",
+            "primary_trap": "near_synonym"
           },
           {
             "num": 8,
@@ -6390,11 +6431,13 @@ export const LISTENING_DATA = {
             "skill": "detail_recall",
             "options": [
               "E-books, audiobooks, and streaming movies through the Libby app",
-              "A music streaming service",
+              "A premium music streaming subscription",
               "Online newspapers and magazines only",
-              "A free internet hotspot device to borrow"
+              "A portable Wi-Fi hotspot device to borrow"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: card holders get e-books, audiobooks, and streaming movies via Libby. B is a near-synonym trap — digital media, but music streaming is not listed. C is a partial-answer trap — only part of the digital collection. D invents hardware lending.",
+            "primary_trap": "partial_answer"
           }
         ]
       },
@@ -9156,7 +9199,9 @@ export const LISTENING_DATA = {
               "Twelve months",
               "Eight months"
             ],
-            "answer": 3
+            "answer": 3,
+            "explanation": "D is correct: the park was closed eight months for renovations. A, B, and C are adjacent-duration traps from the same report.",
+            "primary_trap": "number_trap"
           },
           {
             "num": 2,
@@ -9168,7 +9213,9 @@ export const LISTENING_DATA = {
               "Two million dollars",
               "Two point five million dollars"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: the project cost three point five million dollars. A is an overstatement trap. C and D are lower adjacent figures (number traps).",
+            "primary_trap": "number_trap"
           },
           {
             "num": 3,
@@ -9180,7 +9227,9 @@ export const LISTENING_DATA = {
               "1978",
               "1968"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: the park was originally built in 1978. A, B, and D are nearby years — classic number traps.",
+            "primary_trap": "number_trap"
           },
           {
             "num": 4,
@@ -9188,11 +9237,13 @@ export const LISTENING_DATA = {
             "skill": "fact_extraction",
             "options": [
               "Federal infrastructure grants and municipal reserves",
-              "Private donations and corporate sponsorship",
-              "A public fundraising campaign",
+              "Private donations and corporate sponsorship only",
+              "A public fundraising campaign by residents",
               "Provincial education funding"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: funding came from federal infrastructure grants and municipal reserves. B is a primary trap — private/corporate funding is not mentioned. C and D invent other funding sources.",
+            "primary_trap": "partial_answer"
           },
           {
             "num": 5,
@@ -9200,11 +9251,13 @@ export const LISTENING_DATA = {
             "skill": "context_inference",
             "options": [
               "It had gone more than two decades without a major upgrade",
-              "It was the busiest park in Burlington",
+              "It was the busiest park in Burlington before closing",
               "It had been permanently closed for safety reasons",
               "It was built entirely with private donations"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: officials note no major upgrade in over twenty years. B is unsupported popularity claim. C is an overstatement trap — renovation closure, not permanent safety closure. D contradicts the stated public funding mix.",
+            "primary_trap": "overstatement"
           }
         ]
       },
@@ -10878,31 +10931,37 @@ export const LISTENING_DATA = {
               "She has meetings all afternoon on Fridays",
               "She prefers to work from home on Fridays"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Priya says she usually leaves early on Fridays to pick up her daughter from daycare. B–D invent other Friday conflicts — speaker-intent traps not in the transcript.",
+            "primary_trap": "speaker_swap"
           },
           {
             "num": 2,
             "text": "Why does Priya reject the sushi restaurant?",
             "skill": "perspective_comparison",
             "options": [
-              "It's too expensive",
-              "It's too far from the office",
-              "She doesn't like sushi",
-              "Some team members don't eat raw fish"
+              "The lunch special is too expensive for the team",
+              "The restaurant is too far from the office",
+              "She personally does not like sushi",
+              "Some team members do not eat raw fish"
             ],
-            "answer": 3
+            "answer": 3,
+            "explanation": "D is correct: Priya says Raj and Amina don't eat raw fish, so they need more variety. A is a number trap — $22 is mentioned but not rejected for cost. B is unsupported distance. C is a speaker-swap trap — she likes sushi but rejects it for the team.",
+            "primary_trap": "partial_answer"
           },
           {
             "num": 3,
             "text": "What is the problem with The Works?",
             "skill": "multi_speaker_tracking",
             "options": [
-              "The food is too expensive",
-              "The service was very slow last time",
-              "They don't take reservations",
-              "They don't have vegetarian options"
+              "The food is too expensive for a team lunch",
+              "The service was very slow the last time they went",
+              "They do not accept reservations for groups",
+              "They do not offer any vegetarian options"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Priya says service was really slow and they were there almost two hours. A is unsupported cost complaint. C contradicts later booking talk. D is false — Dana cites burgers, salads, and veggie options.",
+            "primary_trap": "overstatement"
           },
           {
             "num": 4,
@@ -10910,23 +10969,27 @@ export const LISTENING_DATA = {
             "skill": "opinion_attribution",
             "options": [
               "The office closes early on Thursdays",
-              "She has a project deadline",
-              "She has a client call at two",
-              "She has another meeting at one thirty"
+              "She has a project deadline at one thirty",
+              "She has a client call at two o'clock",
+              "She has another internal meeting at one thirty"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: Dana needs to be back by one thirty because she has a client call at two. B is a near-synonym trap — deadline vs client call. D swaps 'client call at two' for 'meeting at one thirty' (time trap). A is unsupported.",
+            "primary_trap": "near_synonym"
           },
           {
             "num": 5,
             "text": "Why is Noodle House chosen over the other options?",
             "skill": "inference",
             "options": [
-              "It is the cheapest of all the options",
-              "It is fast and handles large groups, fitting their time limit",
+              "It is the cheapest option they discussed",
+              "It is fast and handles large groups within their time limit",
               "It is the closest restaurant to the office",
-              "It has the best online reviews"
+              "It has the highest online review rating"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Priya says Noodle House is fast, has a huge menu, handles big groups, and they were in and out in under an hour — matching Dana's one-thirty deadline. A is unsupported — cheapest is never stated. C and D invent proximity and reviews.",
+            "primary_trap": "partial_answer"
           },
           {
             "num": 6,
@@ -10934,11 +10997,13 @@ export const LISTENING_DATA = {
             "skill": "critical_listening",
             "options": [
               "Noodle House on Thursday at noon",
-              "Sushi on Friday at noon",
+              "Sushi on Adelaide on Friday at noon",
               "The Works on Wednesday at twelve thirty",
               "Noodle House on Friday at noon"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Dana books Noodle House on Thursday at noon. B is the primary trap — sushi on Friday was Kyle's early suggestion, rejected. C mixes The Works (slow service concern) with Wednesday (Priya's preference, not final). D gets the venue right but wrong day (Friday rejected).",
+            "primary_trap": "primary_trap"
           }
         ]
       },
@@ -13894,9 +13959,11 @@ export const LISTENING_DATA = {
               "Paper books last longer than e-readers",
               "Libraries only lend paper books",
               "The sensory and physical experience is irreplaceable",
-              "Paper books are cheaper"
+              "Paper books are always cheaper than e-books"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: Claire cites the feel of pages and smell — a sensory experience screens cannot replicate. A is unsupported durability claim. B is outside the debate. D is an overstatement trap — price is not her main argument.",
+            "primary_trap": "overstatement"
           },
           {
             "num": 2,
@@ -13905,10 +13972,12 @@ export const LISTENING_DATA = {
             "options": [
               "An entire library fits on one lightweight device",
               "They are always cheaper than paper editions",
-              "They can be shared with unlimited people",
+              "They can be shared with unlimited people at once",
               "They include built-in dictionaries and audiobook features"
             ],
-            "answer": 0
+            "answer": 0,
+            "explanation": "A is correct: Derek says he carries his entire library on a device lighter than a paperback. B is an overstatement trap — cheaper is not claimed. C and D add features never mentioned.",
+            "primary_trap": "overstatement"
           },
           {
             "num": 3,
@@ -13916,11 +13985,13 @@ export const LISTENING_DATA = {
             "skill": "contrast_comparison",
             "options": [
               "He says retention depends on the reader, not the format",
-              "He says the studies are outdated",
+              "He says the studies are outdated and unreliable",
               "He says the studies were funded by paper companies",
               "He says the difference mainly applies to academic reading, not leisure"
             ],
-            "answer": 3
+            "answer": 3,
+            "explanation": "D is correct: Derek accepts the studies but says differences are mostly about academic reading; for leisure, retention differences are negligible. A–C invent dismissals he never makes.",
+            "primary_trap": "near_synonym"
           },
           {
             "num": 4,
@@ -13930,33 +14001,39 @@ export const LISTENING_DATA = {
               "E-books are better for academic reading",
               "The accessibility benefits for people with vision problems",
               "E-readers are more environmentally friendly in all cases",
-              "E-books are better for travel"
+              "E-books are better for travel in every situation"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Claire says 'That's a fair point about accessibility' after Derek mentions adjustable font size for vision problems. A is a speaker-swap trap — Derek, not Claire, frames academic reading. C and D use 'all/every' overstatements Claire does not concede.",
+            "primary_trap": "overstatement"
           },
           {
             "num": 5,
             "text": "According to Derek, after how many books does an e-reader become environmentally better?",
             "skill": "argument_analysis",
             "options": [
-              "About ten",
-              "About twenty-three",
-              "About fifteen",
-              "About fifty"
+              "About ten books",
+              "About twenty-three books",
+              "About fifteen books",
+              "About fifty books"
             ],
-            "answer": 1
+            "answer": 1,
+            "explanation": "B is correct: Derek gives the crossover point as about twenty-three books. A, C, and D are adjacent-number traps.",
+            "primary_trap": "number_trap"
           },
           {
             "num": 6,
             "text": "What does Derek imply Claire's preference is based on?",
             "skill": "inference",
             "options": [
-              "Environmental concerns",
+              "Environmental concerns alone",
               "Ignorance about technology",
               "Nostalgia and emotional attachment",
               "Financial reasons"
             ],
-            "answer": 2
+            "answer": 2,
+            "explanation": "C is correct: Derek says nostalgia should not prevent embracing a more convenient format; Claire herself ties preference to emotional accomplishment of finishing a physical book. A is a partial trap — environment is debated but not his label for her view. B and D are unsupported characterizations.",
+            "primary_trap": "partial_answer"
           }
         ]
       },
