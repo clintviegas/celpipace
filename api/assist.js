@@ -158,18 +158,45 @@ async function runCoachToolLoop(apiKey, messages, { supabase, userId }) {
 
 async function handleCoachGet(req, res, auth) {
   const userId = auth.user.id
-  const isPremium = await fetchPremium(auth.supabase, userId)
-  const [profile, usage] = await Promise.all([
-    getCoachProfile(auth.supabase, userId),
-    getCoachUsage(auth.supabase, userId, isPremium),
-  ])
-  const practice = suggestPractice(profile, { max: 4 })
-  return res.status(200).json({
-    mode: 'coach',
-    profile,
-    usage,
-    weeklyFocus: practice.suggestions,
-  })
+  try {
+    const isPremium = await fetchPremium(auth.supabase, userId)
+    const [profile, usage] = await Promise.all([
+      getCoachProfile(auth.supabase, userId),
+      getCoachUsage(auth.supabase, userId, isPremium),
+    ])
+    const practice = suggestPractice(profile, { max: 4 })
+    return res.status(200).json({
+      mode: 'coach',
+      profile,
+      usage,
+      weeklyFocus: practice.suggestions,
+      profileWarning: profile.profileError || null,
+    })
+  } catch (err) {
+    console.error('[assist/coach GET] error:', err)
+    const isPremium = await fetchPremium(auth.supabase, userId).catch(() => false)
+    const usage = await getCoachUsage(auth.supabase, userId, isPremium).catch(() => ({
+      remaining: null,
+      limit: null,
+      premium: isPremium,
+      used: 0,
+    }))
+    return res.status(200).json({
+      mode: 'coach',
+      profile: {
+        targetCLB: 9,
+        sections: {},
+        painPoints: [],
+        dataRich: false,
+        reviewDue: 0,
+        reviewTotal: 0,
+        profileError: err.message,
+      },
+      usage,
+      weeklyFocus: [],
+      profileWarning: 'Coach profile is temporarily limited. Chat still works — complete a few practice sets for richer insights.',
+    })
+  }
 }
 
 async function handleCoachPost(req, res, apiKey, auth) {

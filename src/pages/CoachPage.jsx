@@ -58,7 +58,7 @@ export default function CoachPage() {
   const [profile, setProfile] = useState(null)
   const [weeklyFocus, setWeeklyFocus] = useState([])
   const [usage, setUsage] = useState(null)
-  const [error, setError] = useState('')
+  const [warning, setWarning] = useState('')
   const [messages, setMessages] = useState([STARTER])
   const [draft, setDraft] = useState('')
   const [busy, setBusy] = useState(false)
@@ -80,15 +80,21 @@ export default function CoachPage() {
         ])
         if (cancelled) return
         if (dash.error === 'sign_in_required') {
-          setError('Sign in to use your personalized coach.')
+          setWarning('Sign in to use your personalized coach.')
           return
         }
-        setProfile(dash.profile)
+        setProfile(dash.profile || { painPoints: [], sections: {}, dataRich: false })
         setWeeklyFocus(dash.weeklyFocus || [])
         setUsage(dash.usage)
         setPlanConfig(cfg)
+        if (dash.profileWarning || dash.profile?.profileError) {
+          setWarning(dash.profileWarning || 'Some profile data is still loading — chat works, and insights improve as you practice more.')
+        }
       } catch (err) {
-        if (!cancelled) setError(err.message || 'Could not load coach')
+        if (!cancelled) {
+          setProfile({ painPoints: [], sections: {}, dataRich: false })
+          setWarning(err.message || 'Could not load your full coach profile. You can still chat below.')
+        }
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -200,9 +206,9 @@ export default function CoachPage() {
       </header>
 
       {loading && <div className="coach-loading">Loading your coach profile…</div>}
-      {error && <div className="coach-error">{error}</div>}
+      {warning && <div className="coach-warning">{warning}</div>}
 
-      {!loading && !error && (
+      {!loading && profile && (
         <div className="coach-grid">
           <aside className="coach-sidebar">
             <section className="coach-section">

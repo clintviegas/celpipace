@@ -1,3 +1,5 @@
+import { buildWritingAnchorBlock, buildSpeakingAnchorBlock } from '../score-anchors.js'
+
 const SUPPORT_EMAIL = 'hello@celpipace.ca'
 
 export const SUPPORT_SYSTEM = `You are the CELPIPACE live study assistant. Help users with CELPIP preparation, using the CELPIPACE platform, subscription questions, billing portal navigation, and study planning.
@@ -9,8 +11,6 @@ Rules:
 - Do not claim to perform official CELPIP scoring. For detailed writing or speaking scoring, direct users to the app's real-time scoring tools.
 - Do not ask for card numbers, passwords, verification codes, or sensitive immigration documents.
 - If the user needs account-specific help you cannot access, ask them to email ${SUPPORT_EMAIL}.`
-
-import { buildWritingAnchorBlock, buildSpeakingAnchorBlock } from '../score-anchors.js'
 
 const RUBRIC_SNIPPET = `${buildWritingAnchorBlock('W2').slice(0, 1200)}
 

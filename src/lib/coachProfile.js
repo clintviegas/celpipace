@@ -1,6 +1,21 @@
 import { supabase } from './supabase'
 import { authedFetch } from './apiClient'
 
+async function parseJsonResponse(res) {
+  const text = await res.text()
+  if (!text) return {}
+  try {
+    return JSON.parse(text)
+  } catch {
+    const snippet = text.replace(/\s+/g, ' ').trim().slice(0, 160)
+    throw new Error(
+      snippet.startsWith('{')
+        ? 'Coach returned invalid data.'
+        : snippet || 'Coach service unavailable. Please try again in a moment.',
+    )
+  }
+}
+
 export async function fetchCoachDashboard() {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session?.access_token) {
@@ -8,9 +23,9 @@ export async function fetchCoachDashboard() {
   }
 
   const res = await authedFetch('/api/assist?mode=coach', { method: 'GET' })
-  const data = await res.json()
+  const data = await parseJsonResponse(res)
   if (!res.ok) {
-    throw new Error(data.error || 'Could not load coach profile')
+    throw new Error(data.error || data.message || 'Could not load coach profile')
   }
   return data
 }
@@ -19,7 +34,7 @@ export async function sendCoachMessage(messages) {
   const res = await authedFetch('/api/assist', {
     body: { mode: 'coach', messages },
   })
-  const data = await res.json()
+  const data = await parseJsonResponse(res)
   if (res.status === 429 && data.error === 'coach_limit_reached') {
     return { limitReached: true, message: data.message, usage: data.usage }
   }

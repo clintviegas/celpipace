@@ -99,7 +99,9 @@ SET search_path = public
 AS $$
 DECLARE
   v_target INTEGER;
-  v_plan RECORD;
+  v_plan_target_clb INTEGER;
+  v_plan_target_date DATE;
+  v_plan_days_per_week INTEGER;
   v_result JSONB;
   v_pain_points JSONB := '[]'::jsonb;
   v_sections JSONB := '{}'::jsonb;
@@ -114,11 +116,11 @@ BEGIN
   END IF;
 
   SELECT target_clb, target_date, days_per_week
-  INTO v_plan
+  INTO v_plan_target_clb, v_plan_target_date, v_plan_days_per_week
   FROM study_plans
   WHERE user_id = p_user_id;
 
-  v_target := COALESCE(p_target_clb, v_plan.target_clb, 9);
+  v_target := COALESCE(p_target_clb, v_plan_target_clb, 9);
 
   -- Section bands from recent practice_attempts (last 30 days per section)
   WITH section_recent AS (
@@ -307,8 +309,8 @@ BEGIN
 
   v_result := jsonb_build_object(
     'targetCLB', v_target,
-    'targetDate', v_plan.target_date,
-    'daysPerWeek', v_plan.days_per_week,
+    'targetDate', v_plan_target_date,
+    'daysPerWeek', v_plan_days_per_week,
     'sections', v_sections,
     'lrSkills', v_lr_skills,
     'writingProfile', get_user_weakness_profile(p_user_id, 'writing', 10),
