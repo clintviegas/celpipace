@@ -457,6 +457,34 @@ const DashboardPage = () => {
           </motion.div>
         )}
 
+        {/* ── Personalized Study Coach ── */}
+        {user && (
+          <motion.div
+            className="db-next-action"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.32 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/study-coach')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">✨</span>
+              <div>
+                <span className="db-next-action-label">Your Study Coach</span>
+                <span className="db-next-action-text">
+                  Pain points and practice picks grounded in your scores — 5 free messages/week
+                </span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/study-coach') }}
+            >
+              Open →
+            </button>
+          </motion.div>
+        )}
+
         {/* ── Review Mistakes (spaced repetition) ── */}
         {reviewSummary.total > 0 && (
           <motion.div

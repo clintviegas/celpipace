@@ -2884,6 +2884,7 @@ function ReadingLayout({ color, partId, onComplete }) {
         questionId: question.id ?? question.num ?? questionIndex + 1,
         number: question.num ?? questionIndex + 1,
         type: question.type || question.questionType || 'mcq',
+        skill: question.skill || question.questionType || null,
         text: question.text,
         selectedAnswer,
         correctAnswer,

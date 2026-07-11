@@ -36,6 +36,7 @@ const WritingPage = lazy(() => import('./pages/WritingPage'))
 const SpeakingPage = lazy(() => import('./pages/SpeakingPage'))
 const PracticeSetPage = lazy(() => import('./pages/PracticeSetPage'))
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
+const CoachPage = lazy(() => import('./pages/CoachPage'))
 const ReviewPage = lazy(() => import('./pages/ReviewPage'))
 const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage'))
 const LearningPathPage = lazy(() => import('./pages/LearningPathPage'))
@@ -416,6 +417,7 @@ export function AppInner() {
         <Routes>
           <Route path="/" element={<HomePage onSignIn={() => setAuthOpen(true)} />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/study-coach" element={<CoachPage />} />
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/study-plan" element={<StudyPlanPage />} />
           <Route path="/learning-path" element={<LearningPathPage onSignIn={() => setAuthOpen(true)} />} />

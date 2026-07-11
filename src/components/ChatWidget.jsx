@@ -41,8 +41,8 @@ export default function ChatWidget() {
     setError('')
 
     try {
-      const res = await authedFetch('/api/chatbot', {
-        body: { messages: nextMessages.slice(-10) },
+      const res = await authedFetch('/api/assist', {
+        body: { mode: 'support', messages: nextMessages.slice(-10) },
       })
       const data = await res.json()
       if (res.status === 429) throw new Error(data.message || 'Too many messages — try again later.')
