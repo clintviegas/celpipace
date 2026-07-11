@@ -6,6 +6,12 @@ import CelpipAceLogo from './CelpipAceLogo'
 /* ── Dropdown data matching CELTESTPIP nav ── */
 const NAV_ITEMS = [
   {
+    id: 'study-coach',
+    label: 'AI Coach',
+    flat: true,
+    highlight: true,
+  },
+  {
     id: 'exam',
     label: 'Mock Exams',
     flat: true,   // no dropdown — direct link
@@ -127,10 +133,11 @@ function NavItem({ item, active, openId, setOpenId, closeMenu, mobileOpen }) {
       <li ref={ref}>
         <Link
           to={'/' + item.id}
-          className={`nav-link-btn${active ? ' nav-link-active' : ''}`}
+          className={`nav-link-btn${active ? ' nav-link-active' : ''}${item.highlight ? ' nav-link-btn--coach' : ''}`}
           onClick={() => { setOpenId(null); closeMenu?.() }}
         >
           {item.label}
+          {item.highlight && <span className="nav-coach-new">NEW</span>}
         </Link>
       </li>
     )
@@ -228,6 +235,9 @@ function UserMenu({ user, signOut }) {
       </button>
       {open && (
         <div className="nav-user-menu">
+          <button className="nav-user-menu-item" onClick={() => { navigate('/study-coach'); setOpen(false) }}>
+            <span className="nav-user-menu-icon">✨</span> AI Study Coach
+          </button>
           <button className="nav-user-menu-item" onClick={() => { navigate('/dashboard'); setOpen(false) }}>
             <span className="nav-user-menu-icon">▣</span> Dashboard
           </button>

@@ -1,3 +1,4 @@
+import CoachShowcase from './CoachShowcase'
 import AIFeatures from './AIFeatures'
 import CRSBooster from './CRSBooster'
 import CTA from './CTA'
@@ -13,6 +14,7 @@ export default function HomeDesktopSections({ onSignIn }) {
   return (
     <>
       <CredibilityBand />
+      <CoachShowcase />
       <FeatureShowcase />
       <AIFeatures />
       <HowItWorks />

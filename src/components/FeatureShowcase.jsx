@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom'
 
 const FEATURES = [
   {
+    icon: '✨',
+    title: 'AI Study Coach',
+    desc: 'Ask what to practice this week. Your coach reads CLB scores, dimension weaknesses, and missed questions — then picks your next sets.',
+    cta: 'Try AI Coach',
+    path: '/study-coach',
+  },
+  {
     icon: '📋',
     title: 'Full-Length Practice Sets',
     desc: 'Each set follows the exact CELPIP format — same question types, same timing, same structure. 220+ practice sets across all four skills.',

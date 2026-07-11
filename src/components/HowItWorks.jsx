@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
 
 const steps = [
-  { num: '01', title: 'Choose a Section', desc: 'Pick Listening, Reading, Writing, or Speaking to start practicing.' },
-  { num: '02', title: 'Complete Practice Sets', desc: 'Work through questions that match the real CELPIP format and timing.' },
-  { num: '03', title: 'Review Your Answers', desc: 'Read explanations for each question and compare against sample responses.' },
-  { num: '04', title: 'Track Your Progress', desc: 'Monitor your CLB growth across all four skills on your dashboard.' },
+  { num: '01', title: 'Practice & get scored', desc: 'Complete section sets or full mocks — instant CLB bands on Writing and Speaking.' },
+  { num: '02', title: 'Open your AI coach', desc: 'See pain points pulled from your real scores and missed questions — not generic tips.' },
+  { num: '03', title: 'Follow your weekly focus', desc: 'Get specific sets to drill based on what will move your CRS the most.' },
+  { num: '04', title: 'Track CLB growth', desc: 'Watch bands rise across all four skills on your dashboard and progress charts.' },
 ]
 
 export default function HowItWorks() {

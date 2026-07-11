@@ -10,6 +10,7 @@ export const CORE_PRODUCT_LINKS = [
 ]
 
 export const TOOL_RESOURCE_LINKS = [
+  { label: 'AI Study Coach', to: '/study-coach' },
   { label: 'CELPIP Score Calculator', to: '/celpip-score-calculator' },
   { label: 'CRS Score Calculator', to: '/crs-score-calculator' },
   { label: 'CELPIP vs IELTS', to: '/celpip-vs-ielts' },

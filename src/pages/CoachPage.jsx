@@ -138,12 +138,45 @@ export default function CoachPage() {
   if (!user) {
     return (
       <div className="coach-page">
-        <SEO title="Study Coach" description="Personalized CELPIP coaching based on your practice data." />
-        <div className="coach-empty">
-          <Sparkles size={40} strokeWidth={1.5} />
-          <h1>Your CELPIP Coach</h1>
-          <p>Sign in to get coaching grounded in your scores, dimension weaknesses, and missed questions.</p>
-          <button type="button" className="coach-cta" onClick={() => navigate('/dashboard')}>Go to Dashboard</button>
+        <SEO title="AI Study Coach" description="Personalized CELPIP coaching based on your practice scores, mistakes, and CLB gaps." />
+        <div className="coach-guest">
+          <header className="coach-guest-head">
+            <Sparkles size={36} strokeWidth={1.5} />
+            <h1>Your CELPIP Study Coach</h1>
+            <p>
+              Not a generic chatbot. This coach reads <strong>your</strong> practice scores, dimension weaknesses,
+              and missed questions — then builds a weekly focus and answers &ldquo;what should I study next?&rdquo;
+            </p>
+          </header>
+
+          <div className="coach-guest-grid">
+            <div className="coach-guest-card">
+              <h2>What it does</h2>
+              <ul>
+                <li>Surfaces pain points (e.g. Listening L3 detail traps, Writing coherence)</li>
+                <li>Suggests specific practice sets — not vague advice</li>
+                <li>Tracks how far you are from your target CLB</li>
+                <li>Chat: ask why a section is weak or what to drill this week</li>
+              </ul>
+            </div>
+            <div className="coach-guest-demo">
+              <p className="coach-guest-demo-label">Example coach reply</p>
+              <div className="coach-guest-msg coach-guest-msg--user">What are my top 3 weaknesses?</div>
+              <div className="coach-guest-msg coach-guest-msg--coach">
+                1) Listening L3 detail questions — 38% last 5 sets. Do L3 Set 2 tomorrow.
+                2) Writing coherence — CLB 7 vs your CLB 9 target. One structured W1 email.
+                3) Speaking S5 comparisons — you rush the second option. Slow down 10 sec before speaking.
+              </div>
+            </div>
+          </div>
+
+          <div className="coach-guest-cta">
+            <button type="button" className="coach-cta" onClick={() => navigate('/dashboard')}>
+              Sign in free to unlock your coach
+            </button>
+            <p className="coach-guest-note">5 free coach messages per week · Premium unlimited</p>
+            <Link to="/practice" className="coach-guest-link">Or start practicing first →</Link>
+          </div>
         </div>
       </div>
     )

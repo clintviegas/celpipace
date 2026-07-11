@@ -6,6 +6,7 @@ import CelpipAceLogo from './CelpipAceLogo'
 
 const NAV_LINKS = [
   { id: 'dashboard', label: 'Dashboard', path: '/dashboard', flat: true },
+  { id: 'study-coach', label: 'AI Coach', path: '/study-coach', flat: true, highlight: true },
   { id: 'exam',      label: 'Mock Exams', path: '/exam', flat: true },
   {
     id: 'listening', label: 'Listening', path: '/celpip-listening-practice', color: '#4A90D9', colorLight: '#EEF4FF',
@@ -50,6 +51,7 @@ const NAV_LINKS = [
   {
     id: 'tools', label: 'My Tools', path: '/study-plan', color: '#0E7C66', colorLight: '#E8F7F2',
     parts: [
+      { label: 'AI Study Coach', desc: 'Pain points and practice picks grounded in your scores', path: '/study-coach' },
       { label: 'Study Plan', desc: 'Your adaptive week-by-week plan toward your target CLB', path: '/study-plan' },
       { label: 'Synonym Match', desc: 'Fast-paced vocabulary game — pick the right synonym', path: '/flashcards' },
       { label: 'Review Your Mistakes', desc: 'Spaced-repetition review of every question you missed', path: '/review' },
@@ -183,7 +185,7 @@ export default function DashboardNavbar({ onSignIn }) {
                 onMouseLeave={() => { if (!menuOpen && hasDrop) setOpenId(null) }}
               >
                 <button
-                  className={`dbn-link${currentPath === link.id ? ' dbn-link--active' : ''}${hasDrop ? ' dbn-link-drop' : ''}${open ? ' dbn-link-drop--open' : ''}`}
+                  className={`dbn-link${currentPath === link.id ? ' dbn-link--active' : ''}${hasDrop ? ' dbn-link-drop' : ''}${open ? ' dbn-link-drop--open' : ''}${link.highlight ? ' dbn-link--coach' : ''}`}
                   aria-expanded={hasDrop ? open : undefined}
                   onClick={() => {
                     if (hasDrop && menuOpen) {
@@ -288,6 +290,9 @@ export default function DashboardNavbar({ onSignIn }) {
                       <strong>{displayName}</strong>
                       <span>{user.email}</span>
                     </div>
+                    <button className="dbn-account-item" onClick={() => goTo('study-coach')}>
+                      <Sparkles size={16} /> AI Study Coach
+                    </button>
                     <button className="dbn-account-item" onClick={() => goTo('dashboard')}>
                       <LayoutDashboard size={16} /> Dashboard
                     </button>

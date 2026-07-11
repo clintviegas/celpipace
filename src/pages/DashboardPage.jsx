@@ -331,6 +331,34 @@ const DashboardPage = () => {
           ))}
         </div>
 
+        {/* ── AI Study Coach (featured) ── */}
+        {user && (
+          <motion.div
+            className="db-next-action db-next-action--coach"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.28 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/study-coach')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">✨</span>
+              <div>
+                <span className="db-next-action-label">AI Study Coach · NEW</span>
+                <span className="db-next-action-text">
+                  Ask what to practice this week — grounded in your CLB scores and missed questions
+                </span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/study-coach') }}
+            >
+              Open coach →
+            </button>
+          </motion.div>
+        )}
+
         {/* ── Smart Next Action ── */}
         <motion.div
           className="db-next-action"
@@ -453,34 +481,6 @@ const DashboardPage = () => {
               onClick={(e) => { e.stopPropagation(); navigate('/predict') }}
             >
               View →
-            </button>
-          </motion.div>
-        )}
-
-        {/* ── Personalized Study Coach ── */}
-        {user && (
-          <motion.div
-            className="db-next-action"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.32 }}
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/study-coach')}
-          >
-            <div className="db-next-action-left">
-              <span className="db-next-action-icon">✨</span>
-              <div>
-                <span className="db-next-action-label">Your Study Coach</span>
-                <span className="db-next-action-text">
-                  Pain points and practice picks grounded in your scores — 5 free messages/week
-                </span>
-              </div>
-            </div>
-            <button
-              className="db-next-action-btn"
-              onClick={(e) => { e.stopPropagation(); navigate('/study-coach') }}
-            >
-              Open →
             </button>
           </motion.div>
         )}

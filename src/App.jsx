@@ -12,6 +12,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import DashboardNavbar from './components/DashboardNavbar'
 import Hero from './components/Hero'
+import CoachShowcase from './components/CoachShowcase'
 import Footer from './components/Footer'
 import HomeInternalLinks from './components/HomeInternalLinks'
 import SEO from './components/SEO'
@@ -163,8 +164,8 @@ const MOBILE_HOME_SECTIONS = [
 ]
 
 const MOBILE_HOME_LINKS = [
+  { label: 'AI Coach', path: '/study-coach', Icon: Sparkles },
   { label: 'CRS', path: '/crs-score-calculator', Icon: Gauge },
-  { label: 'Resources', path: '/celpip-resources', Icon: Sparkles },
   { label: 'Premium', path: '/pricing', Icon: Trophy },
 ]
 
@@ -203,13 +204,21 @@ function MobileHomeApp({ onSignIn }) {
           <span className="mh-kicker">{BRAND_NAME}</span>
           <span className="mh-mini-stat">CLB 4-12</span>
         </div>
-        <h1>A focused CELPIP study home.</h1>
-        <p>{PRODUCT_STATS.questionItems} question items, mock exams, scoring, and section drills built for quick mobile study sessions.</p>
+        <h1>Your CLB gap, mapped — with an AI coach.</h1>
+        <p>Practice sets, timed mocks, instant scoring, and a coach that reads your weak spots. {PRODUCT_STATS.questionItems} questions built for PR and Express Entry.</p>
         <div className="mh-actions">
-          <button className="mh-primary" onClick={() => navigate('/crs-score-calculator')}>Calculate CRS</button>
-          <button className="mh-secondary" onClick={() => navigate('/exam')}>Mock exams</button>
+          <button className="mh-primary" onClick={() => navigate('/study-coach')}>AI Study Coach</button>
+          <button className="mh-secondary" onClick={() => navigate('/practice')}>Free practice</button>
         </div>
       </div>
+
+      <button className="mh-focus-card mh-focus-card--coach" onClick={() => navigate('/study-coach')}>
+        <span className="mh-focus-icon" aria-hidden="true"><Sparkles size={22} /></span>
+        <span>
+          <strong>AI Study Coach</strong>
+          <small>Pain points + weekly focus from your scores · 5 free msgs/week</small>
+        </span>
+      </button>
 
       <button className="mh-focus-card" onClick={() => navigate('/exam')}>
         <span className="mh-focus-icon" aria-hidden="true"><ClipboardCheck size={22} /></span>
@@ -294,14 +303,15 @@ function HomePage({ onSignIn }) {
   return (
     <main className="home-page">
       <SEO
-        title="CELPIP Mock Test & Practice Tests Online – Free AI Scoring"
-        description="Free CELPIP mock tests and section practice with instant AI scoring. Full-length exams for Listening, Reading, Writing & Speaking. Start free today."
+        title="CELPIP Mock Test & AI Study Coach – Free CLB Scoring"
+        description="Free CELPIP practice with an AI coach that reads your scores and tells you what to study. Full mock exams, instant CLB feedback, CRS tools. Start free."
         canonical="/"
         jsonLd={homeFaqs}
       />
       <Hero />
       {isMobile ? (
         <div className="home-mobile-only">
+          <CoachShowcase compact />
           <MobileHomeApp onSignIn={onSignIn} />
         </div>
       ) : (
@@ -384,7 +394,7 @@ export function AppInner() {
   const isAdminRoute = location.pathname === '/admin' || location.pathname.startsWith('/admin/')
 
   // Keep public learning pages on the original site navbar so dropdown behavior stays consistent after navigation.
-  const innerPaths = ['/dashboard','/review','/study-plan','/learning-path','/flashcards','/progress','/predict','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription','/crs-score-calculator']
+  const innerPaths = ['/dashboard','/review','/study-plan','/study-coach','/learning-path','/flashcards','/progress','/predict','/exam','/mock-test','/celpip-listening-practice','/celpip-reading-practice','/celpip-writing-practice','/celpip-speaking-practice','/listening','/reading','/writing','/speaking','/practice','/practice-set','/writing-practice','/subscription','/crs-score-calculator']
   const isInnerPage = innerPaths.some(p => location.pathname === p || location.pathname.startsWith(p + '/'))
   const isPaymentRoute = location.pathname === '/payment'
 

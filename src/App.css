@@ -1657,13 +1657,119 @@
 
 .coach-cta {
 	margin-top: 16px;
-	background: #c8102e;
+	background: #6b4faf;
 	color: #fff;
 	border: 0;
-	padding: 10px 20px;
+	padding: 12px 24px;
 	border-radius: 10px;
 	font-weight: 700;
+	font-size: 15px;
 	cursor: pointer;
+}
+
+.coach-guest {
+	max-width: 880px;
+	margin: 0 auto;
+	padding: 32px 20px 48px;
+}
+
+.coach-guest-head {
+	text-align: center;
+	margin-bottom: 32px;
+}
+
+.coach-guest-head h1 {
+	color: #111;
+	font-size: 1.85rem;
+	margin: 12px 0 10px;
+}
+
+.coach-guest-head p {
+	color: #555;
+	font-size: 16px;
+	line-height: 1.65;
+	max-width: 620px;
+	margin: 0 auto;
+}
+
+.coach-guest-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+	margin-bottom: 28px;
+}
+
+@media (max-width: 720px) {
+	.coach-guest-grid { grid-template-columns: 1fr; }
+}
+
+.coach-guest-card,
+.coach-guest-demo {
+	background: #fff;
+	border: 1px solid #e8ecf2;
+	border-radius: 14px;
+	padding: 20px;
+}
+
+.coach-guest-card h2 {
+	font-size: 15px;
+	margin: 0 0 12px;
+	color: #111;
+}
+
+.coach-guest-card ul {
+	margin: 0;
+	padding-left: 18px;
+	color: #555;
+	font-size: 14px;
+	line-height: 1.65;
+}
+
+.coach-guest-demo-label {
+	font-size: 11px;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: .06em;
+	color: #8b95a8;
+	margin: 0 0 12px;
+}
+
+.coach-guest-msg {
+	padding: 12px 14px;
+	border-radius: 12px;
+	font-size: 13.5px;
+	line-height: 1.55;
+	margin-bottom: 10px;
+}
+
+.coach-guest-msg--user {
+	background: #0f1f3d;
+	color: #fff;
+	margin-left: 20%;
+}
+
+.coach-guest-msg--coach {
+	background: #f3efff;
+	color: #3d2d66;
+	border: 1px solid #e4d9ff;
+}
+
+.coach-guest-cta {
+	text-align: center;
+}
+
+.coach-guest-note {
+	font-size: 13px;
+	color: #888;
+	margin: 10px 0 0;
+}
+
+.coach-guest-link {
+	display: inline-block;
+	margin-top: 12px;
+	font-size: 14px;
+	color: #6b4faf;
+	font-weight: 600;
 }
 
 .coach-hint,

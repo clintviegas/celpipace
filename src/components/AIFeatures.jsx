@@ -3,6 +3,11 @@ import { BRAND_NAME } from '../data/constants'
 
 const features = [
   {
+    icon: '✨',
+    title: 'AI Study Coach',
+    desc: 'Personalized weekly focus and chat grounded in your practice history — 5 free messages/week.',
+  },
+  {
     icon: '📋',
     title: 'Real Test Format',
     desc: 'Questions match official CELPIP format, timing, and difficulty.',
@@ -28,7 +33,7 @@ const features = [
     desc: 'Expert strategies, vocabulary lists, scoring rubrics, and common mistakes.',
   },
   {
-    icon: '�',
+    icon: '🍁',
     title: 'Real-World Context',
     desc: 'Every scenario uses authentic workplace, community, and everyday settings — just like the real test.',
   },
