@@ -80,32 +80,11 @@ $$;
 GRANT EXECUTE ON FUNCTION public.assert_premium() TO authenticated;
 
 -- ── 4. Auto-expire stale premium rows ─────────────────────────────────────
--- Call from a Supabase scheduled job (Edge Function / pg_cron) every 15 min.
--- Also safe to call from the webhook on every event as a backstop.
-CREATE OR REPLACE FUNCTION public.expire_premium_users()
-RETURNS INT
-LANGUAGE plpgsql SECURITY DEFINER SET search_path = public
-AS $$
-DECLARE
-  v_count INT;
-BEGIN
-  UPDATE public.profiles
-     SET is_premium          = FALSE,
-         subscription_status = 'expired',
-         current_plan        = 'free',
-         updated_at          = now()
-   WHERE is_premium = TRUE
-     AND premium_expires_at IS NOT NULL
-     AND premium_expires_at <= now();
-  GET DIAGNOSTICS v_count = ROW_COUNT;
-  RETURN v_count;
-END;
-$$;
-
-GRANT EXECUTE ON FUNCTION public.expire_premium_users() TO service_role;
-
--- Optional: schedule via pg_cron if available (uncomment after enabling extension)
--- SELECT cron.schedule('expire-premium-users', '*/15 * * * *', $$SELECT public.expire_premium_users();$$);
+-- Canonical definition: phase3_expire_premium_rpc.sql (returns TABLE of expired users).
+-- job-sweep.js expects an array from supabase.rpc('expire_premium_users').
+-- Do NOT use the INT-returning variant below — it breaks cron-sweep parsing.
+--
+-- Apply phase3_expire_premium_rpc.sql after this file, or run it standalone to fix prod drift.
 
 -- ── 5. RLS: lock down profile writes that affect billing ──────────────────
 -- Users may already update their profile (display_name, avatar) but they must

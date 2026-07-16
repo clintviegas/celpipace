@@ -38,7 +38,7 @@ CELPIPACE is an independent preparation platform and is not affiliated with, end
 
 ## Pricing Model
 
-- Free access lets users explore the first question in each section.
+- Free access: Set 1 in Listening L1–L3, Reading R1–R2, Writing W1, Speaking S1 + S3; 2 AI writing scores, 2 AI speaking scores, and 5 coach messages per week.
 - Premium unlocks all mock exams, all question items and prompts, unlimited real-time scoring, progress tracking, study guides, vocabulary bundles, and priority email support.
 - Stripe handles checkout, subscriptions, billing portal access, cancellations, and refunds.
 - First-time subscribers can use `CELPIP25` for 25% off the first checkout.

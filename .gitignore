@@ -12,6 +12,7 @@ public/images
 .env
 .env.local
 .env.*.local
+!.env.example
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
@@ -47,4 +48,7 @@ gsc-credentials.json
 .gsc-oauth-client.json
 .gsc-token.json
 docs/gsc/*.json
-.env*
+.env
+.env.local
+.env.*.local
+!.env.example

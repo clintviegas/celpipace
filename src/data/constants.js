@@ -277,66 +277,17 @@ export const CRS_SPOUSE_CAN_EXP = { 0:0, 1:5, 2:7, 3:8, 4:9, 5:10 }
 // All other parts require premium for any set (including Set 1).
 export const FREE_PARTS = new Set(['L1', 'L2', 'L3', 'R1', 'R2', 'W1', 'S1', 'S3'])
 
-// ─── Pricing ─────────────────────────────────────────────────────
-export const PRICING_PLANS = [
-  {
-    name: 'Free',
-    price: '$0',
-    period: 'forever',
-    badge: null,
-    active: true,
-    features: [
-      '3 practice questions per section',
-      'Basic tips & strategies',
-      'Score level reference guide',
-      'CLB equivalency chart',
-      'Interactive CRS Calculator',
-    ],
-    locked: [
-      'Full mock tests (all 28 questions)',
-      'Detailed answer explanations',
-      'Premium strategy guides',
-      'Writing templates & samples',
-      'Speaking model answers',
-      'Progress tracking',
-    ],
-    cta: 'Current Plan',
-    ctaStyle: 'inactive',
-  },
-  {
-    name: 'Pro',
-    price: '$19',
-    period: '/month',
-    badge: '🔥 Most Popular',
-    features: [
-      'Everything in Free',
-      'Full mock tests — all 28 questions',
-      'Detailed answer explanations',
-      'All premium tips & strategies',
-      'Writing templates & sample answers',
-      'Speaking model responses',
-      'Progress tracking dashboard',
-    ],
-    locked: [],
-    cta: 'Start 7-Day Free Trial',
-    ctaStyle: 'primary',
-  },
-  {
-    name: 'Premium',
-    price: '$49.99',
-    period: '/year',
-    badge: '🏆 Best Value',
-    features: [
-      'Everything in Pro',
-      'Annual subscription',
-      '8 full-length mock tests',
-      'Instant writing feedback',
-      'Real-time speaking assessment',
-      'Personalised study plan',
-      'Priority email support',
-    ],
-    locked: [],
-    cta: 'Get Annual Premium',
-    ctaStyle: 'gold',
-  },
+// ─── Free-tier limits & copy (single source of truth) ─────────────
+export const FREE_AI_WRITING_EVALS = 2
+export const FREE_AI_SPEAKING_EVALS = 2
+export const FREE_COACH_MESSAGES_WEEKLY = 5
+
+export const FREE_TIER_SUMMARY =
+  'Free: Set 1 in Listening L1–L3, Reading R1–R2, Writing W1, Speaking S1 + S3 — plus 2 AI writing scores, 2 AI speaking scores, and 5 coach messages per week.'
+
+export const FREE_TIER_PRICING_SECTIONS = [
+  { icon: '🎧', section: 'Listening', desc: 'Set 1 free (L1, L2, L3)' },
+  { icon: '📖', section: 'Reading', desc: 'Set 1 free (R1, R2)' },
+  { icon: '✍️', section: 'Writing', desc: 'Set 1 free (W1) · 2 AI scores' },
+  { icon: '🎤', section: 'Speaking', desc: 'Set 1 free (S1 + S3) · 2 AI scores' },
 ]

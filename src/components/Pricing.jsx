@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Tag, Sparkles, Zap, Crown, ExternalLink } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
+import { BRAND_NAME, PRODUCT_STATS, FREE_TIER_PRICING_SECTIONS, FREE_TIER_SUMMARY } from '../data/constants'
 import {
   BILLING_PLANS,
   PREMIUM_FEATURES,
@@ -26,24 +26,12 @@ const PLAN_ICONS = {
 
 const PLANS = BILLING_PLANS.map(plan => ({ ...plan, icon: PLAN_ICONS[plan.id] }))
 
-const FREE_SECTIONS = [
-  { icon: '🎧', section: 'Listening', desc: '1st question free' },
-  { icon: '📖', section: 'Reading',   desc: '1st question free' },
-  { icon: '✍️', section: 'Writing',   desc: '1st question free' },
-  { icon: '🎤', section: 'Speaking',  desc: '1st question free' },
-]
-
-// ⚠️ REAL TESTIMONIALS ONLY. Fake reviews are deceptive and illegal under the
-// FTC's 2024 fake-review rule. This array is intentionally EMPTY so nothing
-// fabricated ships — the testimonials section below only renders once you add
-// genuine, verifiable quotes from real users. Shape:
-//   { quote: 'Their writing feedback...', name: 'A. Sharma', detail: 'CLB 9 · Vancouver' }
-const TESTIMONIALS = []
+const FREE_SECTIONS = FREE_TIER_PRICING_SECTIONS
 
 const FAQS = [
   {
     q: 'What do I get with the free plan?',
-    a: `The free plan lets you try the first question from each section — Listening, Reading, Writing, and Speaking. It is a simple way to explore ${BRAND_NAME} before upgrading. No credit card required.`,
+    a: `${FREE_TIER_SUMMARY} No credit card required — explore ${BRAND_NAME} before upgrading.`,
   },
   {
     q: 'Will I be auto-charged?',
@@ -187,7 +175,7 @@ export default function Pricing({ onSignIn, showFaq = true }) {
           Subscribe. Study with confidence.
         </motion.h2>
         <motion.p className="section-sub" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
-          Try the first question in every section for free — no credit card required.<br />
+          Try Set 1 across key parts for free — no credit card required.<br />
           <strong>Cancel any time</strong> through the secure Stripe billing portal.
         </motion.p>
 
@@ -208,7 +196,7 @@ export default function Pricing({ onSignIn, showFaq = true }) {
           >
             <div className="pricing-name">Free</div>
             <div className="pricing-price">$0<span className="pricing-period"> forever</span></div>
-            <p className="pricing-desc">Explore each section with the first question free.</p>
+            <p className="pricing-desc">Set 1 in Listening, Reading, Writing &amp; Speaking — plus 2 AI scores per skill.</p>
             <button className="btn btn-outline pricing-cta" onClick={() => user ? navigate('/listening') : onSignIn?.()}>Get Started Free</button>
 
             <div className="pricing-free-sections">
@@ -222,7 +210,8 @@ export default function Pricing({ onSignIn, showFaq = true }) {
             </div>
 
             <ul className="pricing-features" style={{ marginTop: 20 }}>
-              <li><Check size={15} className="check-icon" />Basic Score Feedback</li>
+              <li><Check size={15} className="check-icon" />2 AI writing + 2 AI speaking scores</li>
+              <li><Check size={15} className="check-icon" />5 AI coach messages per week</li>
               <li><Check size={15} className="check-icon" />CLB to CRS Calculator</li>
             </ul>
           </motion.div>

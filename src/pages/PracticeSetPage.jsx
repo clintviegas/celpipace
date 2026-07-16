@@ -12,6 +12,7 @@ import { useAuthGate } from '../hooks/useAuthGate'
 import { useAudioRecorder } from '../hooks/useAudioRecorder'
 import { authedFetch } from '../lib/apiClient'
 import UpgradeModal from '../components/UpgradeModal'
+import { useAiEvalUsage } from '../hooks/useAiEvalUsage'
 import SEO from '../components/SEO'
 import ScoreTips, { getListeningTips, getWritingTips } from '../components/ScoreTips'
 
@@ -1764,6 +1765,8 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
   const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start the timer, write responses, and save your score.')
   const { isCompleted, getSetScore, getPartStats } = useProgress()
   const [upgradeFor, setUpgradeFor] = useState(null)
+  const [upgradeLimitFor, setUpgradeLimitFor] = useState(null)
+  const { usage: aiUsage, refresh: refreshAiUsage } = useAiEvalUsage(user?.id, 'writing', isPremium)
   const [activeIdx, setActiveIdx] = useState(0)
   const [responses, setResponses] = useState({})   // { [idx]: text }
   const [timeLeft, setTimeLeft]   = useState(null)
@@ -1840,9 +1843,10 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
     setAiResult(null)
     const result = await scoreWithAI(text, q.prompt, q.criteria, q.section)
     setAiLoading(false)
-    if (result?.limitReached) { setUpgradeFor(1); return }
+    if (result?.limitReached) { setUpgradeLimitFor('writing'); return }
     setAiResult(result)
     if (result && !result.error && onComplete) {
+      refreshAiUsage()
       const band = Math.round(Number(result.clbBand ?? result.overall))
       if (!Number.isFinite(band) || band < 1) return
       onComplete('writing', q.section, q.num, band, 12, {
@@ -2047,6 +2051,14 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
               {wordCount > 0 && wordCount < 150 && ` — ${150 - wordCount} more needed`}
             </span>
             <div className="wl-editor-actions">
+              {!isPremium && aiUsage && (
+                <span
+                  className="wl-ai-usage"
+                  style={{ fontSize: 13, color: aiUsage.remaining === 0 ? '#C8102E' : '#555', marginRight: 12 }}
+                >
+                  {aiUsage.remaining} of {aiUsage.limit} free AI scores remaining
+                </span>
+              )}
               <button
                 className="wl-ai-btn"
                 style={{ background: aiLoading ? '#aaa' : color }}
@@ -2090,7 +2102,14 @@ function WritingLayout({ questions, color, partId, partLabel, partIcon, onComple
         </div>
       </div>
     </div>
-    <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Writing" />
+    <UpgradeModal
+      open={!!upgradeFor || !!upgradeLimitFor}
+      onClose={() => { setUpgradeFor(null); setUpgradeLimitFor(null) }}
+      setNumber={upgradeFor}
+      reason={upgradeLimitFor ? 'ai_limit' : 'set_lock'}
+      aiSection={upgradeLimitFor || undefined}
+      sectionLabel="Writing"
+    />
     {authGateModal}
     </>
   )
@@ -4118,6 +4137,8 @@ function SpeakingLayout({ color, partId, onComplete }) {
   const { user, isPremium } = useAuth()
   const { requireAuth, authGateModal } = useAuthGate('Sign in with Google to start speaking practice, record responses, and save your score.')
   const [upgradeFor, setUpgradeFor] = useState(null)
+  const [upgradeLimitFor, setUpgradeLimitFor] = useState(null)
+  const { usage: aiUsage, refresh: refreshAiUsage } = useAiEvalUsage(user?.id, 'speaking', isPremium)
   const taskNum = parseInt(partId.replace('S', ''), 10)
   const meta = SPEAKING_TASK_META[taskNum] || SPEAKING_TASK_META[1]
   const { getPartStats, isCompleted, getSetScore } = useProgress()
@@ -4373,9 +4394,10 @@ function SpeakingLayout({ color, partId, onComplete }) {
     setAiResult(null)
     const result = await scoreSpeakingWithAI(transcript, prompt.prompt, meta.label, prompt.topic || prompt.topicName, fluencyMetrics)
     setAiLoading(false)
-    if (result?.limitReached) { setUpgradeFor(1); return }
+    if (result?.limitReached) { setUpgradeLimitFor('speaking'); return }
     setAiResult(result)
     if (result && !result.error && onComplete) {
+      refreshAiUsage()
       const band = Math.round(Number(result.clbBand ?? result.overall))
       if (!Number.isFinite(band) || band < 1) return
       onComplete('speaking', partId, prompt.setId, band, 12, {
@@ -5122,6 +5144,13 @@ function SpeakingLayout({ color, partId, onComplete }) {
                   {wordCount > 0 && wordCount < 40 && ' \u2014 add more detail'}
                   {wordCount >= 40 && ' \u2713'}
                 </span>
+                {!isPremium && aiUsage && (
+                  <span
+                    style={{ fontSize: 13, color: aiUsage.remaining === 0 ? '#C8102E' : '#555', marginRight: 12 }}
+                  >
+                    {aiUsage.remaining} of {aiUsage.limit} free AI scores remaining
+                  </span>
+                )}
                 <button
                   className="sl-score-btn"
                   style={{ background: aiLoading ? '#aaa' : color }}
@@ -5178,7 +5207,14 @@ function SpeakingLayout({ color, partId, onComplete }) {
         </div>
       </div>
     </div>
-    <UpgradeModal open={!!upgradeFor} onClose={() => setUpgradeFor(null)} setNumber={upgradeFor} sectionLabel="Speaking" />
+    <UpgradeModal
+      open={!!upgradeFor || !!upgradeLimitFor}
+      onClose={() => { setUpgradeFor(null); setUpgradeLimitFor(null) }}
+      setNumber={upgradeFor}
+      reason={upgradeLimitFor ? 'ai_limit' : 'set_lock'}
+      aiSection={upgradeLimitFor || undefined}
+      sectionLabel="Speaking"
+    />
     {authGateModal}
     </>
   )

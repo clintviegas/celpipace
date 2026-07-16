@@ -13,7 +13,9 @@
     "e2e:install": "playwright install chromium",
     "gsc:pull": "node scripts/gsc-pull.mjs",
     "gsc:setup-vercel": "node scripts/setup-gsc-vercel.mjs",
-    "stripe:verify": "node scripts/verify-stripe-subscriptions.mjs"
+    "stripe:verify": "node scripts/verify-stripe-subscriptions.mjs",
+    "supabase:coach-patch": "node scripts/apply-coach-patch.mjs",
+    "revert:fifa-promo": "node scripts/revert-fifa-promo.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",

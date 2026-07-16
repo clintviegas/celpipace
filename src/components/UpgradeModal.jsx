@@ -1,21 +1,33 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Lock, Sparkles, Check, X, Flame } from 'lucide-react'
+import { Lock, Sparkles, Check, X, Flame, Zap } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { BRAND_NAME, PRODUCT_STATS } from '../data/constants'
+import {
+  BRAND_NAME,
+  FREE_AI_SPEAKING_EVALS,
+  FREE_AI_WRITING_EVALS,
+  FREE_COACH_MESSAGES_WEEKLY,
+  FREE_TIER_SUMMARY,
+  PRODUCT_STATS,
+} from '../data/constants'
+import { PREMIUM_FEATURES, formatPlanPrice, getBillingPlan } from '../data/paymentPlans'
 import { useAuth } from '../context/AuthContext'
 import { daysUntil } from '../lib/studyPlan'
+import { buildUpgradePaymentUrl } from '../lib/paymentDeepLink'
 
 /* ─────────────────────────────────────────────────────────────
-   UpgradeModal — elegant paywall prompt
-   Shown inline when a user clicks a locked set
+   UpgradeModal — paywall prompt for set locks and usage limits
 ───────────────────────────────────────────────────────────── */
-export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 'Practice' }) {
+export default function UpgradeModal({
+  open,
+  onClose,
+  setNumber,
+  sectionLabel = 'Practice',
+  reason = 'set_lock',
+  aiSection,
+}) {
   const navigate = useNavigate()
   const { profile } = useAuth()
 
-  // Exam-date urgency: if the user told us their test date and it's coming up,
-  // turn the generic paywall into a deadline-aware nudge. Only fire inside a
-  // 60-day window so it feels real rather than nagging.
   const examDate = profile?.exam_date || null
   const daysLeft = examDate ? daysUntil(examDate) : null
   const showUrgency = daysLeft != null && daysLeft >= 0 && daysLeft <= 60
@@ -24,6 +36,27 @@ export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 
     : daysLeft === 1
       ? 'Your test is tomorrow — make every set count.'
       : `Your test is in ${daysLeft} days — make every practice set count.`
+
+  const monthlyPlan = getBillingPlan('monthly')
+  const isAiLimit = reason === 'ai_limit'
+  const isCoachLimit = reason === 'coach_limit'
+  const sectionName = aiSection === 'speaking' ? 'Speaking' : aiSection === 'writing' ? 'Writing' : sectionLabel
+
+  const title = isCoachLimit
+    ? 'Weekly coach limit reached'
+    : isAiLimit
+      ? `Free ${sectionName} AI scores used up`
+      : setNumber
+        ? `Set ${setNumber} is locked`
+        : 'This content is locked'
+
+  const subtitle = isCoachLimit
+    ? `You've used your ${FREE_COACH_MESSAGES_WEEKLY} free coach messages this week. Upgrade for unlimited coaching and every practice set.`
+    : isAiLimit
+      ? `You've used your ${aiSection === 'speaking' ? FREE_AI_SPEAKING_EVALS : FREE_AI_WRITING_EVALS} free ${sectionName.toLowerCase()} AI evaluations. Upgrade for unlimited real-time scoring.`
+      : `You're on the free plan. Unlock every ${sectionLabel.toLowerCase()} set, all ${PRODUCT_STATS.mockExams} mock exams, and unlimited scoring with ${BRAND_NAME} Premium.`
+
+  const checkoutUrl = buildUpgradePaymentUrl(profile, { reason })
 
   return (
     <AnimatePresence>
@@ -50,13 +83,13 @@ export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 
             <div className="upg-icon-wrap">
               <div className="upg-icon-halo" />
               <div className="upg-icon-circle">
-                <Lock size={26} strokeWidth={2.5} />
+                {isAiLimit || isCoachLimit ? <Zap size={26} strokeWidth={2.5} /> : <Lock size={26} strokeWidth={2.5} />}
               </div>
             </div>
 
             <div className="upg-eyebrow">
               <Sparkles size={14} />
-              Premium Content
+              {isAiLimit || isCoachLimit ? 'Upgrade to keep going' : 'Premium Content'}
             </div>
 
             {showUrgency && (
@@ -75,23 +108,27 @@ export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 
               </div>
             )}
 
-            <h2 className="upg-title">
-              {setNumber ? `Set ${setNumber} is locked` : 'This content is locked'}
-            </h2>
-            <p className="upg-sub">
-              You&rsquo;re on the free plan. Unlock every {sectionLabel.toLowerCase()} set, all 8 mock exams,
-              and unlimited real-time scoring with {BRAND_NAME} Premium.
-            </p>
+            <h2 className="upg-title">{title}</h2>
+            <p className="upg-sub">{subtitle}</p>
+
+            {(isAiLimit || isCoachLimit) && (
+              <p className="upg-sub" style={{ fontSize: 13, marginTop: -8, opacity: 0.85 }}>
+                Free includes: {FREE_TIER_SUMMARY}
+              </p>
+            )}
 
             <ul className="upg-perks">
-              <li><Check size={16} /> Every set across Listening, Reading, Writing & Speaking</li>
-              <li><Check size={16} /> All {PRODUCT_STATS.mockExams} full-length mock exams</li>
-              <li><Check size={16} /> Unlimited real-time scoring &amp; detailed feedback</li>
-              <li><Check size={16} /> Progress tracker &amp; model CLB responses</li>
+              {PREMIUM_FEATURES.slice(0, 4).map(f => (
+                <li key={f}><Check size={16} /> {f}</li>
+              ))}
+              <li><Check size={16} /> From {formatPlanPrice(monthlyPlan.price)}/mo — cancel any time</li>
             </ul>
 
             <div className="upg-actions">
-              <button className="upg-btn-primary" onClick={() => { onClose?.(); navigate('/pricing') }}>
+              <button
+                className="upg-btn-primary"
+                onClick={() => { onClose?.(); navigate(checkoutUrl) }}
+              >
                 Unlock Premium →
               </button>
               <button className="upg-btn-ghost" onClick={onClose}>
@@ -100,7 +137,9 @@ export default function UpgradeModal({ open, onClose, setNumber, sectionLabel = 
             </div>
 
             <div className="upg-footer">
-              Have a coupon? Redeem it on the pricing page.
+              {(isAiLimit || isCoachLimit)
+                ? 'CELPIP25 applies at checkout for first-time subscribers.'
+                : 'Have a coupon? Enter it on the checkout page.'}
             </div>
           </motion.div>
         </motion.div>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Send, Sparkles } from 'lucide-react'
+import UpgradeModal from '../components/UpgradeModal'
 import SEO from '../components/SEO'
 import { useAuth } from '../context/AuthContext'
 import { useProgress } from '../hooks/useProgress'
@@ -63,6 +64,7 @@ export default function CoachPage() {
   const [draft, setDraft] = useState('')
   const [busy, setBusy] = useState(false)
   const [chatError, setChatError] = useState('')
+  const [coachLimitOpen, setCoachLimitOpen] = useState(false)
   const [planConfig, setPlanConfig] = useState(null)
   const messagesRef = useRef(null)
 
@@ -116,7 +118,7 @@ export default function CoachPage() {
     const content = text.trim()
     if (!content || busy || !user) return
     if (!isPremium && usage && usage.remaining === 0) {
-      setChatError('Weekly free coach limit reached. Upgrade for unlimited coaching.')
+      setCoachLimitOpen(true)
       return
     }
 
@@ -129,7 +131,7 @@ export default function CoachPage() {
     try {
       const data = await sendCoachMessage(next.slice(-10))
       if (data.limitReached) {
-        setChatError(data.message)
+        setCoachLimitOpen(true)
         setUsage(data.usage)
         return
       }
@@ -332,6 +334,13 @@ export default function CoachPage() {
         </div>
         </>
       )}
+
+      <UpgradeModal
+        open={coachLimitOpen}
+        onClose={() => setCoachLimitOpen(false)}
+        reason="coach_limit"
+        sectionLabel="Coach"
+      />
     </div>
   )
 }

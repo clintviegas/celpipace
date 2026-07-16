@@ -135,7 +135,7 @@ GRANT EXECUTE ON FUNCTION match_essay_exemplars(vector, TEXT, TEXT, INT, NUMERIC
 -- Aggregates the user's recent scored submissions into a JSON map of
 -- {dimension -> {avg, count, trend}}. Used for personalised prompt injection
 -- and study recommendations.
-CREATE OR REPLACE FUNCTION get_user_weakness_profile(
+CREATE OR REPLACE FUNCTION public.get_user_weakness_profile(
   p_user_id UUID,
   p_section TEXT DEFAULT NULL,
   p_window  INT  DEFAULT 10
@@ -193,7 +193,7 @@ BEGIN
   RETURN COALESCE(v_result, '{"sample_count":0,"dimensions":{}}'::jsonb);
 END $$;
 
-GRANT EXECUTE ON FUNCTION get_user_weakness_profile(UUID, TEXT, INT)
+GRANT EXECUTE ON FUNCTION public.get_user_weakness_profile(UUID, TEXT, INT)
   TO authenticated, service_role;
 
 -- ── 6. Helper view for admin/analytics dashboards ───────────────────────────

@@ -24,6 +24,14 @@ Do **not** use `/Speaking_fifa/...` for production — that path is not on R2 an
 
 ## Revert to park scene
 
+When the promo ends, run:
+
+```bash
+npm run revert:fifa-promo
+```
+
+Or manually:
+
 1. Restore park PNGs to R2 at `images/S3/1.png` and `images/S4/1.png` (from your local backup or re-export)
 2. Restore JSON:
 
