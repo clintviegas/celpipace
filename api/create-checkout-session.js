@@ -189,9 +189,6 @@ export default async function handler(req, res) {
       subscription_data: {
         metadata: { user_id: userId, email, plan, coupon_code: appliedCouponCode },
         description: `celpipAce Premium — ${plan}`,
-        payment_settings: {
-          save_default_payment_method: 'on_subscription',
-        },
       },
     })
     // Record the checkout intent so the abandoned-checkout recovery job can
