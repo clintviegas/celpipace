@@ -24,7 +24,10 @@
     { "source": "/listening",            "destination": "/celpip-listening-practice",     "permanent": true },
     { "source": "/listening/:path*",     "destination": "/celpip-listening-practice/:path*","permanent": true },
     { "source": "/calculator",           "destination": "/crs-score-calculator",          "permanent": true },
-    { "source": "/tips",                 "destination": "/celpip-resources",              "permanent": true }
+    { "source": "/tips",                 "destination": "/celpip-resources",              "permanent": true },
+    { "source": "/comparison",           "destination": "/celpip-vs-ielts",               "permanent": true },
+    { "source": "/score",                "destination": "/celpip-score-calculator",       "permanent": true },
+    { "source": "/mock",                 "destination": "/celpip-mock-test",            "permanent": true }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }

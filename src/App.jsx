@@ -444,6 +444,9 @@ export function AppInner() {
           <Route path="/scores" element={<ScoresPage />} />
           <Route path="/crs-score-calculator" element={<CRSCalculatorPage />} />
           <Route path="/calculator" element={<Navigate to="/crs-score-calculator" replace />} />
+          <Route path="/comparison" element={<Navigate to="/celpip-vs-ielts" replace />} />
+          <Route path="/score" element={<Navigate to="/celpip-score-calculator" replace />} />
+          <Route path="/mock" element={<Navigate to="/celpip-mock-test" replace />} />
           <Route path="/exam" element={<ExamPage />} />
           <Route path="/mock-test/:examId" element={<RequirePremium reason="Sign in with Google to start or review a mock exam."><MockTestPage /></RequirePremium>} />
 
