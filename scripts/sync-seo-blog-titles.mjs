@@ -11,6 +11,14 @@ import { BLOG_ARTICLES } from '../src/data/blogData.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
+function stripEnvValue(value) {
+  const v = String(value || '').trim()
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+    return v.slice(1, -1)
+  }
+  return v
+}
+
 function loadEnvFile(filePath) {
   if (!existsSync(filePath)) return {}
   return Object.fromEntries(
@@ -19,7 +27,7 @@ function loadEnvFile(filePath) {
       .filter(l => l && !l.startsWith('#') && l.includes('='))
       .map(l => {
         const i = l.indexOf('=')
-        return [l.slice(0, i).trim(), l.slice(i + 1).trim()]
+        return [l.slice(0, i).trim(), stripEnvValue(l.slice(i + 1))]
       }),
   )
 }
