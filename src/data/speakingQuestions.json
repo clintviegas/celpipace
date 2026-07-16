@@ -24,19 +24,19 @@
           "task_number": 3,
           "task_type": "Describing a Scene",
           "prompt": "Describe some things that are happening in the picture below as well as you can. The person with whom you are speaking cannot see the picture.",
-          "image_url": "/images/S3/1.png",
+          "image_url": "/Speaking_fifa/fifa-wc-final.png",
           "prep_time_seconds": 30,
           "speak_time_seconds": 60,
-          "topic": "Public Park"
+          "topic": "FIFA World Cup Final"
         },
         {
           "task_number": 4,
           "task_type": "Making Predictions",
           "prompt": "In this picture, what do you think will most probably happen next?",
-          "image_url": "/images/S4/1.png",
+          "image_url": "/Speaking_fifa/fifa-wc-final.png",
           "prep_time_seconds": 30,
           "speak_time_seconds": 60,
-          "topic": "Park — Predict"
+          "topic": "FIFA World Cup Final — Predict"
         },
         {
           "task_number": 5,
