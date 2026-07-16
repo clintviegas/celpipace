@@ -2,19 +2,57 @@
 // public.blog_posts table. Safe to re-run — uses upsert on slug.
 //
 // Usage: node scripts/seed-blog-posts.mjs
+//
+// Requires VITE_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in .env.local or .env
+// (run `vercel env pull .env.local` once if you don't have a local env file).
 
 import { createClient } from '@supabase/supabase-js'
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { BLOG_ARTICLES } from '../src/data/blogData.js'
 
-const env = Object.fromEntries(
-  readFileSync(new URL('../.env', import.meta.url), 'utf8')
-    .split('\n')
-    .filter(l => l && !l.startsWith('#') && l.includes('='))
-    .map(l => { const i = l.indexOf('='); return [l.slice(0, i).trim(), l.slice(i + 1).trim()] })
-)
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-const supabase = createClient(env.VITE_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+function stripEnvValue(value) {
+  const v = String(value || '').trim()
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+    return v.slice(1, -1)
+  }
+  return v
+}
+
+function loadEnvFile(filePath) {
+  if (!existsSync(filePath)) return {}
+  return Object.fromEntries(
+    readFileSync(filePath, 'utf8')
+      .split('\n')
+      .filter(l => l && !l.startsWith('#') && l.includes('='))
+      .map(l => {
+        const i = l.indexOf('=')
+        return [l.slice(0, i).trim(), stripEnvValue(l.slice(i + 1))]
+      }),
+  )
+}
+
+const env = {
+  ...loadEnvFile(path.join(ROOT, '.env')),
+  ...loadEnvFile(path.join(ROOT, '.env.local')),
+  ...process.env,
+}
+
+const supabaseUrl = env.VITE_SUPABASE_URL
+const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!supabaseUrl || !serviceRoleKey) {
+  console.error(
+    'Missing VITE_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.\n' +
+    'Run: vercel env pull .env.local',
+  )
+  process.exit(1)
+}
+
+const supabase = createClient(supabaseUrl, serviceRoleKey)
 
 const rows = BLOG_ARTICLES.map((a, i) => ({
   slug:             a.slug,

@@ -30,6 +30,30 @@ const INTRO_CTAS = {
     to: '/celpip-practice-test',
     label: 'CELPIP Practice Test →',
   },
+  'celpip-mock-test-online-2026': {
+    text: 'Ready to see your CLB baseline? Take a full-length mock with scoring on all four skills.',
+    links: [
+      { to: '/celpip-mock-test', label: 'CELPIP Mock Test →' },
+      { to: '/exam', label: 'Full Mock Exam →' },
+    ],
+  },
+  'celpip-practice-test-online-2026': {
+    text: 'Start with free timed section drills — then track your CLB progress week by week.',
+    to: '/celpip-practice-test',
+    label: 'CELPIP Practice Test →',
+  },
+  'celpip-speaking-practice-guide-2026': {
+    text: 'Record all 8 speaking tasks with instant CLB feedback — start on the speaking practice hub.',
+    to: '/celpip-speaking-practice',
+    label: 'CELPIP Speaking Practice →',
+  },
+  'what-is-the-celpip-test-2026': {
+    text: 'New to CELPIP? Take a free practice test to find your CLB baseline, then model your CRS target.',
+    links: [
+      { to: '/celpip-practice-test', label: 'CELPIP Practice Test →' },
+      { to: '/celpip-score-calculator', label: 'CELPIP Score Calculator →' },
+    ],
+  },
 }
 
 // Map snake_case DB row -> camelCase shape used throughout the page.

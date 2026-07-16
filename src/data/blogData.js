@@ -2237,4 +2237,291 @@ export const BLOG_ARTICLES = [
       },
     ],
   },
+
+  /* ── 39 ── */
+  {
+    slug: 'celpip-mock-test-online-2026',
+    title: 'CELPIP Mock Test Online (2026): Full-Length Practice With CLB Scoring',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0A7B7B',
+    tagColorLight: '#E0F7F7',
+    readTime: '9 min read',
+    date: 'July 16, 2026',
+    excerpt:
+      'Searching for a CELPIP mock test online? Here is what a real full-length mock includes, how CLB scoring works, free vs paid options, and a 4-week schedule to use mocks before you book your exam.',
+    sections: [
+      {
+        heading: 'What a Real CELPIP Mock Test Includes',
+        body: `A CELPIP mock test is a full-length simulation of the real exam — all four skills (Listening, Reading, Writing, and Speaking) completed in one sitting under timed conditions. It is not a single section drill, a handful of sample questions, or a recycled official preview.\n\nA legitimate online CELPIP mock test should include:\n\n**Listening (47 minutes):** Six parts with audio clips, note-taking time, and answer selection — matching real pacing.\n\n**Reading (55 minutes):** Four parts including correspondence, diagrams, and opinion passages.\n\n**Writing (53 minutes):** Task 1 (email) and Task 2 (survey response) with word-count expectations.\n\n**Speaking (15–20 minutes):** All eight tasks with prep time and recording — the section most candidates skip in "mock" practice.\n\nIf a platform only offers one or two sections, call it section practice — not a mock test. The value of a mock is experiencing fatigue, time pressure, and skill-switching exactly as you will on test day.`,
+      },
+      {
+        heading: 'Mock Test vs Section Drills: When to Use Each',
+        body: `Section drills and mock tests serve different purposes in your study plan. Confusing the two is one of the most common preparation mistakes.\n\n**Section drills** are best when you are building or fixing a single skill. If your Writing is stuck at CLB 7, daily timed Writing tasks with instant feedback will move the needle faster than full mocks.\n\n**Mock tests** are best when you need to answer: "Can I hit my target CLB under real exam conditions?" They reveal timing breakdowns, stamina issues, and whether one weak section drags down an otherwise strong performance.\n\nA practical rule: spend the first 3–4 weeks on section drills, then introduce one full mock per week in the final month before your booking. For a structured baseline-to-mock progression, pair this guide with the CELPIP 8-week study plan.`,
+      },
+      {
+        heading: 'How CLB Scoring Works on Online Mock Tests',
+        body: `CELPIP scores map directly to Canadian Language Benchmarks (CLB) levels 4–12. On a quality online mock, you should receive a CLB estimate per skill — not just a percentage or raw point total.\n\n**Listening and Reading** are typically auto-scored against answer keys. Mock platforms that show only "12/15 correct" without a CLB conversion are less useful — you need to know whether 12/15 maps to CLB 8 or CLB 9 for your target draw.\n\n**Writing and Speaking** require rubric-based scoring across Content, Vocabulary, Readability, and Task Fulfillment. Human examiners do this on test day; the best online mocks use AI scoring calibrated to CLB descriptors so you get feedback within minutes, not days.\n\nTreat mock CLB scores as directional, not guaranteed. A mock CLB 9 in Writing does not promise CLB 9 on test day — but three consecutive mock CLB 9s across all four skills is a strong signal you are ready to book.`,
+      },
+      {
+        heading: 'Free vs Paid CELPIP Mock Tests Online',
+        body: `The CELPIP mock test landscape online breaks into three tiers:`,
+        list: [
+          'Official Paragon sample — one short preview test, useful for format orientation but not a full mock',
+          'Free section samples on practice platforms — enough for baseline diagnostics, not enough for mock-level volume',
+          'Paid full mock libraries — multiple timed exams with CLB scoring, especially on Writing and Speaking',
+        ],
+        body2: `Free resources are genuinely useful for your first exposure to format and pacing. They are not sufficient if you are targeting CLB 9 for Express Entry and need 4–6 full mocks before booking.\n\nFor a detailed breakdown of what is actually free vs paywalled online, read Free CELPIP Practice Tests: What Is Actually Free Online (and What Is Not). The cost of one retake ($280 CAD) almost always exceeds the cost of a month of paid mock access — making paid mocks the higher-ROI choice for immigration timelines.`,
+      },
+      {
+        heading: '4-Week CELPIP Mock Test Study Schedule',
+        body: `If your exam is four weeks away, here is a mock-focused schedule that balances section repair with full-exam simulation:\n\n**Week 1 — Baseline mock + diagnosis:** Take one full timed mock on day 1. Record CLB per skill. Spend the rest of the week on section drills targeting your two weakest skills.\n\n**Week 2 — Section depth + mini-mock:** Continue daily drills on weak skills. On day 7, run a "half mock" — your two weakest sections back-to-back under timed conditions.\n\n**Week 3 — Full mock #2:** Take a complete mock. Compare CLB scores to week 1. If any skill improved by 1+ CLB, maintain that skill with lighter maintenance practice. If a skill did not move, increase drill volume on that skill only.\n\n**Week 4 — Full mock #3 + booking decision:** Take a final mock 5–7 days before your exam date. If all four skills meet your target CLB consistently, proceed. If one skill is still 1 CLB short, consider postponing — retaking without improvement costs more than extending prep by two weeks.`,
+      },
+      {
+        heading: 'Common Mock Test Mistakes That Waste Your Time',
+        body: `Even candidates who take mocks regularly often practice in ways that do not translate to test-day scores:`,
+        list: [
+          'Practising untimed — removes the primary variable the CELPIP measures',
+          'Skipping Speaking — the hardest section to improvise on test day; always record all eight tasks',
+          'Pausing between sections — real fatigue hits after 2+ hours; mocks must be continuous',
+          'Ignoring sub-scores — a CLB 7 in Writing with low Task Fulfillment needs different fixes than low Vocabulary',
+          'Taking only one mock — a single data point cannot show whether improvement is real or luck',
+        ],
+        body2: `Another frequent error is booking the exam immediately after one strong mock. Wait for consistency — two or three mocks at target CLB, taken on different days, before you commit to the $280 exam fee.`,
+      },
+      {
+        heading: 'How to Use Mock Scores Before Booking Your Exam',
+        body: `Your mock scores should drive a clear go/no-go booking decision, not just general encouragement.\n\n**Green light (book now):** Three mocks within 2 weeks, all four skills at or above target CLB, with no skill swinging more than 1 CLB between attempts.\n\n**Yellow light (2 more weeks of prep):** Two skills at target, one skill 1 CLB below, one skill at target or above. Focus drills on the weak skill; retest in 14 days.\n\n**Red light (do not book yet):** Any skill 2+ CLB below target, or scores swinging wildly between mocks. This indicates either insufficient volume or a fundamental skill gap — extend your timeline and follow the how to practice for CELPIP method before rebooking.\n\nOnce you are green-lit, confirm your test centre and date using the how to book CELPIP test 2026 guide — seats fill quickly in major cities.`,
+      },
+      {
+        heading: 'Start Your First CELPIP Mock Test Today',
+        body: `The fastest way to stop guessing about your CLB level is to take one full timed mock this week. Whether you use a free section sample to start or jump straight into a full mock with instant Writing and Speaking scoring, the diagnostic value is immediate.\n\nCELPIPACE offers full-length CELPIP mock tests online with CLB scoring across all four skills — including AI feedback on Writing and Speaking that mirrors the official rubric dimensions. Start with the CELPIP mock test hub for format-matched practice, then move to the full exam simulator when you are ready for a complete timed run.\n\nPair your mock results with the CELPIP practice test online guide to build the section drill routine that closes any gaps your first mock reveals.`,
+      },
+    ],
+  },
+
+  /* ── 40 ── */
+  {
+    slug: 'celpip-practice-test-online-2026',
+    title: 'CELPIP Practice Test Online (2026): Free Drills, Timed Sections & CLB Feedback',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0F7490',
+    tagColorLight: '#E0F7FA',
+    readTime: '9 min read',
+    date: 'July 16, 2026',
+    excerpt:
+      'Looking for a CELPIP practice test online? Compare free section drills vs timed full tests, see how CLB feedback works per skill, and build a weekly routine that prepares you for mock exams.',
+    sections: [
+      {
+        heading: 'What "CELPIP Practice Test Online" Actually Means',
+        body: `When candidates search for a CELPIP practice test online, they usually want one of three things: a quick free sample to see the format, a timed section drill to train one skill, or a full mock exam to simulate test day. These are not interchangeable — and platforms that blur the labels waste your study time.\n\n**Practice test** (in the strict sense) = timed questions modelled on real CELPIP item types, with scoring that maps to CLB levels.\n\n**Section drill** = focused practice on one skill (e.g., Listening Part 3 only) — faster, more repeatable, better for skill repair.\n\n**Mock test** = all four skills in one continuous sitting — best for readiness checks before booking.\n\nThis guide covers all three levels so you can build a practice routine that actually moves your CLB score. For the free-vs-paid landscape specifically, see the companion guide Free CELPIP Practice Tests: What Is Actually Free Online (and What Is Not).`,
+      },
+      {
+        heading: 'Section-by-Section Online Practice Breakdown',
+        body: `Each CELPIP skill has distinct item types. Effective online practice mirrors those types exactly — not generic English exercises.`,
+        list: [
+          'Listening (6 parts, ~47 min) — problem-solving dialogues, daily conversations, information broadcasts, news, and discussion panels',
+          'Reading (4 parts, ~55 min) — correspondence, diagram/application tasks, reading for information, and opinion-based passages',
+          'Writing (2 tasks, ~53 min) — Task 1 email (formal/semi-formal) and Task 2 survey response (opinion with reasons)',
+          'Speaking (8 tasks, ~15–20 min) — advice, personal experience, describing scenes, persuasion, and expressing opinions',
+        ],
+        body2: `The highest-ROI practice strategy is to identify your weakest section from a baseline test, then run daily timed drills in that section for 2–3 weeks before broadening back to all four skills. Candidates who spread practice evenly across skills when only Writing is weak routinely plateau at CLB 7.`,
+      },
+      {
+        heading: 'Timed vs Untimed Practice: When Each Matters',
+        body: `Untimed practice has a place — but only in the first 3–5 sessions per skill, when you are learning item types and rubric expectations. Once you understand the format, timed practice must become the default.\n\nCELPIP is a performance test. Listening and Reading scores are as much about pace management as comprehension. Writing scores depend on completing both tasks within 53 minutes with coherent structure. Speaking scores require delivering complete responses within strict prep-and-record windows.\n\nA useful split: **untimed** for learning rubric dimensions and studying sample answers; **timed** for every session after week 1. If you only practise untimed, test-day time pressure will cost you 1–2 CLB levels in at least one skill.`,
+      },
+      {
+        heading: 'Why Instant CLB Feedback Changes Your Practice',
+        body: `Practising without feedback is repetition, not improvement. The difference between a CLB 7 and CLB 9 writer is rarely grammar knowledge — it is task fulfillment, register, and structure under time pressure. You cannot self-diagnose those gaps reliably.\n\nQuality online CELPIP practice tests provide instant CLB-level feedback, especially on Writing and Speaking:\n\n**Writing feedback** should address Content, Vocabulary, Readability, and Task Fulfillment — the same dimensions official examiners use.\n\n**Speaking feedback** should flag fluency gaps, incomplete responses, and pronunciation clarity — not just a generic score.\n\n**Listening/Reading feedback** should show which question types you miss repeatedly (inference, detail, attitude) so you can target strategy fixes rather than re-listening randomly.\n\nCandidates who receive instant feedback after every timed session improve 1 CLB level faster than those who batch-review once a week.`,
+      },
+      {
+        heading: 'Building a Weekly CELPIP Practice Test Routine',
+        body: `Here is a sustainable 7-day practice schedule for a candidate targeting CLB 9, assuming 45–60 minutes of daily study:\n\n**Monday — Listening timed drill:** One full Listening section or two parts under time. Review wrong answers by question type.\n\n**Tuesday — Reading timed drill:** One full Reading section. Note whether errors come from vocabulary, inference, or time management.\n\n**Wednesday — Writing timed drill:** Both Task 1 and Task 2 under 53-minute conditions. Read AI/human feedback immediately.\n\n**Thursday — Speaking timed drill:** All eight tasks with recording. Listen back to Tasks 6–8 (opinion tasks) specifically.\n\n**Friday — Weak-skill repeat:** Second session on whichever skill scored lowest Mon–Thu.\n\n**Saturday — Half mock:** Two weakest skills back-to-back under full timed conditions.\n\n**Sunday — Review only:** Re-read feedback from the week, note recurring errors, plan next week's focus.\n\nFor a broader study methodology that wraps around this schedule, see how to practice for CELPIP.`,
+      },
+      {
+        heading: 'Free Online Practice: What You Can Realistically Achieve',
+        body: `Free CELPIP practice tests online are excellent for orientation and baseline scoring. Most free tiers include a limited number of section items — enough to learn format and identify weak skills, but not enough volume to reach CLB 9 consistently.\n\nRealistic free-tier outcomes:\n- **Week 1:** Understand all four section formats; get a rough CLB baseline per skill\n- **Weeks 2–3:** Build familiarity with question types; improve 0.5–1 CLB in your most-practised skill\n- **Week 4+:** Plateau without new question sets, Writing/Speaking feedback, or full mock access\n\nIf your immigration timeline is tight, plan to upgrade to paid practice by week 3. The cost is typically less than one exam retake and unlocks the volume and feedback needed to close CLB gaps reliably.`,
+      },
+      {
+        heading: 'When to Graduate from Practice Tests to Full Mocks',
+        body: `Section practice tests and full mock exams are sequential steps, not alternatives. Move to mocks when:\n\n1. You have completed at least 10 timed sessions per skill\n2. Your section drill scores are within 1 CLB of your target in at least three of four skills\n3. You can complete each section within the official time limit without leaving tasks blank\n4. Writing and Speaking feedback shows no critical Task Fulfillment failures\n\nAt that point, shift to one full mock per week while maintaining lighter section maintenance on your strongest skills. Read the CELPIP mock test online 2026 guide for the mock-specific schedule and booking decision framework.\n\nIf you are starting from zero, take a free section sample today on the CELPIP practice test hub — then build outward using the weekly routine above.`,
+      },
+    ],
+  },
+
+  /* ── 41 ── */
+  {
+    slug: 'celpip-speaking-practice-guide-2026',
+    title: 'CELPIP Speaking Practice (2026): Train All 8 Tasks to CLB 9',
+    category: 'speaking',
+    tag: 'Speaking',
+    tagColor: '#7C3AED',
+    tagColorLight: '#EDE9FE',
+    readTime: '9 min read',
+    date: 'July 16, 2026',
+    excerpt:
+      'CELPIP Speaking practice for all 8 tasks: format overview, task-by-task training tips, fluency vs accuracy, recording workflows, and a 14-day sprint plan to reach CLB 9.',
+    sections: [
+      {
+        heading: 'CELPIP Speaking Format: What You Are Practising For',
+        body: `CELPIP Speaking is the shortest section on paper — 15 to 20 minutes — but it carries equal weight with Listening, Reading, and Writing in your final CLB profile. You complete eight recorded tasks on a computer, speaking into a microphone with no human examiner present.\n\nEach task gives you 30–90 seconds of preparation time, then 60–90 seconds to respond. Tasks progress from personal/advice scenarios (Tasks 1–4) to descriptive and argumentative scenarios (Tasks 5–8). The format is consistent across every test administration — which means targeted practice on each task type produces predictable score improvements.\n\nFor a task-by-task breakdown of prompts and timing, start with the CELPIP Speaking Tasks 1 to 8 guide. This article focuses on how to practise those tasks effectively.`,
+      },
+      {
+        heading: 'Tasks 1–4: Giving Advice and Personal Experience',
+        body: `Tasks 1–4 test everyday communication — advising a friend, talking about a personal experience, describing a scene, and making predictions. These feel easy because the topics are familiar, but they are where many candidates lose CLB points through under-developed responses.\n\n**Task 1 (Giving advice):** Structure as situation → advice → reason. Do not list three tips without explaining why. Aim for 75–85 seconds of continuous speech.\n\n**Task 2 (Personal experience):** Use past tense narrative with a clear beginning, middle, and reflection. "I learned that…" endings score higher than abrupt stops.\n\n**Task 3 (Describing a scene):** Cover foreground, background, people, and activity systematically — not random observations. Practise with photos and timed 60-second descriptions.\n\n**Task 4 (Making predictions):** State 2–3 predictions with supporting reasons. Use future tense consistently and avoid hedging every sentence with "maybe."\n\nCommon CLB 7 trap: stopping at 40 seconds because you ran out of ideas. Practice extending responses with examples and consequences until you consistently fill the time window.`,
+      },
+      {
+        heading: 'Tasks 5–8: Persuasion, Opinions, and Difficult Choices',
+        body: `Tasks 5–8 separate CLB 8–9 speakers from CLB 6–7 speakers. These require structured argument, opinion defence, and comparison — skills that do not come from casual conversation practice.\n\n**Task 5 (Comparing and persuading):** Pick one option and defend it with two clear reasons. Acknowledge the other option briefly, then redirect. Do not present both sides equally — you are persuading, not analysing.\n\n**Task 6 (Dealing with a difficult situation):** Describe the problem, your action, and the outcome. Stay in first person and show decision-making — examiners reward resolution, not just complaint.\n\n**Task 7 (Expressing opinions):** State your position in the first 10 seconds. Support with two reasons and a concrete example. This is the highest-stakes opinion task — see CELPIP speaking common mistakes for the "sitting on the fence" error that caps scores at CLB 7.\n\n**Task 8 (Describing an unusual situation):** Use descriptive vocabulary and explain why the situation is unusual. Narrative clarity matters more than sophisticated vocabulary here.\n\nFor annotated sample responses at CLB 8–9 level, review CELPIP speaking sample answers alongside your own recordings.`,
+      },
+      {
+        heading: 'Fluency vs Accuracy: How to Balance Both for CLB 9',
+        body: `CELPIP Speaking rewards fluent, complete responses more than perfect grammar with long pauses. This does not mean grammar is irrelevant — it means your practice priority should be continuous, well-structured speech within the time limit.\n\n**Fluency priorities:** Eliminate 3+ second mid-sentence freezes. Use connectors (first, however, as a result, in my experience). Maintain pace even if you self-correct one error — do not restart the entire sentence.\n\n**Accuracy priorities:** Subject-verb agreement in fast speech. Correct tense throughout narratives (Tasks 2, 6, 8). Pronunciation clarity on word endings — dropped final consonants reduce clarity scores.\n\nThe CELPIP speaking fluency tips guide covers micro-techniques (chunking, shadowing, pace control). In practice sessions, record one task focusing on fluency (ignore minor grammar) and the next task focusing on accuracy (slow down slightly, prioritise clean sentences). Alternating builds both dimensions without over-correcting mid-response.`,
+      },
+      {
+        heading: 'The Recording and Self-Review Method',
+        body: `Speaking is the one CELPIP skill you cannot improve by reading about it. You must record, listen back, and revise — daily during intensive prep.\n\n**Daily 30-minute self-review loop:**\n1. Complete one Speaking task under real prep + record timing\n2. Listen immediately — note where you stopped early, repeated words, or lost structure\n3. Re-record the same task with one specific fix (e.g., "fill the full 90 seconds" or "state opinion in first 10 seconds")\n4. Compare both recordings — the improvement should be audible within 3–4 days of repetition\n\n**Weekly benchmark:** Every Sunday, run all eight tasks in sequence. Score yourself against CLB descriptors: Did I address the prompt? Did I speak continuously? Was my opinion clear on Tasks 5 and 7? Save weekly recordings to track progress — most candidates who reach CLB 9 can hear the difference between week 1 and week 4 recordings.`,
+      },
+      {
+        heading: 'AI and Instant Feedback on Speaking Practice',
+        body: `Self-review catches obvious gaps — stopping early, mumbling, off-topic responses. It does not reliably catch CLB-level issues in pronunciation clarity, vocabulary range, or task fulfillment depth.\n\nOnline CELPIP speaking practice with instant AI feedback adds a second review layer: rubric-scored responses across the same dimensions human examiners use. This is especially valuable for Tasks 5–7, where candidates consistently overestimate their persuasion and opinion clarity.\n\nUse AI feedback after your self-review, not instead of it. The best workflow: record → self-assess → submit for CLB-scored feedback → re-record with one targeted fix. Candidates who follow this loop for 14 consecutive days typically gain 1 CLB level in Speaking — more than most candidates gain from a month of untimed conversation practice.`,
+      },
+      {
+        heading: '14-Day CELPIP Speaking Practice Sprint',
+        body: `If Speaking is your bottleneck skill, this focused two-week plan can move you 1–2 CLB levels when run daily:\n\n**Days 1–2:** Tasks 1–4 only. One round each day, recorded. Focus on filling the full response window.\n\n**Days 3–4:** Tasks 5–8 only. Focus on opinion clarity (Task 7) and persuasion structure (Task 5).\n\n**Days 5–6:** Full 8-task run under timed conditions. Identify the two lowest-scoring tasks from feedback.\n\n**Days 7–8:** Repeat only the two weakest tasks — 3 repetitions per task per day with re-recording.\n\n**Days 9–10:** Fluency sprint — all tasks at slightly faster pace using connectors from the fluency tips guide.\n\n**Days 11–12:** Accuracy sprint — slow prep, deliberate grammar, clean pronunciation on word endings.\n\n**Days 13–14:** Two full 8-task mock speaking sessions on consecutive days. If both runs hit target CLB, integrate speaking into your full four-skill mock schedule.`,
+      },
+      {
+        heading: 'Put Your Speaking Practice on a Real Schedule',
+        body: `Speaking is the skill most candidates postpone — it feels awkward to record yourself, and it is easy to convince yourself that reading sample answers is enough. It is not. Every CLB 9 candidate who improved Speaking did it by recording hundreds of timed responses, not by reading dozens of tips.\n\nStart today with one task on the CELPIP speaking practice hub — record Task 7 (opinion) first, since it is the most common CLB ceiling. Compare your response to the sample answers guide, then re-record with a clear position stated in the opening sentence.\n\nWhen Speaking is no longer your weakest skill, shift to full mock tests using the CELPIP mock test online guide to confirm all four skills together before you book your exam.`,
+      },
+    ],
+  },
+
+  /* ── 42 ── */
+  {
+    slug: 'celpip-general-vs-celpip-ls',
+    title: 'CELPIP General vs CELPIP LS: Which Test Do You Need for PR & Citizenship?',
+    category: 'immigration',
+    tag: 'Immigration',
+    tagColor: '#B45309',
+    tagColorLight: '#FEF3C7',
+    readTime: '9 min read',
+    date: 'July 16, 2026',
+    excerpt:
+      'CELPIP General vs CELPIP LS: which test for Express Entry, PR, citizenship, or nursing? Compare format, accepted uses, CLB requirements, and a simple decision guide for 2026 applicants.',
+    sections: [
+      {
+        heading: 'What CELPIP General and CELPIP LS Each Measure',
+        body: `CELPIP (Canadian English Language Proficiency Index Program) comes in two versions — and choosing the wrong one can invalidate your application or force an unnecessary retake.\n\n**CELPIP-General** tests all four language skills: Listening, Reading, Writing, and Speaking. It takes approximately 3 hours and is the standard test for immigration, professional licensing, and most employer requirements.\n\n**CELPIP-General LS** tests only Listening and Speaking. It takes approximately 1 hour and is designed for specific programs that do not require Reading and Writing proof — most notably Canadian citizenship applications.\n\nBoth tests use the same CLB scale (levels 4–12) for the skills they measure. A CLB 9 in Listening on CELPIP-General is equivalent to CLB 9 in Listening on CELPIP-General LS. But the tests are not interchangeable — submitting LS scores where General is required will result in application rejection.`,
+      },
+      {
+        heading: 'Who Accepts CELPIP General vs CELPIP LS',
+        body: `The acceptance rules are strict and program-specific:`,
+        list: [
+          'Express Entry (FSW, CEC, FST) — CELPIP-General only, all four skills required',
+          'Provincial Nominee Programs (PNPs) — CELPIP-General only in virtually all cases',
+          'Canadian citizenship — CELPIP-General LS accepted (Listening + Speaking only, CLB 4 minimum)',
+          'Nursing registration (NNAS, provincial colleges) — CELPIP-General only, all four skills',
+          'IRCC spousal sponsorship — CELPIP-General (all four skills for principal applicant language points)',
+          'Employers and universities — varies; most require CELPIP-General',
+        ],
+        body2: `When in doubt, default to CELPIP-General. It satisfies the broadest set of requirements. CELPIP-General LS is only the right choice when your specific program explicitly accepts it and you do not need Reading/Writing scores — citizenship is the primary example.`,
+      },
+      {
+        heading: 'Express Entry and PR: Why General Is Mandatory',
+        body: `IRCC requires all four language skills for Express Entry Comprehensive Ranking System (CRS) points. There is no pathway to submit CELPIP-General LS scores for Federal Skilled Worker, Canadian Experience Class, or Federal Skilled Trades programs.\n\nYour Express Entry language score is built from CLB levels across Listening, Reading, Writing, and Speaking. Each skill contributes independently to your CRS total — a CLB 9 in Listening does not compensate for CLB 7 in Writing. You must take CELPIP-General and score competitively in all four skills.\n\nFor the CLB targets that matter in 2026 draws, read CELPIP score for Express Entry and PR. Use the CELPIP score calculator to model how each CLB level per skill translates to CRS points before you book either test version.`,
+      },
+      {
+        heading: 'Citizenship: When CELPIP LS Is the Right Choice',
+        body: `Canadian citizenship language requirements differ from Express Entry. IRCC requires applicants aged 18–54 to demonstrate adequate knowledge of English or French — currently defined as CLB 4 in Speaking and Listening.\n\nCELPIP-General LS satisfies this requirement directly. You do not need to sit the full four-skill General test for citizenship if you already hold PR status and only need to prove Listening and Speaking at CLB 4.\n\n**Practical note:** CLB 4 is a low bar — most PR holders who achieved CLB 7+ for immigration will pass citizenship language requirements comfortably. If you are a PR holder preparing only for citizenship (not a new PR application), CELPIP-General LS saves time and money.\n\nFor the full citizenship language rules and age exemptions, see CELPIP score requirements for citizenship 2026.`,
+      },
+      {
+        heading: 'Cost, Format, and Scoring Differences',
+        body: `Understanding the practical differences helps you plan your test day and budget:`,
+        list: [
+          'CELPIP-General — ~3 hours, all four skills, fee approximately $280 CAD (varies by test centre)',
+          'CELPIP-General LS — ~1 hour, Listening + Speaking only, lower fee than General',
+          'Both are computer-delivered at approved test centres across Canada and internationally',
+          'Both use CLB scoring — results typically available within 4–5 business days online',
+          'Score validity for IRCC — 2 years from test date for both versions',
+          'Retake policy — no mandatory waiting period for either version',
+        ],
+        body2: `Because CELPIP-General covers all four skills, preparation time is longer and more expensive in study hours. Candidates who need General for Express Entry should budget 6–12 weeks of structured practice across all skills — not just the two skills covered by LS.`,
+      },
+      {
+        heading: 'Decision Guide: Which Test Should You Book?',
+        body: `Use this decision flow before you register at celpip.ca:\n\n**Book CELPIP-General if:**\n- You are applying through Express Entry or any PNP\n- You need CRS language points for PR\n- You are a nurse or regulated professional needing all four skills\n- You are unsure which test you need (General is the safe default)\n\n**Book CELPIP-General LS if:**\n- You are a current PR holder applying only for citizenship\n- Your program explicitly states Listening + Speaking proof is sufficient\n- You do not need Reading or Writing scores for any concurrent application\n\n**Book neither yet if:**\n- You have not confirmed which CLB level your pathway requires — use the CRS score calculator and CELPIP score calculator first\n- You are still deciding between CELPIP and IELTS — read is CELPIP harder than IELTS for a format comparison before committing`,
+      },
+      {
+        heading: 'Prepare for the Right Test Version',
+        body: `Once you know which CELPIP version you need, your preparation should match exactly. General test candidates must practise Writing emails and survey responses, plus Reading across four part types — skills that LS candidates can skip entirely. LS candidates should focus deeply on Listening parts 1–6 and all eight Speaking tasks.\n\nWhichever version you take, start with a baseline practice test to identify weak skills before booking. CELPIPACE offers section practice for all four skills (General) and targeted Listening/Speaking drills — use the CELPIP practice test hub to begin, then model your CRS impact with the CRS score calculator if you are on the Express Entry path.`,
+      },
+    ],
+  },
+
+  /* ── 43 ── */
+  {
+    slug: 'what-is-the-celpip-test-2026',
+    title: 'What Is the CELPIP Test? Format, Scores & Who Should Take It (2026)',
+    category: 'strategy',
+    tag: 'Strategy',
+    tagColor: '#0A7B7B',
+    tagColorLight: '#E0F7F7',
+    readTime: '9 min read',
+    date: 'July 16, 2026',
+    excerpt:
+      'What is the CELPIP test? A complete 2026 beginner guide — four skills, CLB scoring, General vs LS, who needs it for PR or citizenship, and how to start preparing today.',
+    sections: [
+      {
+        heading: 'CELPIP in Plain English',
+        body: `CELPIP stands for the Canadian English Language Proficiency Index Program. It is an English test designed specifically for Canadian immigration, citizenship, and professional contexts — using Canadian accents, spelling, and everyday scenarios rather than academic English.\n\nUnlike IELTS — which offers Academic and General Training versions with a face-to-face Speaking interview — CELPIP is fully computer-delivered. You listen through headphones, type your Writing responses, and speak into a microphone. There is no human examiner in the room.\n\nCELPIP is accepted by Immigration, Refugees and Citizenship Canada (IRCC) for Express Entry, permanent residence, and citizenship applications. It is also accepted by provincial nursing colleges, some employers, and professional regulatory bodies. If you are planning to live, work, or settle in Canada, CELPIP is one of the two primary English tests you will consider (the other being IELTS General Training).`,
+      },
+      {
+        heading: 'The Four Skills: What Each Section Tests',
+        body: `CELPIP-General measures four language skills in a single sitting, each scored independently on the CLB scale:`,
+        list: [
+          'Listening (~47 min, 6 parts) — conversations, news, discussions, and problem-solving dialogues',
+          'Reading (~55 min, 4 parts) — emails, diagrams, informational texts, and opinion passages',
+          'Writing (~53 min, 2 tasks) — writing an email and responding to a survey question with reasons',
+          'Speaking (~15–20 min, 8 tasks) — advice, descriptions, persuasion, and opinion tasks via microphone',
+        ],
+        body2: `Each skill is scored separately. Your "CELPIP score" for immigration is actually four CLB levels — one per skill. There is no single combined score. For a detailed breakdown of every part and task type, read the CELPIP test format complete guide.`,
+      },
+      {
+        heading: 'How CLB Scoring Works',
+        body: `CELPIP results are reported as Canadian Language Benchmark (CLB) levels, ranging from CLB 4 (basic) to CLB 12 (advanced). IRCC and provincial programs set minimum CLB requirements per skill — not an overall average.\n\nKey scoring facts for 2026 applicants:\n\n**Express Entry competitive scores** typically require CLB 9 or higher in all four skills for maximum CRS language points. CLB 7 is the minimum eligibility threshold for Federal Skilled Worker — but rarely competitive in practice.\n\n**Citizenship** requires CLB 4 in Speaking and Listening only — a much lower bar, testable via CELPIP-General LS.\n\n**Nursing and regulated professions** usually require CLB 7–9 depending on the province and college.\n\nYour CELPIP score is valid for 2 years from the test date for IRCC purposes. Use the CELPIP score calculator to convert raw practice scores to CLB levels and model your CRS impact before booking.`,
+      },
+      {
+        heading: 'CELPIP General vs CELPIP LS: Quick Guide',
+        body: `CELPIP comes in two versions. Choosing the wrong one wastes money and delays your application.\n\n**CELPIP-General** = all four skills. Required for Express Entry, PNPs, nursing registration, and most PR pathways.\n\n**CELPIP-General LS** = Listening and Speaking only. Accepted for Canadian citizenship and select programs that do not need Reading/Writing proof.\n\nIf you are applying for permanent residence, you need CELPIP-General — no exceptions. If you are a PR holder applying only for citizenship, CELPIP-General LS is sufficient and shorter.\n\nFor the full decision framework including cost, format, and program-by-program acceptance, read CELPIP General vs CELPIP LS: Which Test Do You Need for PR and Citizenship?`,
+      },
+      {
+        heading: 'Who Needs to Take the CELPIP Test?',
+        body: `CELPIP is not for everyone — but if you fall into one of these groups, it is likely your most strategic English test choice:`,
+        list: [
+          'Express Entry candidates needing CRS language points (CLB 7+ minimum, CLB 9+ competitive)',
+          'Provincial Nominee Program applicants requiring four-skill English proof',
+          'Permanent residents applying for Canadian citizenship (CELPIP LS acceptable)',
+          'Internationally educated nurses seeking registration through NNAS or provincial colleges',
+          'Canadian permanent residents who find computer-based testing less stressful than IELTS interviews',
+          'Candidates who use North American English daily and want a test that reflects Canadian contexts',
+        ],
+        body2: `CELPIP is not typically required for study permits — most universities prefer IELTS Academic or TOEFL. It is also not accepted for UK, US, or Australian visa applications. Its value is concentrated in the Canadian immigration and settlement ecosystem.`,
+      },
+      {
+        heading: 'CELPIP vs IELTS: A Quick 2026 Comparison',
+        body: `Most Canadian immigration candidates choose between CELPIP-General and IELTS General Training. The core differences:\n\n**Format:** CELPIP is fully computer-based with microphone Speaking. IELTS Speaking is a live interview with a human examiner; Listening, Reading, and Writing may be paper or computer depending on test centre.\n\n**Content:** CELPIP uses Canadian English contexts exclusively. IELTS uses international English accents and contexts.\n\n**Scoring:** CELPIP reports CLB levels directly. IELTS reports band scores (1–9) that must be converted to CLB for IRCC purposes.\n\n**Acceptance:** Both are accepted equally by IRCC for Express Entry. Some provincial nursing colleges accept both; some prefer one — check your college's current list.\n\nFor a detailed difficulty and format comparison, read is CELPIP harder than IELTS. The right choice depends on your speaking comfort (microphone vs interview) and which format you score higher on in practice tests.`,
+      },
+      {
+        heading: 'How to Register and What It Costs',
+        body: `CELPIP is administered by Paragon Testing Enterprises at approved test centres in Canada and select international locations. Registration is online at celpip.ca.\n\n**Typical fee:** approximately $280 CAD plus taxes for CELPIP-General (varies by city). CELPIP-General LS is less expensive.\n\n**Results:** available within 4–5 business days after the test, downloadable as a PDF from your Paragon account.\n\n**Retakes:** no mandatory waiting period — you can rebook as soon as seats are available, though 4–6 weeks of targeted practice between attempts is strongly recommended.\n\n**Preparation timeline:** most candidates need 6–12 weeks of structured practice to reach CLB 9 from a CLB 6–7 baseline. Do not book until a practice test confirms you are within 1 CLB of your target in all four skills.\n\nFor step-by-step booking instructions and centre selection tips, see how to book CELPIP test 2026.`,
+      },
+      {
+        heading: 'How to Start Preparing for CELPIP',
+        body: `The most effective CELPIP preparation follows three steps: diagnose, drill, mock.\n\n**Step 1 — Diagnose:** Take a free CELPIP practice test online to get a CLB baseline per skill. Identify your two weakest sections.\n\n**Step 2 — Drill:** Run daily timed section practice on weak skills for 3–4 weeks. Use instant CLB feedback on Writing and Speaking — not just answer keys on Listening and Reading.\n\n**Step 3 — Mock:** Take full-length CELPIP mock tests online in the final month. Book your exam only when two consecutive mocks hit your target CLB in all four skills.\n\nCELPIPACE offers free section drills and paid full mock exams with AI scoring across all four skills. Start on the CELPIP practice test hub today, explore pricing when you are ready for unlimited mock access, and use the CELPIP 8-week study plan to structure your timeline from baseline to test day.`,
+      },
+    ],
+  },
 ]
