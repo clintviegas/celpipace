@@ -10083,6 +10083,11 @@ img { display: block; max-width: 100%; }
   color: var(--red);
   text-decoration: none;
 }
+.blog-art-intro-cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
 .blog-art-intro-cta-link:hover { text-decoration: underline; }
 
 /* Article CTA */

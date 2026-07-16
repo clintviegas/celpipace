@@ -8,8 +8,25 @@
 //   Schedule (Mon 9am) → HTTP GET https://www.celpipace.ca/api/cron?job=gsc-summary
 //   Header: Authorization: Bearer {{CRON_SECRET}}
 //   → Slack: post {{slackMessage}} from JSON body
+//
+// Optional bypass (skip Relay Slack step): set SLACK_WEBHOOK_URL in Vercel.
 
 import { buildGscSummary, isGscConfigured } from './gsc.js'
+
+async function postSlackWebhook(text) {
+  const url = process.env.SLACK_WEBHOOK_URL
+  if (!url) return { posted: false, reason: 'no_webhook' }
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+  if (!res.ok) {
+    const body = await res.text().catch(() => '')
+    throw new Error(`Slack webhook failed (${res.status}): ${body.slice(0, 200)}`)
+  }
+  return { posted: true }
+}
 
 export default async function handler(req, res) {
   const cronSecret = process.env.CRON_SECRET
@@ -30,7 +47,14 @@ export default async function handler(req, res) {
 
   try {
     const summary = await buildGscSummary()
-    return res.status(200).json(summary)
+    let slack = { posted: false }
+    try {
+      slack = await postSlackWebhook(summary.slackMessage)
+    } catch (slackErr) {
+      console.warn('[gsc-summary] slack webhook:', slackErr.message)
+      slack = { posted: false, error: slackErr.message }
+    }
+    return res.status(200).json({ ...summary, slack })
   } catch (err) {
     console.error('[gsc-summary]', err.message)
     return res.status(500).json({

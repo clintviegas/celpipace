@@ -332,6 +332,14 @@ function renderRelatedArticles(article) {
       </section>`
 }
 
+function renderBlogIntroCta(article) {
+  if (article.slug !== 'celpip-score-required-express-entry-pr') return ''
+  return `        <div class="seo-actions" style="margin-top:12px">
+          <a class="seo-primary" href="/celpip-practice-test">Free CELPIP Practice Test</a>
+          <a class="seo-secondary" href="/celpip-score-calculator">CELPIP Score Calculator</a>
+        </div>`
+}
+
 function renderBlogArticle(article) {
   const recs = landingsForBlogCategory(article.category)
   const recsBlock = recs.length
@@ -349,6 +357,7 @@ function renderBlogArticle(article) {
         <p class="seo-section-label">${escapeHtml(article.tag)} · ${escapeHtml(article.readTime)}</p>
         <h1>${escapeHtml(article.title)}</h1>
         <p class="seo-subhead">${escapeHtml(article.excerpt)}</p>
+${renderBlogIntroCta(article)}
         <div class="seo-faq-list">
           ${article.sections.map(section => `<section class="seo-faq-item"><h2>${escapeHtml(section.heading)}</h2><p>${escapeHtml(section.body)}</p>${section.list ? renderList(section.list) : ''}${section.body2 ? `<p>${escapeHtml(section.body2)}</p>` : ''}</section>`).join('\n          ')}
         </div>

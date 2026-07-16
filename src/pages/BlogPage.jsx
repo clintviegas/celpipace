@@ -8,6 +8,13 @@ import { BRAND_NAME } from '../data/constants'
 import { landingsForBlogCategory } from '../data/seoPages'
 
 const INTRO_CTAS = {
+  'celpip-score-required-express-entry-pr': {
+    text: 'Know your target CLB — then check your CRS impact and start practising the skill holding you back.',
+    links: [
+      { to: '/celpip-practice-test', label: 'Free CELPIP Practice Test →' },
+      { to: '/celpip-score-calculator', label: 'CELPIP Score Calculator →' },
+    ],
+  },
   'is-celpip-harder-than-ielts': {
     text: 'Compare formats here, then try a free CELPIP practice test to see your CLB baseline before booking either exam.',
     to: '/celpip-practice-test',
@@ -104,14 +111,22 @@ function ArticleView({ article, onBack, relatedArticles }) {
         </div>
         <h1 className="blog-art-title">{article.title}</h1>
         <p className="blog-art-excerpt">{article.excerpt}</p>
-        {INTRO_CTAS[article.slug] && (
-          <div className="blog-art-intro-cta">
-            <p>{INTRO_CTAS[article.slug].text}</p>
-            <Link to={INTRO_CTAS[article.slug].to} className="blog-art-intro-cta-link">
-              {INTRO_CTAS[article.slug].label}
-            </Link>
-          </div>
-        )}
+        {INTRO_CTAS[article.slug] && (() => {
+          const cta = INTRO_CTAS[article.slug]
+          const links = cta.links || [{ to: cta.to, label: cta.label }]
+          return (
+            <div className="blog-art-intro-cta">
+              <p>{cta.text}</p>
+              <div className="blog-art-intro-cta-links">
+                {links.map(link => (
+                  <Link key={link.to} to={link.to} className="blog-art-intro-cta-link">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )
+        })()}
       </header>
 
       {/* Layout: body + sidebar */}

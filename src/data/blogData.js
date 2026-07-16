@@ -1809,7 +1809,7 @@ export const BLOG_ARTICLES = [
   /* ── paa-4 ── */
   {
     slug: 'celpip-score-required-express-entry-pr',
-    title: 'Minimum CELPIP Score for Express Entry & PR (2026 CLB Guide)',
+    title: 'CELPIP Score for Express Entry & PR (2026): CLB 7 vs CLB 9 + CRS Points',
     category: 'immigration',
     tag: 'Immigration',
     tagColor: '#6B4FAF',
@@ -1817,10 +1817,10 @@ export const BLOG_ARTICLES = [
     readTime: '6 min read',
     date: 'Jun 6, 2026',
     excerpt:
-      'Minimum CELPIP score for Express Entry and Canadian PR in 2026: CLB 7 eligibility vs CLB 9 competitiveness. Exact scores for FSW, CEC, PNP, and how many CRS points each CLB level adds.',
+      'What CELPIP score do you need for PR in 2026? CLB 7 enters the pool; CLB 9 wins ITAs. Exact scores for FSW, CEC, PNP + CRS points table.',
     sections: [
       {
-        heading: 'Minimum CELPIP Score for Express Entry (2026)',
+        heading: 'What CELPIP Score Do You Need for Express Entry? (2026)',
         body: `The minimum CELPIP score for Express Entry eligibility is CELPIP 7 (CLB 7) in all four skills — Listening, Reading, Writing, and Speaking.\n\nHowever, the minimum for eligibility is very different from the score needed to actually receive an Invitation to Apply (ITA). In 2026, most Express Entry draws have cleared at CRS scores above 510 for the Canadian Experience Class — and achieving that CRS score almost always requires CLB 9 language scores.`,
       },
       {
@@ -1855,7 +1855,7 @@ export const BLOG_ARTICLES = [
       },
       {
         heading: 'How to Reach CELPIP 9 for Express Entry',
-        body: `If your current CELPIP score is 7 or 8, improving to 9 is achievable in 4–8 weeks with targeted practice. Identify your weakest skill, practice with timed scored questions, take a full mock exam after 2–3 weeks to verify improvement, and rebook when mock scores consistently show 8.5+.\n\nCELPIPACE offers CLB-targeted practice sets for all four skills and a score calculator that shows exactly how your current CELPIP scores convert to CRS points.`,
+        body: `If your current CELPIP score is 7 or 8, improving to 9 is achievable in 4–8 weeks with targeted practice. Identify your weakest skill, practice with timed scored questions, take a full mock exam after 2–3 weeks to verify improvement, and rebook when mock scores consistently show 8.5+.\n\nStart with a free CELPIP practice test to find your weakest skill, then use the CELPIP score calculator to see how each CLB level changes your CRS total before you rebook.`,
       },
     ],
   },

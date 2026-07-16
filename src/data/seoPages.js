@@ -20,7 +20,7 @@ const BLOG_CATEGORY_TO_LANDINGS = {
   writing:     ['writing', 'practice'],
   speaking:    ['speaking', 'practice'],
   strategy:    ['practice', 'mock'],
-  immigration: ['score', 'comparison'],
+  immigration: ['practice', 'score', 'mock'],
 }
 
 export function landingsForBlogCategory(category) {
