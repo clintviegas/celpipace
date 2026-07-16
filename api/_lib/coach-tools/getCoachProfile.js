@@ -1,3 +1,5 @@
+import { buildCoachProfileFallback } from './buildCoachProfileFallback.js'
+
 export function emptyCoachProfile({ targetClb = 9, rpcError = null } = {}) {
   return {
     targetCLB: targetClb,
@@ -25,7 +27,14 @@ export async function getCoachProfile(supabase, userId, targetClb = null) {
 
   if (error) {
     console.error('[coach] get_user_coach_profile failed:', error.message)
-    return emptyCoachProfile({ targetClb: targetClb || 9, rpcError: error.message })
+    try {
+      const fallback = await buildCoachProfileFallback(supabase, userId, targetClb)
+      console.warn('[coach] using JS profile fallback after RPC error')
+      return fallback
+    } catch (fallbackErr) {
+      console.error('[coach] profile fallback failed:', fallbackErr.message)
+      return emptyCoachProfile({ targetClb: targetClb || 9, rpcError: error.message })
+    }
   }
 
   if (!data || typeof data !== 'object') {

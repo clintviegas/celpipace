@@ -1789,6 +1789,13 @@
 	font-weight: 600;
 }
 
+.coach-sidebar--loading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 200px;
+}
+
 .coach-hint,
 .coach-muted,
 .coach-plan-line {

@@ -87,8 +87,10 @@ export default function CoachPage() {
         setWeeklyFocus(dash.weeklyFocus || [])
         setUsage(dash.usage)
         setPlanConfig(cfg)
-        if (dash.profileWarning || dash.profile?.profileError) {
-          setWarning(dash.profileWarning || 'Some profile data is still loading — chat works, and insights improve as you practice more.')
+        if (dash.profileWarning && dash.profile?.profileError) {
+          setWarning(dash.profileWarning)
+        } else if (!dash.profile?.dataRich) {
+          setWarning('')
         }
       } catch (err) {
         if (!cancelled) {
@@ -205,10 +207,41 @@ export default function CoachPage() {
         {isPremium && <div className="coach-usage-badge coach-usage-badge--pro">Premium · unlimited</div>}
       </header>
 
-      {loading && <div className="coach-loading">Loading your coach profile…</div>}
-      {warning && <div className="coach-warning">{warning}</div>}
+      {loading && (
+        <div className="coach-grid">
+          <aside className="coach-sidebar coach-sidebar--loading">
+            <div className="coach-loading">Loading your practice insights…</div>
+          </aside>
+          <section className="coach-chat-panel">
+            <div className="coach-chat-messages" ref={messagesRef}>
+              {messages.map((m, i) => (
+                <div key={i} className={`coach-chat-msg coach-chat-msg--${m.role}`}>{m.content}</div>
+              ))}
+            </div>
+            <div className="coach-quick-row">
+              {QUICK.map((q) => (
+                <button key={q} type="button" onClick={() => send(q)} disabled={busy}>{q}</button>
+              ))}
+            </div>
+            <form className="coach-chat-form" onSubmit={(e) => { e.preventDefault(); send() }}>
+              <input
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                placeholder="Ask about your weaknesses, study plan, or next practice set…"
+                maxLength={900}
+                disabled={busy}
+              />
+              <button type="submit" disabled={busy || !draft.trim()} aria-label="Send">
+                <Send size={18} />
+              </button>
+            </form>
+          </section>
+        </div>
+      )}
 
-      {!loading && profile && (
+      {!loading && (
+        <>
+      {warning && <div className="coach-warning">{warning}</div>}
         <div className="coach-grid">
           <aside className="coach-sidebar">
             <section className="coach-section">
@@ -238,7 +271,7 @@ export default function CoachPage() {
               )}
             </section>
 
-            {profile?.sections && (
+            {profile?.sections && Object.keys(profile.sections).length > 0 ? (
               <section className="coach-section">
                 <h2>Section bands</h2>
                 <div className="coach-bands">
@@ -252,6 +285,12 @@ export default function CoachPage() {
                     </div>
                   ))}
                 </div>
+              </section>
+            ) : (
+              <section className="coach-section">
+                <h2>Get started</h2>
+                <p className="coach-hint">Complete a few practice sets — especially S3 Describing a Scene — and your coach will map CLB gaps here.</p>
+                <Link to="/celpip-speaking-practice/S3" className="coach-focus-link">Try free S3 practice →</Link>
               </section>
             )}
           </aside>
@@ -291,6 +330,7 @@ export default function CoachPage() {
             </form>
           </section>
         </div>
+        </>
       )}
     </div>
   )

@@ -40,6 +40,7 @@ const PARTS = [
     icon: '🖼️',
     duration: '30s prep · 60s speak',
     difficulty: 'Intermediate',
+    free: true,
     description:
       'You are shown an image and asked to describe what you see in detail — the people, the setting, the activities happening, and the overall atmosphere. This part tests your descriptive vocabulary and your ability to speak clearly about visual information.',
     tip: 'Don\'t just list objects. Describe actions ("a woman is handing something to a child"), relationships between people, and what the scene suggests about the situation. End with a sentence about the overall mood or what might happen next.',
