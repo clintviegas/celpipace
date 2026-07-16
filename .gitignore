@@ -38,6 +38,9 @@ django_api
 *.sw?
 .vercel
 
+# Playwright run artifacts
+test-results/
+
 # GSC pull script — credentials and tokens never commit; raw data is local-only
 .gsc-credentials.json
 gsc-credentials.json
