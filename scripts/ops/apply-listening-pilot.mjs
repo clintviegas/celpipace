@@ -7,7 +7,7 @@ import { join, dirname } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const ROOT = join(__dirname, '..')
+const ROOT = join(__dirname, '..', '..')
 const OUT = join(ROOT, 'src', 'data', 'listeningData.js')
 const PILOT = join(ROOT, 'src', 'data', 'listening', 'pilot-set1-traps.json')
 

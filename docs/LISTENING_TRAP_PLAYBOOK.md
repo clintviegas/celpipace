@@ -14,7 +14,7 @@ Zero-runtime-token strategy: harder MCQ distractors and post-answer explanations
 | L6 | 1 | Paper Books vs E-Books | 6 |
 
 Source enrichments: `src/data/listening/pilot-set1-traps.json`  
-Apply to bundle: `node scripts/apply-listening-pilot.mjs`
+Apply to bundle: `node scripts/ops/apply-listening-pilot.mjs`
 
 ## Per-question checklist
 

@@ -62,7 +62,9 @@ CELPIPACE is an independent preparation platform and is not affiliated with, end
 api/                 Serverless API routes for scoring, payments, contact, webhooks
 docs/                Setup notes for auth, contact, payments, persistence, subscriptions
 public/              Static assets, logo, favicon, audio, images, training material
-scripts/             Audio/content conversion, SEO prerendering, asset upload tools
+scripts/build/       Wired into npm run build/verify — SEO prerendering, static checks
+scripts/ops/         Documented, repeatable maintenance scripts (see scripts/ops/README.md)
+scripts/archive/     One-off scripts already run once; kept for reference, not wired to anything
 src/components/      Shared UI, navigation, auth modal, pricing, SEO, footer
 src/context/         Auth provider and account state
 src/data/            Practice data, SEO pages, pricing plans, constants
@@ -77,7 +79,7 @@ tests/e2e/           Playwright smoke and subscription flow tests
 
 ### Requirements
 
-- Node.js 20+
+- Node.js 22+
 - npm
 - Supabase project
 - Stripe account
@@ -97,7 +99,8 @@ Copy the example environment file and fill in the required values:
 cp .env.example .env.local
 ```
 
-Common variables:
+`.env.example` lists every variable the app reads, grouped by subsystem
+(Supabase, Stripe, OpenAI, Brevo, cron). The short version:
 
 ```text
 VITE_SUPABASE_URL=
@@ -108,17 +111,16 @@ STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
 STRIPE_PRICE_WEEKLY=
 STRIPE_PRICE_MONTHLY=
-STRIPE_PRICE_QUARTERLY=
+STRIPE_PRICE_ANNUAL=
 SUPABASE_SERVICE_ROLE_KEY=
 PUBLIC_SITE_URL=
 BREVO_API_KEY=
-BREVO_LIST_ID=
-BREVO_LIST_PREMIUM=
-BREVO_LIST_CANCELLED=
-EMAIL_FROM=
+CRON_SECRET=
 ```
 
-Server-side secrets such as `STRIPE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, and `BREVO_API_KEY` must never be exposed with a `VITE_` prefix.
+Server-side secrets such as `STRIPE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, and `BREVO_API_KEY` must never be exposed with a `VITE_` prefix — the client bundle only reads `VITE_`-prefixed vars, and anything else lives only in the Vercel functions under `api/`.
+
+`CRON_SECRET` matters more than it looks: it must exactly match the Supabase Vault secret pg_cron sends as its Bearer token (`supabase/migrations/20260806070000_pg_cron_schedule.sql`). A mismatch fails every cron call with 401 and nothing else surfaces it — worth a periodic check against `net._http_response` in Supabase.
 
 ### Database Setup
 
@@ -150,7 +152,7 @@ Open http://localhost:5173.
 npm run build
 ```
 
-The build runs Vite and then prerenders SEO routes with `scripts/prerender-seo.mjs`.
+The build runs Vite and then prerenders SEO routes with `scripts/build/prerender-seo.mjs`.
 
 ## Testing
 
@@ -177,9 +179,19 @@ npm run e2e
 - Admin dashboard: `/admin`
 - Admin auth is isolated from the public app session through `src/lib/adminSupabase.js`.
 - Admin password recovery is available from `/admin`.
-- Stripe remains the safest place to issue refunds.
-- Full Stripe refunds are handled by webhook events, which mark the payment as refunded and revoke premium access.
-- Refund requests should be reviewed for genuine billing or access issues; substantial premium usage does not automatically qualify.
+- Refunds go through one implementation (`api/_lib/refunds.js`) used by three callers:
+  - **Self-serve**: cancelling with "request a refund" ticked auto-refunds if the payment
+    is inside the plan's money-back window (`AUTO_REFUND_DAYS_*`, default weekly 2d /
+    monthly 7d / annual 14d, one per customer). Outside the window it falls to the
+    admin review queue.
+  - **Admin panel** (`/admin` → Billing): manual refund button, same logic, no window.
+  - **Webhook** (`charge.refunded`): if a refund is issued directly in the Stripe
+    dashboard, the webhook still marks the payment row and revokes access.
+- Every refund path cancels the Stripe subscription immediately and revokes premium —
+  refunding money without also cancelling the subscription is exactly the bug this
+  shared implementation exists to prevent.
+- Admin → Users → Revoke asks immediate-vs-period-end and actually cancels the Stripe
+  subscription (`set-premium` action); it used to only flip local columns.
 
 ## Useful Scripts
 

@@ -1,7 +1,7 @@
 // One-time seed: copy BLOG_ARTICLES from src/data/blogData.js into the
 // public.blog_posts table. Safe to re-run — uses upsert on slug.
 //
-// Usage: node scripts/seed-blog-posts.mjs
+// Usage: node scripts/ops/seed-blog-posts.mjs
 //
 // Requires VITE_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in .env.local or .env
 // (run `vercel env pull .env.local` once if you don't have a local env file).

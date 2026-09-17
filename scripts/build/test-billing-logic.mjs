@@ -12,8 +12,8 @@
 //
 // Run: node scripts/test-billing-logic.mjs
 
-import { subscriptionToProfilePatch, normalizePlanSlug, invoiceSubscriptionId, stripeTimeToIso } from '../api/_lib/billing.js'
-import { backoffSeconds, MAX_ATTEMPTS } from '../api/_lib/inbox.js'
+import { subscriptionToProfilePatch, normalizePlanSlug, invoiceSubscriptionId, stripeTimeToIso } from '../../api/_lib/billing.js'
+import { backoffSeconds, MAX_ATTEMPTS } from '../../api/_lib/inbox.js'
 
 let passed = 0
 const failures = []

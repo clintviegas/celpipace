@@ -51,7 +51,7 @@ Apply SQL in this order when bootstrapping a new project or auditing prod drift.
 
 ```bash
 # Verify / apply coach weakness RPC (needs SUPABASE_DB_URL to auto-apply)
-node scripts/apply-coach-patch.mjs
+node scripts/ops/apply-coach-patch.mjs
 ```
 
 ## RPC deduplication rules
@@ -61,7 +61,7 @@ node scripts/apply-coach-patch.mjs
 
 ## After schema changes
 
-1. Re-seed RAG exemplars if rubric changed: `node scripts/seed-exemplars.mjs`
-2. Seed blog posts if content changed: `node scripts/seed-blog-posts.mjs`
-3. Smoke-test Stripe checkout: `node scripts/debug-checkout-live.mjs`
+1. Re-seed RAG exemplars if rubric changed: `node scripts/ops/seed-exemplars.mjs`
+2. Seed blog posts if content changed: `node scripts/ops/seed-blog-posts.mjs`
+3. Smoke-test Stripe checkout: `node scripts/ops/debug-checkout-live.mjs`
 4. Check Vercel cron logs for `cron-sweep` errors

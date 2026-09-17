@@ -123,12 +123,13 @@ Every user-table policy follows the same pattern: read your own rows
 
 ## Build / scripts — `scripts/`
 
-Runs after `vite build` (see `package.json` → `build`):
+Three tiers, in order of how often you'll touch them:
 
-| Script | Purpose |
+| Folder | What's in it |
 | --- | --- |
-| `prerender-seo.mjs` | Pulls blog posts from Supabase, writes per-slug `index.html` files with full meta tags + JSON-LD, and regenerates `dist/sitemap.xml`. Falls back to `src/data/blogData.js` if Supabase is unreachable. |
-| `seed-blog-posts.mjs` | One-time / idempotent seed of `src/data/blogData.js` into `public.blog_posts`. Re-runnable any time. |
+| `scripts/build/` | Wired into `npm run build`/`verify` — runs on every build. `check-db-catch.mjs` and `test-billing-logic.mjs` are static checks; `prerender-seo.mjs` pulls blog posts from Supabase, writes per-slug `index.html` with meta tags + JSON-LD, and regenerates `dist/sitemap.xml` (falls back to `src/data/blogData.js` if Supabase is unreachable). |
+| `scripts/ops/` | Repeatable maintenance scripts, each documented in a `docs/*_SETUP.md` / runbook and listed in `scripts/ops/README.md`. Run manually via `npm run <alias>` (see `package.json`) or `node scripts/ops/<name>.mjs`. |
+| `scripts/archive/` | One-off scripts that already did their job — initial content generation, a completed backfill — kept for reference, not wired into anything. See `scripts/archive/README.md`. |
 
 ---
 
@@ -161,7 +162,7 @@ Per-subsystem setup walkthroughs:
 ## How a request flows
 
 **Visitor opens a blog post:**
-1. Vercel serves the pre-rendered `dist/blog/<slug>/index.html` (built by `scripts/prerender-seo.mjs`)
+1. Vercel serves the pre-rendered `dist/blog/<slug>/index.html` (built by `scripts/build/prerender-seo.mjs`)
 2. React hydrates and `src/pages/BlogPage.jsx` fetches the full article from `public.blog_posts` for any client-side updates
 
 **User submits a Writing response:**

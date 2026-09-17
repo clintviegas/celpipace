@@ -7,7 +7,7 @@ All speaking scene images use **`/images/S3/{n}.png`** and **`/images/S4/{n}.png
 The app loads them via `asset()` in [`src/data/constants.js`](../src/data/constants.js), which prefixes **`VITE_CDN_URL`** (Cloudflare R2) in production. Files live in `public/images/` locally, are **gitignored**, and are uploaded with:
 
 ```bash
-node scripts/upload-r2.mjs celpipace
+node scripts/ops/upload-r2.mjs celpipace
 # or single files:
 npx wrangler r2 object put "celpipace/images/S3/1.png" --file="public/images/S3/1.png" --remote
 npx wrangler r2 object put "celpipace/images/S4/1.png" --file="public/images/S4/1.png" --remote

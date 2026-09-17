@@ -23,7 +23,7 @@ wrangler login      # once per machine
 After adding or changing files under `public/audio/` or `public/images/` locally:
 
 ```bash
-node scripts/upload-r2.mjs celpipace
+node scripts/ops/upload-r2.mjs celpipace
 ```
 
 This preserves paths like `/audio/L1/set-01/line-00.mp3` and `/images/S3/1.png`.
@@ -57,7 +57,7 @@ npx wrangler r2 object put "celpipace/images/S4/1.png" \
 When the temporary FIFA S3/S4 Set 1 promo ends:
 
 ```bash
-node scripts/revert-fifa-promo.mjs
+node scripts/ops/revert-fifa-promo.mjs
 ```
 
 See also [`SPEAKING_FIFA_REVERT.md`](SPEAKING_FIFA_REVERT.md).

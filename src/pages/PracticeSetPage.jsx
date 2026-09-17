@@ -2332,7 +2332,7 @@ function ListeningLayoutInner({ color, partId, part, onComplete }) {
     if (timerRef.current) clearInterval(timerRef.current)
     if (otRef.current) clearInterval(otRef.current)
     stopAudio()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   const fmtTime = (secs) => {
     if (secs === null) return '--:--'

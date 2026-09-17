@@ -52,6 +52,6 @@ Credentials: see `.gsc-credentials.json` / `docs/gsc/` (never commit tokens).
 
 ## Sitemap
 
-Sitemap is generated at build time via `scripts/prerender-seo.mjs`. After deploy, confirm new URLs appear in:
+Sitemap is generated at build time via `scripts/build/prerender-seo.mjs`. After deploy, confirm new URLs appear in:
 
 - https://www.celpipace.ca/sitemap.xml

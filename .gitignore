@@ -6,6 +6,7 @@ playwright-report/
 
 # env & local tooling
 .env*
+!.env.example
 .vercel
 .claude/settings.local.json
 

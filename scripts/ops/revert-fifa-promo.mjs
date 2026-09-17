@@ -10,7 +10,7 @@
  *   3. Restore speakingQuestions.json from backup/s3-set1-park
  *
  * Usage:
- *   node scripts/revert-fifa-promo.mjs [--skip-r2] [--skip-git]
+ *   node scripts/ops/revert-fifa-promo.mjs [--skip-r2] [--skip-git]
  *
  * --skip-r2   Skip wrangler upload (if you already uploaded park PNGs)
  * --skip-git  Skip git checkout of JSON (dry-run local file restore only)

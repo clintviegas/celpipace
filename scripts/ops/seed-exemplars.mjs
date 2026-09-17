@@ -44,7 +44,7 @@ async function loadDotenv() {
   } catch { /* no .env present — rely on shell env */ }
 }
 
-const ROOT = path.resolve(fileURLToPath(import.meta.url), '..', '..');
+const ROOT = path.resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const SOURCE = path.join(ROOT, 'src', 'pages', 'PracticeSetPage.jsx');
 
 // ── Argv ────────────────────────────────────────────────────────────────────

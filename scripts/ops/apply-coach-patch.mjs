@@ -6,7 +6,7 @@
  * Supabase → Project Settings → Database → Connection string → URI).
  *
  * Usage:
- *   SUPABASE_DB_URL=postgresql://... node scripts/apply-coach-patch.mjs
+ *   SUPABASE_DB_URL=postgresql://... node scripts/ops/apply-coach-patch.mjs
  *
  * If SUPABASE_DB_URL is not set, verifies whether the RPC already exists
  * via the service-role client and prints manual SQL Editor instructions.

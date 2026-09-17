@@ -1,6 +1,6 @@
 # Google Search Console data pull
 
-`scripts/gsc-pull.mjs` pulls performance data from GSC into JSON files here.
+`scripts/ops/gsc-pull.mjs` pulls performance data from GSC into JSON files here.
 It runs as **your own Google account** (the one that owns the GSC property) —
 no "Add user" step needed.
 
@@ -84,13 +84,13 @@ Returns JSON with `slackMessage`, `topQueries`, `topPages`, `priorityAction`, an
 Push GSC credentials to Vercel:
 
 ```bash
-node scripts/setup-gsc-vercel.mjs
+node scripts/ops/setup-gsc-vercel.mjs
 ```
 
 Push the Slack webhook (after creating it in Slack):
 
 ```bash
-SLACK_WEBHOOK_URL='https://hooks.slack.com/services/...' node scripts/setup-gsc-vercel.mjs
+SLACK_WEBHOOK_URL='https://hooks.slack.com/services/...' node scripts/ops/setup-gsc-vercel.mjs
 ```
 
 Print refresh token locally:

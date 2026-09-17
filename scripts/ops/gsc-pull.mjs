@@ -19,7 +19,7 @@ import http from 'node:http'
 import { exec } from 'node:child_process'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const ROOT      = path.resolve(__dirname, '..')
+const ROOT      = path.resolve(__dirname, '..', '..')
 const OUT_DIR   = path.join(ROOT, 'docs', 'gsc')
 const SCOPE     = 'https://www.googleapis.com/auth/webmasters.readonly'
 

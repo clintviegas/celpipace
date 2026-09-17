@@ -12,7 +12,7 @@ Phase 1 of the AI scoring upgrade: pgvector-backed retrieval-augmented feedback 
 | `api/score-writing.js` | Now embeds → retrieves exemplars + weakness profile → injects → scores → persists |
 | `api/score-speaking.js` | Same pipeline, mirrored for speaking |
 | `api/study-recommendations.js` | New endpoint that turns a weakness profile into 3 concrete next steps |
-| `scripts/seed-exemplars.mjs` | One-shot script that imports the 40 hand-written model answers as retrieval exemplars |
+| `scripts/ops/seed-exemplars.mjs` | One-shot script that imports the 40 hand-written model answers as retrieval exemplars |
 | `src/pages/PracticeSetPage.jsx`, `src/pages/MockTestPage.jsx` | Pass `userId` through to the scoring fetches |
 
 ## Architecture
@@ -74,8 +74,8 @@ This creates the `vector` extension, the `essay_embeddings` table, two RPCs, and
 ### 2. Seed the exemplars
 
 ```
-node scripts/seed-exemplars.mjs --dry      # parse only
-node scripts/seed-exemplars.mjs            # full seed (~40 OpenAI embedding calls)
+node scripts/ops/seed-exemplars.mjs --dry      # parse only
+node scripts/ops/seed-exemplars.mjs            # full seed (~40 OpenAI embedding calls)
 ```
 
 The `--dry` run reports coverage so you can confirm all 20 W1 + 20 W2 model answers were extracted. The full run costs roughly **$0.001** total (text-embedding-3-small is ~$0.02 per 1M tokens, and the corpus is ~10k tokens).

@@ -27,7 +27,7 @@
 import { readFileSync, globSync } from 'node:fs'
 
 const ROOTS = ['api', 'src', 'scripts']
-const SELF = 'scripts/check-db-catch.mjs'
+const SELF = 'scripts/build/check-db-catch.mjs'
 const HELPER = 'api/_lib/db.js'
 
 /** Advance past a string, template literal, or comment starting at i. Returns the index after it, or -1. */

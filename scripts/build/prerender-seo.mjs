@@ -8,7 +8,7 @@ import { createClient } from '@supabase/supabase-js'
 // but a local `npm run build` needs them for the Supabase fetch below).
 {
   const __filename = fileURLToPath(import.meta.url)
-  const envPath = path.resolve(path.dirname(__filename), '..', '.env')
+  const envPath = path.resolve(path.dirname(__filename), '..', '..', '.env')
   if (existsSync(envPath)) {
     for (const line of readSync(envPath, 'utf8').split('\n')) {
       const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+)\s*$/)
@@ -16,10 +16,10 @@ import { createClient } from '@supabase/supabase-js'
     }
   }
 }
-import { BLOG_ARTICLES as FALLBACK_ARTICLES } from '../src/data/blogData.js'
-import { CORE_PRODUCT_LINKS, FEATURED_BLOG_LINKS, TOOL_RESOURCE_LINKS } from '../src/data/crawlLinks.js'
-import { BRAND_NAME, PRODUCT_STATS, PUBLIC_SITE_URL } from '../src/data/constants.js'
-import { LANDING_PAGES, faqJsonLd, softwareJsonLd, landingsForBlogCategory } from '../src/data/seoPages.js'
+import { BLOG_ARTICLES as FALLBACK_ARTICLES } from '../../src/data/blogData.js'
+import { CORE_PRODUCT_LINKS, FEATURED_BLOG_LINKS, TOOL_RESOURCE_LINKS } from '../../src/data/crawlLinks.js'
+import { BRAND_NAME, PRODUCT_STATS, PUBLIC_SITE_URL } from '../../src/data/constants.js'
+import { LANDING_PAGES, faqJsonLd, softwareJsonLd, landingsForBlogCategory } from '../../src/data/seoPages.js'
 
 // Fetch published blog posts from Supabase at build time so the CMS drives SEO.
 // Falls back to the static blogData.js array if env vars are missing or fetch fails.
@@ -63,7 +63,7 @@ async function loadBlogArticles() {
 const BLOG_ARTICLES = await loadBlogArticles()
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const rootDir = path.resolve(__dirname, '..')
+const rootDir = path.resolve(__dirname, '..', '..')
 const distDir = path.join(rootDir, 'dist')
 const templatePath = path.join(distDir, 'index.html')
 const DEFAULT_OG_IMAGE = `${PUBLIC_SITE_URL}/og-image.png`

@@ -7,7 +7,7 @@ import { appendFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const LOG_PATH = resolve(dirname(fileURLToPath(import.meta.url)), '../.cursor/debug-7c6ac0.log')
+const LOG_PATH = resolve(dirname(fileURLToPath(import.meta.url)), '../../.cursor/debug-7c6ac0.log')
 const BASE = (process.argv[2] || 'https://www.celpipace.ca').replace(/\/$/, '')
 const SESSION_ID = '7c6ac0'
 const RUN_ID = process.env.DEBUG_RUN_ID || 'pre-fix'
