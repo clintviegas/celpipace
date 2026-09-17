@@ -57,9 +57,9 @@ The plans must now be **recurring**, not one-time.
 
 | Plan | Interval | Amount |
 | --- | --- | --- |
-| Weekly | Every 1 week | $12.99 USD |
-| Monthly | Every 1 month | $24.99 USD |
-| Annual | Every 1 year | $49.99 USD |
+| Weekly | Every 1 week | $12.99 CAD |
+| Monthly | Every 1 month | $24.99 CAD |
+| Annual | Every 1 year | $49.99 CAD |
 
 Copy the new price IDs into Vercel:
 

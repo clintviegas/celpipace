@@ -37,6 +37,13 @@ export const weeklyPromoSpotsLeft = () =>
 // env var at it, or customers will see one number and be charged another.
 // Existing subscribers stay on their old Price IDs and are unaffected.
 //
+// Currency: CAD. CELPIP is a Canadian test and celpipace.ca is a .ca product —
+// billing in CAD matches what a Canadian cardholder expects to see and avoids
+// an FX line on their statement. Kept the same digits as the old USD prices
+// (a real ~28% cut at ~1.39 USD/CAD) rather than FX-converting, since the
+// goal right now is lowering the price to fix conversion, not preserving
+// USD-equivalent revenue. Must match the currency of the live Stripe Price IDs.
+//
 // Pricing strategy: CELPIP is a short-lived need (people prep 4–8 weeks, take
 // the test, leave). Monthly is the natural fit and is the hero. Annual is
 // priced as a real long-haul/retaker plan so it no longer undercuts monthly.

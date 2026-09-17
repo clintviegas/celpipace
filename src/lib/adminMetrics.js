@@ -1,6 +1,12 @@
 // Shared MRR / plan helpers for the admin dashboard.
 
-export const PLAN_MRR_USD = {
+// CAD, matching the live plan prices in src/data/paymentPlans.js. Subscribers
+// on legacy USD Stripe Prices (anyone who checked out before the 2026-09
+// CAD switch) are still counted at these CAD figures — since the CAD prices
+// are the same digits as the old USD ones (a real cut, not an FX conversion),
+// this slightly *understates* a grandfathered customer's true MRR. Acceptable
+// at current subscriber volume.
+export const PLAN_MRR_CAD = {
   weekly: 12.99 * 52 / 12,
   monthly: 24.99,
   annual: 49.99 / 12,
@@ -25,7 +31,7 @@ export function resolveBillingPlan(row) {
 export function monthlyMrrForRow(row, { includeCanceling = false } = {}) {
   if (!row?.is_premium || !isPaidPremiumSource(row.premium_source)) return 0
   if (row.cancel_at_period_end && !includeCanceling) return 0
-  return PLAN_MRR_USD[resolveBillingPlan(row)] ?? 24.99
+  return PLAN_MRR_CAD[resolveBillingPlan(row)] ?? 24.99
 }
 
 export function computeMrrSummary(rows) {

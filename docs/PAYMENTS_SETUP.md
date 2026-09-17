@@ -20,13 +20,13 @@ This creates the `payments` table, augments `profiles` with subscription columns
 
 In Stripe Dashboard → **Products** → Add product (one product, three prices works fine, or three separate products):
 
-| Plan        | Price (USD) | Type       | Description                       |
+| Plan        | Price (CAD) | Type       | Description                       |
 |-------------|-------------|------------|-----------------------------------|
 | Weekly      | $12.99      | Recurring  | celpipAce Premium — weekly        |
 | Monthly     | $24.99      | Recurring  | celpipAce Premium — monthly       |
 | Annual      | $49.99      | Recurring  | celpipAce Premium — 1 year        |
 
-> **Currency:** Use **USD** for all three prices. Stripe will auto-convert to the buyer's local currency at checkout when needed, and USD is the cleanest baseline for global users.
+> **Currency:** Use **CAD** for all three prices. CELPIP is a Canadian test and celpipace.ca serves a Canadian audience almost exclusively — billing in CAD matches what a Canadian cardholder expects and avoids a foreign-transaction line on their statement. These are the same digits as the old USD prices — a deliberate ~28% cut (not an FX conversion) aimed at fixing conversion, not preserving USD-equivalent revenue. Subscribers who checked out before this switch stay on their original USD Price IDs (Stripe subscriptions never change currency after creation); only new checkouts get the CAD prices.
 
 Copy each Price ID (starts with `price_`).
 
