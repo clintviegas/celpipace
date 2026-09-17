@@ -39,6 +39,8 @@ human in the SQL editor:
 
 ```sql
 select vault.create_secret('<CRON_SECRET from Vercel>', 'cron_secret');
-select public.schedule_celpipace_jobs('https://celpipace.ca');
+select public.schedule_celpipace_jobs('https://www.celpipace.ca');  -- must be www: the
+  -- apex domain 308-redirects, and pg_net drops the Authorization header across
+  -- that redirect, so every call silently 401s (found + fixed 2026-09-17)
 select * from public.cron_job_health;   -- expect 12 rows
 ```

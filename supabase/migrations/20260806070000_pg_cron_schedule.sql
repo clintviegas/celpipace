@@ -26,7 +26,9 @@
 --        SELECT vault.update_secret(
 --          (SELECT id FROM vault.secrets WHERE name = 'cron_secret'),
 --          '<new value>');
---   2. SELECT public.schedule_celpipace_jobs('https://celpipace.ca');
+--   2. SELECT public.schedule_celpipace_jobs('https://www.celpipace.ca');
+--      (must be the www host — the apex domain 308-redirects, and pg_net drops
+--      the Authorization header across that redirect, so every call 401s)
 --   3. Verify:  SELECT jobname, schedule, active FROM cron.job ORDER BY jobname;
 --   4. After a week:  SELECT public.unschedule_celpipace_jobs();  -- to roll back
 -- ============================================================================
@@ -73,7 +75,7 @@ REVOKE ALL ON FUNCTION public.call_cron_job(TEXT, TEXT) FROM PUBLIC, anon, authe
 
 -- ── Schedule ────────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.schedule_celpipace_jobs(
-  p_base_url TEXT DEFAULT 'https://celpipace.ca'
+  p_base_url TEXT DEFAULT 'https://www.celpipace.ca'
 )
 RETURNS TABLE (jobname TEXT, schedule TEXT)
 LANGUAGE plpgsql
