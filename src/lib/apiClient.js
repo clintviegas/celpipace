@@ -18,9 +18,3 @@ export async function authedFetch(path, { method = 'POST', body, headers = {} } 
     body: body !== undefined ? JSON.stringify(body) : undefined,
   })
 }
-
-// Variant that allows guests (no token attached if not signed in). Used by the
-// public chat widget where guests are expected.
-export async function maybeAuthedFetch(path, opts = {}) {
-  return authedFetch(path, opts)
-}

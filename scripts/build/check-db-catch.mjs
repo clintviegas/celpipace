@@ -106,7 +106,7 @@ function findCatchInChain(src, openIdx) {
 
 const files = ROOTS.flatMap(root => {
   try {
-    return globSync(`${root}/**/*.{js,jsx,mjs}`, { exclude: p => p.includes('_disabled') })
+    return globSync(`${root}/**/*.{js,jsx,mjs}`)
   } catch { return [] }
 })
 

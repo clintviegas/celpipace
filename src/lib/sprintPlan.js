@@ -273,15 +273,3 @@ function buildWeeks(n, focusOrder, target, startCLB, hoursPerDay) {
   }
   return weeks
 }
-
-/* Map a journey result to the config shape lib/studyPlan.js persists,
-   so a saved plan re-opens cleanly on the full Study Plan page. */
-export function toPlanConfig({ targetDate, targetCLB, hoursPerDay }) {
-  return {
-    targetDate,
-    targetCLB: clampCLB(targetCLB || 9),
-    // Sprints assume daily study; map heavier days to the 7/wk ceiling.
-    daysPerWeek: hoursPerDay >= 2 ? 7 : 5,
-    createdAt: new Date().toISOString(),
-  }
-}

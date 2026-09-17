@@ -82,8 +82,6 @@ anywhere else.**
 | `embeddings.js` · `rag.js` | OpenAI embeddings + retrieval for scoring context |
 | `audience.js` | Audience-segmenting helpers for marketing emails |
 
-`api/_disabled/` holds parked routes kept in the tree but not deployed.
-
 **Auth model:** every authenticated endpoint expects
 `Authorization: Bearer <supabase access_token>`. The token is verified server-
 side using the service-role key.

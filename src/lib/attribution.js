@@ -77,8 +77,3 @@ export function getStoredAttribution() {
   if (typeof window === 'undefined') return null
   return readStored()
 }
-
-export function clearAttribution() {
-  if (typeof window === 'undefined') return
-  try { window.localStorage.removeItem(STORAGE_KEY) } catch { /* noop */ }
-}

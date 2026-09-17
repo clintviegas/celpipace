@@ -4,15 +4,6 @@ const SESSION_KEY = 'celpipace_analytics_session_id'
 const FLUSH_DELAY_MS = 1200
 const MAX_BATCH_SIZE = 10
 
-export const ANALYTICS_EVENT_TYPES = [
-  'page_view',
-  'click',
-  'signup_complete',
-  'checkout_started',
-  'checkout_error',
-  'upgrade_click',
-]
-
 let queue = []
 let flushTimer = null
 let lastPageView = { key: '', at: 0 }

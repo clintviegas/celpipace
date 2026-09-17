@@ -200,8 +200,6 @@ export const SCORE_LEVELS = [
 // [withSpouse, withoutSpouse]
 export const CRS_AGE_WITH_SPOUSE    = { 17:0, 18:90, 19:95, 20:100, 21:100, 22:100, 23:100, 24:100, 25:100, 26:100, 27:100, 28:100, 29:100, 30:95, 31:90, 32:85, 33:80, 34:75, 35:70, 36:65, 37:60, 38:55, 39:50, 40:45, 41:35, 42:25, 43:15, 44:5, 45:0 }
 export const CRS_AGE_NO_SPOUSE      = { 17:0, 18:99, 19:105, 20:110, 21:110, 22:110, 23:110, 24:110, 25:110, 26:110, 27:110, 28:110, 29:110, 30:105, 31:99, 32:94, 33:88, 34:83, 35:77, 36:72, 37:66, 38:61, 39:55, 40:50, 41:39, 42:28, 43:17, 44:6, 45:0 }
-// Keep backward compat alias (no spouse)
-export const CRS_AGE = CRS_AGE_NO_SPOUSE
 
 // ─── CRS Education points ─────────────────────────────────────────
 // Source: Official IRCC CRS JS
@@ -209,19 +207,11 @@ export const CRS_AGE = CRS_AGE_NO_SPOUSE
 // Without spouse: secondary=30, 1yr=90, 2yr=98, bachelors=120, 2+=128, masters=135, doctoral=150
 export const CRS_EDUCATION_WITH_SPOUSE = { 'none':0, 'secondary':28, 'one_year':84, 'two_year':91, 'bachelors':112, 'two_or_more':119, 'masters':126, 'doctoral':140 }
 export const CRS_EDUCATION_NO_SPOUSE   = { 'none':0, 'secondary':30, 'one_year':90, 'two_year':98, 'bachelors':120, 'two_or_more':128, 'masters':135, 'doctoral':150 }
-// Keep backward compat alias
-export const CRS_EDUCATION = CRS_EDUCATION_NO_SPOUSE
 
 // ─── CRS Canadian work experience ────────────────────────────────
 // Source: Official IRCC CRS JS
 export const CRS_CAN_EXP_WITH_SPOUSE = { 0:0, 1:35, 2:46, 3:56, 4:63, 5:70 }
 export const CRS_CAN_EXP_NO_SPOUSE   = { 0:0, 1:40, 2:53, 3:64, 4:72, 5:80 }
-export const CRS_CAN_EXP = CRS_CAN_EXP_NO_SPOUSE
-
-// ─── CRS Foreign work experience ─────────────────────────────────
-// Source: Official IRCC CRS JS — only in skill transferability, no direct core pts
-// (IRCC Q6ii foreign adds 0 core pts — foreign exp only matters for skill transferability)
-export const CRS_FOREIGN_EXP = { 0:0, 1:0, 2:0, 3:0 }
 
 // ─── CRS First official language (per skill, per CLB) ────────────
 // Source: Official IRCC CRS JS — CELPIP array z[i][6]=with_spouse, z[i][7]=no_spouse
@@ -244,7 +234,6 @@ export const CRS_LANG_POINTS_NO_SPOUSE = {
   9:  { listen:31, read:31, write:31, speak:31 },
   10: { listen:34, read:34, write:34, speak:34 },
 }
-export const CRS_LANG_POINTS = CRS_LANG_POINTS_NO_SPOUSE
 
 // ─── CRS Second official language (per skill, per CLB) ───────────
 // Source: Official IRCC CRS JS — z[i][8]=with_spouse, z[i][9]=no_spouse

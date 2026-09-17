@@ -8,7 +8,6 @@ export default defineConfig([
   globalIgnores([
     'dist',
     'src/data/**',
-    'api/_disabled/**',
   ]),
   {
     files: [
