@@ -1,0 +1,61 @@
+{
+  "name": "celpip",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run verify && vite build && node scripts/prerender-seo.mjs",
+    "lint": "eslint .",
+    "verify": "node scripts/check-db-catch.mjs && node scripts/test-billing-logic.mjs",
+    "test:billing": "node scripts/test-billing-logic.mjs",
+    "check:db-catch": "node scripts/check-db-catch.mjs",
+    "preview": "vite preview",
+    "e2e": "playwright test",
+    "e2e:smoke": "npm run build && E2E_BASE_URL=http://127.0.0.1:4173 E2E_PREVIEW=1 playwright test smoke.spec.js",
+    "e2e:smoke:dev": "playwright test smoke.spec.js",
+    "e2e:install": "playwright install chromium",
+    "gsc:pull": "node scripts/gsc-pull.mjs",
+    "gsc:setup-vercel": "node scripts/setup-gsc-vercel.mjs",
+    "stripe:verify": "node scripts/verify-stripe-subscriptions.mjs",
+    "supabase:coach-patch": "node scripts/apply-coach-patch.mjs",
+    "revert:fifa-promo": "node scripts/revert-fifa-promo.mjs"
+  },
+  "dependencies": {
+    "@sentry/node": "^10.69.0",
+    "@sentry/react": "^10.69.0",
+    "@supabase/supabase-js": "^2.99.3",
+    "@vercel/speed-insights": "^2.0.0",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^0.577.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-helmet-async": "^3.0.0",
+    "react-router-dom": "^7.13.2",
+    "stripe": "^17.5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.59.1",
+    "@sentry/vite-plugin": "^5.4.0",
+    "@tailwindcss/vite": "^4.2.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "googleapis": "^171.4.0",
+    "tailwindcss": "^4.2.1",
+    "vite": "^8.0.0"
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=22"
+  }
+}

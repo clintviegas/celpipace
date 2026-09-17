@@ -1,0 +1,38 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "npm install --legacy-peer-deps",
+  "crons": [
+    { "path": "/api/cron?job=health-report",     "schedule": "0 2 * * *" },
+    { "path": "/api/cron?job=reconcile-billing", "schedule": "0 3 * * *" },
+    { "path": "/api/cron?job=worker",            "schedule": "0 4 * * *" },
+    { "path": "/api/cron?job=sweep",         "schedule": "0 0 * * *"  },
+    { "path": "/api/cron?job=marketing",     "schedule": "0 10 * * *" },
+    { "path": "/api/cron?job=winback",       "schedule": "0 11 * * *" },
+    { "path": "/api/cron?job=examcountdown", "schedule": "0 13 * * *" },
+    { "path": "/api/cron?job=digest",        "schedule": "0 14 * * *" },
+    { "path": "/api/cron?job=abandoned",     "schedule": "0 15 * * *" },
+    { "path": "/api/cron?job=reminders",     "schedule": "0 16 * * *" },
+    { "path": "/api/cron?job=broadcast",     "schedule": "0 17 * * *" },
+    { "path": "/api/cron?job=gsc-summary",   "schedule": "0 5 * * 1" }
+  ],
+  "redirects": [
+    { "source": "/writing",              "destination": "/celpip-writing-practice",       "permanent": true },
+    { "source": "/writing/:path*",       "destination": "/celpip-writing-practice/:path*","permanent": true },
+    { "source": "/speaking",             "destination": "/celpip-speaking-practice",      "permanent": true },
+    { "source": "/speaking/:path*",      "destination": "/celpip-speaking-practice/:path*","permanent": true },
+    { "source": "/reading",              "destination": "/celpip-reading-practice",       "permanent": true },
+    { "source": "/reading/:path*",       "destination": "/celpip-reading-practice/:path*","permanent": true },
+    { "source": "/listening",            "destination": "/celpip-listening-practice",     "permanent": true },
+    { "source": "/listening/:path*",     "destination": "/celpip-listening-practice/:path*","permanent": true },
+    { "source": "/calculator",           "destination": "/crs-score-calculator",          "permanent": true },
+    { "source": "/tips",                 "destination": "/celpip-resources",              "permanent": true },
+    { "source": "/comparison",           "destination": "/celpip-vs-ielts",               "permanent": true },
+    { "source": "/score",                "destination": "/celpip-score-calculator",       "permanent": true },
+    { "source": "/mock",                 "destination": "/celpip-mock-test",            "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

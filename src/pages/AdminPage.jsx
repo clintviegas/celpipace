@@ -1,0 +1,2908 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { adminSupabase } from '../lib/adminSupabase'
+import { computeMrrSummary, countActiveUsers } from '../lib/adminMetrics'
+import {
+  CheckoutTab,
+  CohortRetentionPanel,
+  ConversionPathPanel,
+  ExamDateSegmentsPanel,
+  ProductTab,
+  SupportTab,
+  eventTypeChip,
+  useAdminAlertCounts,
+  adminApi,
+} from './adminExtendedTabs'
+
+/* ─────────────────────────────────────────────────────────────
+   Hidden admin dashboard — URL: /admin
+   Only accessible when signed in as clint.viegas@gmail.com.
+───────────────────────────────────────────────────────────── */
+const ADMIN_EMAIL = 'clint.viegas@gmail.com'
+const PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at, last_seen_at, exam_date, country_code, country, city, region, timezone, locale, utm_source, utm_medium, utm_campaign, utm_content, utm_term, landing_page, referrer, first_touch_at, signup_ip_hash, signup_user_agent, current_plan, subscription_status, cancel_at_period_end, stripe_customer_id, stripe_subscription_id, current_period_end'
+const LEGACY_PROFILE_COLUMNS = 'id, email, full_name, avatar_url, is_premium, premium_source, premium_granted_at, premium_expires_at, created_at'
+const PAYMENT_COLUMNS = 'id, email, plan, amount_cents, currency, status, granted_days, stripe_session_id, stripe_payment_intent_id, stripe_customer_id, created_at'
+
+const PLAN_LABELS = {
+  weekly: 'Weekly',
+  monthly: 'Monthly',
+  annual: 'Annual',
+  admin: 'Admin',
+  premium: 'Premium',
+  free: 'Free',
+}
+
+function isPaidPremiumSource(source) {
+  const normalized = String(source || '').trim().toLowerCase()
+  return normalized === 'paid' || normalized === 'stripe' || normalized.startsWith('stripe:')
+}
+
+function planLabel(row) {
+  const currentPlan = String(row?.current_plan || '').trim().toLowerCase()
+  if (currentPlan && currentPlan !== 'premium') return PLAN_LABELS[currentPlan] || currentPlan
+
+  const premiumSource = String(row?.premium_source || '').trim().toLowerCase()
+  const [, sourcePlan] = premiumSource.split(':')
+  if (premiumSource.startsWith('stripe:') && sourcePlan) return PLAN_LABELS[sourcePlan] || sourcePlan
+
+  return row?.is_premium ? 'Premium' : 'Free'
+}
+
+function PlanCell({ row, showStatus = false }) {
+  if (!row?.is_premium) return <span style={{ color: '#98a2b5', fontSize: 12 }}>free</span>
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      <Chip color="#ffd66a" text={planLabel(row).toUpperCase()} />
+      {row.cancel_at_period_end && <Chip color="#ff9a9a" text="CANCELING" />}
+      {showStatus && row.subscription_status && row.subscription_status !== 'none' && (
+        <span style={{ color: '#98a2b5', fontSize: 12 }}>{row.subscription_status}</span>
+      )}
+    </span>
+  )
+}
+
+function fmtDate(value) {
+  if (!value) return null
+  const d = new Date(value)
+  return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString()
+}
+
+// Describe the renewal lifecycle state of a premium row so admins can tell at a
+// glance whether a subscriber will renew, is winding down (cancel-at-period-end),
+// is an admin/coupon grant with an expiry, or has lifetime access.
+function renewalInfo(row) {
+  if (!row?.is_premium) return { state: 'none', label: '—', color: '#667' }
+  const paid = isPaidPremiumSource(row.premium_source)
+  const expLabel = fmtDate(row.premium_expires_at)
+  if (row.cancel_at_period_end) {
+    return { state: 'canceling', label: 'Canceling', sub: expLabel ? `ends ${expLabel}` : 'ends at period end', color: '#ff9a9a' }
+  }
+  if (paid) {
+    return { state: 'renewing', label: 'Renews', sub: expLabel || 'auto', color: '#7dffb0' }
+  }
+  if (expLabel) {
+    return { state: 'expiring', label: 'Expires', sub: expLabel, color: '#ffd66a' }
+  }
+  return { state: 'lifetime', label: 'Lifetime', color: '#7dffb0' }
+}
+
+function RenewalBadge({ row }) {
+  const info = renewalInfo(row)
+  if (info.state === 'none') return <span style={{ color: '#667', fontSize: 12 }}>—</span>
+  return (
+    <span style={{ display: 'inline-flex', flexDirection: 'column', lineHeight: 1.35 }}>
+      <span style={{ color: info.color, fontSize: 12, fontWeight: 600 }}>{info.label}</span>
+      {info.sub && <span style={{ color: '#98a2b5', fontSize: 11 }}>{info.sub}</span>}
+    </span>
+  )
+}
+
+// MRR counts only recurring paid subscribers — admin grants, coupons and
+// lifetime access are not recurring revenue and would inflate the figure.
+function countPaidPremium(rows) {
+  return rows.filter(r => r.is_premium && isPaidPremiumSource(r.premium_source)).length
+}
+function countCanceling(rows) {
+  return rows.filter(r => r.is_premium && r.cancel_at_period_end).length
+}
+
+function stripeSearchUrl(value) {
+  const query = encodeURIComponent(value || '')
+  return `https://dashboard.stripe.com/search?query=${query}`
+}
+
+export default function AdminPage() {
+  const { user, loading, signOut, recoveryMode, clearRecoveryMode } = useAdminAuth()
+  const isAdmin = !!user && user.email?.toLowerCase() === ADMIN_EMAIL
+  const [email, setEmail]       = useState('')
+  const [password, setPassword] = useState('')
+  const [loginErr, setLoginErr] = useState('')
+  const [sending, setSending]   = useState(false)
+  const [resetBusy, setResetBusy] = useState(false)
+  const [resetMsg, setResetMsg] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [passwordMsg, setPasswordMsg] = useState('')
+  const [passwordBusy, setPasswordBusy] = useState(false)
+
+  const [tab, setTab] = useState('overview')
+
+  /* ── Login ── */
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setLoginErr('')
+    if (email.trim().toLowerCase() !== ADMIN_EMAIL) { setLoginErr('Unauthorized.'); return }
+    setSending(true)
+    const { error } = await adminSupabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password })
+    setSending(false)
+    if (error) setLoginErr(error.message)
+  }
+
+  const sendPasswordReset = async () => {
+    setLoginErr('')
+    setResetMsg('')
+    setResetBusy(true)
+    try {
+      const r = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request-password-reset' }),
+      })
+      const data = await r.json().catch(() => ({}))
+      if (!r.ok) {
+        setLoginErr(data.message || data.error || 'Could not send reset email.')
+        return
+      }
+      setResetMsg(data.message || `Password reset email sent to ${ADMIN_EMAIL}.`)
+    } catch {
+      setLoginErr('Could not send reset email. Check your connection and try again.')
+    } finally {
+      setResetBusy(false)
+    }
+  }
+
+  const updateAdminPassword = async (e) => {
+    e.preventDefault()
+    setPasswordMsg('')
+    if (newPassword.length < 8) {
+      setPasswordMsg('Use at least 8 characters.')
+      return
+    }
+    setPasswordBusy(true)
+    const { error } = await adminSupabase.auth.updateUser({ password: newPassword })
+    setPasswordBusy(false)
+    if (error) {
+      setPasswordMsg(error.message)
+      return
+    }
+    setNewPassword('')
+    setPasswordMsg('Admin password updated. You can continue to the dashboard.')
+    clearRecoveryMode()
+  }
+
+  if (loading) {
+    return <div style={shellStyle}><div style={cardStyle}><p style={{ color: '#98a2b5' }}>Loading…</p></div></div>
+  }
+
+  if (user && isAdmin && recoveryMode) {
+    return (
+      <div style={shellStyle}>
+        <div style={cardStyle}>
+          <div style={{ fontSize: 12, letterSpacing: '.18em', color: '#ffd66a', marginBottom: 6 }}>PASSWORD RESET</div>
+          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#fff' }}>Set Admin Password</h1>
+          <p style={{ color: '#98a2b5', fontSize: 14, marginTop: 6, marginBottom: 20 }}>Create a new password for {ADMIN_EMAIL}.</p>
+          <form onSubmit={updateAdminPassword}>
+            <label style={labelStyle}>New Password</label>
+            <input type="password" autoComplete="new-password" value={newPassword} onChange={e => setNewPassword(e.target.value)} style={inputStyle} autoFocus />
+            {passwordMsg && <div style={{ color: passwordMsg.includes('updated') ? '#7dffb0' : '#ff9a9a', fontSize: 13, marginTop: 8 }}>{passwordMsg}</div>}
+            <button type="submit" disabled={passwordBusy} style={btnPrimaryStyle}>{passwordBusy ? 'Updating…' : 'Update Password'}</button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user || !isAdmin) {
+    return (
+      <div style={shellStyle}>
+        <div style={cardStyle}>
+          <div style={{ fontSize: 12, letterSpacing: '.18em', color: '#ffd66a', marginBottom: 6 }}>RESTRICTED</div>
+          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#fff' }}>Admin Console</h1>
+          <p style={{ color: '#98a2b5', fontSize: 14, marginTop: 6, marginBottom: 20 }}>Authorised personnel only.</p>
+          <form onSubmit={handleLogin}>
+            <label style={labelStyle}>Email</label>
+            <input type="email" autoComplete="email" value={email} onChange={e => { setEmail(e.target.value); setLoginErr('') }} style={inputStyle} autoFocus />
+            <label style={labelStyle}>Password</label>
+            <input type="password" autoComplete="current-password" value={password} onChange={e => { setPassword(e.target.value); setLoginErr('') }} style={inputStyle} />
+            {loginErr && <div style={{ color: '#ff9a9a', fontSize: 13, marginTop: 6 }}>{loginErr}</div>}
+            {resetMsg && <div style={{ color: '#7dffb0', fontSize: 13, marginTop: 8 }}>{resetMsg}</div>}
+            {user && !isAdmin && (
+              <div style={{ color: '#ff9a9a', fontSize: 13, marginTop: 6 }}>
+                Signed in as {user.email}. Not an admin account.
+                <button type="button" onClick={signOut} style={{ marginLeft: 8, background: 'none', border: 'none', color: '#ffd66a', cursor: 'pointer', textDecoration: 'underline' }}>Sign out</button>
+              </div>
+            )}
+            <button type="submit" disabled={sending} style={btnPrimaryStyle}>{sending ? 'Signing in…' : 'Sign In'}</button>
+            <button type="button" onClick={sendPasswordReset} disabled={resetBusy} style={{ ...btnGhostStyle, width: '100%', marginTop: 10 }}>
+              {resetBusy ? 'Sending reset email…' : 'Forgot admin password?'}
+            </button>
+            <p style={{ color: '#667', fontSize: 12, marginTop: 8, marginBottom: 0, textAlign: 'center' }}>
+              Reset link is sent to {ADMIN_EMAIL}.
+            </p>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="admin-root" style={{ minHeight: '100vh', background: '#0B1626', color: '#E6ECF5', padding: '32px 20px' }}>
+      <style>{ADMIN_RESPONSIVE_CSS}</style>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 12, letterSpacing: '.18em', color: '#ffd66a' }}>ADMIN</div>
+            <h1 style={{ margin: '4px 0 0', fontSize: 26, fontWeight: 700 }}>CELPIPACE Dashboard</h1>
+            <p style={{ color: '#98a2b5', fontSize: 13, margin: '4px 0 0' }}>
+              Signed in as <strong style={{ color: '#E6ECF5' }}>{user.email}</strong>
+            </p>
+          </div>
+          <button onClick={signOut} style={btnGhostStyle}>Sign Out</button>
+        </div>
+
+        {/* Tab bar */}
+        <div className="admin-tabbar" style={{ display: 'flex', gap: 6, borderBottom: '1px solid #1d3152', marginBottom: 24, overflowX: 'auto' }}>
+          {[
+            ['overview', 'Overview'],
+            ['support', 'Support'],
+            ['checkout', 'Checkout'],
+            ['acquisition', 'Acquisition'],
+            ['funnel', 'Funnel'],
+            ['product', 'Product'],
+            ['users', 'Users'],
+            ['activity', 'Activity'],
+            ['revenue', 'Revenue'],
+            ['subscriptions', 'Subscriptions'],
+            ['analytics', 'Analytics'],
+            ['refunds', 'Refunds'],
+            ['observability', 'Observability'],
+            ['coupons', 'Coupons'],
+            ['blog', 'Blog'],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              style={{
+                background: tab === id ? '#12223A' : 'transparent',
+                border: 'none',
+                borderBottom: tab === id ? '2px solid #ffd66a' : '2px solid transparent',
+                color: tab === id ? '#ffd66a' : '#98a2b5',
+                padding: '10px 18px',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {tab === 'overview' && <OverviewTab onNavigate={setTab} />}
+        {tab === 'support' && <SupportTab UserDetailPanel={UserDetailDrawer} />}
+        {tab === 'checkout' && <CheckoutTab />}
+        {tab === 'acquisition' && <AcquisitionTab />}
+        {tab === 'funnel' && <FunnelTab />}
+        {tab === 'product' && <ProductTab />}
+        {tab === 'users' && <UsersTab />}
+        {tab === 'activity' && <ActivityTab />}
+        {tab === 'revenue' && <RevenueTab />}
+        {tab === 'subscriptions' && <SubscriptionsTab />}
+        {tab === 'analytics' && <AnalyticsTab />}
+        {tab === 'refunds' && <RefundsTab />}
+        {tab === 'observability' && <ObservabilityTab />}
+        {tab === 'coupons' && <CouponsTab />}
+        {tab === 'blog' && <BlogTab />}
+      </div>
+    </div>
+  )
+}
+
+function useAdminAuth() {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [recoveryMode, setRecoveryMode] = useState(false)
+
+  useEffect(() => {
+    let mounted = true
+    adminSupabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (!mounted) return
+        setUser(session?.user ?? null)
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.warn('[admin] getSession failed:', error?.message || error)
+        if (mounted) setLoading(false)
+      })
+
+    const { data: { subscription } } = adminSupabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') setRecoveryMode(true)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    return () => { mounted = false; subscription.unsubscribe() }
+  }, [])
+
+  const signOut = async () => {
+    setUser(null)
+    setRecoveryMode(false)
+    await adminSupabase.auth.signOut({ scope: 'local' }).catch(() => {})
+  }
+
+  return { user, loading, signOut, recoveryMode, clearRecoveryMode: () => setRecoveryMode(false) }
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  DATA HOOK — shared profiles fetch                          */
+/* ═══════════════════════════════════════════════════════════ */
+function useProfiles() {
+  const [rows, setRows] = useState(null)
+  const [err, setErr]   = useState('')
+  useEffect(() => {
+    let cancel = false
+    ;(async () => {
+      let { data, error } = await adminSupabase
+        .from('profiles')
+        .select(PROFILE_COLUMNS)
+        .order('created_at', { ascending: false })
+      // If any of the enriched columns are missing on legacy DBs, fall back.
+      if (error && /column .* does not exist/i.test(error.message || '')) {
+        const fallback = await adminSupabase
+          .from('profiles')
+          .select(LEGACY_PROFILE_COLUMNS)
+          .order('created_at', { ascending: false })
+        data = fallback.data?.map(row => ({ ...row, last_seen_at: null })) ?? null
+        error = fallback.error
+      }
+      if (cancel) return
+      if (error) setErr(error.message)
+      else setRows(data ?? [])
+    })()
+    return () => { cancel = true }
+  }, [])
+  return { rows, setRows, err }
+}
+
+function useAdminActivity() {
+  const [rows, setRows] = useState(null)
+  const [err, setErr] = useState('')
+
+  useEffect(() => {
+    let cancel = false
+    ;(async () => {
+      const { data, error } = await adminSupabase.rpc('get_admin_user_activity')
+      if (cancel) return
+      if (error) setErr(error.message)
+      else setRows(data ?? [])
+    })()
+    return () => { cancel = true }
+  }, [])
+
+  return { rows, err }
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  OVERVIEW                                                    */
+/* ═══════════════════════════════════════════════════════════ */
+function OverviewTab({ onNavigate }) {
+  const { rows, err } = useProfiles()
+  const { counts } = useAdminAlertCounts()
+  if (err) return <Err msg={err} />
+  if (!rows) return <Loading />
+
+  const total = rows.length
+  const premium = rows.filter(r => r.is_premium).length
+  const free = total - premium
+  const last7d = rows.filter(r => r.created_at && Date.now() - new Date(r.created_at).getTime() < 7 * 864e5).length
+  const last30d = rows.filter(r => r.created_at && Date.now() - new Date(r.created_at).getTime() < 30 * 864e5).length
+  const paidPremium = countPaidPremium(rows)
+  const canceling = countCanceling(rows)
+  const { activeMrr, atRiskMrr } = computeMrrSummary(rows)
+  const mrr = activeMrr
+  const arr = mrr * 12
+  const churnRisk = paidPremium ? Math.round((canceling / paidPremium) * 100) : 0
+  const dau = countActiveUsers(rows, 1)
+  const wau = countActiveUsers(rows, 7)
+  const mau = countActiveUsers(rows, 30)
+
+  const recent = rows.slice(0, 8)
+  const goTab = (id) => { if (typeof onNavigate === 'function') onNavigate(id) }
+
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Total Users"  value={total} />
+        <StatCard label="DAU"          value={dau} accent="#7dc8ff" hint="Active last 24h (last_seen_at)" />
+        <StatCard label="WAU"          value={wau} accent="#7dc8ff" />
+        <StatCard label="MAU"          value={mau} accent="#7dc8ff" />
+        <StatCard label="Premium"      value={premium} accent="#ffd66a" />
+        <StatCard label="Paid subs"    value={paidPremium} accent="#7dffb0" />
+        <StatCard label="Canceling"    value={canceling} accent={canceling ? '#ff9a9a' : '#E6ECF5'} />
+        <StatCard label="Free"         value={free} />
+        <StatCard label="New (7d)"     value={last7d} accent="#7dc8ff" />
+        <StatCard label="New (30d)"    value={last30d} accent="#7dc8ff" />
+        <StatCard label="Conversion"   value={total ? `${Math.round(premium/total*100)}%` : '–'} />
+        <StatCard label="Churn risk"   value={`${churnRisk}%`} accent={churnRisk >= 20 ? '#ff9a9a' : '#E6ECF5'} />
+        <StatCard label="Est. MRR"     value={`$${mrr.toFixed(0)}`} accent="#7dffb0" hint="Plan-based; excludes cancel-at-period-end" />
+        <StatCard label="At-risk MRR"  value={`$${atRiskMrr.toFixed(0)}`} accent={atRiskMrr ? '#ff9a9a' : '#E6ECF5'} />
+        <StatCard label="Est. ARR"     value={`$${arr.toFixed(0)}`} accent="#7dffb0" />
+        <StatCard
+          label="Open support (7d)"
+          value={counts.supportOpen ?? '—'}
+          accent={(counts.supportOpen ?? 0) > 0 ? '#ff9a9a' : '#E6ECF5'}
+          onClick={() => goTab('support')}
+          hint="New billing/technical tickets"
+        />
+        <StatCard
+          label="Abandoned checkout (72h)"
+          value={counts.checkoutHot ?? '—'}
+          accent={(counts.checkoutHot ?? 0) > 0 ? '#ffd66a' : '#E6ECF5'}
+          onClick={() => goTab('checkout')}
+          hint="Open checkout intents"
+        />
+      </div>
+
+      <Panel title="Recent signups">
+        <Table
+          cols={['Email', 'Name', 'Location', 'Plan', 'Joined']}
+          rows={recent.map(r => [
+            r.email,
+            r.full_name || '—',
+            r.country_code
+              ? <span style={{ fontSize: 12 }}>{r.city ? `${r.city}, ` : ''}{r.country || r.country_code}</span>
+              : <span style={{ color: '#667', fontSize: 12 }}>—</span>,
+            <PlanCell row={r} />,
+            r.created_at ? new Date(r.created_at).toLocaleString() : '—',
+          ])}
+        />
+      </Panel>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  USERS                                                       */
+/* ═══════════════════════════════════════════════════════════ */
+function UsersTab() {
+  const { rows, setRows, err } = useProfiles()
+  const [query, setQuery] = useState('')
+  const [filter, setFilter] = useState('all')
+  const [busyId, setBusyId] = useState(null)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [revokeTarget, setRevokeTarget] = useState(null) // row pending an immediate-vs-period-end choice
+  const drawerRef = useRef(null)
+
+  // Scroll the detail drawer into view when a user is opened — without this
+  // the drawer renders below the entire table and looks like the View button
+  // does nothing on tables with many rows.
+  useEffect(() => {
+    if (!selectedUser || !drawerRef.current) return
+    drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [selectedUser])
+
+  const filtered = useMemo(() => {
+    if (!rows) return []
+    const q = query.trim().toLowerCase()
+    return rows.filter(r => {
+      if (filter === 'premium' && !r.is_premium) return false
+      if (filter === 'free' && r.is_premium) return false
+      if (filter === 'canceling' && !(r.is_premium && r.cancel_at_period_end)) return false
+      if (filter === 'paid' && !(r.is_premium && isPaidPremiumSource(r.premium_source))) return false
+      if (filter === 'admin' && r.premium_source !== 'admin') return false
+      if (filter === 'coupon' && !String(r.premium_source || '').startsWith('coupon')) return false
+      if (!q) return true
+      return (r.email ?? '').toLowerCase().includes(q) || (r.full_name ?? '').toLowerCase().includes(q)
+    })
+  }, [rows, query, filter])
+
+  // Grant/revoke now goes through /api/admin (action: set-premium) instead of
+  // writing profiles columns directly from the client. A revoke used to only
+  // flip our own columns — if the account had a live Stripe subscription
+  // attached, Stripe never heard about it and kept billing. The server action
+  // cancels the real subscription (immediately or at period end, whichever
+  // the admin picks) before it touches our columns.
+  const applyPremiumChange = async (row, { next, cancelMode }) => {
+    setBusyId(row.id)
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'set-premium', user_id: row.id, next, cancel_mode: cancelMode }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || 'Update failed')
+      setRows(prev => prev.map(r => r.id === row.id ? { ...r, ...data.profile } : r))
+    } catch (e) {
+      alert('Update failed: ' + e.message)
+    } finally {
+      setBusyId(null)
+      setRevokeTarget(null)
+    }
+  }
+
+  // Pull live Stripe state for one row on demand. Without this, a cancel made
+  // in the Stripe dashboard doesn't show up here until the reconciler's next
+  // run, which on the current cron cadence is up to a day later.
+  const syncFromStripe = async (row) => {
+    setBusyId(row.id)
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'sync-user-subscription', user_id: row.id }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.message || data.error || 'Sync failed')
+      setRows(prev => prev.map(r => r.id === row.id ? { ...r, ...data.profile } : r))
+      alert(data.changed?.length
+        ? `Synced from Stripe (${data.stripe_status}). Updated: ${data.changed.join(', ')}`
+        : `Already up to date with Stripe (${data.stripe_status}).`)
+    } catch (e) {
+      alert('Sync failed: ' + e.message)
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  const handleTogglePremium = (row) => {
+    if (!row.is_premium) {
+      if (!window.confirm(`Grant ${row.email} manual premium access?`)) return
+      applyPremiumChange(row, { next: true })
+      return
+    }
+    // Revoking is where "immediately or at period end" actually matters, and
+    // where a real Stripe subscription might be attached — always confirm
+    // through the dialog rather than guessing a default.
+    setRevokeTarget(row)
+  }
+
+  const downloadCsv = () => {
+    const header = ['email','full_name','is_premium','premium_source','created_at']
+    const lines = [header.join(',')]
+    for (const r of filtered) {
+      lines.push([
+        JSON.stringify(r.email ?? ''),
+        JSON.stringify(r.full_name ?? ''),
+        r.is_premium ? 'true' : 'false',
+        JSON.stringify(r.premium_source ?? ''),
+        JSON.stringify(r.created_at ?? ''),
+      ].join(','))
+    }
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url; a.download = `celpipace-users-${new Date().toISOString().slice(0,10)}.csv`
+    document.body.appendChild(a); a.click(); a.remove()
+    URL.revokeObjectURL(url)
+  }
+
+  if (err) return <Err msg={err} />
+  if (!rows) return <Loading />
+
+  return (
+    <>
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+        <input placeholder="Search email or name…" value={query} onChange={e => setQuery(e.target.value)} style={{ ...inputStyle, flex: 1, minWidth: 240, margin: 0 }} />
+        <select value={filter} onChange={e => setFilter(e.target.value)} style={{ ...inputStyle, margin: 0, width: 160 }}>
+          <option value="all">All users</option>
+          <option value="premium">Premium</option>
+          <option value="free">Free</option>
+          <option value="paid">Paid subs</option>
+          <option value="canceling">Canceling</option>
+          <option value="admin">Admin grant</option>
+          <option value="coupon">Coupon</option>
+        </select>
+        <button onClick={downloadCsv} style={btnPrimaryCompact}>⇣ Export CSV</button>
+      </div>
+
+      <Panel>
+        <Table
+          cols={['Email', 'Name', 'Source', 'Location', 'Joined', 'Plan', 'Renewal', 'Actions']}
+          rows={filtered.map(r => [
+            r.email,
+            r.full_name || <span style={{ color: '#667' }}>—</span>,
+            <div style={{ fontSize: 12 }}>
+              {r.utm_source
+                ? <><span style={{ color: '#ffd66a' }}>{r.utm_source}</span>
+                    {r.utm_campaign && <span style={{ color: '#98a2b5' }}> · {r.utm_campaign}</span>}</>
+                : r.referrer
+                ? <span style={{ color: '#7dc8ff' }}>{(() => { try { return new URL(r.referrer).hostname } catch { return r.referrer.slice(0, 24) } })()}</span>
+                : <span style={{ color: '#667' }}>direct</span>}
+            </div>,
+            <div style={{ fontSize: 12 }}>
+              {r.country_code
+                ? <><span style={{ color: '#E6ECF5' }}>{r.city ? `${r.city}, ` : ''}{r.country || r.country_code}</span></>
+                : <span style={{ color: '#667' }}>—</span>}
+            </div>,
+            r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
+            <PlanCell row={r} showStatus />,
+            <RenewalBadge row={r} />,
+            <div style={{ display: 'flex', gap: 6 }}>
+              <button
+                onClick={() => setSelectedUser(selectedUser?.id === r.id ? null : r)}
+                style={{ ...btnSmallStyle, background: selectedUser?.id === r.id ? '#1d3152' : 'transparent', border: '1px solid #1d3152' }}
+              >
+                {selectedUser?.id === r.id ? 'Hide' : 'View →'}
+              </button>
+              {(r.stripe_subscription_id || r.stripe_customer_id) && (
+                <button
+                  onClick={() => syncFromStripe(r)}
+                  disabled={busyId === r.id}
+                  style={{ ...btnSmallStyle, color: '#7dc8ff' }}
+                  title="Pull live status from Stripe"
+                >
+                  {busyId === r.id ? '…' : '⟳ Sync'}
+                </button>
+              )}
+              <button onClick={() => handleTogglePremium(r)} disabled={busyId === r.id} style={btnSmallStyle}>
+                {busyId === r.id ? '…' : (r.is_premium ? 'Revoke' : 'Grant')}
+              </button>
+            </div>,
+          ])}
+          empty="No users match."
+        />
+      </Panel>
+      <p style={{ color: '#667', fontSize: 12, marginTop: 16, textAlign: 'center' }}>
+        {filtered.length} of {rows.length} users shown
+      </p>
+
+      {selectedUser && (
+        <div ref={drawerRef}>
+          <UserDetailDrawer
+            userId={selectedUser.id}
+            email={selectedUser.email}
+            onClose={() => setSelectedUser(null)}
+          />
+        </div>
+      )}
+
+      {revokeTarget && (
+        <RevokeModal
+          row={revokeTarget}
+          busy={busyId === revokeTarget.id}
+          onCancel={() => setRevokeTarget(null)}
+          onConfirm={(cancelMode) => applyPremiumChange(revokeTarget, { next: false, cancelMode })}
+        />
+      )}
+    </>
+  )
+}
+
+function RevokeModal({ row, busy, onCancel, onConfirm }) {
+  const hasStripeSub = !!row.stripe_subscription_id
+  const periodEnd = row.current_period_end ? new Date(row.current_period_end).toLocaleDateString() : 'the end of the billing period'
+
+  return (
+    <div
+      onClick={busy ? undefined : onCancel}
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(2,8,20,0.7)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 20, zIndex: 100,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: '#12223A', border: '1px solid #1d3152', borderRadius: 14,
+          maxWidth: 460, width: '100%', padding: 26,
+        }}
+      >
+        <h3 style={{ margin: '0 0 8px', fontSize: 16, color: '#E6ECF5' }}>Revoke {row.email}</h3>
+        {hasStripeSub ? (
+          <p style={{ color: '#98a2b5', fontSize: 13, lineHeight: 1.5, marginBottom: 20 }}>
+            This account has a live Stripe subscription (<code>{row.stripe_subscription_id}</code>) — it will actually
+            get cancelled in Stripe, not just flipped locally. Otherwise Stripe keeps billing regardless of what this
+            dashboard shows.
+          </p>
+        ) : (
+          <p style={{ color: '#98a2b5', fontSize: 13, lineHeight: 1.5, marginBottom: 20 }}>
+            No Stripe subscription is attached to this account — this only removes the manually granted access.
+          </p>
+        )}
+
+        <div style={{ display: 'grid', gap: 10, marginBottom: 22 }}>
+          <button
+            onClick={() => onConfirm('immediate')}
+            disabled={busy}
+            style={{ ...btnSmallStyle, textAlign: 'left', padding: '12px 14px', color: '#ff9a9a', cursor: busy ? 'wait' : 'pointer' }}
+          >
+            <strong>End access immediately</strong>
+            <div style={{ color: '#98a2b5', fontWeight: 400, marginTop: 2 }}>
+              {hasStripeSub ? 'Cancels the Stripe subscription right now — no further charge.' : 'Access ends now.'}
+            </div>
+          </button>
+          {hasStripeSub && (
+            <button
+              onClick={() => onConfirm('period_end')}
+              disabled={busy}
+              style={{ ...btnSmallStyle, textAlign: 'left', padding: '12px 14px', cursor: busy ? 'wait' : 'pointer' }}
+            >
+              <strong>End at period end ({periodEnd})</strong>
+              <div style={{ color: '#98a2b5', fontWeight: 400, marginTop: 2 }}>
+                Same as the customer's own self-serve cancel — no more renewals, access continues until then.
+              </div>
+            </button>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button onClick={onCancel} disabled={busy} style={{ ...btnGhostStyle, cursor: busy ? 'wait' : 'pointer' }}>
+            {busy ? 'Working…' : 'Cancel'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  ACTIVITY                                                    */
+/* ═══════════════════════════════════════════════════════════ */
+/* User detail drawer — joins every table that references this user_id into
+   one chronological view. Used by both Activity and Users tabs. */
+function UserDetailDrawer({ userId, email, onClose }) {
+  const [data, setData] = useState(null)
+  const [err, setErr] = useState('')
+
+  useEffect(() => {
+    if (!userId) return
+    let cancel = false
+    ;(async () => {
+      try {
+        const [profileR, eventsR, practiceR, paymentsR, subsR, emailsR] = await Promise.all([
+          adminSupabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
+          adminSupabase.from('analytics_events')
+            .select('id, session_id, event_type, page_path, page_title, element_label, element_tag, href, metadata, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(300),
+          adminSupabase.from('practice_attempts')
+            .select('id, section, part_id, set_number, score, total, pct, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(50),
+          adminSupabase.from('payments')
+            .select('id, plan, amount_cents, currency, status, granted_days, stripe_session_id, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }),
+          adminSupabase.from('subscription_events')
+            .select('id, event_type, prev_status, new_status, plan, amount_cents, currency, reason, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(50),
+          adminSupabase.from('email_log')
+            .select('id, kind, subject, status, provider, sent_at, created_at')
+            .eq('user_id', userId).order('created_at', { ascending: false }).limit(50),
+        ])
+
+        if (cancel) return
+        const firstError = [profileR, eventsR, practiceR, paymentsR, subsR, emailsR].find(r => r.error)?.error
+        if (firstError) { setErr(firstError.message); return }
+
+        setData({
+          profile: profileR.data,
+          events: eventsR.data ?? [],
+          practice: practiceR.data ?? [],
+          payments: paymentsR.data ?? [],
+          subs: subsR.data ?? [],
+          emails: emailsR.data ?? [],
+        })
+      } catch (e) {
+        if (!cancel) setErr(e?.message || 'Failed to load user detail')
+      }
+    })()
+    return () => { cancel = true }
+  }, [userId])
+
+  if (err) return <div style={drawerStyle}><Err msg={err} /></div>
+  if (!data) return <div style={drawerStyle}><Loading /></div>
+
+  const { profile, events, practice, payments, subs, emails } = data
+
+  // ── Engagement aggregates (existing logic) ──
+  const pageViews = events.filter(e => e.event_type === 'page_view')
+  const clicks    = events.filter(e => e.event_type === 'click')
+  const sessions  = [...new Set(events.map(e => e.session_id).filter(Boolean))]
+
+  const pageCounts = {}
+  pageViews.forEach(e => { const p = e.page_path || 'Unknown'; pageCounts[p] = (pageCounts[p] || 0) + 1 })
+  const topPages = Object.entries(pageCounts).sort((a,b) => b[1]-a[1]).slice(0,8).map(([label,count]) => ({ label, count }))
+
+  const clickCounts = {}
+  clicks.forEach(e => { const k = e.element_label || e.href || e.element_tag || 'Unknown'; clickCounts[k] = (clickCounts[k] || 0) + 1 })
+  const topClicks = Object.entries(clickCounts).sort((a,b) => b[1]-a[1]).slice(0,8).map(([label,count]) => ({ label, count }))
+
+  // ── Combined chronological lifecycle feed ──
+  const lifecycle = [
+    ...payments.map(p => ({ when: p.created_at, kind: 'payment',  label: `${(p.amount_cents/100).toFixed(2)} ${p.currency?.toUpperCase()} · ${p.plan}`, status: p.status, color: '#7dffb0' })),
+    ...subs.map(s => ({ when: s.created_at, kind: 'subscription', label: `${s.event_type}${s.prev_status && s.new_status ? ` · ${s.prev_status} → ${s.new_status}` : ''}`, status: s.reason || s.plan, color: '#ffd66a' })),
+    ...emails.map(e => ({ when: e.sent_at || e.created_at, kind: 'email', label: `${e.kind} · ${e.subject || ''}`, status: e.status, color: '#7dc8ff' })),
+    ...practice.map(p => ({ when: p.created_at, kind: 'practice', label: `${p.section} · ${p.part_id || ''}${p.set_number ? ` #${p.set_number}` : ''}${p.pct != null ? ` · ${p.pct}%` : ''}`, status: p.score != null ? `${p.score}/${p.total}` : null, color: '#a78bfa' })),
+  ]
+    .filter(x => x.when)
+    .sort((a,b) => new Date(b.when).getTime() - new Date(a.when).getTime())
+
+  const utmKnown = profile.utm_source || profile.utm_medium || profile.utm_campaign || profile.referrer
+
+  return (
+    <div style={drawerStyle}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 12, letterSpacing: '.16em', color: '#ffd66a', marginBottom: 2 }}>USER DETAIL</div>
+          <strong style={{ color: '#E6ECF5', fontSize: 17 }}>{profile?.full_name || friendlyName(email)}</strong>
+          <div style={{ color: '#98a2b5', fontSize: 13, marginTop: 2 }}>
+            {email}
+            {profile?.is_premium && <span style={{ marginLeft: 8 }}><Chip color="#ffd66a" text={planLabel(profile).toUpperCase()} /></span>}
+            {profile?.subscription_status && profile.subscription_status !== 'none' && (
+              <span style={{ marginLeft: 8, color: '#98a2b5', fontSize: 12 }}>· {profile.subscription_status}</span>
+            )}
+          </div>
+        </div>
+        <button onClick={onClose} style={{ ...btnSmallStyle, background: 'transparent', border: '1px solid #1d3152' }}>✕ Close</button>
+      </div>
+
+      {/* Quick stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12, marginBottom: 18 }}>
+        <StatCard label="Page views"     value={pageViews.length} />
+        <StatCard label="Clicks"         value={clicks.length} />
+        <StatCard label="Sessions"       value={sessions.length} />
+        <StatCard label="Practice"       value={practice.length} accent="#a78bfa" />
+        <StatCard label="Payments"       value={payments.length} accent="#7dffb0" />
+        <StatCard label="Emails sent"    value={emails.length} accent="#7dc8ff" />
+      </div>
+
+      {/* Attribution + Geo side-by-side */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 18 }}>
+        <Panel title="Acquisition">
+          {utmKnown ? (
+            <div style={{ fontSize: 13, lineHeight: 1.9 }}>
+              {profile.utm_source   && <KV k="utm_source"   v={profile.utm_source} />}
+              {profile.utm_medium   && <KV k="utm_medium"   v={profile.utm_medium} />}
+              {profile.utm_campaign && <KV k="utm_campaign" v={profile.utm_campaign} />}
+              {profile.utm_content  && <KV k="utm_content"  v={profile.utm_content} />}
+              {profile.utm_term     && <KV k="utm_term"     v={profile.utm_term} />}
+              {profile.referrer     && <KV k="referrer"     v={profile.referrer} truncate />}
+              {profile.landing_page && <KV k="landing"      v={profile.landing_page} />}
+              {profile.first_touch_at && <KV k="first touch" v={new Date(profile.first_touch_at).toLocaleString()} />}
+            </div>
+          ) : (
+            <div style={{ color: '#98a2b5', fontSize: 13 }}>
+              No attribution captured. Signed up direct or before tracking was enabled.
+            </div>
+          )}
+        </Panel>
+
+        <Panel title="Location & device">
+          <div style={{ fontSize: 13, lineHeight: 1.9 }}>
+            {profile.country_code
+              ? <KV k="country" v={`${profile.country || profile.country_code} (${profile.country_code})`} />
+              : <KV k="country" v="unknown" />}
+            {profile.region   && <KV k="region"   v={profile.region} />}
+            {profile.city     && <KV k="city"     v={profile.city} />}
+            {profile.timezone && <KV k="timezone" v={profile.timezone} />}
+            {profile.locale   && <KV k="locale"   v={profile.locale} />}
+            {profile.signup_ip_hash && <KV k="ip hash" v={profile.signup_ip_hash.slice(0,16) + '…'} />}
+            {profile.signup_user_agent && <KV k="user agent" v={profile.signup_user_agent} truncate />}
+          </div>
+        </Panel>
+      </div>
+
+      {/* Lifecycle timeline */}
+      <Panel title={`Lifecycle (${lifecycle.length})`}>
+        {lifecycle.length === 0 ? (
+          <div style={{ color: '#98a2b5', fontSize: 13 }}>No payments, subscription events, emails, or practice attempts yet.</div>
+        ) : (
+          <Table
+            cols={['When', 'Kind', 'Detail', 'Status']}
+            rows={lifecycle.slice(0, 50).map(item => [
+              new Date(item.when).toLocaleString(),
+              <Chip color={item.color} text={item.kind.toUpperCase()} />,
+              <span style={{ fontSize: 13 }}>{item.label}</span>,
+              <span style={{ color: '#98a2b5', fontSize: 12 }}>{item.status || '—'}</span>,
+            ])}
+          />
+        )}
+      </Panel>
+
+      {/* Engagement summary */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginTop: 18 }}>
+        <Panel title="Top pages">
+          <RankedList rows={topPages} empty="No page views recorded." />
+        </Panel>
+        <Panel title="Top clicks">
+          <RankedList rows={topClicks} empty="No clicks recorded." />
+        </Panel>
+      </div>
+
+      {/* Recent raw events */}
+      <Panel title={`Recent events (${events.length})`}>
+        <Table
+          cols={['When', 'Type', 'Page', 'Click target', 'Session']}
+          rows={events.slice(0, 80).map(e => [
+            new Date(e.created_at).toLocaleString(),
+            e.event_type === 'click' ? <Chip color="#ffd66a" text="CLICK" /> : <Chip color="#7dc8ff" text="PAGE" />,
+            <div>
+              <strong style={{ fontSize: 13 }}>{e.page_path || '—'}</strong>
+              <div style={{ color: '#98a2b5', fontSize: 11 }}>{e.page_title || ''}</div>
+            </div>,
+            e.event_type === 'click'
+              ? <span style={{ fontSize: 12 }}>{e.element_label || e.href || e.element_tag || '—'}</span>
+              : <span style={{ color: '#667' }}>—</span>,
+            <code style={{ color: '#98a2b5', fontSize: 11 }}>{e.session_id?.slice(0,16) || '—'}</code>,
+          ])}
+          empty="No events."
+        />
+        {events.length > 80 && (
+          <p style={{ color: '#667', fontSize: 12, margin: '8px 0 0' }}>Showing 80 of {events.length}.</p>
+        )}
+      </Panel>
+    </div>
+  )
+}
+
+// Backwards-compat alias for the old name used inside ActivityTab.
+const UserEventsPanel = UserDetailDrawer
+
+function KV({ k, v, truncate }) {
+  return (
+    <div style={{ display: 'flex', gap: 10 }}>
+      <span style={{ color: '#667', minWidth: 92, fontSize: 12, textTransform: 'uppercase', letterSpacing: '.06em' }}>{k}</span>
+      <span style={{ color: '#E6ECF5', wordBreak: 'break-all', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: truncate ? 'nowrap' : 'normal', maxWidth: truncate ? 280 : undefined }}>{v}</span>
+    </div>
+  )
+}
+
+const drawerStyle = { background: '#0d1f38', border: '1px solid #1d3152', borderRadius: 12, padding: 20, marginTop: 16 }
+
+function ActivityTab() {
+  const { rows, err } = useAdminActivity()
+  const [query, setQuery] = useState('')
+  const [selectedUser, setSelectedUser] = useState(null)
+  const drawerRef = useRef(null)
+
+  useEffect(() => {
+    if (!selectedUser || !drawerRef.current) return
+    drawerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [selectedUser])
+
+  if (err) return <Err msg={`${err}. Run supabase/admin_hardening.sql if this is the first deploy of activity analytics.`} />
+  if (!rows) return <Loading />
+
+  const now = Date.now()
+  const inWindow = (row, days) => {
+    const source = row.last_activity_at || row.last_seen_at || row.last_response_at || row.created_at
+    if (!source) return false
+    return now - new Date(source).getTime() <= days * 864e5
+  }
+  const total = rows.length
+  const active24h = rows.filter(r => inWindow(r, 1)).length
+  const active7d = rows.filter(r => inWindow(r, 7)).length
+  const active30d = rows.filter(r => inWindow(r, 30)).length
+
+  const q = query.trim().toLowerCase()
+  const filtered = q
+    ? rows.filter(r => `${r.full_name || ''} ${r.email || ''}`.toLowerCase().includes(q))
+    : rows
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>User Activity</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            {total} total · {active24h} in 24h · {active7d} in 7d · {active30d} in 30d
+            <span style={{ marginLeft: 8, color: '#667' }}>(includes progress saves, practice responses, writing, and mock exams)</span>
+          </p>
+        </div>
+        <input
+          placeholder="Search users…"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          style={{ ...inputStyle, width: 260, margin: 0 }}
+        />
+      </div>
+
+      <Panel>
+        <Table
+          cols={['User', 'Last Seen', 'Last Response', 'Activity', 'Joined', 'Events']}
+          rows={filtered.map(r => [
+            <div>
+              <div style={{ fontWeight: 700 }}>{r.full_name || friendlyName(r.email)}</div>
+              <div style={{ color: '#98a2b5', fontSize: 13, marginTop: 2 }}>{r.email || '—'}</div>
+            </div>,
+            <span style={{ color: r.last_seen_at ? '#E6ECF5' : '#98a2b5' }}>{formatRelativeTime(r.last_seen_at)}</span>,
+            <span style={{ color: r.last_response_at ? '#E6ECF5' : '#98a2b5' }}>{formatRelativeTime(r.last_response_at)}</span>,
+            <div>
+              <strong>{r.response_count || 0}</strong>
+              <span style={{ color: '#98a2b5', marginLeft: 6 }}>responses</span>
+              {!!r.completed_sessions_count && <span style={{ color: '#7dffb0', marginLeft: 8 }}>{r.completed_sessions_count} completed</span>}
+            </div>,
+            r.created_at ? new Date(r.created_at).toLocaleDateString() : '—',
+            <button
+              onClick={() => setSelectedUser(selectedUser?.id === r.id ? null : r)}
+              style={{ ...btnSmallStyle, background: selectedUser?.id === r.id ? '#1d3152' : 'transparent', border: '1px solid #1d3152' }}
+            >
+              {selectedUser?.id === r.id ? 'Hide' : 'View events →'}
+            </button>,
+          ])}
+          empty="No activity found."
+        />
+      </Panel>
+
+      {selectedUser && (
+        <div ref={drawerRef}>
+          <UserEventsPanel
+            userId={selectedUser.id}
+            email={selectedUser.email}
+            onClose={() => setSelectedUser(null)}
+          />
+        </div>
+      )}
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  SUBSCRIPTIONS                                               */
+/* ═══════════════════════════════════════════════════════════ */
+function SubscriptionsTab() {
+  const { rows, err } = useProfiles()
+  const [source, setSource] = useState('all')
+
+  if (err) return <Err msg={err} />
+  if (!rows) return <Loading />
+
+  const subs = rows.filter(r => r.is_premium)
+  const filtered = subs.filter(r => {
+    if (source === 'all') return true
+    if (source === 'coupon') return (r.premium_source || '').startsWith('coupon')
+    if (source === 'admin') return r.premium_source === 'admin'
+    if (source === 'paid') return isPaidPremiumSource(r.premium_source)
+    if (source === 'canceling') return !!r.cancel_at_period_end
+    return true
+  })
+
+  // Surface canceling subscribers first — they're the rows that need attention.
+  const sorted = [...filtered].sort((a, b) => {
+    if (!!b.cancel_at_period_end !== !!a.cancel_at_period_end) return a.cancel_at_period_end ? -1 : 1
+    const ax = a.premium_expires_at ? new Date(a.premium_expires_at).getTime() : Infinity
+    const bx = b.premium_expires_at ? new Date(b.premium_expires_at).getTime() : Infinity
+    return ax - bx
+  })
+
+  const bySource = subs.reduce((acc, r) => {
+    const key = (r.premium_source || 'unknown').split(':')[0]
+    acc[key] = (acc[key] || 0) + 1
+    return acc
+  }, {})
+
+  const paidCount = countPaidPremium(subs)
+  const cancelingCount = countCanceling(subs)
+  const { activeMrr: mrr } = computeMrrSummary(subs)
+  const churnRisk = paidCount ? Math.round((cancelingCount / paidCount) * 100) : 0
+
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 14, marginBottom: 18 }}>
+        <StatCard label="Total Premium" value={subs.length} accent="#ffd66a" />
+        <StatCard label="Paid subs" value={paidCount} accent="#7dffb0" />
+        <StatCard label="Canceling" value={cancelingCount} accent={cancelingCount ? '#ff9a9a' : '#E6ECF5'} />
+        <StatCard label="Churn risk" value={`${churnRisk}%`} accent={churnRisk >= 20 ? '#ff9a9a' : '#E6ECF5'} />
+        <StatCard label="Est. MRR" value={`$${mrr.toFixed(0)}`} accent="#7dffb0" />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 14, marginBottom: 24 }}>
+        {Object.entries(bySource).map(([k, v]) => (
+          <StatCard key={k} label={k} value={v} />
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+        <select value={source} onChange={e => setSource(e.target.value)} style={{ ...inputStyle, margin: 0, width: 180 }}>
+          <option value="all">All sources</option>
+          <option value="paid">Paid</option>
+          <option value="canceling">Canceling</option>
+          <option value="coupon">Coupon</option>
+          <option value="admin">Admin grant</option>
+        </select>
+      </div>
+
+      <Panel>
+        <Table
+          cols={['Email', 'Name', 'Plan', 'Source', 'Status', 'Renewal', 'Granted', 'Expires']}
+          rows={sorted.map(r => [
+            r.email,
+            r.full_name || '—',
+            <PlanCell row={r} />,
+            <span style={{ color: '#ffd66a', fontSize: 12 }}>{r.premium_source || '—'}</span>,
+            r.subscription_status || '—',
+            <RenewalBadge row={r} />,
+            r.premium_granted_at ? new Date(r.premium_granted_at).toLocaleDateString() : '—',
+            r.premium_expires_at ? new Date(r.premium_expires_at).toLocaleDateString() : <span style={{ color: '#7dffb0' }}>lifetime</span>,
+          ])}
+          empty="No premium subscribers yet."
+        />
+      </Panel>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  COUPONS                                                     */
+/* ═══════════════════════════════════════════════════════════ */
+function CouponsTab() {
+  const [coupons, setCoupons] = useState(null)
+  const [err, setErr]         = useState('')
+  const [newCode, setNewCode] = useState('')
+  const [newDays, setNewDays] = useState('365')
+  const [newMax, setNewMax]   = useState('')
+  const [busy, setBusy]       = useState(false)
+
+  const load = async () => {
+    try {
+      const data = await adminApi('list-coupons')
+      setCoupons(data.rows ?? [])
+      setErr('')
+    } catch (e) {
+      setErr(e.message || 'Failed to load coupons')
+    }
+  }
+  useEffect(() => { load() }, [])
+
+  const create = async () => {
+    const code = newCode.trim().toUpperCase()
+    if (!code) return
+    setBusy(true)
+    try {
+      await adminApi('create-coupon', {
+        code,
+        grants_days: newDays || null,
+        max_redemptions: newMax || null,
+      })
+      setNewCode(''); setNewDays('365'); setNewMax('')
+      await load()
+    } catch (e) {
+      alert('Create failed: ' + (e.message || 'Unknown error'))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const toggleActive = async (c) => {
+    try {
+      const data = await adminApi('update-coupon', { code: c.code, active: !c.active })
+      setCoupons(prev => prev.map(x => x.code === c.code ? data.row : x))
+    } catch (e) {
+      alert(e.message || 'Update failed')
+    }
+  }
+
+  if (err) return <Err msg={err} />
+  if (!coupons) return <Loading />
+
+  return (
+    <>
+      <Panel title="Create coupon">
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <input placeholder="CODE" value={newCode} onChange={e => setNewCode(e.target.value.toUpperCase())} style={{ ...inputStyle, margin: 0, width: 180 }} />
+          <input placeholder="Grants days (blank = lifetime)" value={newDays} onChange={e => setNewDays(e.target.value)} style={{ ...inputStyle, margin: 0, width: 220 }} />
+          <input placeholder="Max redemptions (blank = ∞)" value={newMax} onChange={e => setNewMax(e.target.value)} style={{ ...inputStyle, margin: 0, width: 220 }} />
+          <button onClick={create} disabled={busy || !newCode.trim()} style={btnPrimaryCompact}>
+            {busy ? '…' : '+ Add Coupon'}
+          </button>
+        </div>
+      </Panel>
+
+      <Panel title="All coupons">
+        <Table
+          cols={['Code', 'Status', 'Redeemed', 'Max', 'Grants', 'Created', 'Action']}
+          rows={coupons.map(c => [
+            <strong style={{ color: '#ffd66a' }}>{c.code}</strong>,
+            c.active ? <Chip color="#7dffb0" text="ACTIVE" /> : <Chip color="#98a2b5" text="INACTIVE" />,
+            c.times_redeemed ?? 0,
+            c.max_redemptions ?? '∞',
+            c.grants_days ? `${c.grants_days}d` : 'lifetime',
+            c.created_at ? new Date(c.created_at).toLocaleDateString() : '—',
+            <button onClick={() => toggleActive(c)} style={btnSmallStyle}>
+              {c.active ? 'Disable' : 'Enable'}
+            </button>,
+          ])}
+          empty="No coupons yet."
+        />
+      </Panel>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  ANALYTICS                                                   */
+/* ═══════════════════════════════════════════════════════════ */
+function AnalyticsTab() {
+  const { rows: profiles, err: profilesErr } = useProfiles()
+  const [events, setEvents] = useState(null)
+  const [payments, setPayments] = useState(null)
+  const [err, setErr] = useState('')
+  const [range, setRange] = useState('7')
+  const [eventFilter, setEventFilter] = useState('all')
+  const [query, setQuery] = useState('')
+
+  useEffect(() => {
+    let cancel = false
+    const days = parseInt(range, 10)
+    const since = new Date(Date.now() - days * 864e5).toISOString()
+    ;(async () => {
+      const [eventsRes, paymentsRes] = await Promise.all([
+        adminSupabase
+          .from('analytics_events')
+          .select('id, user_id, session_id, event_type, page_path, page_url, page_title, element_tag, element_role, element_label, element_id, element_classes, href, metadata, user_agent, created_at')
+          .gte('created_at', since)
+          .order('created_at', { ascending: false })
+          .limit(1500),
+        adminSupabase
+          .from('payments')
+          .select('id, status, created_at')
+          .gte('created_at', since)
+          .order('created_at', { ascending: false })
+          .limit(500),
+      ])
+      if (cancel) return
+      if (eventsRes.error) setErr(eventsRes.error.message)
+      else {
+        setEvents(eventsRes.data ?? [])
+        setPayments(paymentsRes.data ?? [])
+      }
+    })()
+    return () => { cancel = true }
+  }, [range])
+
+  if (profilesErr) return <Err msg={profilesErr} />
+  if (err) return <Err msg={`${err}. Run supabase/analytics_events.sql or rerun supabase/admin_hardening.sql, then deploy the app so events can be collected.`} />
+  if (!profiles || !events || !payments) return <Loading />
+
+  const profileById = new Map(profiles.map(profile => [profile.id, profile]))
+  const q = query.trim().toLowerCase()
+  const filtered = events.filter(event => {
+    if (eventFilter !== 'all' && event.event_type !== eventFilter) return false
+    if (!q) return true
+    const profile = profileById.get(event.user_id)
+    return [
+      profile?.email,
+      profile?.full_name,
+      event.page_path,
+      event.page_title,
+      event.element_label,
+      event.href,
+      event.session_id,
+    ].some(value => String(value || '').toLowerCase().includes(q))
+  })
+
+  const clicks = filtered.filter(event => event.event_type === 'click')
+  const pageViews = filtered.filter(event => event.event_type === 'page_view')
+  const uniqueSessions = new Set(filtered.map(event => event.session_id).filter(Boolean)).size
+  const uniqueUsers = new Set(filtered.map(event => event.user_id).filter(Boolean)).size
+  const anonymousEvents = filtered.filter(event => !event.user_id).length
+  const activeUserLabel = uniqueUsers ? uniqueUsers : '—'
+
+  // Bounce rate: sessions with only 1 page_view
+  const sessionPVCounts = {}
+  pageViews.forEach(e => {
+    if (!e.session_id) return
+    sessionPVCounts[e.session_id] = (sessionPVCounts[e.session_id] || 0) + 1
+  })
+  const pvSessionCount = Object.keys(sessionPVCounts).length
+  const bouncedCount = Object.values(sessionPVCounts).filter(n => n === 1).length
+  const bounceRate = pvSessionCount ? Math.round((bouncedCount / pvSessionCount) * 100) : 0
+
+  // Exit pages: last page_view per session (events are desc order, so first occurrence per session = last page visited)
+  const sessionExitPage = {}
+  pageViews.forEach(e => { if (e.session_id && !sessionExitPage[e.session_id]) sessionExitPage[e.session_id] = e.page_path || 'Unknown' })
+  const topExitPages = topGroups(Object.values(sessionExitPage).map(p => ({ page_path: p })), e => e.page_path, 10)
+
+  const topClicks = topGroups(clicks, event => {
+    const label = event.element_label || event.href || event.element_id || event.element_tag || 'Unknown click'
+    return `${label}${event.page_path ? ` · ${event.page_path}` : ''}`
+  }, 10)
+  const topPages = topGroups(filtered, event => event.page_path || 'Unknown page', 10)
+  const topUsers = topGroups(filtered.filter(event => event.user_id), event => {
+    const profile = profileById.get(event.user_id)
+    return profile?.email || profile?.full_name || event.user_id
+  }, 10)
+
+  const days = parseInt(range, 10)
+  const today = new Date(); today.setHours(0,0,0,0)
+  const buckets = Array.from({ length: days }, (_, i) => {
+    const date = new Date(today); date.setDate(date.getDate() - (days - 1 - i))
+    return { date, label: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }), clicks: 0, pageViews: 0 }
+  })
+  const startMs = buckets[0]?.date.getTime() ?? today.getTime()
+  filtered.forEach(event => {
+    const time = new Date(event.created_at).getTime()
+    const idx = Math.floor((time - startMs) / 864e5)
+    if (idx < 0 || idx >= buckets.length) return
+    if (event.event_type === 'click') buckets[idx].clicks += 1
+    if (event.event_type === 'page_view') buckets[idx].pageViews += 1
+  })
+  const maxV = Math.max(1, ...buckets.map(bucket => bucket.clicks + bucket.pageViews))
+
+  const downloadCsv = () => {
+    const header = ['created_at','email','full_name','event_type','page_path','element_label','element_tag','href','session_id','metadata']
+    const lines = [header.join(',')]
+    for (const event of filtered) {
+      const profile = profileById.get(event.user_id)
+      lines.push([
+        event.created_at,
+        JSON.stringify(profile?.email || ''),
+        JSON.stringify(profile?.full_name || ''),
+        event.event_type,
+        JSON.stringify(event.page_path || ''),
+        JSON.stringify(event.element_label || ''),
+        JSON.stringify(event.element_tag || ''),
+        JSON.stringify(event.href || ''),
+        event.session_id || '',
+        JSON.stringify(event.metadata || {}),
+      ].join(','))
+    }
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url; a.download = `celpipace-analytics-${new Date().toISOString().slice(0,10)}.csv`
+    document.body.appendChild(a); a.click(); a.remove()
+    URL.revokeObjectURL(url)
+  }
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Detailed Analytics</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            Page views, click targets, sessions, and user-level activity from the live app.
+          </p>
+        </div>
+        <button onClick={downloadCsv} style={btnPrimaryCompact}>⇣ Export CSV</button>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Total events" value={filtered.length} />
+        <StatCard label="Clicks" value={clicks.length} accent="#ffd66a" />
+        <StatCard label="Page views" value={pageViews.length} accent="#7dc8ff" />
+        <StatCard label="Sessions" value={uniqueSessions} />
+        <StatCard label="Known users" value={activeUserLabel} accent="#7dffb0" />
+        <StatCard label="Anonymous events" value={anonymousEvents} />
+        <StatCard label="Bounce rate" value={pvSessionCount ? `${bounceRate}%` : '—'} accent={bounceRate > 70 ? '#ff7d7d' : bounceRate > 40 ? '#ffd66a' : '#7dffb0'} />
+      </div>
+
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+        <select value={range} onChange={e => setRange(e.target.value)} style={{ ...inputStyle, margin: 0, width: 150 }}>
+          <option value="1">Last 24 hours</option>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
+        <select value={eventFilter} onChange={e => setEventFilter(e.target.value)} style={{ ...inputStyle, margin: 0, width: 170 }}>
+          <option value="all">All events</option>
+          <option value="page_view">Page views</option>
+          <option value="click">Clicks</option>
+          <option value="signup_complete">Signup complete</option>
+          <option value="upgrade_click">Upgrade clicks</option>
+          <option value="checkout_started">Checkout started</option>
+          <option value="checkout_error">Checkout errors</option>
+        </select>
+        <input
+          placeholder="Search user, page, click, session…"
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          style={{ ...inputStyle, flex: 1, minWidth: 260, margin: 0 }}
+        />
+      </div>
+
+      <Panel title={`Event volume — last ${days} day${days === 1 ? '' : 's'}`}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 200, padding: '12px 4px', borderBottom: '1px solid #1d3152' }}>
+          {buckets.map((bucket, i) => {
+            const total = bucket.clicks + bucket.pageViews
+            return (
+              <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }} title={`${bucket.label}: ${bucket.clicks} clicks, ${bucket.pageViews} page views`}>
+                <div style={{ fontSize: 10, color: '#98a2b5' }}>{total || ''}</div>
+                <div style={{ width: '100%', background: '#1d3152', borderRadius: 3, position: 'relative', height: `${(total / maxV) * 160}px`, minHeight: total ? 3 : 0 }}>
+                  {!!bucket.clicks && <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: '#ffd66a', borderRadius: 3, height: `${(bucket.clicks / total) * 100}%` }} />}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+        <div style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: 12, color: '#98a2b5' }}>
+          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#1d3152', borderRadius: 2, marginRight: 6 }} />Page views</span>
+          <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#ffd66a', borderRadius: 2, marginRight: 6 }} />Clicks</span>
+        </div>
+      </Panel>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+        <Panel title="Top clicked items">
+          <RankedList rows={topClicks} empty="No click events in this view yet." />
+        </Panel>
+        <Panel title="Top pages">
+          <RankedList rows={topPages} empty="No page activity in this view yet." />
+        </Panel>
+        <Panel title="Most active users">
+          <RankedList rows={topUsers} empty="No signed-in user events in this view yet." />
+        </Panel>
+        <Panel title={`Exit pages — where sessions end (${pvSessionCount} sessions)`}>
+          <p style={{ color: '#98a2b5', fontSize: 12, margin: '0 0 12px' }}>
+            Last page visited before the user left. Bounce rate: <strong style={{ color: bounceRate > 70 ? '#ff7d7d' : bounceRate > 40 ? '#ffd66a' : '#7dffb0' }}>{bounceRate}%</strong>
+            <span style={{ color: '#667', marginLeft: 6 }}>({bouncedCount} of {pvSessionCount} sessions had only 1 page view)</span>
+          </p>
+          <RankedList rows={topExitPages} empty="Not enough session data yet." />
+        </Panel>
+      </div>
+
+      <ConversionPathPanel events={events} payments={payments} rangeDays={days} />
+
+      <Panel title="Recent event stream">
+        <Table
+          cols={['When', 'User', 'Event', 'Page', 'Clicked / target', 'Session']}
+          rows={filtered.slice(0, 200).map(event => {
+            const profile = profileById.get(event.user_id)
+            const metadata = event.metadata || {}
+            return [
+              new Date(event.created_at).toLocaleString(),
+              profile
+                ? <div><strong>{profile.full_name || friendlyName(profile.email)}</strong><div style={{ color: '#98a2b5', fontSize: 12 }}>{profile.email}</div></div>
+                : <span style={{ color: '#98a2b5' }}>Anonymous</span>,
+              eventTypeChip(event.event_type),
+              <div><strong>{event.page_path || '—'}</strong><div style={{ color: '#98a2b5', fontSize: 12 }}>{event.page_title || '—'}</div></div>,
+              <div>
+                <strong>{event.element_label || (event.event_type === 'page_view' ? 'Page viewed' : event.event_type?.replace(/_/g, ' ') || 'Event')}</strong>
+                <div style={{ color: '#98a2b5', fontSize: 12, marginTop: 2 }}>
+                  {[event.element_tag, event.element_id ? `#${event.element_id}` : '', event.href, metadata.x != null ? `x:${metadata.x} y:${metadata.y}` : ''].filter(Boolean).join(' · ') || '—'}
+                </div>
+              </div>,
+              <code style={{ color: '#98a2b5', fontSize: 11 }}>{event.session_id?.slice(0, 18) || '—'}</code>,
+            ]
+          })}
+          empty="No analytics events match this filter."
+        />
+        <p style={{ color: '#667', fontSize: 12, margin: '12px 0 0' }}>
+          Showing {Math.min(filtered.length, 200)} of {filtered.length} filtered events. Query limit is the most recent 1,500 events for the selected range.
+        </p>
+      </Panel>
+    </>
+  )
+}
+
+function topGroups(rows, keyFn, limit = 8) {
+  const counts = new Map()
+  rows.forEach(row => {
+    const key = keyFn(row) || 'Unknown'
+    counts.set(key, (counts.get(key) || 0) + 1)
+  })
+  return Array.from(counts.entries())
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit)
+}
+
+function RankedList({ rows, empty }) {
+  if (!rows.length) return <div style={{ color: '#98a2b5', fontSize: 14 }}>{empty}</div>
+  const max = Math.max(1, ...rows.map(row => row.count))
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      {rows.map(row => (
+        <div key={row.label}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 13, marginBottom: 4 }}>
+            <span style={{ color: '#E6ECF5', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.label}</span>
+            <strong style={{ color: '#ffd66a' }}>{row.count}</strong>
+          </div>
+          <div style={{ height: 6, background: '#0B1626', borderRadius: 999, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${(row.count / max) * 100}%`, background: '#ffd66a' }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  ACQUISITION — where are users coming from?                  */
+/* ═══════════════════════════════════════════════════════════ */
+function AcquisitionTab() {
+  const { rows, err } = useProfiles()
+  const [range, setRange] = useState('30')
+
+  if (err) return <Err msg={err} />
+  if (!rows) return <Loading />
+
+  const days = parseInt(range, 10)
+  const since = Date.now() - days * 864e5
+  const inRange = rows.filter(r => r.created_at && new Date(r.created_at).getTime() >= since)
+
+  const total       = inRange.length
+  const paid        = inRange.filter(r => r.is_premium).length
+  const withUtm     = inRange.filter(r => r.utm_source).length
+  const withRef     = inRange.filter(r => r.referrer).length
+  const direct      = total - withUtm - withRef
+  const convRate    = total ? Math.round(paid / total * 100) : 0
+
+  const sources  = topGroups(inRange, r => r.utm_source     || (r.referrer ? 'referral' : 'direct'), 10)
+  const mediums  = topGroups(inRange, r => r.utm_medium     || (r.referrer ? 'referral' : '(none)'), 10)
+  const campaigns= topGroups(inRange.filter(r => r.utm_campaign), r => r.utm_campaign, 10)
+  const referrers= topGroups(inRange.filter(r => r.referrer), r => { try { return new URL(r.referrer).hostname } catch { return r.referrer.slice(0, 30) } }, 10)
+  const countries= topGroups(inRange.filter(r => r.country_code), r => `${r.country || r.country_code}`, 10)
+  const cities   = topGroups(inRange.filter(r => r.city), r => `${r.city}${r.country_code ? `, ${r.country_code}` : ''}`, 10)
+  const landings = topGroups(inRange.filter(r => r.landing_page), r => (r.landing_page || '').split('?')[0], 10)
+
+  // Conversion rate by UTM source
+  const bySource = {}
+  for (const r of inRange) {
+    const key = r.utm_source || (r.referrer ? 'referral' : 'direct')
+    if (!bySource[key]) bySource[key] = { total: 0, paid: 0 }
+    bySource[key].total++
+    if (r.is_premium) bySource[key].paid++
+  }
+  const sourceConv = Object.entries(bySource)
+    .map(([source, s]) => ({ source, total: s.total, paid: s.paid, rate: s.total ? Math.round(s.paid/s.total*100) : 0 }))
+    .sort((a,b) => b.total - a.total)
+    .slice(0, 12)
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Acquisition</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>Where signups come from. Captured first-touch — never overwritten.</p>
+        </div>
+        <select value={range} onChange={e => setRange(e.target.value)} style={{ ...inputStyle, margin: 0, width: 160 }}>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+          <option value="9999">All time</option>
+        </select>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Signups"          value={total} />
+        <StatCard label="Paid conversions" value={paid} accent="#7dffb0" />
+        <StatCard label="Conversion %"     value={`${convRate}%`} accent="#ffd66a" />
+        <StatCard label="UTM-tagged"       value={withUtm} accent="#ffd66a" />
+        <StatCard label="Referral"         value={withRef} accent="#7dc8ff" />
+        <StatCard label="Direct / unknown" value={direct} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
+        <Panel title="Top sources">
+          <RankedList rows={sources} empty="No source data yet." />
+        </Panel>
+        <Panel title="Top mediums">
+          <RankedList rows={mediums} empty="No medium data yet." />
+        </Panel>
+        <Panel title="Top campaigns">
+          <RankedList rows={campaigns} empty="No campaigns tagged. Use ?utm_source=…&utm_campaign=… links." />
+        </Panel>
+        <Panel title="Top referring domains">
+          <RankedList rows={referrers} empty="No external referrals captured." />
+        </Panel>
+        <Panel title="Top countries">
+          <RankedList rows={countries} empty="No geo data yet." />
+        </Panel>
+        <Panel title="Top cities">
+          <RankedList rows={cities} empty="No city data yet." />
+        </Panel>
+        <Panel title="Top landing pages">
+          <RankedList rows={landings} empty="No landing pages captured." />
+        </Panel>
+      </div>
+
+      <Panel title="Conversion rate by source">
+        <Table
+          cols={['Source', 'Signups', 'Paid', 'Conversion']}
+          rows={sourceConv.map(s => [
+            <strong>{s.source}</strong>,
+            s.total,
+            <span style={{ color: s.paid ? '#7dffb0' : '#98a2b5' }}>{s.paid}</span>,
+            <span style={{ color: s.rate >= 10 ? '#7dffb0' : s.rate > 0 ? '#ffd66a' : '#98a2b5' }}>{s.rate}%</span>,
+          ])}
+          empty="Not enough data."
+        />
+      </Panel>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  FUNNEL — signup → first practice → paid → retained          */
+/* ═══════════════════════════════════════════════════════════ */
+function FunnelTab() {
+  const { rows: profiles, err: profilesErr } = useProfiles()
+  const [practiceUsers, setPracticeUsers] = useState(null)
+  const [err, setErr] = useState('')
+  const [range, setRange] = useState('30')
+
+  useEffect(() => {
+    let cancel = false
+    ;(async () => {
+      // Distinct user_ids that have at least one practice_attempt
+      const { data, error } = await adminSupabase
+        .from('practice_attempts')
+        .select('user_id, created_at')
+        .order('created_at', { ascending: true })
+        .limit(5000)
+      if (cancel) return
+      if (error) setErr(error.message)
+      else {
+        // earliest practice per user
+        const firstPractice = {}
+        for (const row of data || []) {
+          if (!firstPractice[row.user_id]) firstPractice[row.user_id] = row.created_at
+        }
+        setPracticeUsers(firstPractice)
+      }
+    })()
+    return () => { cancel = true }
+  }, [])
+
+  if (profilesErr) return <Err msg={profilesErr} />
+  if (!profiles || !practiceUsers) return <Loading />
+
+  const days = parseInt(range, 10)
+  const since = Date.now() - days * 864e5
+  const cohort = profiles.filter(p => p.created_at && new Date(p.created_at).getTime() >= since)
+
+  const step1_signup     = cohort.length
+  const step2_anyEvent   = cohort.filter(p => p.last_seen_at).length
+  const step3_practice   = cohort.filter(p => practiceUsers[p.id]).length
+  const step4_paid       = cohort.filter(p => p.is_premium && isPaidPremiumSource(p.premium_source)).length
+  const step5_retained   = cohort.filter(p => p.is_premium && !p.cancel_at_period_end && p.subscription_status === 'active').length
+
+  const steps = [
+    { label: 'Signed up',                   value: step1_signup,   color: '#7dc8ff' },
+    { label: 'Returned (any session)',      value: step2_anyEvent, color: '#a78bfa' },
+    { label: 'Started practice',            value: step3_practice, color: '#ffd66a' },
+    { label: 'Converted to paid',           value: step4_paid,     color: '#7dffb0' },
+    { label: 'Still active (not cancelled)', value: step5_retained, color: '#34d399' },
+  ]
+
+  const max = Math.max(1, ...steps.map(s => s.value))
+
+  // Median time to first practice (only for those who did)
+  const timeToFirst = cohort
+    .filter(p => practiceUsers[p.id])
+    .map(p => new Date(practiceUsers[p.id]).getTime() - new Date(p.created_at).getTime())
+    .sort((a,b) => a - b)
+  const median = timeToFirst.length ? timeToFirst[Math.floor(timeToFirst.length/2)] : null
+  const medianHours = median != null ? Math.round(median / 3600000 * 10) / 10 : null
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Conversion funnel</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            How users move from signup to paid retention. Cohort = users created in the selected range.
+          </p>
+        </div>
+        <select value={range} onChange={e => setRange(e.target.value)} style={{ ...inputStyle, margin: 0, width: 160 }}>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last year</option>
+          <option value="9999">All time</option>
+        </select>
+      </div>
+
+      <Panel title={`Funnel · ${step1_signup} users in cohort`}>
+        <div style={{ display: 'grid', gap: 14 }}>
+          {steps.map((s, i) => {
+            const pctOfTop = step1_signup ? Math.round(s.value / step1_signup * 100) : 0
+            const pctOfPrev = i === 0 ? null : (steps[i-1].value ? Math.round(s.value / steps[i-1].value * 100) : 0)
+            return (
+              <div key={s.label}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
+                  <span style={{ color: '#E6ECF5' }}><strong style={{ marginRight: 8 }}>{i+1}.</strong>{s.label}</span>
+                  <span style={{ color: s.color }}>
+                    <strong>{s.value}</strong>
+                    <span style={{ color: '#98a2b5', marginLeft: 8 }}>{pctOfTop}% of signups</span>
+                    {pctOfPrev != null && <span style={{ color: '#667', marginLeft: 8 }}>({pctOfPrev}% of step {i})</span>}
+                  </span>
+                </div>
+                <div style={{ height: 14, background: '#0B1626', borderRadius: 999, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${(s.value / max) * 100}%`, background: s.color, transition: 'width .3s ease' }} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </Panel>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginTop: 18 }}>
+        <StatCard label="Activation rate"    value={step1_signup ? `${Math.round(step3_practice/step1_signup*100)}%` : '—'} accent="#ffd66a" />
+        <StatCard label="Free → paid"        value={step1_signup ? `${Math.round(step4_paid/step1_signup*100)}%` : '—'} accent="#7dffb0" />
+        <StatCard label="Retention (paid)"   value={step4_paid ? `${Math.round(step5_retained/step4_paid*100)}%` : '—'} />
+        <StatCard label="Median time to 1st practice" value={medianHours != null ? `${medianHours}h` : '—'} />
+      </div>
+
+      <CohortRetentionPanel />
+      <ExamDateSegmentsPanel profiles={profiles} />
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  REVENUE — actual Stripe payments                            */
+/* ═══════════════════════════════════════════════════════════ */
+function RevenueTab() {
+  const [rows, setRows] = useState(null)
+  const [err, setErr]   = useState('')
+  const [range, setRange] = useState('30')   // days
+  const [planFilter, setPlanFilter] = useState('all')
+  const [syncingId, setSyncingId] = useState(null)
+  const [syncMsg, setSyncMsg] = useState(null)
+
+  useEffect(() => {
+    let cancel = false
+    ;(async () => {
+      const { data, error } = await adminSupabase
+        .from('payments')
+        .select(PAYMENT_COLUMNS)
+        .order('created_at', { ascending: false })
+        .limit(500)
+      if (cancel) return
+      if (error) setErr(error.message)
+      else setRows(data ?? [])
+    })()
+    return () => { cancel = true }
+  }, [])
+
+  if (err) return <Err msg={err} />
+  if (!rows) return <Loading />
+
+  const days = parseInt(range, 10)
+  const cutoff = Date.now() - days * 864e5
+  const inRange = rows.filter(r => new Date(r.created_at).getTime() >= cutoff)
+  const filtered = inRange.filter(r => planFilter === 'all' ? true : r.plan === planFilter)
+
+  const totalAll  = rows.filter(r => r.status === 'paid').reduce((s, r) => s + (r.amount_cents || 0), 0) / 100
+  const totalRng  = inRange.filter(r => r.status === 'paid').reduce((s, r) => s + (r.amount_cents || 0), 0) / 100
+  const refunded  = rows.filter(r => r.status === 'refunded').reduce((s, r) => s + (r.amount_cents || 0), 0) / 100
+  const numPaid   = inRange.filter(r => r.status === 'paid').length
+  const aov       = numPaid ? totalRng / numPaid : 0
+
+  // Daily revenue chart
+  const today = new Date(); today.setHours(0,0,0,0)
+  const buckets = Array.from({ length: days }, (_, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (days - 1 - i))
+    return { date: d, label: d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }), revenue: 0, count: 0 }
+  })
+  const startMs = buckets[0].date.getTime()
+  inRange.forEach(r => {
+    if (r.status !== 'paid') return
+    const t = new Date(r.created_at).getTime()
+    if (t < startMs) return
+    const idx = Math.floor((t - startMs) / 864e5)
+    if (idx >= 0 && idx < days) {
+      buckets[idx].revenue += (r.amount_cents || 0) / 100
+      buckets[idx].count += 1
+    }
+  })
+  const maxV = Math.max(1, ...buckets.map(b => b.revenue))
+
+  // Per-plan breakdown
+  const byPlan = inRange.reduce((acc, r) => {
+    if (r.status !== 'paid') return acc
+    const k = r.plan || 'unknown'
+    if (!acc[k]) acc[k] = { count: 0, revenue: 0 }
+    acc[k].count += 1
+    acc[k].revenue += (r.amount_cents || 0) / 100
+    return acc
+  }, {})
+
+  const downloadCsv = () => {
+    const header = ['date','email','plan','amount','currency','status','granted_days','stripe_session_id','stripe_payment_intent_id','stripe_customer_id']
+    const lines = [header.join(',')]
+    for (const r of filtered) {
+      lines.push([
+        new Date(r.created_at).toISOString(),
+        JSON.stringify(r.email ?? ''),
+        r.plan,
+        ((r.amount_cents || 0) / 100).toFixed(2),
+        r.currency,
+        r.status,
+        r.granted_days ?? '',
+        r.stripe_session_id ?? '',
+        r.stripe_payment_intent_id ?? '',
+        r.stripe_customer_id ?? '',
+      ].join(','))
+    }
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url; a.download = `celpipace-revenue-${new Date().toISOString().slice(0,10)}.csv`
+    document.body.appendChild(a); a.click(); a.remove()
+    URL.revokeObjectURL(url)
+  }
+
+  const syncSubscriptionAccess = async (payment) => {
+    setSyncMsg(null)
+    if (!payment.stripe_session_id?.startsWith('cs_')) {
+      setSyncMsg({ type: 'err', msg: 'Only original Checkout Session payments can be synced from Stripe.' })
+      return
+    }
+    if (!window.confirm(`Sync Stripe subscription access for ${payment.email}? This will update their profile plan and expiry from Stripe.`)) return
+
+    setSyncingId(payment.id)
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'sync-subscription', payment_id: payment.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Subscription sync failed')
+
+      const profile = data.profile || {}
+      setRows(prev => prev?.map(row => row.id === payment.id ? { ...row, plan: profile.current_plan || row.plan } : row) ?? prev)
+      setSyncMsg({
+        type: 'ok',
+        msg: `${profile.email || payment.email} synced as ${(profile.current_plan || payment.plan || 'premium').toUpperCase()} until ${profile.premium_expires_at ? new Date(profile.premium_expires_at).toLocaleDateString() : 'the Stripe period end'}.`,
+      })
+    } catch (e) {
+      setSyncMsg({ type: 'err', msg: e.message || 'Subscription sync failed' })
+    } finally {
+      setSyncingId(null)
+    }
+  }
+
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Revenue (all time)"   value={`$${totalAll.toFixed(2)}`} accent="#7dffb0" />
+        <StatCard label={`Revenue (${days}d)`} value={`$${totalRng.toFixed(2)}`} accent="#7dffb0" />
+        <StatCard label={`Payments (${days}d)`} value={numPaid} />
+        <StatCard label="Avg order value"      value={`$${aov.toFixed(2)}`} />
+        <StatCard label="Refunded"             value={`$${refunded.toFixed(2)}`} accent={refunded > 0 ? '#ff9a9a' : '#E6ECF5'} />
+      </div>
+
+      <Panel title={`Revenue — last ${days} days`}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 200, padding: '12px 4px', borderBottom: '1px solid #1d3152' }}>
+          {buckets.map((b, i) => (
+            <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
+              title={`${b.label}: $${b.revenue.toFixed(2)} (${b.count} payments)`}>
+              <div style={{ fontSize: 10, color: '#98a2b5' }}>{b.revenue ? `$${b.revenue.toFixed(0)}` : ''}</div>
+              <div style={{ width: '100%', background: 'linear-gradient(180deg, #7dffb0, #2a9d5b)', borderRadius: 3,
+                height: `${(b.revenue / maxV) * 160}px`, minHeight: b.revenue ? 3 : 0 }} />
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel title="By plan">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
+          {Object.entries(byPlan).length === 0 && (
+            <div style={{ color: '#98a2b5', fontSize: 14 }}>No revenue in this window yet.</div>
+          )}
+          {Object.entries(byPlan).map(([k, v]) => (
+            <StatCard key={k} label={k} value={`$${v.revenue.toFixed(2)}`} />
+          ))}
+        </div>
+      </Panel>
+
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+        <select value={range} onChange={e => setRange(e.target.value)} style={{ ...inputStyle, margin: 0, width: 140 }}>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last 365 days</option>
+        </select>
+        <select value={planFilter} onChange={e => setPlanFilter(e.target.value)} style={{ ...inputStyle, margin: 0, width: 160 }}>
+          <option value="all">All plans</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="annual">Annual</option>
+        </select>
+        <button onClick={downloadCsv} style={btnPrimaryCompact}>⇣ Export CSV</button>
+      </div>
+
+      <Panel title="Refund review workflow">
+        <div style={{ color: '#98a2b5', fontSize: 13, lineHeight: 1.65 }}>
+          <strong style={{ color: '#E6ECF5' }}>Recommended flow:</strong> verify the customer email, check usage/support context, open the Stripe record, then refund only genuine billing or access issues. Full Stripe refunds are tracked by the webhook and remove premium access on our side.
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 10, marginTop: 12 }}>
+          {['Duplicate charge or duplicate subscription', 'Technical access issue support cannot resolve', 'Payment/billing error within review window', 'Not eligible after substantial premium use'].map(item => (
+            <div key={item} style={{ background: '#0B1626', border: '1px solid #1d3152', borderRadius: 8, padding: '10px 12px', color: '#E6ECF5', fontSize: 12, fontWeight: 600 }}>{item}</div>
+          ))}
+        </div>
+      </Panel>
+
+      {syncMsg && (
+        <div style={{
+          padding: 12, marginBottom: 16, borderRadius: 10,
+          background: syncMsg.type === 'ok' ? '#0f3d24' : '#3d1416',
+          color: syncMsg.type === 'ok' ? '#7dffb0' : '#ff9a9a',
+          fontSize: 13,
+        }}>{syncMsg.msg}</div>
+      )}
+
+      <Panel title="Recent payments">
+        <Table
+          cols={['Date', 'Email', 'Plan', 'Amount', 'Status', 'Stripe ID', 'Stripe', 'Access']}
+          rows={filtered.slice(0, 100).map(r => [
+            new Date(r.created_at).toLocaleString(),
+            r.email,
+            <Chip color="#ffd66a" text={(r.plan || '').toUpperCase()} />,
+            <strong style={{ color: r.status === 'refunded' ? '#ff9a9a' : '#7dffb0' }}>
+              ${((r.amount_cents || 0) / 100).toFixed(2)} {(r.currency || '').toUpperCase()}
+            </strong>,
+            r.status === 'paid'
+              ? <Chip color="#7dffb0" text="PAID" />
+              : <Chip color="#ff9a9a" text={(r.status || '').toUpperCase()} />,
+            <code style={{ color: '#98a2b5', fontSize: 11 }}>{(r.stripe_session_id || '').slice(0, 18)}…</code>,
+            <a
+              href={stripeSearchUrl(r.stripe_payment_intent_id || r.stripe_session_id || r.stripe_customer_id || r.email)}
+              target="_blank"
+              rel="noreferrer"
+              style={{ ...btnSmallStyle, display: 'inline-block', textDecoration: 'none' }}
+            >
+              Open Stripe
+            </a>,
+            <button
+              onClick={() => syncSubscriptionAccess(r)}
+              disabled={syncingId === r.id || r.status !== 'paid' || !r.stripe_session_id?.startsWith('cs_')}
+              style={btnSmallStyle}
+            >
+              {syncingId === r.id ? 'Syncing…' : 'Sync access'}
+            </button>,
+          ])}
+          empty="No payments yet."
+        />
+      </Panel>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  SHARED UI                                                   */
+/* ═══════════════════════════════════════════════════════════ */
+function friendlyName(email) {
+  const local = (email || '').split('@')[0]
+  if (!local) return 'Unknown user'
+  return local
+    .split(/[._-]+/)
+    .filter(Boolean)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+}
+
+function formatRelativeTime(value) {
+  if (!value) return 'never'
+  const time = new Date(value).getTime()
+  if (!Number.isFinite(time)) return 'never'
+  const diff = Math.max(0, Date.now() - time)
+  const mins = Math.floor(diff / 60000)
+  if (mins < 1) return 'just now'
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  const days = Math.floor(hrs / 24)
+  if (days < 30) return `${days}d ago`
+  const months = Math.floor(days / 30)
+  if (months < 12) return `${months}mo ago`
+  return `${Math.floor(months / 12)}y ago`
+}
+
+function StatCard({ label, value, accent = '#E6ECF5', onClick, hint }) {
+  const clickable = typeof onClick === 'function'
+  return (
+    <div
+      onClick={onClick}
+      title={hint || undefined}
+      style={{
+        background: '#12223A', border: '1px solid #1d3152', borderRadius: 12, padding: '16px 18px',
+        cursor: clickable ? 'pointer' : 'default',
+      }}
+    >
+      <div style={{ fontSize: 11, color: '#98a2b5', letterSpacing: '.05em', textTransform: 'uppercase' }}>{label}</div>
+      <div style={{ fontSize: 24, fontWeight: 700, marginTop: 4, color: accent }}>{value}</div>
+    </div>
+  )
+}
+
+function Panel({ title, children }) {
+  return (
+    <div style={{ background: '#12223A', border: '1px solid #1d3152', borderRadius: 12, padding: 20, marginBottom: 20 }}>
+      {title && <h3 style={{ margin: '0 0 14px', fontSize: 14, fontWeight: 600, color: '#E6ECF5', letterSpacing: '.02em' }}>{title}</h3>}
+      {children}
+    </div>
+  )
+}
+
+function Table({ cols, rows, empty }) {
+  return (
+    <div style={{ overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+        <thead>
+          <tr style={{ background: '#0F1F3D', textAlign: 'left' }}>
+            {cols.map(c => <th key={c} style={thStyle}>{c}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i} style={{ borderTop: '1px solid #1d3152' }}>
+              {r.map((cell, j) => <td key={j} style={tdStyle}>{cell}</td>)}
+            </tr>
+          ))}
+          {rows.length === 0 && (
+            <tr><td colSpan={cols.length} style={{ ...tdStyle, textAlign: 'center', color: '#98a2b5', padding: 32 }}>{empty || 'No data.'}</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function Chip({ color, text }) {
+  return <span style={{ background: color, color: '#0F1F3D', padding: '3px 10px', borderRadius: 999, fontSize: 11, fontWeight: 700 }}>{text}</span>
+}
+
+function Loading() { return <div style={{ color: '#98a2b5', padding: 20 }}>Loading…</div> }
+function Err({ msg }) { return <div style={{ color: '#ff9a9a', padding: 20 }}>Error: {msg}</div> }
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  OBSERVABILITY                                              */
+/*  Per-user audit trail across:                                */
+/*    - subscription_events (interpreted)                       */
+/*    - cancellation_feedback                                   */
+/*    - email_log                                               */
+/*    - webhook_events (most recent, all users)                 */
+/* ═══════════════════════════════════════════════════════════ */
+/* ── Queue health ──────────────────────────────────────────────
+ * The numbers that would have caught the 2026-07-27 incident on day one
+ * instead of day ten. Reads the inbox/outbox state machines directly.
+ *
+ * `processed` (the legacy boolean) is deliberately NOT used here — it cannot
+ * distinguish "waiting to be picked up" from "retried six times and given up".
+ * `status` can.
+ */
+function QueueHealthPanel() {
+  const [health, setHealth] = useState(null)
+  const [err, setErr] = useState('')
+
+  const load = useCallback(async () => {
+    setErr('')
+    const stuckBefore = new Date(Date.now() - 30 * 60_000).toISOString()
+    const dayAgo = new Date(Date.now() - 24 * 3600_000).toISOString()
+    const count = (table, apply) =>
+      apply(adminSupabase.from(table).select('id', { count: 'exact', head: true }))
+
+    try {
+      const [dead, stuck, pending, oDead, oPending, oDone, failedMail] = await Promise.all([
+        count('webhook_events', q => q.eq('status', 'dead')),
+        count('webhook_events', q => q.eq('status', 'pending').lt('received_at', stuckBefore)),
+        count('webhook_events', q => q.eq('status', 'pending')),
+        count('job_queue',      q => q.eq('status', 'dead')),
+        count('job_queue',      q => q.eq('status', 'pending')),
+        count('job_queue',      q => q.eq('status', 'done')),
+        count('email_log',      q => q.eq('status', 'failed').gte('created_at', dayAgo)),
+      ])
+      const firstErr = [dead, stuck, pending, oDead, oPending, oDone, failedMail].find(r => r.error)
+      if (firstErr) throw firstErr.error
+
+      // Oldest un-processed event — the clearest "is the worker ticking?" signal.
+      const { data: oldest } = await adminSupabase
+        .from('webhook_events')
+        .select('received_at')
+        .eq('status', 'pending')
+        .order('received_at', { ascending: true })
+        .limit(1)
+        .maybeSingle()
+
+      setHealth({
+        inboxDead: dead.count || 0,
+        inboxStuck: stuck.count || 0,
+        inboxPending: pending.count || 0,
+        outboxDead: oDead.count || 0,
+        outboxPending: oPending.count || 0,
+        outboxDone: oDone.count || 0,
+        emailFailed: failedMail.count || 0,
+        oldestPending: oldest?.received_at || null,
+      })
+    } catch (ex) {
+      setErr(ex.message || 'Could not load queue health')
+    }
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  if (err) return <Panel title="Queue health"><Err msg={err} /></Panel>
+  if (!health) return <Panel title="Queue health"><Loading /></Panel>
+
+  const ok = '#a7f3d0', warn = '#fde68a', bad = '#fecaca'
+  const ageMin = health.oldestPending
+    ? Math.round((Date.now() - new Date(health.oldestPending).getTime()) / 60000)
+    : null
+
+  const healthy =
+    health.inboxDead === 0 && health.outboxDead === 0 &&
+    health.inboxStuck === 0 && health.emailFailed === 0
+
+  return (
+    <Panel title="Queue health">
+      <div style={{
+        display: 'grid', gap: 12, marginBottom: 14,
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+      }}>
+        <StatCard label="Inbox dead"    value={health.inboxDead}
+          accent={health.inboxDead ? bad : ok}
+          hint="Stripe events that failed 6 attempts and gave up. Needs a human." />
+        <StatCard label="Inbox stuck"   value={health.inboxStuck}
+          accent={health.inboxStuck ? bad : ok}
+          hint="Pending for over 30 minutes — usually means the worker is not ticking." />
+        <StatCard label="Inbox pending" value={health.inboxPending}
+          accent={health.inboxPending ? warn : ok}
+          hint="Waiting to be processed. Brief spikes are normal." />
+        <StatCard label="Outbox dead"   value={health.outboxDead}
+          accent={health.outboxDead ? bad : ok}
+          hint="Emails / CRM syncs that exhausted their retries." />
+        <StatCard label="Outbox queued" value={health.outboxPending}
+          accent={health.outboxPending ? warn : ok}
+          hint="Queued email and Brevo work waiting on the next worker tick." />
+        <StatCard label="Email failed 24h" value={health.emailFailed}
+          accent={health.emailFailed ? bad : ok}
+          hint="Sends that errored in the last 24 hours." />
+      </div>
+
+      <div style={{ fontSize: 13, color: healthy ? '#a7f3d0' : '#fde68a' }}>
+        {healthy ? '✓ All queues clear.' : '⚠ Something needs attention — see the cards above.'}
+        {ageMin !== null && (
+          <span style={{ color: ageMin > 30 ? '#fecaca' : '#98a2b5', marginLeft: 8 }}>
+            Oldest pending event: {ageMin} min old.
+          </span>
+        )}
+        <span style={{ color: '#98a2b5', marginLeft: 8 }}>
+          Outbox completed all-time: {health.outboxDone}.
+        </span>
+      </div>
+
+      <button onClick={load} style={{ ...btnPrimaryCompact, marginTop: 14 }}>Refresh</button>
+    </Panel>
+  )
+}
+
+function ObservabilityTab() {
+  const [emailQuery, setEmailQuery] = useState('')
+  const [activeEmail, setActiveEmail] = useState('')
+  const [subEvents, setSubEvents] = useState(null)
+  const [cancelFb, setCancelFb] = useState(null)
+  const [emails, setEmails] = useState(null)
+  const [webhooks, setWebhooks] = useState(null)
+  const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  // Recent webhook_events on mount (across all users)
+  useEffect(() => {
+    let alive = true
+    adminSupabase
+      .from('webhook_events')
+      .select('id, stripe_event_id, event_type, status, attempts, processing_error, received_at, processed_at')
+      .order('received_at', { ascending: false })
+      .limit(50)
+      .then(({ data, error }) => {
+        if (!alive) return
+        if (error) setErr(error.message)
+        else setWebhooks(data)
+      })
+    return () => { alive = false }
+  }, [])
+
+  const lookup = async (e) => {
+    e?.preventDefault?.()
+    const target = emailQuery.trim().toLowerCase()
+    if (!target) return
+    setBusy(true)
+    setErr('')
+    setActiveEmail(target)
+    try {
+      const [s, c, m] = await Promise.all([
+        adminSupabase.from('subscription_events')
+          .select('id, created_at, event_type, prev_status, new_status, plan, amount_cents, currency, reason, stripe_event_id, stripe_invoice_id')
+          .eq('email', target).order('created_at', { ascending: false }).limit(100),
+        adminSupabase.from('cancellation_feedback')
+          .select('id, created_at, reason, free_text, would_return, plan_at_cancel, current_period_end')
+          .eq('email', target).order('created_at', { ascending: false }).limit(20),
+        adminSupabase.from('email_log')
+          .select('id, created_at, sent_at, kind, subject, status, provider_id, error, pdf_url')
+          .eq('to_email', target).order('created_at', { ascending: false }).limit(50),
+      ])
+      if (s.error) throw s.error
+      if (c.error) throw c.error
+      if (m.error) throw m.error
+      setSubEvents(s.data || [])
+      setCancelFb(c.data || [])
+      setEmails(m.data || [])
+    } catch (ex) {
+      setErr(ex.message || 'Lookup failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <>
+      <h2 style={sectionTitleStyle}>Observability</h2>
+      <p style={{ color: '#98a2b5', fontSize: 13, marginBottom: 20 }}>
+        Queue health for the billing pipeline, then a per-user audit trail of subscription state
+        changes, cancellations, and emails sent. Plus the 50 most recent Stripe webhook events.
+      </p>
+
+      <QueueHealthPanel />
+
+      <form onSubmit={lookup} style={{ display: 'flex', gap: 8, marginBottom: 20, maxWidth: 480 }}>
+        <input
+          type="email"
+          placeholder="user@example.com"
+          value={emailQuery}
+          onChange={(e) => setEmailQuery(e.target.value)}
+          style={{ ...inputStyle, flex: 1 }}
+        />
+        <button type="submit" disabled={busy || !emailQuery.trim()} style={btnPrimaryCompact}>
+          {busy ? 'Loading…' : 'Lookup'}
+        </button>
+      </form>
+
+      {err && <Err msg={err} />}
+
+      {activeEmail && subEvents && (
+        <div style={{ marginBottom: 28 }}>
+          <h3 style={subTitleStyle}>Subscription events for {activeEmail}</h3>
+          <Table
+            cols={['When', 'Event', 'Prev', 'New', 'Plan', 'Amount', 'Reason', 'Stripe event']}
+            rows={subEvents.map(r => [
+              new Date(r.created_at).toLocaleString(),
+              r.event_type,
+              r.prev_status || '—',
+              r.new_status || '—',
+              r.plan || '—',
+              r.amount_cents != null ? `${(r.currency || 'cad').toUpperCase()} $${(r.amount_cents / 100).toFixed(2)}` : '—',
+              r.reason || '—',
+              r.stripe_event_id || r.stripe_invoice_id || '—',
+            ])}
+            empty="No subscription events for this email."
+          />
+        </div>
+      )}
+
+      {activeEmail && cancelFb && cancelFb.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <h3 style={subTitleStyle}>Cancellation feedback</h3>
+          <Table
+            cols={['When', 'Reason', 'Would return?', 'Plan at cancel', 'Period end', 'Note']}
+            rows={cancelFb.map(r => [
+              new Date(r.created_at).toLocaleString(),
+              r.reason,
+              r.would_return == null ? 'Not sure' : r.would_return ? 'Yes' : 'No',
+              r.plan_at_cancel || '—',
+              r.current_period_end ? new Date(r.current_period_end).toLocaleDateString() : '—',
+              r.free_text || '—',
+            ])}
+          />
+        </div>
+      )}
+
+      {activeEmail && emails && (
+        <div style={{ marginBottom: 28 }}>
+          <h3 style={subTitleStyle}>Email log</h3>
+          <Table
+            cols={['When', 'Sent', 'Kind', 'Subject', 'Status', 'Error', 'PDF']}
+            rows={emails.map(r => [
+              new Date(r.created_at).toLocaleString(),
+              r.sent_at ? new Date(r.sent_at).toLocaleString() : '—',
+              r.kind,
+              r.subject || '—',
+              <Chip
+                key={r.id}
+                color={r.status === 'sent' ? '#a7f3d0' : r.status === 'failed' ? '#fecaca' : '#fde68a'}
+                text={r.status}
+              />,
+              r.error || '—',
+              r.pdf_url ? <a href={r.pdf_url} target="_blank" rel="noreferrer" style={{ color: '#ffd66a' }}>PDF</a> : '—',
+            ])}
+            empty="No emails sent to this address yet."
+          />
+        </div>
+      )}
+
+      <div>
+        <h3 style={subTitleStyle}>Recent webhook events (last 50)</h3>
+        {!webhooks ? <Loading /> : (
+          <Table
+            cols={['Received', 'Type', 'Status', 'Tries', 'Stripe event id', 'Error']}
+            rows={webhooks.map(r => {
+              // 'pending/failed' used to lump together "not picked up yet" and
+              // "gave up after 6 tries". Those need very different reactions.
+              const colour = {
+                done:       '#a7f3d0',
+                pending:    '#fde68a',
+                processing: '#bfdbfe',
+                dead:       '#fecaca',
+              }[r.status] || '#fecaca'
+              return [
+                new Date(r.received_at).toLocaleString(),
+                r.event_type,
+                <Chip key={r.id + 'p'} color={colour} text={r.status || 'unknown'} />,
+                r.attempts ?? 0,
+                r.stripe_event_id || '—',
+                r.processing_error || '—',
+              ]
+            })}
+          />
+        )}
+      </div>
+    </>
+  )
+}
+
+const sectionTitleStyle = { margin: '0 0 6px', fontSize: 22, fontWeight: 700 }
+const subTitleStyle = { margin: '0 0 10px', fontSize: 15, fontWeight: 600, color: '#E6ECF5' }
+
+/* ── Styles ── */
+/* ═══════════════════════════════════════════════════════════ */
+/*  REFUNDS — one-click refund issuance + history               */
+/* ═══════════════════════════════════════════════════════════ */
+function RefundsTab() {
+  const [pendingRequests, setPendingRequests] = useState(null)
+  const [paidPayments, setPaidPayments] = useState(null)
+  const [refundedEvents, setRefundedEvents] = useState(null)
+  const [err, setErr] = useState(null)
+  const [busyId, setBusyId] = useState(null)
+  const [toast, setToast] = useState(null)
+
+  const load = useCallback(async () => {
+    setErr(null)
+    try {
+      // 1) Refund-review requests — cancellation_feedback joined with profile state
+      const { data: requests, error: reqErr } = await adminSupabase
+        .from('cancellation_feedback')
+        .select('id, user_id, email, reason, free_text, plan_at_cancel, stripe_subscription_id, created_at')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      if (reqErr) throw reqErr
+
+      // 2) Paid payments — what we could refund
+      const { data: paid, error: paidErr } = await adminSupabase
+        .from('payments')
+        .select('id, user_id, email, plan, amount_cents, currency, status, stripe_payment_intent_id, stripe_session_id, stripe_customer_id, created_at')
+        .eq('status', 'paid')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      if (paidErr) throw paidErr
+
+      // 3) Refund history — subscription_events of refunds
+      const { data: refunds, error: refErr } = await adminSupabase
+        .from('subscription_events')
+        .select('id, user_id, email, amount_cents, currency, stripe_customer_id, metadata, created_at')
+        .eq('new_status', 'refunded')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      if (refErr) throw refErr
+
+      setPendingRequests(requests || [])
+      setPaidPayments(paid || [])
+      setRefundedEvents(refunds || [])
+    } catch (e) {
+      setErr(e.message)
+    }
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  async function issueRefund(payment) {
+    if (!payment.stripe_payment_intent_id && !payment.stripe_session_id?.startsWith('in_')) {
+      setToast({ type: 'err', msg: `No payment_intent on row — cannot refund automatically. Refund in Stripe dashboard instead.` })
+      return
+    }
+    if (!window.confirm(`Refund ${(payment.amount_cents / 100).toFixed(2)} ${payment.currency.toUpperCase()} (minus the non-refundable Stripe processing fee) to ${payment.email}? This will end their Premium access immediately.`)) return
+    setBusyId(payment.id)
+    setToast(null)
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({
+          action: 'refund',
+          payment_intent_id: payment.stripe_payment_intent_id || null,
+          charge_id: null,
+          stripe_session_id: payment.stripe_session_id || null,
+          reason: 'requested_by_customer',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Refund failed')
+      const fee = typeof data.fee_cents === 'number' ? ` (Stripe fee $${(data.fee_cents / 100).toFixed(2)} deducted)` : ''
+      setToast({ type: 'ok', msg: `Refunded ${(data.amount / 100).toFixed(2)} ${data.currency?.toUpperCase()}${fee} — Premium ended. Stripe webhook confirms in a few seconds.` })
+      setTimeout(load, 4000)
+    } catch (e) {
+      setToast({ type: 'err', msg: e.message })
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  if (err) return <Err msg={err} />
+  if (!pendingRequests || !paidPayments || !refundedEvents) return <Loading />
+
+  const refundedCount = refundedEvents.length
+  const pendingCount  = pendingRequests.length
+  const refundedTotal = refundedEvents.reduce((sum, e) => sum + (e.amount_cents || 0), 0)
+  const refundableCount = paidPayments.filter(p => p.stripe_payment_intent_id || p.stripe_session_id?.startsWith('in_')).length
+  const avgRefund = refundedCount ? refundedTotal / refundedCount : 0
+
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 14, marginBottom: 24 }}>
+        <StatCard label="Pending requests" value={pendingCount} accent={pendingCount ? '#ffd66a' : '#E6ECF5'} />
+        <StatCard label="Refundable payments" value={refundableCount} accent="#7dc8ff" />
+        <StatCard label="Refunds issued" value={refundedCount} accent="#ff9a9a" />
+        <StatCard label="Refunded total" value={`$${(refundedTotal / 100).toFixed(2)}`} />
+        <StatCard label="Avg refund" value={`$${(avgRefund / 100).toFixed(2)}`} />
+      </div>
+
+      {toast && (
+        <div style={{
+          padding: 12, marginBottom: 16, borderRadius: 10,
+          background: toast.type === 'ok' ? '#0f3d24' : '#3d1416',
+          color: toast.type === 'ok' ? '#7dffb0' : '#ff9a9a',
+          fontSize: 13,
+        }}>{toast.msg}</div>
+      )}
+
+      <Panel title="Cancellation requests (recent — review refund-eligibility manually)">
+        <Table
+          cols={['Email', 'Reason', 'Plan', 'Free text', 'When']}
+          rows={pendingRequests.map(r => [
+            r.email || '—',
+            r.reason || '—',
+            r.plan_at_cancel ? <Chip color="#ffd66a" text={r.plan_at_cancel} /> : '—',
+            (r.free_text || '').slice(0, 80) || <span style={{ color: '#5b6781' }}>—</span>,
+            new Date(r.created_at).toLocaleString(),
+          ])}
+          empty="No cancellation feedback recorded yet."
+        />
+      </Panel>
+
+      <div style={{ marginTop: 24 }}>
+        <Panel title="Paid payments (click Refund to issue full refund)">
+          <Table
+            cols={['Email', 'Plan', 'Amount', 'Created', 'Action']}
+            rows={paidPayments.map(p => [
+              p.email || '—',
+              p.plan ? <Chip color="#ffd66a" text={p.plan} /> : '—',
+              `${(p.amount_cents / 100).toFixed(2)} ${p.currency.toUpperCase()}`,
+              new Date(p.created_at).toLocaleDateString(),
+              <button
+                onClick={() => issueRefund(p)}
+                disabled={busyId === p.id}
+                style={{
+                  background: busyId === p.id ? '#3d1416' : '#C8102E',
+                  color: '#fff', border: 'none', borderRadius: 6,
+                  padding: '6px 12px', fontSize: 12, fontWeight: 700,
+                  cursor: busyId === p.id ? 'wait' : 'pointer',
+                }}
+              >{busyId === p.id ? 'Refunding…' : 'Refund'}</button>,
+            ])}
+            empty="No paid payments yet."
+          />
+        </Panel>
+      </div>
+
+      <div style={{ marginTop: 24 }}>
+        <Panel title="Refund history">
+          <Table
+            cols={['Email', 'Amount', 'When', 'Charge / PI']}
+            rows={refundedEvents.map(e => [
+              e.email || '—',
+              `${((e.amount_cents || 0) / 100).toFixed(2)} ${(e.currency || 'usd').toUpperCase()}`,
+              new Date(e.created_at).toLocaleString(),
+              <span style={{ fontSize: 11, color: '#98a2b5' }}>{e.metadata?.payment_intent || e.metadata?.charge_id || '—'}</span>,
+            ])}
+            empty="No refunds yet."
+          />
+        </Panel>
+      </div>
+    </>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  BLOG CMS                                                    */
+/* ═══════════════════════════════════════════════════════════ */
+const BLOG_CATEGORY_OPTIONS = [
+  { id: 'writing',     label: 'Writing',     color: '#C8972A', light: '#FFF7E0' },
+  { id: 'listening',   label: 'Listening',   color: '#4A90D9', light: '#EAF3FF' },
+  { id: 'reading',     label: 'Reading',     color: '#2D8A56', light: '#F0FDF4' },
+  { id: 'speaking',    label: 'Speaking',    color: '#C8102E', light: '#FFF0F0' },
+  { id: 'immigration', label: 'Immigration', color: '#6B4FAF', light: '#F3EFFF' },
+  { id: 'strategy',    label: 'Strategy',    color: '#C8102E', light: '#FFF0F0' },
+]
+
+const EMPTY_BLOG_DRAFT = {
+  slug: '',
+  title: '',
+  category: 'strategy',
+  read_time: '6 min read',
+  date_label: '',
+  excerpt: '',
+  sections: [{ heading: '', body: '', list: [], body2: '' }],
+  published: true,
+  sort_order: 0,
+}
+
+function slugify(s) {
+  return (s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 96)
+}
+
+function BlogTab() {
+  const [posts, setPosts]     = useState(null)
+  const [err, setErr]         = useState('')
+  const [editing, setEditing] = useState(null) // current draft being edited, or null
+  const [busy, setBusy]       = useState(false)
+  const [query, setQuery]     = useState('')
+  const [deployState, setDeployState] = useState('idle') // idle | deploying | ok | err
+  const [deployMsg, setDeployMsg]     = useState('')
+
+  const triggerDeploy = async () => {
+    if (!confirm('Trigger a fresh Vercel deploy to regenerate pre-rendered HTML for all published posts? This usually takes ~1 minute.')) return
+    setDeployState('deploying')
+    setDeployMsg('')
+    try {
+      const { data: { session } } = await adminSupabase.auth.getSession()
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'deploy' }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setDeployState('err')
+        setDeployMsg(data.error || `HTTP ${res.status}`)
+        return
+      }
+      setDeployState('ok')
+      setDeployMsg(`Deploy queued (${data.state || 'PENDING'}). New post HTML will be live in ~1–2 min.`)
+    } catch (e) {
+      setDeployState('err')
+      setDeployMsg(e?.message || 'Deploy request failed')
+    }
+  }
+
+  const load = async () => {
+    const { data, error } = await adminSupabase
+      .from('blog_posts')
+      .select('*')
+      .order('sort_order', { ascending: false })
+      .order('created_at', { ascending: false })
+    if (error) setErr(error.message)
+    else setPosts(data ?? [])
+  }
+  useEffect(() => { load() }, [])
+
+  const startNew = () => {
+    const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    setEditing({ ...EMPTY_BLOG_DRAFT, date_label: today, sort_order: (posts?.[0]?.sort_order ?? 0) + 1 })
+  }
+
+  const startEdit = (post) => {
+    setEditing({
+      ...post,
+      sections: Array.isArray(post.sections) && post.sections.length
+        ? post.sections.map(s => ({ heading: s.heading || '', body: s.body || '', list: Array.isArray(s.list) ? s.list : [], body2: s.body2 || '' }))
+        : [{ heading: '', body: '', list: [], body2: '' }],
+    })
+  }
+
+  const cancelEdit = () => setEditing(null)
+
+  const save = async () => {
+    if (!editing.title.trim()) { alert('Title required'); return }
+    const slug = editing.slug.trim() || slugify(editing.title)
+    const cat  = BLOG_CATEGORY_OPTIONS.find(c => c.id === editing.category) || BLOG_CATEGORY_OPTIONS[5]
+
+    const cleanedSections = editing.sections
+      .filter(s => s.heading.trim() || s.body.trim() || (s.list?.length))
+      .map(s => {
+        const out = { heading: s.heading.trim(), body: s.body.trim() }
+        const list = (s.list || []).map(li => li.trim()).filter(Boolean)
+        if (list.length) out.list = list
+        if (s.body2?.trim()) out.body2 = s.body2.trim()
+        return out
+      })
+
+    const payload = {
+      slug,
+      title:           editing.title.trim(),
+      category:        editing.category,
+      tag:             cat.label,
+      tag_color:       cat.color,
+      tag_color_light: cat.light,
+      read_time:       editing.read_time.trim() || '5 min read',
+      date_label:      editing.date_label.trim(),
+      excerpt:         editing.excerpt.trim(),
+      sections:        cleanedSections,
+      published:       editing.published,
+      sort_order:      editing.sort_order ?? 0,
+    }
+
+    setBusy(true)
+    const { error } = await adminSupabase.from('blog_posts').upsert(payload, { onConflict: 'slug' })
+    setBusy(false)
+    if (error) { alert('Save failed: ' + error.message); return }
+    setEditing(null)
+    load()
+  }
+
+  const togglePublished = async (post) => {
+    const { error } = await adminSupabase.from('blog_posts').update({ published: !post.published }).eq('slug', post.slug)
+    if (error) { alert(error.message); return }
+    setPosts(prev => prev.map(p => p.slug === post.slug ? { ...p, published: !post.published } : p))
+  }
+
+  const remove = async (post) => {
+    if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) return
+    const { error } = await adminSupabase.from('blog_posts').delete().eq('slug', post.slug)
+    if (error) { alert(error.message); return }
+    setPosts(prev => prev.filter(p => p.slug !== post.slug))
+  }
+
+  if (err) return <Err msg={err} />
+  if (!posts) return <Loading />
+
+  if (editing) {
+    return <BlogEditor draft={editing} setDraft={setEditing} onSave={save} onCancel={cancelEdit} busy={busy} />
+  }
+
+  const q = query.trim().toLowerCase()
+  const filtered = q ? posts.filter(p => `${p.title} ${p.slug} ${p.excerpt}`.toLowerCase().includes(q)) : posts
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 24, color: '#E6ECF5' }}>Blog Posts</h2>
+          <p style={{ margin: '6px 0 0', color: '#98a2b5', fontSize: 13 }}>
+            {posts.length} total · {posts.filter(p => p.published).length} published · {posts.filter(p => !p.published).length} draft
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <input
+            placeholder="Search title / slug…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            style={{ ...inputStyle, width: 220, margin: 0 }}
+          />
+          <button
+            onClick={triggerDeploy}
+            disabled={deployState === 'deploying'}
+            style={{ ...btnGhostStyle, opacity: deployState === 'deploying' ? 0.6 : 1 }}
+            title="Rebuild the site so newly published posts get pre-rendered SEO HTML."
+          >
+            {deployState === 'deploying' ? 'Deploying…' : '⚡ Deploy now'}
+          </button>
+          <button onClick={startNew} style={btnPrimaryCompact}>+ New Post</button>
+        </div>
+      </div>
+
+      {deployMsg && (
+        <div style={{
+          padding: '10px 14px',
+          marginBottom: 14,
+          borderRadius: 8,
+          fontSize: 13,
+          background: deployState === 'ok' ? 'rgba(125,255,176,0.1)' : 'rgba(255,154,154,0.1)',
+          color: deployState === 'ok' ? '#7dffb0' : '#ff9a9a',
+          border: `1px solid ${deployState === 'ok' ? '#1d5232' : '#5d2222'}`,
+        }}>
+          {deployMsg}
+        </div>
+      )}
+
+      <Panel>
+        <Table
+          cols={['Title', 'Slug', 'Category', 'Status', 'Updated', 'Actions']}
+          rows={filtered.map(p => [
+            <div>
+              <div style={{ fontWeight: 700 }}>{p.title}</div>
+              <div style={{ color: '#98a2b5', fontSize: 12, marginTop: 2, maxWidth: 480, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.excerpt}</div>
+            </div>,
+            <code style={{ color: '#7dc8ff', fontSize: 12 }}>/blog/{p.slug}</code>,
+            <Chip color={p.tag_color || '#98a2b5'} text={(p.category || '').toUpperCase()} />,
+            p.published
+              ? <Chip color="#7dffb0" text="LIVE" />
+              : <Chip color="#98a2b5" text="DRAFT" />,
+            p.updated_at ? new Date(p.updated_at).toLocaleString() : '—',
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              <button onClick={() => startEdit(p)} style={btnSmallStyle}>Edit</button>
+              <button onClick={() => togglePublished(p)} style={btnSmallStyle}>{p.published ? 'Unpublish' : 'Publish'}</button>
+              <a href={`/blog/${p.slug}`} target="_blank" rel="noreferrer" style={{ ...btnSmallStyle, textDecoration: 'none', display: 'inline-block' }}>View ↗</a>
+              <button onClick={() => remove(p)} style={{ ...btnSmallStyle, color: '#ff9a9a' }}>Delete</button>
+            </div>,
+          ])}
+          empty="No posts yet. Click + New Post to create one."
+        />
+      </Panel>
+    </>
+  )
+}
+
+function BlogEditor({ draft, setDraft, onSave, onCancel, busy }) {
+  const update = (patch) => setDraft(d => ({ ...d, ...patch }))
+  const updateSection = (idx, patch) => setDraft(d => ({
+    ...d,
+    sections: d.sections.map((s, i) => i === idx ? { ...s, ...patch } : s),
+  }))
+  const addSection = () => setDraft(d => ({ ...d, sections: [...d.sections, { heading: '', body: '', list: [], body2: '' }] }))
+  const removeSection = (idx) => setDraft(d => ({ ...d, sections: d.sections.filter((_, i) => i !== idx) }))
+  const moveSection = (idx, dir) => setDraft(d => {
+    const next = [...d.sections]
+    const tgt = idx + dir
+    if (tgt < 0 || tgt >= next.length) return d
+    ;[next[idx], next[tgt]] = [next[tgt], next[idx]]
+    return { ...d, sections: next }
+  })
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+        <h2 style={{ margin: 0, fontSize: 22, color: '#E6ECF5' }}>{draft.slug ? `Edit: ${draft.title || draft.slug}` : 'New Blog Post'}</h2>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={onCancel} style={btnGhostStyle} disabled={busy}>Cancel</button>
+          <button onClick={onSave} style={btnPrimaryCompact} disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
+        </div>
+      </div>
+
+      <Panel title="Metadata">
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14 }}>
+          <div>
+            <label style={labelStyle}>Title</label>
+            <input value={draft.title} onChange={e => update({ title: e.target.value, slug: draft.slug || slugify(e.target.value) })} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Slug (/blog/…)</label>
+            <input value={draft.slug} onChange={e => update({ slug: slugify(e.target.value) })} style={inputStyle} placeholder="auto from title" />
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 14, marginTop: 8 }}>
+          <div>
+            <label style={labelStyle}>Category</label>
+            <select value={draft.category} onChange={e => update({ category: e.target.value })} style={inputStyle}>
+              {BLOG_CATEGORY_OPTIONS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle}>Read time</label>
+            <input value={draft.read_time} onChange={e => update({ read_time: e.target.value })} style={inputStyle} placeholder="6 min read" />
+          </div>
+          <div>
+            <label style={labelStyle}>Date label</label>
+            <input value={draft.date_label} onChange={e => update({ date_label: e.target.value })} style={inputStyle} placeholder="May 13, 2026" />
+          </div>
+          <div>
+            <label style={labelStyle}>Sort order (higher = top)</label>
+            <input type="number" value={draft.sort_order} onChange={e => update({ sort_order: parseInt(e.target.value || '0', 10) })} style={inputStyle} />
+          </div>
+        </div>
+        <div style={{ marginTop: 8 }}>
+          <label style={labelStyle}>Excerpt (shown in cards & meta description)</label>
+          <textarea value={draft.excerpt} onChange={e => update({ excerpt: e.target.value })} rows={3} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
+        </div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, color: '#E6ECF5', fontSize: 14 }}>
+          <input type="checkbox" checked={draft.published} onChange={e => update({ published: e.target.checked })} />
+          Published (visible at /blog/{draft.slug || '…'})
+        </label>
+      </Panel>
+
+      <Panel title={`Sections (${draft.sections.length})`}>
+        {draft.sections.map((s, i) => (
+          <div key={i} style={{ border: '1px solid #1d3152', borderRadius: 8, padding: 14, marginBottom: 12, background: '#0d1f38' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <strong style={{ color: '#ffd66a', fontSize: 13 }}>Section {i + 1}</strong>
+              <div style={{ display: 'flex', gap: 4 }}>
+                <button onClick={() => moveSection(i, -1)} disabled={i === 0} style={{ ...btnSmallStyle, padding: '4px 8px' }}>↑</button>
+                <button onClick={() => moveSection(i, 1)} disabled={i === draft.sections.length - 1} style={{ ...btnSmallStyle, padding: '4px 8px' }}>↓</button>
+                <button onClick={() => removeSection(i)} style={{ ...btnSmallStyle, padding: '4px 8px', color: '#ff9a9a' }}>✕</button>
+              </div>
+            </div>
+
+            <label style={labelStyle}>Heading</label>
+            <input value={s.heading} onChange={e => updateSection(i, { heading: e.target.value })} style={inputStyle} />
+
+            <label style={labelStyle}>Body (supports \n for paragraph breaks, **bold**)</label>
+            <textarea value={s.body} onChange={e => updateSection(i, { body: e.target.value })} rows={5} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
+
+            <label style={labelStyle}>Bullet list (one item per line, optional)</label>
+            <textarea
+              value={(s.list || []).join('\n')}
+              onChange={e => updateSection(i, { list: e.target.value.split('\n') })}
+              rows={4}
+              style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }}
+              placeholder="One bullet per line"
+            />
+
+            <label style={labelStyle}>Body 2 (text after the bullet list, optional)</label>
+            <textarea value={s.body2 || ''} onChange={e => updateSection(i, { body2: e.target.value })} rows={3} style={{ ...inputStyle, fontFamily: 'inherit', resize: 'vertical' }} />
+          </div>
+        ))}
+        <button onClick={addSection} style={btnGhostStyle}>+ Add Section</button>
+      </Panel>
+
+      <div style={{ display: 'flex', gap: 8, marginTop: 16, justifyContent: 'flex-end' }}>
+        <button onClick={onCancel} style={btnGhostStyle} disabled={busy}>Cancel</button>
+        <button onClick={onSave} style={btnPrimaryCompact} disabled={busy}>{busy ? 'Saving…' : 'Save'}</button>
+      </div>
+    </>
+  )
+}
+
+const shellStyle = {
+  minHeight: '100vh',
+  background: 'linear-gradient(135deg, #0B1626 0%, #0F1F3D 100%)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
+}
+const cardStyle = {
+  background: '#12223A', border: '1px solid #1d3152', borderRadius: 16, padding: 32,
+  width: '100%', maxWidth: 380, boxShadow: '0 30px 60px rgba(0,0,0,.4)',
+}
+const labelStyle = {
+  display: 'block', fontSize: 12, color: '#98a2b5', letterSpacing: '.05em',
+  textTransform: 'uppercase', marginBottom: 6, marginTop: 12,
+}
+const inputStyle = {
+  width: '100%', background: '#0B1626', border: '1px solid #1d3152', borderRadius: 8,
+  color: '#E6ECF5', padding: '10px 12px', fontSize: 14, outline: 'none', boxSizing: 'border-box',
+}
+const btnPrimaryStyle = {
+  marginTop: 20, width: '100%', background: 'linear-gradient(135deg, #ffd66a, #f5b800)',
+  color: '#0F1F3D', border: 'none', borderRadius: 8, padding: '11px 16px',
+  fontSize: 14, fontWeight: 700, cursor: 'pointer',
+}
+const btnPrimaryCompact = {
+  background: 'linear-gradient(135deg, #ffd66a, #f5b800)', color: '#0F1F3D', border: 'none',
+  borderRadius: 8, padding: '10px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+}
+const btnGhostStyle = {
+  background: 'transparent', border: '1px solid #1d3152', color: '#E6ECF5',
+  padding: '8px 14px', borderRadius: 8, fontSize: 13, cursor: 'pointer',
+}
+const btnSmallStyle = {
+  background: '#0B1626', border: '1px solid #1d3152', color: '#ffd66a',
+  padding: '6px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer',
+}
+const thStyle = { padding: '12px 14px', fontSize: 11, color: '#98a2b5', fontWeight: 600, letterSpacing: '.04em', textTransform: 'uppercase' }
+const tdStyle = { padding: '12px 14px', color: '#E6ECF5', verticalAlign: 'middle' }
+
+// Injected once into the admin shell. Inline styles can't express media
+// queries, so this handles the small-screen layout (tighter padding, compact
+// tab bar, and a sensible table min-width so columns stay readable + scroll).
+const ADMIN_RESPONSIVE_CSS = `
+.admin-root table { min-width: 580px; }
+.admin-root .admin-tabbar { -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.admin-root .admin-tabbar::-webkit-scrollbar { height: 4px; }
+.admin-root .admin-tabbar::-webkit-scrollbar-thumb { background: #1d3152; border-radius: 4px; }
+@media (max-width: 720px) {
+  .admin-root { padding: 18px 12px !important; }
+  .admin-root .admin-tabbar button { padding: 9px 13px !important; font-size: 13px !important; }
+}
+@media (max-width: 480px) {
+  .admin-root { padding: 14px 10px !important; }
+}
+`

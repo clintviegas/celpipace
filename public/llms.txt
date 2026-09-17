@@ -1,0 +1,46 @@
+# CELPIPAce
+
+> Independent online preparation for the CELPIP General test (the English test accepted for Canadian permanent residence and citizenship). Practice every section with instant CLB scoring, take full-length timed mock exams, and get AI feedback on speaking and writing. Not affiliated with Paragon Testing Enterprises.
+
+CELPIPAce is at https://www.celpipace.ca. It is used mainly by people in Canada preparing for Express Entry, PNP, or citizenship, and by applicants abroad — Nigeria, India, the UAE — preparing before they arrive.
+
+## What it does
+
+- **Speaking practice with AI scoring** — 120 prompts across all 8 CELPIP speaking tasks. Record an answer, get a CLB estimate and specific feedback within seconds. This is the section most learners can't practise alone and the one CELPIPAce is best known for.
+- **Listening** — 120 practice sets across all 6 parts, with audio.
+- **Reading** — 46 practice sets across all 4 parts.
+- **Writing** — 40 prompts for both tasks (email and survey response), AI-scored.
+- **8 full-length timed mock exams** with a CLB score report per section.
+- **AI Study Coach** — reads your practice scores and tells you what to work on this week.
+- **Study plan and exam countdown** — set your test date; the plan and reminder emails work backwards from it.
+- **CRS score calculator** — see how each CLB level changes Express Entry points.
+
+## Pricing
+
+Free tier with section practice. Premium (weekly, monthly, or annual) unlocks mock exams, full AI scoring, and the coach. No card needed to start.
+
+## Key pages
+
+- [CELPIP vs IELTS for Canadian PR](https://www.celpipace.ca/celpip-vs-ielts): format, scoring, and which test to choose.
+- [CELPIP score calculator](https://www.celpipace.ca/celpip-score-calculator): convert raw scores to CLB levels.
+- [CRS score calculator](https://www.celpipace.ca/crs-score-calculator): Express Entry points by language level.
+- [Free CELPIP practice test](https://www.celpipace.ca/celpip-practice-test)
+- [CELPIP mock test](https://www.celpipace.ca/celpip-mock-test)
+- [Speaking practice](https://www.celpipace.ca/celpip-speaking-practice)
+- [Listening practice](https://www.celpipace.ca/celpip-listening-practice)
+- [Reading practice](https://www.celpipace.ca/celpip-reading-practice)
+- [Writing practice](https://www.celpipace.ca/celpip-writing-practice)
+- [CELPIP tips and resources](https://www.celpipace.ca/celpip-resources)
+- [Blog](https://www.celpipace.ca/blog)
+
+## Common questions it answers
+
+- How is CELPIP speaking scored, and what does a CLB 9 answer sound like?
+- Is CELPIP easier than IELTS for Canadian immigration?
+- What CLB level do I need for Express Entry, and how many CRS points is each level worth?
+- How long should I prepare for CELPIP?
+- What's the difference between CELPIP General and CELPIP General LS?
+
+## Contact
+
+hello@celpipace.ca

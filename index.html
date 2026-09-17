@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CELPIPACE" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <!-- Preconnect + async Google Fonts (non-render-blocking) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" /></noscript>
+
+    <!-- Google Search Console verification -->
+    <meta name="google-site-verification" content="HKw16CWEOvgmL4z1OmDaknyvBv-j4WV1DLRDZ5ZpfI0" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLZQCDPV37"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XLZQCDPV37');
+    </script>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://www.celpipace.ca/#website",
+          "url": "https://www.celpipace.ca/",
+          "name": "CELPIPACE",
+          "description": "CELPIP Mock Test – Free Practice Tests & AI Scoring"
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://www.celpipace.ca/#organization",
+          "name": "CELPIPACE",
+          "url": "https://www.celpipace.ca/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.celpipace.ca/logo.png"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Primary Meta -->
+    <title>CELPIPACE – CELPIP Mock Tests, Practice, and AI Scoring</title>
+    <meta name="description" content="CELPIPACE helps Canadian PR applicants prepare with full-length CELPIP mock exams, section practice, instant AI scoring, and saved CLB reports." />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://www.celpipace.ca/" />
+    <meta property="og:title"       content="CELPIPACE – CELPIP Mock Tests, Practice, and AI Scoring" />
+    <meta property="og:description" content="CELPIPACE helps Canadian PR applicants prepare with full-length CELPIP mock exams, section practice, instant AI scoring, and saved CLB reports." />
+    <meta property="og:image"       content="https://www.celpipace.ca/og-image.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="CELPIPACE – CELPIP Mock Tests, Practice, and AI Scoring" />
+    <meta name="twitter:description" content="CELPIPACE helps Canadian PR applicants prepare with full-length CELPIP mock exams, section practice, instant AI scoring, and saved CLB reports." />
+    <meta name="twitter:image"       content="https://www.celpipace.ca/og-image.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "CELPIPACE — CELPIP Mock Tests & Practice",
+  "short_name": "CELPIPACE",
+  "description": "Full-length CELPIP mock exams, section practice, instant AI scoring, flashcards and progress tracking.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F8FAFC",
+  "theme_color": "#0f172a",
+  "categories": ["education", "productivity"],
+  "lang": "en-CA",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/favicon.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Dashboard", "short_name": "Dashboard", "url": "/dashboard?source=pwa" },
+    { "name": "Mock exams", "short_name": "Mock", "url": "/exam?source=pwa" },
+    { "name": "Flashcards", "short_name": "Cards", "url": "/flashcards?source=pwa" }
+  ]
+}

@@ -1,0 +1,660 @@
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import ExamDatePrompt from '../components/ExamDatePrompt'
+import { useProgress } from '../hooks/useProgress'
+import { supabase } from '../lib/supabase'
+import { getReviewSummary } from '../lib/reviewQueue'
+import { loadPlanConfig, fetchPlanConfigCloud, savePlanConfigLocal, generatePlan, daysUntil } from '../lib/studyPlan'
+import { getSynonymSummary } from '../lib/synonymGame'
+import { fetchBandPrediction } from '../lib/bandPrediction'
+import SEO from '../components/SEO'
+
+/* ── section config ── */
+const SECTIONS = [
+  { key: 'listening', label: 'Listening', icon: '🎧', color: '#4A90D9', colorLight: '#EEF4FF', parts: ['L1','L2','L3','L4','L5','L6'] },
+  { key: 'reading',   label: 'Reading',   icon: '📖', color: '#2D8A56', colorLight: '#F0FDF4', parts: ['R1','R2','R3','R4'] },
+  { key: 'writing',   label: 'Writing',   icon: '✍️',  color: '#C8972A', colorLight: '#FFFBEB', parts: ['W1','W2'] },
+  { key: 'speaking',  label: 'Speaking',  icon: '🎙️', color: '#C8102E', colorLight: '#FEF2F2', parts: ['S1','S2','S3','S4','S5','S6','S7','S8'] },
+]
+
+const MOTIVATIONAL = [
+  'Every question you answer brings you closer to CLB 9+.',
+  'Consistency beats intensity — keep the streak going!',
+  'Focus on your weakest section today for maximum growth.',
+  'Track your progress, not perfection.',
+  'Small daily practice builds exam confidence.',
+]
+
+function timeAgo(ts) {
+  const diff = Date.now() - ts
+  const mins = Math.floor(diff / 60000)
+  if (mins < 1) return 'Just now'
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  const days = Math.floor(hrs / 24)
+  if (days === 1) return 'Yesterday'
+  if (days < 7) return `${days}d ago`
+  return new Date(ts).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })
+}
+
+function getGreeting() {
+  const h = new Date().getHours()
+  if (h < 12) return 'Good morning'
+  if (h < 17) return 'Good afternoon'
+  return 'Good evening'
+}
+
+function getCLB(pct) {
+  if (pct == null) return null
+  if (pct >= 95) return 12
+  if (pct >= 90) return 11
+  if (pct >= 85) return 10
+  if (pct >= 78) return 9
+  if (pct >= 70) return 8
+  if (pct >= 60) return 7
+  if (pct >= 50) return 6
+  if (pct >= 40) return 5
+  if (pct >= 30) return 4
+  return 3
+}
+
+const DashboardPage = () => {
+  const navigate = useNavigate()
+  const { user, isPremium } = useAuth()
+  const { stats, streak, activity, pendingSync, retryPendingSync } = useProgress()
+  const [retrying, setRetrying] = useState(false)
+  const [motivIdx] = useState(() => Math.floor(Math.random() * MOTIVATIONAL.length))
+  const [activityPage, setActivityPage] = useState(1)
+  const ACTIVITY_PER_PAGE = 10
+
+  // ── Active in-progress sessions (for Resume card) ────────────────────
+  const [activeSessions, setActiveSessions] = useState([])
+  useEffect(() => {
+    if (!user?.id) return
+    let cancelled = false
+    ;(async () => {
+      const { data, error } = await supabase
+        .from('test_sessions')
+        .select('id, kind, section, part_id, set_number, exam_number, current_section, current_part, current_question_index, updated_at')
+        .eq('user_id', user.id)
+        .eq('is_completed', false)
+        .order('updated_at', { ascending: false })
+        .limit(5)
+      if (!cancelled && !error && data) setActiveSessions(data)
+    })()
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  // ── Review queue summary (spaced repetition) ────────────────────────
+  const [reviewSummary, setReviewSummary] = useState({ due: 0, learning: 0, mastered: 0, total: 0 })
+  useEffect(() => {
+    if (!user?.id) { setReviewSummary({ due: 0, learning: 0, mastered: 0, total: 0 }); return }
+    let cancelled = false
+    getReviewSummary().then(s => { if (!cancelled) setReviewSummary(s) }).catch(() => {})
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  // ── Study plan config (adaptive plan) ───────────────────────────────
+  const [planConfig, setPlanConfig] = useState(() => loadPlanConfig(user?.id || null))
+  useEffect(() => {
+    if (!user?.id) { setPlanConfig(loadPlanConfig(null)); return }
+    let cancelled = false
+    ;(async () => {
+      const cloud = await fetchPlanConfigCloud()
+      if (cancelled) return
+      if (cloud) { savePlanConfigLocal(user.id, cloud); setPlanConfig(cloud) }
+      else setPlanConfig(loadPlanConfig(user.id))
+    })()
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  // ── Synonym Match game summary ──────────────────────────────────────
+  const [flashSummary, setFlashSummary] = useState({ wordBank: 0, gamesPlayed: 0, bestStreak: 0, accuracy: 0 })
+  useEffect(() => {
+    try { setFlashSummary(getSynonymSummary()) } catch { /* ignore */ }
+  }, [user?.id])
+
+  // ── Band prediction (estimated CLB from practice history) ───────────
+  const [prediction, setPrediction] = useState(null)
+  useEffect(() => {
+    if (!user?.id) { setPrediction(null); return }
+    let cancelled = false
+    fetchBandPrediction().then(p => { if (!cancelled) setPrediction(p) }).catch(() => {})
+    return () => { cancelled = true }
+  }, [user?.id])
+
+  const resumeSession = (s) => {
+    if (s.kind === 'mock') {
+      navigate(`/mock-test/${s.exam_number || 1}`)
+    } else if (s.section && s.part_id) {
+      navigate(`/${s.section}/${s.part_id}`)
+    }
+  }
+
+  const firstName = user?.user_metadata?.full_name?.split(' ')[0]
+    ?? user?.email?.split('@')[0]
+    ?? 'there'
+
+  const greeting = getGreeting()
+
+  // Find weakest section for smart recommendation
+  const weakest = SECTIONS.reduce((w, s) => {
+    const ss = stats.sections[s.key]
+    if (!w || (ss?.avgCLB != null && (w.avgCLB == null || ss.avgCLB < w.avgCLB))) {
+      return { ...s, ...ss }
+    }
+    return w
+  }, null)
+
+  // Next recommended action
+  const getNextAction = () => {
+    if (stats.totalCompleted === 0) return { text: 'Start your first practice set', route: '/celpip-listening-practice', icon: '🚀' }
+    if (weakest?.key) return { text: `Practice ${weakest.label} — your weakest section`, route: `/celpip-${weakest.key}-practice`, icon: '🎯' }
+    return { text: 'Continue practising', route: '/exam', icon: '📝' }
+  }
+  const nextAction = getNextAction()
+
+  // Study plan dashboard summary
+  const planSummary = (() => {
+    if (!planConfig) return { text: 'Build your personalised week-by-week plan' }
+    const dLeft = daysUntil(planConfig.targetDate)
+    const plan = generatePlan(planConfig, stats.sections || {})
+    const week = plan.weeks[0]
+    const focusLabels = (week?.focus || [])
+      .map(k => SECTIONS.find(s => s.key === k)?.label)
+      .filter(Boolean)
+      .join(' & ')
+    if (plan.overdue) return { text: 'Test date passed — review or set a new date' }
+    return {
+      text: `Week 1 of ${plan.weeksLeft} · ${dLeft} day${dLeft === 1 ? '' : 's'} left${focusLabels ? ` · focus: ${focusLabels}` : ''}`,
+    }
+  })()
+
+  const handleRetrySync = async () => {
+    setRetrying(true)
+    try { await retryPendingSync?.() } finally { setRetrying(false) }
+  }
+
+  return (
+    <main className="db-page">
+      <SEO
+        title="Dashboard"
+        description="Your CELPIP practice dashboard. Track your progress, resume practice sets, and see your CLB score improvements."
+        noindex={true}
+      />
+
+      {pendingSync > 0 && (
+        <div
+          role="status"
+          style={{
+            background: '#fef3c7', color: '#92400e',
+            border: '1px solid #fde68a', borderRadius: 12,
+            padding: '12px 16px', margin: '16px auto 0', maxWidth: 1200,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: 12, fontSize: 14, fontWeight: 500,
+          }}
+        >
+          <span>
+            {pendingSync} practice {pendingSync === 1 ? 'score' : 'scores'} not yet synced to your account.
+            Your progress is safe locally and will retry automatically.
+          </span>
+          <button
+            onClick={handleRetrySync}
+            disabled={retrying}
+            style={{
+              background: '#92400e', color: '#fff', border: 'none',
+              borderRadius: 8, padding: '6px 14px', fontSize: 13, fontWeight: 600,
+              cursor: retrying ? 'wait' : 'pointer',
+            }}
+          >
+            {retrying ? 'Retrying…' : 'Retry now'}
+          </button>
+        </div>
+      )}
+
+      {/* ── Welcome Bar ── */}
+      <div className="db-welcome-bar">
+        <div className="db-welcome-inner">
+          <div className="db-welcome-top">
+            <div>
+              <h1 className="db-welcome-title">{greeting}, {firstName}</h1>
+              <p className="db-welcome-sub">{MOTIVATIONAL[motivIdx]}</p>
+            </div>
+            {streak.current > 0 && (
+              <motion.div
+                className="db-streak-badge"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              >
+                <span className="db-streak-fire">🔥</span>
+                <div className="db-streak-info">
+                  <span className="db-streak-count">{streak.current}</span>
+                  <span className="db-streak-label">day streak</span>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="db-content">
+
+        {/* ── First run: capture exam date, then go straight to Speaking ── */}
+        <ExamDatePrompt />
+
+        {/* ── Upgrade Banner ── */}
+        {!isPremium && (
+          <motion.div
+            className="db-upgrade-banner"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="db-upgrade-banner-left">
+              <span className="db-upgrade-plan-tag">Free Plan</span>
+              <span className="db-upgrade-banner-text">
+                Unlock all practice questions and instant scoring with Premium
+              </span>
+            </div>
+            <button className="db-upgrade-btn" onClick={() => navigate('/pricing')}>
+              Upgrade Now
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── Resume In-Progress Sessions ── */}
+        {activeSessions.length > 0 && (
+          <motion.section
+            className="db-section"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="db-section-title">Resume Where You Left Off</h2>
+            <div className="db-section-rows">
+              {activeSessions.map((s) => {
+                const isMock = s.kind === 'mock'
+                const sec = isMock
+                  ? SECTIONS.find(x => x.key === s.current_section) || SECTIONS[0]
+                  : SECTIONS.find(x => x.key === s.section) || SECTIONS[0]
+                const title = isMock
+                  ? `Mock Exam #${s.exam_number || 1}`
+                  : `${sec.label} — ${s.part_id || ''}${s.set_number ? ` Set ${s.set_number}` : ''}`
+                const sub = isMock
+                  ? `Currently on ${s.current_part || s.current_section || 'L1'} · updated ${timeAgo(new Date(s.updated_at).getTime())}`
+                  : `Question ${(s.current_question_index || 0) + 1} · updated ${timeAgo(new Date(s.updated_at).getTime())}`
+                return (
+                  <div key={s.id} className="db-section-row">
+                    <div className="db-section-row-icon" style={{ background: sec.colorLight }}>{sec.icon}</div>
+                    <div className="db-section-row-body">
+                      <div className="db-section-row-top">
+                        <span className="db-section-row-label">{title}</span>
+                        <span className="db-section-row-count" style={{ color: sec.color }}>In progress</span>
+                      </div>
+                      <div className="db-section-row-bottom">
+                        <span className="db-section-row-pct">{sub}</span>
+                      </div>
+                    </div>
+                    <button
+                      className="db-section-row-btn"
+                      style={{ color: sec.color, borderColor: sec.color + '50', background: sec.colorLight }}
+                      onClick={() => resumeSession(s)}
+                    >
+                      Resume
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          </motion.section>
+        )}
+
+        {/* ── Stat Tiles ── */}
+        <div className="db-stat-tiles">
+          {[
+            { value: stats.totalCompleted, label: 'Sets Completed', sub: `of ${stats.totalSets}` },
+            { value: stats.avgScore !== null ? `CLB ${getCLB(stats.avgScore)}` : '—', label: 'Avg CLB', sub: stats.avgScore !== null && getCLB(stats.avgScore) >= 7 ? 'On track for PR' : 'Keep practising' },
+            { value: `${stats.totalPct}%`, label: 'Progress', sub: stats.totalPct >= 50 ? 'Halfway there' : 'Getting started' },
+            { value: streak.current || 0, label: 'Day Streak', sub: `Best: ${streak.best}` },
+          ].map((tile, i) => (
+            <motion.div
+              key={tile.label}
+              className="db-stat-tile"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.07 }}
+            >
+              <div className="db-stat-tile-value">{tile.value}</div>
+              <div className="db-stat-tile-label">{tile.label}</div>
+              <div className="db-stat-tile-sub">{tile.sub}</div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* ── AI Study Coach (featured) ── */}
+        {user && (
+          <motion.div
+            className="db-next-action db-next-action--coach"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.28 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/study-coach')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">✨</span>
+              <div>
+                <span className="db-next-action-label">AI Study Coach · NEW</span>
+                <span className="db-next-action-text">
+                  Ask what to practice this week — grounded in your CLB scores and missed questions
+                </span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/study-coach') }}
+            >
+              Open coach →
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── Smart Next Action ── */}
+        <motion.div
+          className="db-next-action"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+        >
+          <div className="db-next-action-left">
+            <span className="db-next-action-icon">{nextAction.icon}</span>
+            <div>
+              <span className="db-next-action-label">Recommended Next</span>
+              <span className="db-next-action-text">{nextAction.text}</span>
+            </div>
+          </div>
+          <button className="db-next-action-btn" onClick={() => navigate(nextAction.route)}>
+            Go →
+          </button>
+        </motion.div>
+
+        {/* ── Study Plan ── */}
+        <motion.div
+          className="db-next-action"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.32 }}
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/study-plan')}
+        >
+          <div className="db-next-action-left">
+            <span className="db-next-action-icon">🗓️</span>
+            <div>
+              <span className="db-next-action-label">Study Plan</span>
+              <span className="db-next-action-text">{planSummary.text}</span>
+            </div>
+          </div>
+          <button
+            className="db-next-action-btn"
+            onClick={(e) => { e.stopPropagation(); navigate('/study-plan') }}
+          >
+            {planConfig ? 'Open →' : 'Build →'}
+          </button>
+        </motion.div>
+
+        {/* ── Synonym Match ── */}
+        <motion.div
+          className="db-next-action"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.34 }}
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/flashcards')}
+        >
+          <div className="db-next-action-left">
+            <span className="db-next-action-icon">�</span>
+            <div>
+              <span className="db-next-action-label">Synonym Match</span>
+              <span className="db-next-action-text">
+                {flashSummary.gamesPlayed > 0
+                  ? `${flashSummary.accuracy}% accuracy · best streak 🔥 ${flashSummary.bestStreak}`
+                  : `Guess the synonym · ${flashSummary.wordBank} high-band words`}
+              </span>
+            </div>
+          </div>
+          <button
+            className="db-next-action-btn"
+            onClick={(e) => { e.stopPropagation(); navigate('/flashcards') }}
+            style={{ background: '#2D8A56' }}
+          >
+            {flashSummary.gamesPlayed > 0 ? 'Play →' : 'Play now →'}
+          </button>
+        </motion.div>
+
+        {/* ── Progress Charts ── */}
+        {stats.totalCompleted > 0 && (
+          <motion.div
+            className="db-next-action"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.36 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/progress')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">📈</span>
+              <div>
+                <span className="db-next-action-label">Progress Charts</span>
+                <span className="db-next-action-text">See your CLB band trend over time across all sections</span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/progress') }}
+            >
+              View →
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── Band Prediction (estimated CLB) ── */}
+        {prediction?.overall?.predictedBand != null && (
+          <motion.div
+            className="db-next-action"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.38 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/predict')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">🔮</span>
+              <div>
+                <span className="db-next-action-label">Predicted band · CLB {prediction.overall.predictedBand}</span>
+                <span className="db-next-action-text">
+                  {`Estimated from your recent practice across ${prediction.overall.sectionsCovered} section${prediction.overall.sectionsCovered === 1 ? '' : 's'}`}
+                </span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/predict') }}
+            >
+              View →
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── Review Mistakes (spaced repetition) ── */}
+        {reviewSummary.total > 0 && (
+          <motion.div
+            className="db-next-action"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.35 }}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/review')}
+          >
+            <div className="db-next-action-left">
+              <span className="db-next-action-icon">🔁</span>
+              <div>
+                <span className="db-next-action-label">Review Your Mistakes</span>
+                <span className="db-next-action-text">
+                  {reviewSummary.due > 0
+                    ? `${reviewSummary.due} question${reviewSummary.due === 1 ? '' : 's'} due for review`
+                    : `${reviewSummary.mastered} mastered · nothing due right now`}
+                </span>
+              </div>
+            </div>
+            <button
+              className="db-next-action-btn"
+              onClick={(e) => { e.stopPropagation(); navigate('/review') }}
+              style={reviewSummary.due > 0 ? { background: '#C8102E' } : undefined}
+            >
+              {reviewSummary.due > 0 ? `Review ${reviewSummary.due} →` : 'Open →'}
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── Practice by Section (LIVE) ── */}
+        <section className="db-section">
+          <h2 className="db-section-title">Practice by Section</h2>
+          <div className="db-section-rows">
+            {SECTIONS.map((s, i) => {
+              const ss = stats.sections[s.key] || { done: 0, total: 0, pct: 0, avgScore: null }
+              return (
+                <motion.div
+                  key={s.key}
+                  className="db-section-row"
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 + i * 0.07 }}
+                >
+                  <div className="db-section-row-icon" style={{ background: s.colorLight }}>
+                    {s.icon}
+                  </div>
+                  <div className="db-section-row-body">
+                    <div className="db-section-row-top">
+                      <span className="db-section-row-label">{s.label}</span>
+                      <span className="db-section-row-count" style={{ color: s.color }}>
+                        {ss.done}/{ss.total} sets
+                      </span>
+                    </div>
+                    <div className="db-section-row-progress-track">
+                      <motion.div
+                        className="db-section-row-progress-fill"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${ss.pct}%` }}
+                        transition={{ duration: 0.7, delay: 0.3 + i * 0.07 }}
+                        style={{ background: s.color }}
+                      />
+                    </div>
+                    <div className="db-section-row-bottom">
+                      <span className="db-section-row-pct">{ss.pct}% complete</span>
+                      {ss.avgCLB != null && (
+                        <span className="db-section-row-score" style={{ color: s.color }}>
+                          CLB {ss.avgCLB}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    className="db-section-row-btn"
+                    style={{ color: s.color, borderColor: s.color + '50', background: s.colorLight }}
+                    onClick={() => navigate('/' + s.key)}
+                  >
+                    {ss.done > 0 ? 'Continue' : 'Start'}
+                  </button>
+                </motion.div>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* ── Recent Activity ── */}
+        <section className="db-section">
+          <h2 className="db-section-title">Recent Activity</h2>
+          {activity.length === 0 ? (
+            <div className="db-activity-empty">
+              <span className="db-activity-empty-icon">📭</span>
+              <p>No activity yet — start practising to see your history here.</p>
+              <button className="db-activity-cta" onClick={() => navigate('/exam')}>
+                Start a Mock Exam →
+              </button>
+            </div>
+          ) : (
+            <div className="db-activity-feed">
+              {activity
+                .slice((activityPage - 1) * ACTIVITY_PER_PAGE, activityPage * ACTIVITY_PER_PAGE)
+                .map((a, i) => {
+                const sec = SECTIONS.find(s => s.key === a.section)
+                const scoreColor = a.pct >= 70 ? '#2D8A56' : a.pct >= 50 ? '#C8972A' : '#C8102E'
+                return (
+                  <motion.div
+                    key={`${a.ts}-${i}`}
+                    className="db-activity-item"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: i * 0.03 }}
+                  >
+                    <div className="db-activity-icon" style={{ background: sec?.colorLight || '#f3f4f6', color: sec?.color || '#6B7280' }}>
+                      {sec?.icon || '📝'}
+                    </div>
+                    <div className="db-activity-body">
+                      <span className="db-activity-title">
+                        {sec?.label || 'Practice'} — {a.partId} Set {a.setNum}
+                      </span>
+                      <span className="db-activity-meta">{timeAgo(a.ts)}</span>
+                    </div>
+                    <div className="db-activity-score" style={{ color: scoreColor, background: scoreColor + '10' }}>
+                      {a.pct}%
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          )}
+          {activity.length > ACTIVITY_PER_PAGE && (
+            <div className="db-activity-pagination">
+              <button
+                className="db-activity-page-btn"
+                onClick={() => setActivityPage(p => Math.max(1, p - 1))}
+                disabled={activityPage === 1}
+                aria-label="Previous page"
+              >
+                ←
+              </button>
+              {Array.from({ length: Math.ceil(activity.length / ACTIVITY_PER_PAGE) }, (_, i) => i + 1).map(n => (
+                <button
+                  key={n}
+                  className={`db-activity-page-btn${n === activityPage ? ' active' : ''}`}
+                  onClick={() => setActivityPage(n)}
+                  aria-label={`Page ${n}`}
+                  aria-current={n === activityPage ? 'page' : undefined}
+                >
+                  {n}
+                </button>
+              ))}
+              <button
+                className="db-activity-page-btn"
+                onClick={() => setActivityPage(p => Math.min(Math.ceil(activity.length / ACTIVITY_PER_PAGE), p + 1))}
+                disabled={activityPage === Math.ceil(activity.length / ACTIVITY_PER_PAGE)}
+                aria-label="Next page"
+              >
+                →
+              </button>
+            </div>
+          )}
+        </section>
+
+
+      </div>
+    </main>
+  )
+}
+
+export default DashboardPage

@@ -1,0 +1,2303 @@
+{
+  "part": "R1",
+  "title": "Reading Correspondence",
+  "total_questions": 11,
+  "time_limit_minutes": 11,
+  "sets": [
+    {
+      "set_number": 1,
+      "difficulty": "easy",
+      "title": "Complaint About a Delayed Furniture Delivery",
+      "passage": {
+        "type": "email",
+        "from": "Janet Morrison",
+        "to": "Customer Service, NorthPine Furniture",
+        "subject": "Delayed Delivery — Order #44721",
+        "body": "Dear Customer Service Team,\n\nI am writing to express my disappointment with the handling of my recent order. On March 3rd, I purchased a dining table and six chairs from your Burnaby showroom (Order #44721). At the time of purchase, the salesperson, Mr. Davies, assured me that delivery would take place within two weeks. It has now been over a month, and I still have not received my furniture.\n\nI called your customer service line twice last week. The first representative told me the items were 'in transit' but could not provide a tracking number. The second representative said the order had not yet left the warehouse and offered no explanation for the delay. Neither person followed up with me as promised.\n\nThis delay has caused real inconvenience. I scheduled a family gathering at my home next weekend specifically because I was told the table would arrive in time. I have now had to borrow folding tables from a neighbour, which is hardly the impression I hoped to make.\n\nI would like a clear delivery date in writing within the next three business days. If you cannot guarantee delivery before next Saturday, I will expect a partial refund to compensate for the inconvenience, as well as confirmation that the delivery fee will be waived.\n\nI have been a loyal customer of NorthPine for many years and have recommended your store to friends. I hope this matter can be resolved quickly so that I can continue to do so.\n\nSincerely,\nJanet Morrison"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is Janet writing this email?",
+          "options": {
+            "A": "To complain about a delayed delivery and request action",
+            "B": "To request that her order be cancelled and refunded immediately",
+            "C": "To ask the company for her missing tracking number",
+            "D": "To follow up on a previous complaint she submitted last week"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Janet says she is 'writing to express my disappointment' and demands a clear delivery date plus compensation — both complaint and request action. B tempts because a partial refund IS mentioned, but only as a conditional demand if delivery fails, not her purpose."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "When did Janet originally place her order?",
+          "options": {
+            "A": "The same day she called customer service for the first time",
+            "B": "Two weeks before the promised delivery date",
+            "C": "Over a month before the email was written",
+            "D": "On March 3rd"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'On March 3rd, I purchased a dining table.' C is the trap — she says it has been 'over a month' since the order, but that is how long she has waited, not a separate date of purchase. B confuses the delivery promise with the order date."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What did the second customer service representative tell her?",
+          "options": {
+            "A": "The items were in transit but a tracking number would be sent by email",
+            "B": "The order had not yet left the warehouse",
+            "C": "The order was with a third-party courier and could not be tracked",
+            "D": "The delivery had been rescheduled and she would receive a callback"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: the second representative 'said the order had not yet left the warehouse.' A is the primary trap — the 'in transit' detail came from the FIRST representative. Mixing which rep said what is the intended confusion here."
+        },
+        {
+          "question_number": 4,
+          "skill": "inference",
+          "question_text": "What can be inferred about Janet's family gathering?",
+          "options": {
+            "A": "It has been moved to a different weekend to allow the furniture to arrive",
+            "B": "It will be held at the neighbour's home who lent the folding tables",
+            "C": "It will go ahead but with borrowed tables instead",
+            "D": "It may still be cancelled if the delivery does not happen before Saturday"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Janet has already 'borrowed folding tables from a neighbour' — the gathering is going ahead with improvised furniture. D tempts because Saturday IS mentioned, but as a deadline for a partial refund, not as a condition for whether the gathering happens."
+        },
+        {
+          "question_number": 5,
+          "skill": "detail_comprehension",
+          "question_text": "What does Janet want from NorthPine within three business days?",
+          "options": {
+            "A": "A partial refund and waived delivery fee confirmed in writing",
+            "B": "An explanation from Mr. Davies about why the delivery was delayed",
+            "C": "A written delivery date",
+            "D": "Confirmation that the order has been dispatched from the warehouse"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'I would like a clear delivery date in writing within the next three business days.' A is the main trap — a partial refund and waived fee ARE requested, but only IF delivery cannot be guaranteed by Saturday, not as her three-business-day demand."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "How would you best describe the tone of Janet's email?",
+          "options": {
+            "A": "Firm but professional",
+            "B": "Frustrated but still hopeful for a quick resolution",
+            "C": "Assertive and on the verge of threatening legal action",
+            "D": "Patient and diplomatic, prioritizing the business relationship over her complaint"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Janet states demands clearly ('I will expect a partial refund') while maintaining distance and mentioning her loyalty — firm but professional. C tempts because the language is direct, but she never implies legal action. D misreads the tone; her demands are clear, not patient."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the response written to Janet. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Ms. Morrison,\n\nThank you for taking the time to contact us. I would like to begin by [BLANK_7] for the inconvenience you have experienced with Order #44721. The level of service you describe is not what we expect of our team, and I understand your frustration.\n\nI have personally looked into your order this morning. I can confirm that your dining set is currently at our regional warehouse and is [BLANK_8] for delivery this Friday between 9:00 a.m. and noon. You will receive a confirmation call from our delivery team the day before.\n\nIn recognition of the delay, we will be [BLANK_9] the delivery fee in full and applying a 15% credit to your account, which can be used toward any future purchase. I have also spoken with Mr. Davies and the customer service representatives involved to ensure that follow-up procedures are improved going forward.\n\nWe truly value your [BLANK_10] as a long-time customer and your willingness to recommend us to others. Please do not hesitate to contact me directly at the number below if any further issues [BLANK_11] before Friday.\n\nKind regards,\nDavid Chen\nCustomer Care Manager",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "acknowledging",
+              "B": "regretting",
+              "C": "expressing concern about",
+              "D": "apologizing"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: the context 'begin by [blank] for the inconvenience' calls for formally taking responsibility. A (acknowledging) and B (regretting) are close near-synonyms but do not carry the full weight of direct apology that business correspondence requires here."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "confirmed",
+              "B": "scheduled",
+              "C": "arranged",
+              "D": "planned"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'your dining set is [blank] for delivery this Friday' needs the standard business collocation for a confirmed future appointment. A (confirmed) and D (planned) are tempting near-synonyms but 'scheduled' specifically implies a fixed time slot, matching 'between 9:00 a.m. and noon.'"
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "forgoing",
+              "B": "waiving",
+              "C": "reducing",
+              "D": "eliminating"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'we will be [blank] the delivery fee in full' means formally choosing not to collect the charge. A (forgoing) and D (eliminating) are near-synonyms but 'waiving' is the standard business term for voluntarily cancelling a fee, especially in apology contexts."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "support",
+              "B": "dedication",
+              "C": "loyalty",
+              "D": "patronage"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'We truly value your [blank] as a long-time customer' echoes Janet's own phrase 'loyal customer.' D (patronage) is a plausible business near-synonym but sounds overly formal for this warm closing tone. B (dedication) applies to the writer, not to a customer relationship."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "arise",
+              "B": "occur",
+              "C": "develop",
+              "D": "emerge"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'if any further issues [blank] before Friday' uses the standard fixed collocation 'issues arise.' B (occur) and D (emerge) are near-synonyms that fit grammatically, but 'arise' is the most natural pairing with 'issues' in formal business English."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 2,
+      "difficulty": "intermediate",
+      "title": "Request for Extended Library Borrowing",
+      "passage": {
+        "type": "email",
+        "from": "Daniel Park",
+        "to": "Oakville Public Library — Circulation Desk",
+        "subject": "Request for Extended Borrowing Period",
+        "body": "Dear Library Staff,\n\nMy name is Daniel Park, and I recently moved to Oakville from Hamilton. I signed up for a library card last month and have been very impressed with the selection of books, especially the Korean-language novels.\n\nHowever, I have found that the standard 14-day borrowing period is often too short for me. I work rotating shifts at a nearby hospital, and I sometimes cannot visit the library for two or three weeks at a time. I have already renewed several books online, and once I was charged a late fee because I forgot to renew before the deadline.\n\nI would like to request an extended borrowing period of 21 days, if that is available. I take good care of every book I borrow and always return items in excellent condition. I would also be happy to sign up for email reminders if that is required.\n\nThank you for considering my request. I look forward to continuing to use the library.\n\nSincerely,\nDaniel Park"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is Daniel writing this email?",
+          "options": {
+            "A": "To complain about a late fee he was charged",
+            "B": "To ask for an online renewal link to avoid future late fees",
+            "C": "To suggest the library expand its Korean-language collection",
+            "D": "To request a longer borrowing period"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Daniel explicitly states 'I would like to request an extended borrowing period of 21 days.' A is the main trap — a late fee IS mentioned, but it is cited as evidence for why he needs an extension, not as a complaint in itself."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "Where did Daniel recently move from?",
+          "options": {
+            "A": "Toronto",
+            "B": "Mississauga",
+            "C": "Ottawa",
+            "D": "Hamilton"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'I recently moved to Oakville from Hamilton.' A (Toronto) and C (Ottawa) are plausible Canadian cities with no support in the text. B (Mississauga) is close to Oakville geographically, which makes it a plausible-sounding distractor."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "Why does Daniel find the 14-day period difficult?",
+          "options": {
+            "A": "He requests books that are in high demand and cannot always renew them",
+            "B": "His rotating work schedule makes regular library visits hard",
+            "C": "He is studying for professional exams and needs more time to read",
+            "D": "He lives across town and travel time makes frequent visits impractical"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'I work rotating shifts at a nearby hospital, and I sometimes cannot visit the library for two or three weeks.' A is a plausible library constraint but is invented. D contradicts the text — the hospital is described as 'nearby,' not across town."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What happened when Daniel forgot to renew a book?",
+          "options": {
+            "A": "His borrowing privileges were temporarily suspended",
+            "B": "He had to return the book before finishing it",
+            "C": "He was charged a late fee",
+            "D": "He received a warning email about his account standing"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'once I was charged a late fee because I forgot to renew before the deadline.' A (suspended privileges) is a more severe consequence that sounds plausible but is not stated. D (warning email) describes a milder alternative the text does not mention."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "What can be inferred about Daniel's attitude toward the library?",
+          "options": {
+            "A": "He values the library and wants to keep using it",
+            "B": "He appreciates the library but feels its Korean collection is too small",
+            "C": "He is considering cancelling his card if the policy is not changed",
+            "D": "He prefers the online renewal system to visiting in person"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Daniel says he is 'very impressed with the selection' and 'looks forward to continuing to use the library.' B is a real-detail trap — Korean novels are mentioned positively, not as a complaint about limited selection. C is an inferential overreach with no support."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "How would you describe the tone of Daniel's email?",
+          "options": {
+            "A": "Polite and reasonable",
+            "B": "Helpful and slightly apologetic, given that he missed a return deadline",
+            "C": "Persistent and mildly impatient despite courteous language",
+            "D": "Overly formal, suggesting discomfort with making personal requests"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Daniel makes a modest, clearly justified request with no pressure or complaint. B is a partial-truth trap — the late fee is mentioned, but Daniel does not apologize for it. C misreads the tone; there is no impatience in the email."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the response written to Daniel. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Mr. Park,\n\nThank you for reaching out and for your kind words about our [BLANK_7]. We are glad to hear you are enjoying the collection, including our Korean-language section.\n\nI am pleased to let you know that we do offer an extended borrowing option of 21 days for patrons who [BLANK_8] for our Frequent Reader program. To enroll, simply bring your library card to the front desk and complete a short form. There is no additional [BLANK_9] for this service.\n\nOnce enrolled, all items you borrow will automatically have a 21-day [BLANK_10] period. We also encourage you to sign up for email and text reminders, which can be set up through your online account.\n\nWe appreciate your care with borrowed materials and hope to continue [BLANK_11] you for a long time.\n\nWarm regards,\nHelen Ng\nHead Librarian, Oakville Public Library",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "selection",
+              "B": "catalogue",
+              "C": "services",
+              "D": "collection"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: the email echoes Daniel's phrase 'impressed with the selection of books' — 'collection' is the standard library noun for the full body of holdings. A (selection) is very close and tempting, but 'collection' is the established institutional term that fits the librarian's formal register."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "sign up",
+              "B": "register",
+              "C": "qualify",
+              "D": "apply"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'patrons who [blank] for our Frequent Reader program' describes the enrollment action. A (sign up) is a near-synonym but more informal. D (apply) suggests a competitive process, which mismatches 'simply bring your library card to the front desk.'"
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "charge",
+              "B": "fee",
+              "C": "cost",
+              "D": "requirement"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'There is no additional [blank] for this service' uses 'cost' as the neutral noun pairing with 'no additional.' A (charge) and B (fee) are close near-synonyms, but 'cost' is the most neutral and common noun in this 'no additional [blank]' construction."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "borrowing",
+              "B": "checkout",
+              "C": "loan",
+              "D": "lending"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'a 21-day [blank] period' uses the standard library term 'loan period.' A (borrowing) is a near-synonym that fits grammatically but 'loan period' is the established institutional phrase. D (lending) describes the library's action, not the patron's, so it shifts the perspective incorrectly."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "serving",
+              "B": "assisting",
+              "C": "welcoming",
+              "D": "supporting"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'hope to continue [blank] you for a long time' is the standard service-industry closing. B (assisting) and D (supporting) are near-synonyms, but 'serving' is the idiomatic verb in institutional contexts meaning 'to meet the ongoing needs of a patron.'"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 3,
+      "difficulty": "advanced",
+      "title": "Neighbourhood Spring Cleanup Invitation",
+      "passage": {
+        "type": "email",
+        "from": "Sarah Chen, Block Captain — Elmwood Crescent",
+        "to": "All Residents of Elmwood Crescent",
+        "subject": "Annual Spring Cleanup & BBQ — Saturday, April 20",
+        "body": "Dear Neighbours,\n\nSpring is here, and it is time once again for our annual Elmwood Crescent Spring Cleanup! Last year, more than 40 residents came out and we collected over 60 bags of leaves and litter — a new record. Let us see if we can do even better this year.\n\nThe cleanup will take place on Saturday, April 20, from 9:00 a.m. to noon. Gloves, bags, and rakes will be provided, but feel free to bring your own gardening tools if you have them. We will focus on the boulevard, the park path along the creek, and the area around the community mailboxes.\n\nOnce the work is done, everyone is invited to a barbecue at my house (14 Elmwood Crescent) starting at 12:30 p.m. Burgers, hot dogs, and drinks will be provided. If you would like to bring a side dish or dessert, that would be wonderful but is certainly not required.\n\nPlease reply to this email by April 15 so I can plan for food. Children are welcome — we will have sidewalk chalk and bubbles to keep the little ones busy. I hope to see you all there!\n\nWarm regards,\nSarah Chen"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "What is the main purpose of Sarah's email?",
+          "options": {
+            "A": "To organize volunteers for a community improvement project",
+            "B": "To announce the record set last year and encourage matching it",
+            "C": "To announce changes to the cleanup schedule and location this year",
+            "D": "To invite residents to a cleanup event and barbecue"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Sarah invites neighbours to both the cleanup and the BBQ. A is a partial-truth trap — volunteering is part of it, but 'community improvement project' omits the social BBQ element, which is central to her message. B focuses only on last year, not this year's invitation."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "How many bags of litter were collected last year?",
+          "options": {
+            "A": "Over 40",
+            "B": "Over 60",
+            "C": "Over 80",
+            "D": "A record 50, up from the previous year"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'we collected over 60 bags of leaves and litter — a new record.' A (over 40) is the primary trap — 40 is the number of RESIDENTS who came out, not bags collected. This is a real-detail swap designed to catch readers who skim."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What time does the barbecue begin?",
+          "options": {
+            "A": "9:00 a.m., when the cleanup begins",
+            "B": "12:30 p.m.",
+            "C": "12:00 p.m., when the cleanup finishes",
+            "D": "1:00 p.m., to allow everyone time to arrive from the cleanup area"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'a barbecue at my house starting at 12:30 p.m.' C is the primary trap — noon is when the cleanup ENDS, not when the BBQ starts. The 30-minute gap between cleanup end and BBQ start is easy to miss on a quick read."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What does Sarah ask residents to do by April 15?",
+          "options": {
+            "A": "Submit a list of gardening tools they can bring to share",
+            "B": "Drop off a side dish at 14 Elmwood Crescent before the event",
+            "C": "Reply to confirm attendance",
+            "D": "Sign up online for a specific cleanup zone on the street"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'Please reply to this email by April 15 so I can plan for food.' B is a real-detail trap — side dishes ARE mentioned, and 14 Elmwood IS the address, but Sarah asks people to bring dishes on the day, not drop them off beforehand."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "What can be inferred about the Elmwood Crescent community?",
+          "options": {
+            "A": "The cleanup is a well-established annual tradition",
+            "B": "Participation has grown steadily since the event began three years ago",
+            "C": "Participation has been declining, which is why Sarah is encouraging turnout",
+            "D": "The event was originally started by the city, not by residents"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'it is time once again for our annual Elmwood Crescent Spring Cleanup' and reference to last year's record establish a recurring tradition. B invents a growth timeline with no support. C contradicts the evidence — a record turnout last year suggests growth, not decline."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "What is the overall tone of Sarah's email?",
+          "options": {
+            "A": "Enthusiastic and community-minded, though slightly formal in places",
+            "B": "Energetic and playful, using humor to persuade people to participate",
+            "C": "Friendly but firm, with clear expectations about attendance",
+            "D": "Warm and encouraging"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Sarah uses inclusive language ('our annual,' 'I hope to see you all'), makes everything optional, and emphasizes enjoyment. A is a partial-truth trap — she is enthusiastic, but the email is not formal. C misreads the tone; attendance and contributions are both presented as voluntary."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the reply from a resident. Complete the reply by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Hi Sarah,\n\nThanks so much for organizing this again! You really are the [BLANK_7] of the neighbourhood when it comes to bringing people together.\n\nMy husband and I will both be there at 9:00 a.m. sharp. I will bring a large garden rake and an extra pair of gloves in case anyone [BLANK_8] theirs. We found the creek path especially messy last year, so maybe we should [BLANK_9] a few extra people to that area this time.\n\nFor the barbecue, I would love to bring my potato salad — it is always a [BLANK_10] at family gatherings. Should I also bring paper plates, or do you have enough?\n\nThe kids are excited too. My daughter has been talking about the sidewalk chalk since you first [BLANK_11] the cleanup last month. See you on the 20th!\n\nBest,\nJennifer",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "heart",
+              "B": "glue",
+              "C": "pillar",
+              "D": "backbone"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'backbone of the neighbourhood' is the established idiom for someone who provides the essential support structure of a group. A (heart) and C (pillar) are plausible near-idioms — 'heart of the neighbourhood' and 'pillar of the community' exist — but 'backbone' is the strongest match for the idea of someone who holds everything together."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "loses",
+              "B": "forgets",
+              "C": "leaves behind",
+              "D": "misplaces"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'in case anyone [blank] theirs' matches the email's context of bringing an extra pair of gloves as a precaution. A (loses) and D (misplaces) are near-synonyms, but 'forgets' is the most natural word for not bringing something you left at home before a planned event."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "direct",
+              "B": "send",
+              "C": "assign",
+              "D": "allocate"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'we should [blank] a few extra people to that area' means designating volunteers for a specific zone. A (direct) and D (allocate) are near-synonyms, but 'assign' is the standard verb for distributing people to tasks in a coordinated group effort."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "hit",
+              "B": "favourite",
+              "C": "success",
+              "D": "crowd-pleaser"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'it is always a hit at family gatherings' is a fixed idiom meaning something is consistently well-received. B (favourite), C (success), and D (crowd-pleaser) all express the same idea and are plausible near-synonyms, but only 'hit' completes the fixed idiomatic expression."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "mentioned",
+              "B": "announced",
+              "C": "discussed",
+              "D": "publicized"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'since you first [blank] the cleanup last month' describes a casual first reference, likely in a passing conversation or earlier email. B (announced) implies a formal broadcast, which overstates the informal context. C (discussed) implies a back-and-forth dialogue not suggested here."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 4,
+      "difficulty": "intermediate",
+      "title": "Restaurant Apology for a Bad Experience",
+      "passage": {
+        "type": "email",
+        "from": "Marco Rossi, General Manager — Bella Cucina Restaurant",
+        "to": "Stephanie Howard",
+        "subject": "Our Sincere Apologies for Your Recent Visit",
+        "body": "Dear Ms. Howard,\n\nThank you for taking the time to share your experience at Bella Cucina last Saturday evening. I have read your comments carefully, and I want you to know that I take your concerns very seriously.\n\nI understand that your pasta arrived cold, that you waited over 45 minutes for your main course, and that there was an error on your bill. None of this is acceptable, and I sincerely apologize. Saturday was an unusually busy night, but that is not an excuse for the level of service you received.\n\nI have spoken with the kitchen team and the server who assisted you to make sure this does not happen again. I would like to invite you and a guest back for a complimentary dinner so that we can show you the experience Bella Cucina is known for. Please call me directly at 905-555-0173 to arrange a convenient date.\n\nThank you again for bringing this to my attention. Your feedback helps us improve.\n\nWith warm regards,\nMarco Rossi"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is Marco writing this email?",
+          "options": {
+            "A": "To explain the causes of the delay Stephanie experienced",
+            "B": "To offer Stephanie a discount on a future visit in response to her feedback",
+            "C": "To follow up after the server reported Stephanie's complaint to management",
+            "D": "To apologize for a poor dining experience"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Marco writes to acknowledge three specific failures and apologize. B is the trap — he does offer compensation, but it is a complimentary dinner, not a discount. A partially fits but explaining the cause is secondary to the apology itself."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "Which of the following was NOT a problem during Stephanie's visit?",
+          "options": {
+            "A": "Cold food",
+            "B": "A rude manager",
+            "C": "A long wait",
+            "D": "A billing error"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Marco lists three problems — cold pasta, a 45-minute wait, and a billing error — but never mentions the manager being rude. In fact, Marco is the manager and his email is apologetic, not rude. The other three options all appear explicitly in the email."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "How long did Stephanie wait for her main course?",
+          "options": {
+            "A": "About 30 minutes",
+            "B": "About 20 minutes longer than the restaurant's typical service time",
+            "C": "Over 45 minutes",
+            "D": "Over an hour, given that the restaurant was unusually busy"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'you waited over 45 minutes for your main course.' A (30 minutes) is a plausible but lower near-number trap. D inflates the wait time, using the 'unusually busy' detail from the email to make the exaggeration sound grounded."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What does Marco offer Stephanie?",
+          "options": {
+            "A": "A refund for the cost of the meal she paid during her visit",
+            "B": "A 20% discount and priority seating on her next visit",
+            "C": "A free dinner for two",
+            "D": "A complimentary appetizer and dessert on her next visit"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'I would like to invite you and a guest back for a complimentary dinner.' A and B offer different types of compensation that are not in the text. D downgrades the offer to just appetizer and dessert — plausible but wrong, as the full dinner is offered."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why does Marco mention that Saturday was unusually busy?",
+          "options": {
+            "A": "To explain, but not excuse, the poor service",
+            "B": "To suggest the service failures were beyond the restaurant's control",
+            "C": "To recommend Stephanie visit on a weekday when service is more consistent",
+            "D": "To highlight that her visit was atypical and the problems rarely occur"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Marco immediately adds 'but that is not an excuse' — he provides context without deflecting blame. B directly contradicts this; Marco explicitly rejects the excuse. D is partially right about atypicality but omits the key 'not an excuse' qualifier that defines his intent."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "How would you describe Marco's tone?",
+          "options": {
+            "A": "Formal and professional, prioritizing the restaurant's reputation",
+            "B": "Empathetic but careful not to accept full responsibility",
+            "C": "Gracious but subtly defensive about the kitchen's performance",
+            "D": "Sincere and apologetic"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Marco takes full responsibility ('None of this is acceptable'), speaks directly with staff, and offers genuine compensation. B inverts his stance — he explicitly does not hedge responsibility. C misreads the busy-Saturday comment; he immediately rejects it as an excuse."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read Stephanie's reply to Marco. Complete the reply by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Mr. Rossi,\n\nThank you for your prompt and thoughtful [BLANK_7]. I appreciate that you took the time to acknowledge what happened and to follow up with your staff.\n\nI was quite [BLANK_8] after our visit, especially because we had chosen Bella Cucina to celebrate my mother's birthday. However, your response has changed my impression of the restaurant, and I would be happy to [BLANK_9] your offer of a complimentary dinner.\n\nI will call the number you provided to [BLANK_10] a date that works for us. I am hopeful that our next visit will be a much better [BLANK_11].\n\nThank you again,\nStephanie Howard",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "reply",
+              "B": "response",
+              "C": "acknowledgement",
+              "D": "message"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'prompt and thoughtful [blank]' pairs with 'response' as the standard noun for a formal reply to a complaint. A (reply) is very close but slightly informal. C (acknowledgement) partially fits since she mentions Marco acknowledging what happened, making it a real-detail near-synonym trap."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "displeased",
+              "B": "disappointed",
+              "C": "let down",
+              "D": "frustrated"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'I was quite disappointed after our visit' is the most measured and appropriate register for this formal reply. A (displeased) and C (let down) are near-synonyms, but 'disappointed' is the standard word in formal complaint correspondence and best matches the email's tone."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "consider",
+              "B": "reconsider",
+              "C": "accept",
+              "D": "take up"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'I would be happy to [blank] your offer' means to agree to it — 'accept' is the standard verb. A (consider) implies she has not yet decided, which contradicts 'would be happy to.' D (take up) is an informal phrasal verb near-synonym that is slightly too casual for the formal register."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "arrange",
+              "B": "schedule",
+              "C": "confirm",
+              "D": "book"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'I will call to [blank] a date' echoes Marco's own phrasing — he said 'to arrange a convenient date.' B (schedule) and D (book) are near-synonyms that are more typical of online reservations, while 'arrange' matches the personal phone-call context Marco established."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "occasion",
+              "B": "impression",
+              "C": "outcome",
+              "D": "experience"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'our next visit will be a much better experience' is the natural collocation — a restaurant visit is an 'experience.' A (occasion) implies a formal event. B (impression) is a real-detail trap — she mentions her 'impression of the restaurant' one sentence earlier, making B feel connected."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 5,
+      "difficulty": "easy",
+      "title": "Inquiry About a Summer Day Camp",
+      "passage": {
+        "type": "email",
+        "from": "Lisa Thompson",
+        "to": "Camp Sunshine — Registration Office",
+        "subject": "Questions About the Junior Explorer Program",
+        "body": "Dear Camp Sunshine Team,\n\nI am writing to ask about the Junior Explorer Program for this coming summer. My daughter, Emma, is seven years old and has never attended a day camp before. She is very excited about the idea, but as a first-time camp parent, I have a number of questions.\n\nFirst, could you confirm the age range for the Junior Explorer group? Your website says ages 6 to 9, but a friend told me it recently changed to ages 7 to 10. Second, what does a typical day look like? Emma is an active child who loves being outdoors, but she is also quite shy and may need some time to adjust to new groups.\n\nI also need to know whether you can accommodate food allergies. Emma has a severe peanut allergy, and I need to be confident that the camp environment is safe for her. Do you have an allergy policy, and are the counsellors trained in using an EpiPen?\n\nFinally, I was wondering about payment options. Is it possible to pay in two instalments rather than one lump sum? The full fee of $475 is manageable, but splitting it would be helpful for our family budget.\n\nThank you for your time. I look forward to hearing from you.\n\nBest regards,\nLisa Thompson"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is Lisa writing this email?",
+          "options": {
+            "A": "To enroll Emma in the Junior Explorer Program for the summer",
+            "B": "To report conflicting information she received about the program's age range",
+            "C": "To ask the camp to accommodate her daughter's peanut allergy",
+            "D": "To ask questions before enrolling her daughter"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Lisa has 'a number of questions' — age range, daily schedule, allergy policy, and payment. A is the trap — she appears close to enrolling, but she has not yet decided and is still gathering information. B and C each name just one of her four questions, not her overall purpose."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "Why is Lisa unsure about the age range?",
+          "options": {
+            "A": "She lost the registration brochure and cannot check the details",
+            "B": "The website and a friend gave different information",
+            "C": "The camp website was recently updated but still shows outdated figures",
+            "D": "Emma just turned 7 and may fall outside the updated range"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'Your website says ages 6 to 9, but a friend told me it recently changed.' A invents a lost brochure not mentioned in the text. D is a plausible inference trap — Emma IS 7 and the changed range starts at 7, so she would qualify either way, making D irrelevant as a reason for Lisa's uncertainty."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What is Lisa's concern about Emma's personality?",
+          "options": {
+            "A": "Emma has had negative experiences at camps before and is nervous about returning",
+            "B": "Emma is very active and may struggle with structured indoor activities",
+            "C": "Emma may struggle to adjust because she is shy",
+            "D": "Emma is sensitive to noise and may find large group settings overwhelming"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'she is also quite shy and may need some time to adjust to new groups.' A contradicts the text — Emma has never attended camp before. B is a real-detail trap — Emma IS described as active and outdoor-loving, but that is a strength, not Lisa's concern."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What medical concern does Lisa raise?",
+          "options": {
+            "A": "Emma has a severe peanut allergy",
+            "B": "Emma requires an EpiPen and daily medication for a breathing condition",
+            "C": "Emma has multiple food allergies that require careful meal planning",
+            "D": "Emma has a known allergy that requires written medical clearance for all activities"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'Emma has a severe peanut allergy.' B is the primary trap — an EpiPen IS mentioned, and breathing allergies are associated with EpiPens, but Lisa specifically names a peanut allergy, not a breathing condition. C overstates by saying 'multiple food allergies' — only one is mentioned."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "What can be inferred about Lisa's financial situation?",
+          "options": {
+            "A": "She can manage the cost but would prefer to split payments",
+            "B": "She is hoping the camp will offer a discount or financial assistance",
+            "C": "She wants to confirm the total cost before agreeing to register",
+            "D": "She finds the full fee of $475 too expensive for a single summer program"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'The full fee of $475 is manageable, but splitting it would be helpful.' Lisa explicitly says the cost is manageable — B and D overstate her financial concern. C is contradicted by the text; she already knows the full cost and states it herself."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "How would you describe Lisa's tone?",
+          "options": {
+            "A": "Cautious and apologetic, as though she is afraid of seeming too demanding",
+            "B": "Organized and matter-of-fact, with little emotional language",
+            "C": "Noticeably anxious, especially regarding Emma's allergy",
+            "D": "Thoughtful and concerned"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Lisa is thorough and clearly invested in Emma's wellbeing, but remains composed. A over-reads into apology that is not present. C overstates the anxiety — she raises the allergy concern clearly but without panic. B is a partial-truth trap — she is organized, but phrases like 'I need to be confident' show genuine emotional investment."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the response from Camp Sunshine. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Ms. Thompson,\n\nThank you for your interest in Camp Sunshine! I am happy to answer your questions and help you feel [BLANK_7] about sending Emma to us this summer.\n\nThe Junior Explorer group is for ages 6 to 9 — the website is correct. A typical day includes outdoor games, nature hikes, arts and crafts, and a supervised swim period. Our counsellors are experienced at helping shy children feel [BLANK_8], and we always pair newcomers with a buddy during the first week.\n\nRegarding allergies, we take food safety very seriously. Our camp is completely nut-free, and all counsellors are [BLANK_9] in first aid, including EpiPen administration. We ask parents to complete a detailed medical form before the first day.\n\nAs for payment, we are happy to offer a two-instalment plan. The first [BLANK_10] of $237.50 is due at registration, and the second is due by June 15.\n\nPlease do not [BLANK_11] to reach out if you have more questions. We would love to have Emma join us!\n\nWarm regards,\nAmanda Gill\nCamp Director",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "comfortable",
+              "B": "confident",
+              "C": "assured",
+              "D": "certain"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'help you feel [blank] about sending Emma' needs a word that conveys secure, informed trust. A (comfortable) and C (assured) are near-synonyms, but 'confident' best matches the context — Lisa said she 'needs to be confident' the camp is safe, so the reply directly echoes her own language."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "welcome",
+              "B": "comfortable",
+              "C": "included",
+              "D": "settled"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'helping shy children feel [blank]' addresses Lisa's concern about Emma adjusting to 'new groups' — 'included' directly targets the social integration worry. A (welcome) focuses on arrival. B (comfortable) is a near-synonym but refers more to physical ease than to social belonging in a group."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "certified",
+              "B": "qualified",
+              "C": "trained",
+              "D": "experienced"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'all counsellors are [blank] in first aid, including EpiPen administration' uses the fixed phrase 'trained in first aid.' A (certified) and B (qualified) are near-synonyms that imply a formal credential level, but 'trained' is the standard verb specifically collocated with 'in first aid.'"
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "instalment",
+              "B": "payment",
+              "C": "deposit",
+              "D": "portion"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'The first [blank] of $237.50' describes one of two equal split payments — the exact arrangement Lisa requested. B (payment) is the broadest near-synonym and is tempting, but 'instalment' is the specific term for a scheduled partial payment in a multi-payment plan."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "wait",
+              "B": "pause",
+              "C": "be afraid",
+              "D": "hesitate"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'Please do not [blank] to reach out' is the fixed polite closing phrase 'do not hesitate to reach out.' A (wait) and B (pause) are near-synonyms that fit grammatically, but only 'hesitate' completes this established business-English idiom for encouraging future contact."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 6,
+      "difficulty": "advanced",
+      "title": "Professor's Scholarship Recommendation",
+      "passage": {
+        "type": "email",
+        "from": "Dr. Margaret Hayes, Department of Political Science — Dalhousie University",
+        "to": "Selection Committee, Pearson Academic Foundation",
+        "subject": "Letter of Recommendation — Priya Nair for the Leadership Scholarship",
+        "body": "Dear Members of the Selection Committee,\n\nI am writing to offer my strongest recommendation for Priya Nair, who is applying for the Pearson Leadership Scholarship. I have had the privilege of teaching and mentoring Priya over the past three years, and I can say without reservation that she is among the most intellectually curious and socially committed students I have encountered in my twenty-two years of university teaching.\n\nPriya maintained a 3.92 GPA while simultaneously serving as president of the university's Model United Nations club and co-founding a peer tutoring program for first-year international students. What distinguishes her from other high achievers is the genuineness of her engagement: she does not pursue activities to build a résumé, but because she is deeply moved by questions of equity and access.\n\nIn my senior seminar on democratic governance, Priya produced a research paper examining voter suppression in municipal elections that was later accepted for presentation at the Canadian Political Science Association's annual conference — a rare achievement for an undergraduate. Her analysis was methodologically rigorous, carefully sourced, and written with a clarity that many graduate students struggle to achieve.\n\nBeyond academics, Priya has volunteered with the Halifax Refugee Clinic for two years, assisting newcomers with housing applications and interpretation services. She has spoken publicly about the challenges facing refugee claimants, and her advocacy contributed to the clinic receiving additional provincial funding last year.\n\nI have no doubt that Priya will use the Pearson Scholarship not merely to advance her own career, but to create meaningful change in whatever community she enters. She has my highest and most enthusiastic endorsement.\n\nSincerely,\nDr. Margaret Hayes"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "What is the primary purpose of this email?",
+          "options": {
+            "A": "To report on Priya's conference presentation to the academic community",
+            "B": "To recommend a student for a scholarship",
+            "C": "To detail the outstanding academic record of an exceptional undergraduate",
+            "D": "To request the committee's support for Priya's ongoing research project"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Hayes writes 'to offer my strongest recommendation for Priya Nair, who is applying for the Pearson Leadership Scholarship.' A and C are real-detail traps — the conference and academic record ARE discussed, but as supporting evidence for the recommendation, not as the purpose."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "What did Priya co-found at the university?",
+          "options": {
+            "A": "A research journal focused on democratic governance and voter rights",
+            "B": "A peer tutoring program for international students",
+            "C": "The Model United Nations club on campus",
+            "D": "An advocacy organization for refugee claimants in Halifax"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Priya co-founded 'a peer tutoring program for first-year international students.' C is the primary trap — Priya IS the president of the MUN club, but she served as president; she did not co-found it. D is a real-detail trap — refugee advocacy IS mentioned, but that was clinic volunteering, not co-founding an organization."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What was notable about Priya's research paper?",
+          "options": {
+            "A": "It was selected as the best undergraduate paper by a national jury",
+            "B": "It was published in an academic journal before the conference",
+            "C": "It was accepted at a major academic conference",
+            "D": "It was later used as a teaching resource in Dr. Hayes's senior seminar"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: the paper 'was later accepted for presentation at the Canadian Political Science Association's annual conference — a rare achievement for an undergraduate.' A upgrades the achievement to an award not mentioned. D is a plausible detail that connects the paper to the seminar context but is entirely invented."
+        },
+        {
+          "question_number": 4,
+          "skill": "inference",
+          "question_text": "Why does Dr. Hayes mention that presenting at the conference is 'a rare achievement for an undergraduate'?",
+          "options": {
+            "A": "To emphasize how exceptional Priya's work is",
+            "B": "To show that the conference normally accepts only graduate and faculty submissions",
+            "C": "To contrast Priya's success with the weaker performance of other students Hayes has taught",
+            "D": "To explain why Hayes personally assisted Priya in preparing the submission"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Hayes uses the rarity remark to strengthen the endorsement — it contextualizes Priya's achievement for the committee. B states a possible reason for why it is rare, which is different from Hayes's intent. D invents a detail; the email never suggests Hayes co-authored or submitted the paper."
+        },
+        {
+          "question_number": 5,
+          "skill": "detail_comprehension",
+          "question_text": "What contribution did Priya make at the Halifax Refugee Clinic?",
+          "options": {
+            "A": "She lobbied provincial officials for additional clinic funding",
+            "B": "She gave public speeches and led interpretation training for newcomers",
+            "C": "She co-managed the clinic's newcomer intake and referral process",
+            "D": "She helped newcomers with housing and interpretation"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'assisting newcomers with housing applications and interpretation services.' A is the primary trap — provincial funding IS mentioned, but her advocacy 'contributed to' receiving it; she did not lobby officials directly. B is a partial truth — public speaking IS mentioned, but not training others."
+        },
+        {
+          "question_number": 6,
+          "skill": "inference",
+          "question_text": "What does Dr. Hayes imply about Priya's motivation for extracurricular activities?",
+          "options": {
+            "A": "Priya pursues activities mainly to strengthen competitive scholarship applications",
+            "B": "Priya is drawn to equity issues because of her own experiences as an international student",
+            "C": "Priya balances academic and social work equally, with neither taking clear priority",
+            "D": "Priya is genuinely driven by a concern for fairness"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Hayes says Priya 'does not pursue activities to build a résumé, but because she is deeply moved by questions of equity and access.' A is a direct inversion of that statement. B invents a personal backstory not in the text. C misses the point — Hayes specifically emphasizes the genuineness of Priya's engagement."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the committee's reply to Dr. Hayes. Complete the reply by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Dr. Hayes,\n\nThank you for your detailed and [BLANK_7] recommendation of Priya Nair. We receive many applications each year, and letters from faculty mentors are an essential part of our [BLANK_8] process.\n\nYour description of Priya's academic achievements, particularly her conference presentation, clearly [BLANK_9] her from the typical applicant pool. We were also impressed to learn about her sustained commitment to the Halifax Refugee Clinic, which aligns closely with the Foundation's values of community [BLANK_10] and leadership.\n\nWe are now in the final stage of review and expect to notify all candidates by May 15. Should we require any additional information, we will not hesitate to [BLANK_11] you.\n\nWith appreciation,\nRobert Fung\nChair, Pearson Academic Foundation Selection Committee",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "thorough",
+              "B": "compelling",
+              "C": "persuasive",
+              "D": "comprehensive"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'detailed and compelling recommendation' pairs the formal quality (detailed) with the rhetorical impact (compelling). A (thorough) and D (comprehensive) are near-synonyms of 'detailed' but would create redundancy. C (persuasive) is close but 'compelling' better captures why a recommendation stands out in a competitive review."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "selection",
+              "B": "review",
+              "C": "evaluation",
+              "D": "assessment"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'an essential part of our evaluation process' is standard scholarship committee language. A (selection) refers to the outcome, not the process. B (review) and D (assessment) are near-synonyms, but 'evaluation' is the most precise term for the systematic consideration of candidates against criteria."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "distinguishes",
+              "B": "differentiates",
+              "C": "sets apart",
+              "D": "separates"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'clearly distinguishes her from the typical applicant pool' is the most established phrasing in professional academic correspondence. B (differentiates), C (sets apart), and D (separates) are all near-synonyms — this is an intentional near-synonym trap — but 'distinguishes' is the standard formal verb for standing out in a competitive field."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "engagement",
+              "B": "involvement",
+              "C": "service",
+              "D": "participation"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'community engagement and leadership' is the standard paired phrase used by foundations to describe active civic contribution. B (involvement) and D (participation) suggest passive joining rather than initiative. C (service) is close but 'community service' typically implies court-ordered or obligatory work, not voluntary leadership."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "reach",
+              "B": "consult",
+              "C": "approach",
+              "D": "contact"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'we will not hesitate to contact you' is the fixed formal phrase for indicating future communication. A (reach), B (consult), and C (approach) are all near-synonyms — intentional traps — but only 'contact' completes the established idiom 'do not hesitate to contact' used in formal committee correspondence."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 7,
+      "difficulty": "easy",
+      "title": "Tenant Complaint About Heating Problems",
+      "passage": {
+        "type": "email",
+        "from": "James O'Brien",
+        "to": "Sunrise Property Management",
+        "subject": "Recurring Heating Issues — Unit 4B, 210 Maple Road",
+        "body": "Dear Property Management,\n\nI am writing to report an ongoing heating problem in my apartment at 210 Maple Road, Unit 4B. For the past three months, the radiator in my living room has been making loud banging noises and frequently shuts off on its own, sometimes for hours at a time. On several nights in January, the indoor temperature dropped below 16°C, which I understand is below the minimum standard set by the city's property maintenance bylaw.\n\nI reported this issue in early December and again in mid-January. A maintenance technician visited on both occasions and told me the problem was related to an aging boiler in the basement. Each time, the radiator worked for a few days after the visit and then stopped again.\n\nThis situation has been especially difficult because my daughter, who is four years old, has been getting frequent colds this winter. Our family doctor suggested that the cold indoor temperatures may be contributing to her illness.\n\nI am requesting that the boiler be properly repaired or replaced as soon as possible. I would also appreciate a written timeline for when this work will be completed. If the issue is not resolved within the next two weeks, I may need to contact the Landlord and Tenant Board for assistance.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\nJames O'Brien"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is James writing this email?",
+          "options": {
+            "A": "To request compensation for the cold conditions he has endured this winter",
+            "B": "To report recurring heating problems and demand a fix",
+            "C": "To notify management that he intends to contact the Landlord and Tenant Board",
+            "D": "To report a safety incident after his daughter was injured at home"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: James reports the heating problem and requests that the boiler be 'properly repaired or replaced.' C is a real-detail trap — the LTB IS mentioned, but as a conditional threat if the problem isn't fixed, not as his current purpose. D distorts the daughter detail — she has colds, not an injury."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "How long has the heating problem been going on?",
+          "options": {
+            "A": "About six weeks, since temperatures first dropped below 16°C in January",
+            "B": "Since early winter, when the boiler was last serviced",
+            "C": "About three months",
+            "D": "About a year"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'For the past three months, the radiator in my living room has been making loud banging noises.' A is the primary trap — 16°C is mentioned but as a January event, not the start of the problem. The problem began in early December, meaning it spans approximately three months at time of writing."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What did the maintenance technician say was causing the problem?",
+          "options": {
+            "A": "Poor insulation in the building's exterior walls",
+            "B": "Blocked ventilation pipes in Unit 4B",
+            "C": "An aging boiler in the basement",
+            "D": "A faulty thermostat controlling James's unit"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'the problem was related to an aging boiler in the basement.' A and B are plausible heating causes that sound technical but are not in the text. D (faulty thermostat) is the most tempting wrong answer — thermostats and radiators are commonly paired, but the technician specifically identified the basement boiler."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What happened after each maintenance visit?",
+          "options": {
+            "A": "The radiator worked briefly and then stopped again",
+            "B": "The radiator functioned normally for the rest of that winter season",
+            "C": "James received a new thermostat and an apology from management",
+            "D": "The technician recommended a full boiler replacement in writing"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'Each time, the radiator worked for a few days after the visit and then stopped again.' B directly contradicts this. C and D are plausible outcomes that are not stated; D tempts because James IS requesting a boiler replacement, but no written recommendation from the technician is mentioned."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why does James mention his daughter's health?",
+          "options": {
+            "A": "To provide a second source confirming the temperature drops below the city standard",
+            "B": "To request that management reimburse the family's medical expenses",
+            "C": "To argue that a health emergency exempts him from standard notice requirements",
+            "D": "To show that the heating problem is causing real harm to his family"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: James connects his daughter's frequent colds to the cold apartment to make the impact of the heating failure concrete and personal. A is a partial-truth trap — the cold temperature link IS there, but the purpose is to show harm, not just confirm a bylaw standard that he has already cited."
+        },
+        {
+          "question_number": 6,
+          "skill": "inference",
+          "question_text": "What is James implying by mentioning the Landlord and Tenant Board?",
+          "options": {
+            "A": "He has already received advice from the LTB about his legal rights",
+            "B": "He will take formal action if the problem is not fixed soon",
+            "C": "He has already filed a complaint with the LTB",
+            "D": "He is warning management that his next communication will escalate in tone"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'If the issue is not resolved within the next two weeks, I may need to contact the Landlord and Tenant Board.' The conditional 'if' structure clearly sets up a future action contingent on non-resolution. C is the primary trap — it removes the conditional; he has NOT yet filed a complaint."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the response from the property manager. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Mr. O'Brien,\n\nThank you for bringing this matter to our attention again, and please accept my [BLANK_7] for the ongoing inconvenience. I understand how frustrating it must be, especially with a young child at home.\n\nAfter reviewing the maintenance reports from December and January, I agree that the temporary repairs have not been [BLANK_8]. I have authorized the replacement of the basement boiler, and our contractor has confirmed that the work can begin this Thursday. The installation is expected to take two to three days, during which we will provide [BLANK_9] space heaters for your unit at no charge.\n\nI have also arranged for a building inspector to [BLANK_10] the heating system once the new boiler is in place to ensure everything meets city standards. You will receive a written confirmation of the completion date by email.\n\nPlease do not hesitate to call me directly if you have any further [BLANK_11]. I want to make sure your family is comfortable.\n\nSincerely,\nDiane Foster\nSunrise Property Management",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "regrets",
+              "B": "apologies",
+              "C": "sympathies",
+              "D": "acknowledgement"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'please accept my apologies' is the established formal phrase for institutional acknowledgement of wrongdoing. A (regrets) and C (sympathies) are near-synonyms — 'regrets' is used in formal apologies but is typically more distant; 'sympathies' conveys condolence rather than accountability."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "adequate",
+              "B": "effective",
+              "C": "sufficient",
+              "D": "lasting"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'the temporary repairs have not been sufficient' is the most neutral and precise phrasing. A (adequate) and B (effective) are near-synonyms — 'effective' tempts because 'not effective' is what the situation implies, but 'sufficient' is the standard word in property management for meeting a required standard."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "portable",
+              "B": "temporary",
+              "C": "supplementary",
+              "D": "loaner"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'portable space heaters' is the standard noun phrase for standalone plug-in heaters provided as a stopgap. B (temporary) describes duration, not the type of device. C (supplementary) is an adjective near-synonym but mismatches the noun 'space heaters' — you don't say 'supplementary space heaters' in this context."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "assess",
+              "B": "examine",
+              "C": "evaluate",
+              "D": "inspect"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'a building inspector to inspect the heating system' uses the professional title ('inspector') and its corresponding verb ('inspect'). A (assess), B (examine), and C (evaluate) are near-synonyms — an intentional near-synonym trap — but 'inspect' is the standard term when discussing a qualified inspector's formal site visit."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "questions",
+              "B": "issues",
+              "C": "complaints",
+              "D": "concerns"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'if you have any further concerns' is the standard polite closing in property management and service correspondence. A (questions), B (issues), and C (complaints) are all near-synonyms — intentional traps — but 'concerns' is the most professionally neutral term, matching the empathetic tone of this letter."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 8,
+      "difficulty": "advanced",
+      "title": "Farewell Lunch Invitation for a Coworker",
+      "passage": {
+        "type": "email",
+        "from": "Rachel Kim",
+        "to": "Marketing Team",
+        "subject": "Farewell Lunch for Kevin — Friday, March 14",
+        "body": "Hi everyone,\n\nAs most of you know, Kevin Chandra's last day at Horizon Media will be next Friday, March 14. After five wonderful years on our team, Kevin is moving to Calgary to be closer to his family. We will miss him greatly!\n\nTo send him off properly, I am organizing a farewell lunch at Trattoria on King Street. The reservation is for 12:30 p.m., and I have booked the back room so we can have some privacy. The restaurant offers a set lunch menu for $22 per person, which includes an appetizer, main course, and coffee or tea.\n\nI am also collecting contributions for a goodbye gift. If you would like to chip in, please send me $10 by e-transfer or bring cash to my desk by Wednesday. I am planning to get him a gift card to his favourite outdoor gear store.\n\nPlease let me know by Tuesday if you can make it so I can confirm the headcount with the restaurant.\n\nThanks!\nRachel"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is Rachel writing this email?",
+          "options": {
+            "A": "To confirm the details of Kevin's exit interview with management",
+            "B": "To organize Kevin's farewell lunch",
+            "C": "To celebrate Kevin's work anniversary at Horizon Media",
+            "D": "To coordinate gifts and travel arrangements for Kevin's move to Calgary"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Rachel is organizing a farewell lunch — venue, reservation, set menu, gift collection, and RSVP. C is a real-detail trap — Kevin DID work five years, but this is a farewell, not an anniversary event. D is a partial-truth trap — a gift IS mentioned, but travel arrangements are not part of Rachel's email."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "Why is Kevin leaving the company?",
+          "options": {
+            "A": "He accepted a new media position at a company based in Calgary",
+            "B": "He is taking an extended sabbatical to spend time with family",
+            "C": "He is moving to Calgary to be near family",
+            "D": "He was asked to transfer to the Calgary branch of Horizon Media"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'Kevin is moving to Calgary to be closer to his family.' A and D are real-detail traps — Calgary IS mentioned, as is a media company, but a new employer or transfer is not stated. B is a near-synonym trap — 'spending time with family' matches the family reason but 'sabbatical' invents the employment arrangement."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "How much does the set lunch cost per person?",
+          "options": {
+            "A": "$22",
+            "B": "$10",
+            "C": "$15",
+            "D": "$30"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'a set lunch menu for $22 per person.' B ($10) is the primary data-swap trap — $10 IS a real figure from the email, but it is the gift contribution amount, not the meal cost. D ($30) and C ($15) are invented but numerically plausible."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What gift does Rachel plan to buy?",
+          "options": {
+            "A": "A gift card to an outdoor gear store",
+            "B": "A personalized outdoor gear kit chosen by the team",
+            "C": "Camping accessories from Kevin's favourite hobby store",
+            "D": "A gift card to a restaurant Kevin has always wanted to visit in Calgary"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'I am planning to get him a gift card to his favourite outdoor gear store.' B is a near-real trap — outdoor gear IS the theme, but a 'kit chosen by the team' is not what Rachel describes. C is a near-synonym trap — camping IS implied by outdoor gear, but the email specifies a gift card, not accessories."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why did Rachel book the back room?",
+          "options": {
+            "A": "The back room accommodates a larger group than the main dining area",
+            "B": "Kevin specifically requested a private space for his farewell",
+            "C": "The set lunch menu is only available in the restaurant's private rooms",
+            "D": "So the group can celebrate privately"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Rachel says she booked the back room 'so we can have some privacy' — her stated reason. A, B, and C are all plausible reasons to book a back room but are not supported by the text. B is the most tempting because Kevin's preferences could logically be behind the choice, but Rachel gives no such indication."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "What is the tone of Rachel's email?",
+          "options": {
+            "A": "Warm and nostalgic, reflecting on Kevin's five-year contributions",
+            "B": "Friendly and organized",
+            "C": "Casual but slightly rushed, given the tight planning deadlines",
+            "D": "Cheerful but businesslike, focused mostly on logistics rather than sentiment"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Rachel balances warmth ('We will miss him greatly!') with clear logistics — venue, cost, gift, RSVP deadline. A overstates the nostalgia; the email is forward-looking and practical. D is a partial-truth trap — logistics dominate, but 'businesslike' is too cold for a message that opens with 'We will miss him greatly!'"
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read a colleague's reply to Rachel. Complete the reply by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Hi Rachel,\n\nThanks for putting this together — Kevin definitely [BLANK_7] a proper send-off. Count me in for Friday! I love Trattoria, so that is a great choice.\n\nI will send you $10 by e-transfer tonight for the gift. An outdoor gear card is a perfect idea since Kevin is always talking about his [BLANK_8] trips. Maybe we can also sign a card? I feel like a group message would be a nice personal [BLANK_9].\n\nOne quick question — is parking available near the restaurant, or should I plan to take the [BLANK_10]? I do not want to be late trying to find a spot.\n\nIt is hard to believe Kevin has been here for five years already. He has been such a great [BLANK_11] to work with. Calgary is lucky to have him!\n\nSee you Friday,\nTom",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "warrants",
+              "B": "earned",
+              "C": "deserves",
+              "D": "merits"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'Kevin definitely deserves a proper send-off' uses the most natural idiomatic verb for expressing that someone has earned recognition through their character. A (warrants), B (earned), and D (merits) are near-synonyms — 'merits' and 'warrants' are slightly more formal, while 'earned' changes the tense structure."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "hiking",
+              "B": "fishing",
+              "C": "camping",
+              "D": "cycling"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'always talking about his camping trips' connects naturally to the 'outdoor gear store' gift card Rachel planned. A (hiking), B (fishing), and D (cycling) are all plausible outdoor hobbies — an intentional near-topic trap — but only 'camping' best fits the outdoor gear context and is the most implied by that gift choice."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "touch",
+              "B": "gesture",
+              "C": "addition",
+              "D": "note"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'a nice personal touch' is the fixed idiom for a small detail that adds warmth or individuality. B (gesture) is close but refers to an action, not a detail. C (addition) lacks the personal warmth implied. D (note) works literally but changes the meaning — 'a personal note' means a written message, not a quality of the gesture."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "bus",
+              "B": "streetcar",
+              "C": "transit",
+              "D": "subway"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'take the subway' is the natural urban transit phrase in a Canadian city context. A (bus), B (streetcar), and C (transit) are near-synonym alternatives — an intentional transit-mode trap — but 'subway' is the most specific and commonly used term for rapid transit to a downtown restaurant in this context."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "coworker",
+              "B": "colleague",
+              "C": "collaborator",
+              "D": "teammate"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'such a great colleague to work with' is the standard professional compliment for someone you work alongside. A (coworker) is the near-synonym trap — it is nearly identical in meaning — but 'colleague' carries a slightly warmer, more respectful register that fits a farewell message. C (collaborator) implies specific project partnership."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 9,
+      "difficulty": "intermediate",
+      "title": "Employee Request for Modified Work Schedule",
+      "passage": {
+        "type": "email",
+        "from": "Ahmed Hassan",
+        "to": "Human Resources Department, Clearview Financial Group",
+        "subject": "Request for Modified Work Hours — Effective April 1",
+        "body": "Dear HR Team,\n\nI am writing to formally request a modification to my daily work schedule, beginning April 1, if possible. I have been with Clearview Financial for four years and currently work the standard hours of 9:00 a.m. to 5:00 p.m., Monday through Friday.\n\nMy wife recently accepted a nursing position with shifts that start at 7:00 a.m. This means that I will now be the one responsible for dropping our three-year-old daughter off at daycare each morning. The daycare opens at 7:30 a.m., but it takes me approximately 40 minutes to drive from there to the office during rush hour. As a result, I would not be able to arrive before 9:15 most mornings.\n\nI would like to propose starting my workday at 8:30 a.m. and finishing at 4:30 p.m. This half-hour shift would allow me to drop off my daughter on time and still complete a full eight-hour day. I have discussed this arrangement with my supervisor, David Liu, who has indicated that he is supportive as long as HR approves it.\n\nI want to emphasize that this change would not affect my productivity or availability for team meetings, which typically begin at 10:00 a.m. I am committed to maintaining the same level of performance that I have always brought to my role.\n\nThank you for considering this request. I am happy to discuss it further at your convenience.\n\nBest regards,\nAhmed Hassan"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "What is the main reason Ahmed is writing this email?",
+          "options": {
+            "A": "To request permission to work from home on mornings when his wife has early shifts",
+            "B": "To ask for a change in his daily work hours",
+            "C": "To inform HR that his childcare situation requires immediate attention",
+            "D": "To formally notify HR of a family change that will affect his availability"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Ahmed explicitly proposes a specific schedule change (8:30 a.m. to 4:30 p.m.) and requests HR approval. A is a near-logical trap — working from home would also solve his problem, but he proposes a schedule shift, not remote work. D is a partial-truth trap; he IS notifying HR, but his primary purpose is to propose and secure a specific change."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "Why has Ahmed's morning routine changed?",
+          "options": {
+            "A": "His daughter recently started daycare and he must now handle morning drop-offs",
+            "B": "His previous childcare arrangement ended unexpectedly",
+            "C": "His wife took a job with early morning shifts",
+            "D": "The office relocated to a building farther from his home"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'My wife recently accepted a nursing position with shifts that start at 7:00 a.m.' A is a real-detail trap — daycare IS involved, but the CAUSE is the wife's new job forcing the change in who does drop-off, not the daughter newly starting daycare. B invents a prior arrangement ending that is not mentioned."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What schedule does Ahmed propose?",
+          "options": {
+            "A": "8:30 a.m. to 4:30 p.m.",
+            "B": "8:00 a.m. to 4:00 p.m.",
+            "C": "9:15 a.m. to 5:15 p.m.",
+            "D": "9:00 a.m. to 5:30 p.m."
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'I would like to propose starting my workday at 8:30 a.m. and finishing at 4:30 p.m.' C is the primary real-detail trap — 9:15 a.m. IS in the email, but it is Ahmed's current likely late-arrival time under his existing schedule, not the proposed new start time."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What has Ahmed's supervisor said about the request?",
+          "options": {
+            "A": "He approved it informally but noted it still requires HR documentation",
+            "B": "He expressed support but raised concerns about meeting attendance",
+            "C": "He has not yet been told about it",
+            "D": "He supports it if HR approves"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'David Liu, who has indicated that he is supportive as long as HR approves it.' A is a near-real-detail trap — informal approval COULD follow from being supportive, but Ahmed does not say it was informally approved. B is a real-detail trap — meetings ARE mentioned by Ahmed, but the supervisor did not raise this concern."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why does Ahmed mention that team meetings start at 10:00 a.m.?",
+          "options": {
+            "A": "To show that starting earlier would give him more preparation time before the first commitment",
+            "B": "To reassure HR that his modified schedule would not affect client-facing work",
+            "C": "To ask HR to confirm his new schedule before the next Monday team meeting",
+            "D": "To show that his proposed schedule would not cause conflicts"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Ahmed notes meetings start at 10:00 a.m. to show that his proposed 8:30 a.m. start means he would be available before and during all team meetings. A is a partial-truth trap — he WOULD arrive before meetings, but 'more preparation time' is not the point he is making; the point is that no conflicts arise."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "Which word best describes Ahmed's approach in this email?",
+          "options": {
+            "A": "Courteous and slightly apologetic for raising a personal matter at work",
+            "B": "Professional",
+            "C": "Formal and persuasive, building a systematic case for his request",
+            "D": "Transparent and cooperative, offering more personal context than strictly necessary"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Ahmed presents a clear business case — reason, proposed solution, supervisor alignment, operational impact — without apology or over-sharing. A overstates the apologetic element. C is partially accurate but 'persuasive' implies a harder sell than Ahmed's tone warrants. D mischaracterizes; the personal detail is relevant and carefully limited."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read HR's response to Ahmed. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Ahmed,\n\nThank you for your request regarding a modified work schedule. We appreciate you [BLANK_7] this matter with your supervisor before reaching out to us.\n\nAfter reviewing your proposal, I am pleased to confirm that your request has been [BLANK_8]. Starting April 1, your work hours will officially change to 8:30 a.m. to 4:30 p.m. This arrangement will be reviewed after a three-month [BLANK_9] period to ensure it continues to work well for both you and the team.\n\nPlease note that all employees on modified schedules are expected to remain [BLANK_10] by phone and email during core business hours, which are 10:00 a.m. to 3:00 p.m. If you need to be away during those hours for any reason, standard leave procedures apply.\n\nWe value your dedication over the past four years and are happy to [BLANK_11] your family needs wherever possible. Please feel free to contact me with any questions.\n\nBest regards,\nNatalie Park\nHR Coordinator",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "raising",
+              "B": "clearing",
+              "C": "discussing",
+              "D": "mentioning"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'appreciate you discussing this with your supervisor' is the natural phrasing for acknowledging a proper workplace process. A (raising) and D (mentioning) are near-synonyms — 'raising this with your supervisor' is a common alternative phrase — but 'discussing' best captures the two-way conversation Ahmed described."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "approved",
+              "B": "confirmed",
+              "C": "accepted",
+              "D": "granted"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'your request has been approved' is the standard HR decision language. C (accepted) and D (granted) are near-synonyms in everyday use, but in HR and policy contexts, 'approved' specifically means a formal authorization by the appropriate authority — which is HR's role here."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "trial",
+              "B": "probationary",
+              "C": "review",
+              "D": "assessment"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'a three-month trial period' is the standard HR phrase for a temporary arrangement subject to evaluation. B (probationary) is a near-synonym but typically refers to a new employee's first period, not a schedule change. C (review) and D (assessment) describe the activity that occurs after the period, not the period itself."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "available",
+              "B": "accessible",
+              "C": "contactable",
+              "D": "reachable"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'remain reachable by phone and email' is the standard phrase for availability during modified schedules. A (available), B (accessible), and C (contactable) are all near-synonyms — an intentional trap — but 'reachable' is most commonly paired with 'by phone and email' in employment policy language."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "address",
+              "B": "accommodate",
+              "C": "support",
+              "D": "assist with"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'happy to accommodate your family needs' uses the standard HR verb for adjusting policy to fit an employee's circumstances. A (address) suggests responding to a problem. C (support) and D (assist with) imply providing help rather than formally adjusting the terms of employment, which is what HR is doing here."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 10,
+      "difficulty": "advanced",
+      "title": "Formal Complaint About a Home Renovation",
+      "passage": {
+        "type": "email",
+        "from": "Catherine Dubois",
+        "to": "Customer Relations, GreenBuild Renovations Inc.",
+        "subject": "Formal Complaint — Kitchen Renovation, Contract #GBR-2024-1187",
+        "body": "Dear Customer Relations Department,\n\nI am writing to formally document my dissatisfaction with the kitchen renovation project currently being carried out at my home (Contract #GBR-2024-1187). What was presented as a straightforward four-week job has now stretched into its ninth week, with significant deficiencies in both workmanship and communication.\n\nThe tile work behind the stove is visibly uneven, with grout lines that vary in width by as much as five millimetres. When I raised this with the site foreman, Mr. Garrett, he dismissed my concern by saying it would 'look fine once the backsplash dries.' I subsequently had an independent contractor assess the work, and he confirmed that the tiles would need to be removed and re-laid.\n\nMore troubling is the countertop issue. The contract clearly specifies Calacatta quartz, yet the material installed is a lower-grade marble that chips easily and requires regular sealing — a significant downgrade that was never discussed with me. When I contacted your office about this, I was told the substitution was made because the specified material was 'backordered,' but no one sought my approval or offered alternatives.\n\nAdditionally, the crew has consistently left debris, open paint cans, and tools scattered across my backyard, raising safety concerns. My neighbour's child stepped on a loose nail near my fence line last week, fortunately without serious injury.\n\nI am requesting a detailed remediation plan within seven business days, including a timeline for correcting the tile work, replacing the countertop with the specified material, and cleaning the work site daily going forward. Should these issues not be addressed satisfactorily, I intend to file a complaint with the Ontario Ministry of Public and Business Service Delivery and seek cost recovery through Small Claims Court.\n\nSincerely,\nCatherine Dubois"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "What is the primary purpose of Catherine's email?",
+          "options": {
+            "A": "To report workmanship deficiencies and request an explanation from the contractor",
+            "B": "To document the unauthorized countertop substitution as a contract violation",
+            "C": "To formally document deficiencies and demand corrections",
+            "D": "To request that the renovation be halted until all deficiencies are corrected"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Catherine writes 'to formally document my dissatisfaction' and demands a detailed remediation plan. A is a near-correct trap — she does document deficiencies, but she demands corrections, not an explanation. B names just one of three major issues; the countertop is only part of her complaint."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "How long was the renovation originally supposed to take?",
+          "options": {
+            "A": "Two to three weeks, as stated in the initial quotation",
+            "B": "Nine weeks, the current length of the project",
+            "C": "Four weeks",
+            "D": "Six to eight weeks, based on the scope of work in the contract"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'What was presented as a straightforward four-week job.' B is the primary real-detail trap — nine weeks IS in the email, but it is how long the renovation has already taken, not the original plan. A and D are plausible-sounding alternatives that are entirely invented."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What did the independent contractor say about the tile work?",
+          "options": {
+            "A": "The tiles would need to be removed and redone",
+            "B": "The unevenness was within acceptable residential variation tolerances",
+            "C": "The issue could be fixed by re-grouting without removing the tiles",
+            "D": "The work, while imperfect, would be less costly to accept than to redo"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'he confirmed that the tiles would need to be removed and re-laid.' B, C, and D are all plausible assessments an independent contractor might give — they all sound technically credible — but all contradict the text. B and C are designed to sound like professional compromises."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "Why was the countertop material changed?",
+          "options": {
+            "A": "Catherine had approved a substitution during an early site meeting",
+            "B": "GreenBuild upgraded to a higher-grade marble when the quartz was unavailable",
+            "C": "The contract specified the style but not the specific material brand",
+            "D": "The original material was backordered and GreenBuild substituted without approval"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Catherine was told 'the substitution was made because the specified material was backordered, but no one sought my approval.' A directly contradicts Catherine — she says no approval was sought. B is a real-detail trap that inverts a key fact: the installed marble is LOWER-grade, not higher."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why does Catherine mention the neighbour's child stepping on a nail?",
+          "options": {
+            "A": "To describe how extensive the debris left by the crew has been",
+            "B": "To illustrate the serious safety risks of the messy work site",
+            "C": "To document a near-injury that could strengthen her Small Claims Court case",
+            "D": "To warn GreenBuild that third parties have been affected by their negligence"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: the nail incident makes the abstract 'safety concerns' concrete — a child was harmed. C is a real-detail trap — Small Claims Court IS mentioned, and this incident could be evidence, but that is not her stated inference; she is illustrating the risk. D is partially true but 'warning' is too strategic; she is explaining the current harm."
+        },
+        {
+          "question_number": 6,
+          "skill": "inference",
+          "question_text": "What can be inferred about Catherine's next steps if GreenBuild does not respond?",
+          "options": {
+            "A": "She will give GreenBuild one more opportunity after the seven-day deadline",
+            "B": "She will pursue government complaint channels and legal action",
+            "C": "She will pause the project while awaiting the remediation plan",
+            "D": "She will engage a different contractor to complete the remaining renovation"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'I intend to file a complaint with the Ontario Ministry... and seek cost recovery through Small Claims Court.' A misreads the conditional — she gives seven days, not an open-ended 'one more opportunity.' C is not stated; she requests corrections but does not say she will pause the work."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read GreenBuild's response to Catherine. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Ms. Dubois,\n\nThank you for your detailed correspondence regarding Contract #GBR-2024-1187. I have reviewed each of your concerns with our operations team, and I want to assure you that we take these matters [BLANK_7].\n\nFirst, regarding the tile work: I have examined the photographs you attached and agree that the installation does not meet our quality [BLANK_8]. We will schedule a crew to remove and re-lay the affected tiles at no additional cost to you, beginning no later than next Monday.\n\nSecond, I must sincerely apologize for the countertop substitution. The decision to install an alternative material without your [BLANK_9] was a clear violation of our company policy. We have already ordered the Calacatta quartz specified in your contract and expect it to arrive within ten business days.\n\nFinally, I have reminded all crew members of our strict site-cleanup protocol. A supervisor will now conduct end-of-day inspections to ensure compliance. The safety of your family and neighbours is not something we are willing to [BLANK_10].\n\nI will personally oversee the remaining work to ensure it is completed to your [BLANK_11]. Please feel free to contact me directly at the number below.\n\nWith sincere apologies,\nAndrew Carr\nPresident, GreenBuild Renovations Inc.",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "earnestly",
+              "B": "gravely",
+              "C": "seriously",
+              "D": "urgently"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'we take these matters seriously' is the established phrase for institutional acknowledgment of complaints. A (earnestly) and B (gravely) are near-synonyms — 'earnestly' is slightly informal, while 'gravely' implies a severity better suited to medical or legal contexts than a renovation complaint response."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "standards",
+              "B": "requirements",
+              "C": "expectations",
+              "D": "benchmarks"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'does not meet our quality standards' is the fixed phrase in professional trade correspondence. B (requirements) and D (benchmarks) are near-synonyms used in quality assurance contexts, while C (expectations) is more subjective. 'Quality standards' is the established compound noun that specifically refers to defined, measurable criteria."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "consent",
+              "B": "authorization",
+              "C": "knowledge",
+              "D": "approval"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'without your approval' echoes Catherine's own language — she said 'no one sought my approval.' A (consent) and B (authorization) are near-synonyms — 'without your consent' is a common phrase — but 'approval' specifically matches what Catherine requested and what the contract process requires from a client."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "overlook",
+              "B": "risk",
+              "C": "neglect",
+              "D": "compromise"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'not something we are willing to compromise' means safety is a non-negotiable value. A (overlook) and C (neglect) are near-synonyms — 'not willing to overlook' sounds natural — but 'compromise' specifically means to sacrifice a principle or standard, which is the strongest statement in context of a child being injured."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "expectations",
+              "B": "satisfaction",
+              "C": "standard",
+              "D": "approval"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'completed to your satisfaction' is the standard business phrase for work meeting a client's needs fully. A (expectations) is a near-synonym — 'to your expectations' works — but 'satisfaction' is the more established closing phrase. D (approval) is tempting because it echoes the earlier 'without your approval' in the letter, creating a false connection."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 11,
+      "difficulty": "easy",
+      "title": "Apology for a Festival Postponement",
+      "passage": {
+        "type": "email",
+        "from": "Derek Singh, Festival Director",
+        "to": "Registered Attendees — Autumn Harvest Festival",
+        "subject": "Important Update: Festival Postponed to November 9",
+        "body": "Dear Festival Guests,\n\nIt is with great regret that I must inform you of the postponement of the Autumn Harvest Festival, originally scheduled for this Saturday, October 26. Due to a severe weather warning issued by Environment Canada — with heavy rain, strong winds, and potential flooding expected throughout the weekend — we have made the difficult decision to move the event to Saturday, November 9.\n\nThe safety of our guests, vendors, and volunteer staff is our top priority, and we simply cannot risk holding an outdoor event under these conditions. The main stage, food court, and children's activity zone are all open-air areas with limited shelter, and setting up in high winds would put our team at risk.\n\nI know this is disappointing. Many of you have been looking forward to the pumpkin carving contest, the live bluegrass performances, and the local cider tasting — and so have we. I want to assure you that every activity on the original program will be offered on November 9, and we are adding a bonus attraction: a farm-to-table cooking demonstration by Chef Alicia Fontaine.\n\nAll tickets remain valid for the new date. If you are unable to attend on November 9, you may request a full refund through our website by October 31. We have also extended the early bird discount for an additional week for anyone who would like to bring a friend.\n\nThank you for your understanding, and I sincerely apologize for the inconvenience.\n\nWarm regards,\nDerek Singh"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "What is the main purpose of Derek's email?",
+          "options": {
+            "A": "To announce that the festival has been cancelled and will not be held this year",
+            "B": "To announce the addition of Chef Fontaine's cooking demonstration",
+            "C": "To inform attendees that the festival has been moved to a new date",
+            "D": "To apologize for the decision to use open-air venues for the event"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Derek's primary purpose is to notify attendees of the postponement and the new date of November 9. A is the trap — 'postponed' and 'cancelled' could be confused, but all tickets remain valid and all activities will be held. B is a real-detail trap — the cooking demo IS announced, but as a bonus within the postponement notice."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "What is the primary reason for the postponement?",
+          "options": {
+            "A": "A severe weather warning from Environment Canada",
+            "B": "The outdoor stage and food court cannot safely accommodate the expected crowd",
+            "C": "Vendor setup could not be completed in time for the original date",
+            "D": "Setting up equipment in high winds would put the crew at risk"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: the decision was made 'Due to a severe weather warning issued by Environment Canada.' D is the primary real-detail trap — crew risk in high winds IS stated, but it is a consequence of the weather warning, not the primary stated reason. B misidentifies a capacity concern that is not in the text."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What bonus attraction has been added to the rescheduled event?",
+          "options": {
+            "A": "A farm-to-table cooking demonstration",
+            "B": "A celebrity chef cooking competition",
+            "C": "Free cider for the first 200 attendees",
+            "D": "A pre-festival farmers' market from 10:00 a.m. to noon"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'we are adding a bonus attraction: a farm-to-table cooking demonstration by Chef Alicia Fontaine.' C is the primary real-detail trap — cider IS mentioned in the email, but the cider tasting is one of the ORIGINAL activities, not the new bonus. B upgrades the event to a competition that is not stated."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "By what date must refund requests be submitted?",
+          "options": {
+            "A": "October 26, the original date of the festival",
+            "B": "November 8, the day before the rescheduled event",
+            "C": "November 9, the rescheduled festival date",
+            "D": "October 31"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'you may request a full refund through our website by October 31.' A is the primary real-detail trap — October 26 IS the original festival date mentioned in the email, making it a plausible-sounding deadline. C is also a real-detail trap — November 9 IS the new event date, so it sounds like a logical deadline but is wrong."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why does Derek mention specific activities like pumpkin carving and cider tasting?",
+          "options": {
+            "A": "To reassure attendees that their early bird discount still applies to the new date",
+            "B": "To acknowledge what attendees are missing and show the event is still worth attending",
+            "C": "To announce that these activities have been replaced by the cooking demonstration",
+            "D": "To identify which activities were planned outdoors and could not be held safely"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Derek says 'I know this is disappointing. Many of you have been looking forward to [these activities]' then confirms they will all be offered on November 9. C directly contradicts the text — all original activities are retained. D is a plausible connection to the weather/outdoor theme, but Derek never links those specific activities to outdoor setup concerns."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "How would you describe Derek's tone in this email?",
+          "options": {
+            "A": "Apologetic but somewhat evasive about the full reasons for the delay",
+            "B": "Disappointed but optimistic, focusing mostly on what the new date offers",
+            "C": "Regretful but reassuring",
+            "D": "Positive and eager, treating the postponement as an improvement opportunity"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Derek opens with 'great regret' and apologizes, but spends equal effort reassuring attendees that all activities remain. B is a partial-truth trap — optimism IS present, but 'disappointed' overstates the emotional register. D is also partial — the bonus demo shows some optimism, but 'eager' mischaracterizes a tone that begins with sincere apology."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read a reply from an attendee. Complete the reply by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Hi Derek,\n\nThank you for the [BLANK_7] about the Autumn Harvest Festival. I understand the decision completely — safety should always come first, and it sounds like the weather forecast leaves no room for [BLANK_8].\n\nHappily, November 9 works for our family, so we will keep our tickets. My kids were a bit disappointed at first, but when I told them about the cooking [BLANK_9] with Chef Fontaine, they got excited all over again.\n\nI also appreciate you extending the early bird discount. I have already forwarded your email to a couple of friends who were on the [BLANK_10] about buying tickets. Hopefully they will join us now.\n\nThank you for handling this so [BLANK_11]. We know it is not easy to reschedule something this big.\n\nBest,\nKaren",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "notice",
+              "B": "notification",
+              "C": "update",
+              "D": "announcement"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'Thank you for the update' is the most natural casual phrase for acknowledging a change of plans from an event organizer. A (notice) and B (notification) are near-synonyms but more formal. D (announcement) fits public communications better, while 'update' suits a friendly email reply."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "doubt",
+              "B": "question",
+              "C": "negotiation",
+              "D": "hesitation"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'leaves no room for doubt' means the situation is clear-cut. B (question) is the primary near-synonym trap — 'leaves no room for question' is grammatically possible but less idiomatic. C and D are near-topic distractors; 'no room for hesitation' and 'negotiation' do not fit the context of assessing a weather forecast."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "class",
+              "B": "show",
+              "C": "presentation",
+              "D": "demonstration"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'cooking demonstration' echoes Derek's exact phrase — 'a farm-to-table cooking demonstration by Chef Alicia Fontaine.' A (class) and C (presentation) are near-synonyms, but only 'demonstration' matches the specific language used in the original email. B (show) is too informal and does not collocate naturally with 'cooking' in this context."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "line",
+              "B": "fence",
+              "C": "edge",
+              "D": "wall"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'on the fence' is the established idiom for being undecided. A (line), C (edge), and D (wall) are near-idiom traps — 'on the line' means at risk, 'on the edge' means nervous or close to losing control, and 'on the wall' is not a standard idiom. Only 'on the fence' means undecided about a purchase."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "professionally",
+              "B": "transparently",
+              "C": "thoughtfully",
+              "D": "honestly"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'handling this so transparently' means Derek communicated openly — the reasons, the alternatives, and the options were all clearly explained. A (professionally) and C (thoughtfully) are near-synonyms for how something was managed but do not capture the specific quality of openness Karen is praising. D (honestly) is close but 'transparently' is more precise for communication."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 12,
+      "difficulty": "intermediate",
+      "title": "Newcomer Inquiry About English Classes",
+      "passage": {
+        "type": "email",
+        "from": "Maria Santos",
+        "to": "Pinecrest Settlement Services Centre",
+        "subject": "Information About English Language Programs",
+        "body": "Dear Pinecrest Centre,\n\nMy name is Maria Santos, and I arrived in Canada from Brazil four months ago. I live in the Scarborough area of Toronto with my husband and our two young children.\n\nI studied some English in school, but I find it difficult to have conversations in everyday situations such as visiting the doctor, speaking to my children's teachers, or shopping at the grocery store. I would like to take English classes to improve my speaking and listening skills.\n\nCould you please let me know what programs you offer for newcomers at my level? I am especially interested in classes that focus on practical, everyday English rather than academic writing. I am available on weekday mornings while my children are at school.\n\nI also want to ask whether childcare is available during classes. My younger son is two years old and is not yet in daycare. If childcare is offered, I may be able to attend afternoon sessions as well.\n\nThank you very much for your help. I am looking forward to hearing from you.\n\nSincerely,\nMaria Santos"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is Maria writing this email?",
+          "options": {
+            "A": "To volunteer at the settlement centre's newcomer programs",
+            "B": "To ask for help enrolling her children in school",
+            "C": "To ask about English classes for newcomers",
+            "D": "To report that she is struggling with everyday English conversations"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Maria asks 'what programs you offer for newcomers at my level' — she is seeking information about English classes. B is a real-detail trap — her children ARE mentioned (they are already at school), but she is not writing to enroll them. D is a partial-truth trap — her difficulty with conversations IS described, but as context for her inquiry, not as a complaint."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "How long has Maria been in Canada?",
+          "options": {
+            "A": "Four months",
+            "B": "About six months, when she started looking for English classes",
+            "C": "Two years, the age of her younger son",
+            "D": "About one year"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'I arrived in Canada from Brazil four months ago.' C is the primary real-detail trap — Maria's son IS two years old, and connecting that number to her time in Canada seems plausible on a quick read. B and D are plausible-sounding durations with no support in the text."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What kind of English does Maria want to focus on?",
+          "options": {
+            "A": "Grammar and academic writing to help support her children's schoolwork",
+            "B": "Listening comprehension and professional vocabulary for the workplace",
+            "C": "Speaking and pronunciation for social integration",
+            "D": "Practical, everyday conversation"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'classes that focus on practical, everyday English rather than academic writing.' A is the primary real-detail trap — her children and school ARE mentioned, but she specifically says she does NOT want academic writing. C is a near-synonym trap — it sounds close, but 'practical, everyday conversation' better matches her stated examples (doctor, teachers, grocery store)."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "Why is Maria asking about childcare?",
+          "options": {
+            "A": "She wants to know if young children can attend classes alongside their mothers",
+            "B": "Her younger son has not adjusted well to daycare settings",
+            "C": "She is only available on weekday mornings when both her children are at school",
+            "D": "She needs someone to watch her two-year-old during class"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: Maria asks about childcare because 'My younger son is two years old and is not yet in daycare' — she needs supervision for him during afternoon sessions. B is a real-detail trap — her son IS not in daycare, but the text gives no reason for it, let alone poor adjustment. C is a partial-truth trap — mornings ARE her current availability, but her childcare question is specifically about expanding to afternoons."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "What can be inferred about Maria's current English level?",
+          "options": {
+            "A": "She is a beginner with minimal prior exposure to English",
+            "B": "She has some basics but struggles with real-life conversations",
+            "C": "She is advanced enough to write but struggles with speaking",
+            "D": "She speaks English at a professional level"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Maria 'studied some English in school' (has a foundation) but 'finds it difficult to have conversations in everyday situations' (struggles with real use). A directly contradicts her prior study. C is a partial-truth trap — the difficulty with speaking IS mentioned, but she also says she wants to improve listening, and her focus is on both."
+        },
+        {
+          "question_number": 6,
+          "skill": "tone_and_register",
+          "question_text": "How would you describe Maria's tone?",
+          "options": {
+            "A": "Nervous and self-deprecating about her limited English",
+            "B": "Warm and gracious, expressing appreciation for the centre",
+            "C": "Polite and hopeful",
+            "D": "Straightforward and efficient, getting quickly to the point"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Maria is courteous throughout ('Thank you very much for your help') and expresses hope rather than anxiety. A overstates the insecurity — she describes her difficulties factually, not apologetically. B is a near-synonym trap — 'polite and hopeful' is slightly more specific than 'warm and gracious,' but 'gracious' overstates a tone that is modest and practical."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the reply from the settlement centre. Complete the reply by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Maria,\n\nThank you for contacting us, and welcome to Canada! We are happy to help you find the right English [BLANK_7] for your needs.\n\nBased on your description, our LINC (Language Instruction for Newcomers to Canada) program at the CLB 3–4 level would be a great [BLANK_8]. These classes focus on everyday communication skills — such as making appointments, talking to teachers, and understanding public notices — exactly what you described.\n\nMorning classes run Monday to Thursday from 9:30 a.m. to 12:00 p.m. We do offer free on-site childcare for children under four, so your younger son would be [BLANK_9] while you are in class.\n\nTo get started, you will need to complete a language [BLANK_10] at our centre so we can place you in the right level. Assessments are available every Tuesday morning. Please bring your permanent resident card or other immigration documents.\n\nWe look forward to [BLANK_11] you soon!\n\nWarm regards,\nJasmine Ali\nProgram Coordinator, Pinecrest Settlement Services",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "course",
+              "B": "class",
+              "C": "program",
+              "D": "option"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'find the right English program for your needs' uses the institutional term that refers to a structured set of courses. The LINC program named in the next sentence confirms this. A (course) and B (class) are near-synonyms that refer to individual sessions; 'program' refers to the broader offering with multiple components."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "fit",
+              "B": "match",
+              "C": "choice",
+              "D": "option"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'would be a great fit' is the natural idiomatic phrase for a program that suits a person's needs and level. B (match) is the primary near-synonym trap — 'a great match' is a real expression but is more commonly used for people or partnerships than for program placement. C and D are grammatically possible but less idiomatic in this context."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "cared for",
+              "B": "accommodated",
+              "C": "supervised",
+              "D": "welcome"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'your younger son would be welcome' means the childcare accepts him — he can attend. A (cared for) and C (supervised) are near-synonyms that describe what will happen to the child, but 'welcome' specifically addresses Maria's underlying question: is he allowed to come? The reply confirms access before describing the care."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "placement test",
+              "B": "assessment",
+              "C": "evaluation",
+              "D": "screening"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'complete a language assessment' is the standard phrase for a newcomer proficiency evaluation used to place students in the correct level. A (placement test) is very close but is used more in academic institutions. C (evaluation) and D (screening) are near-synonyms, but 'assessment' is the specific term used in government-funded LINC programs."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "seeing",
+              "B": "welcoming",
+              "C": "meeting",
+              "D": "serving"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'We look forward to meeting you soon' is the standard friendly closing for a service inquiry where the next step is an in-person appointment. A (seeing) is the primary near-synonym trap and is used in casual contexts. B (welcoming) and D (serving) emphasize the centre's role but 'meeting' best implies the next concrete step."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 13,
+      "difficulty": "advanced",
+      "title": "Professional Reference for a Social Worker",
+      "passage": {
+        "type": "email",
+        "from": "Dr. Susan Webb, Clinical Director — Harbourview Mental Health Services",
+        "to": "Hiring Committee, Riverside Health Centre",
+        "subject": "Professional Reference — Karen Liu, MSW, RSW",
+        "body": "Dear Hiring Committee,\n\nI am writing in response to your request for a professional reference for Karen Liu, who has applied for the Social Worker position at Riverside Health Centre. Karen worked under my supervision at Harbourview Mental Health Services for four years, from 2020 to 2024, and I can provide an unqualified endorsement of her clinical abilities and professional character.\n\nDuring her time at Harbourview, Karen managed a caseload of approximately 35 to 40 clients, many of whom presented with complex, co-occurring conditions including severe anxiety disorders, substance use, and trauma histories. She consistently demonstrated the ability to build therapeutic rapport quickly, even with clients who had previously disengaged from services. Her documentation was thorough, timely, and reflective of sound clinical reasoning.\n\nOne area where Karen particularly excelled was interdisciplinary collaboration. She worked closely with psychiatrists, occupational therapists, and community outreach workers to develop integrated care plans, and she frequently took the lead in coordinating case conferences. Her colleagues often noted that she elevated the quality of discussion by asking precise, client-centred questions that kept the team focused on outcomes rather than process.\n\nKaren also showed exceptional composure in crisis situations. On more than one occasion, she de-escalated volatile encounters in the walk-in intake area with a combination of calm authority and genuine empathy. Following one particularly difficult incident involving a client in acute psychosis, Karen developed a revised safety protocol for the intake team that was adopted agency-wide.\n\nI consider Karen to be among the top five social workers I have supervised in my career. She would be a significant asset to your team, and I am confident she will bring the same dedication and professionalism to Riverside that she demonstrated here.\n\nPlease do not hesitate to contact me if you require any further information.\n\nSincerely,\nDr. Susan Webb, PhD, RSW"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "What is the primary purpose of this email?",
+          "options": {
+            "A": "To describe a crisis incident that demonstrates Karen's composure under pressure",
+            "B": "To inform the hiring committee of Karen's qualifications and work history",
+            "C": "To provide a professional reference for a job applicant",
+            "D": "To request that Riverside consider adopting Karen's safety protocol"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Webb writes 'in response to your request for a professional reference for Karen Liu.' A is a real-detail trap — the crisis incident IS described in detail, but as supporting evidence for the endorsement. D is a real-detail trap — the protocol IS mentioned, but as an example of Karen's initiative, not as a request to Riverside."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "How many clients did Karen typically manage at one time?",
+          "options": {
+            "A": "35 to 40",
+            "B": "20 to 25, with a focus on trauma cases",
+            "C": "About 30, with complex co-occurring conditions",
+            "D": "40 to 45 during peak periods"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'a caseload of approximately 35 to 40 clients.' B is a real-detail trap — trauma IS mentioned as a client condition, but the number 20-25 is wrong. C misuses a near-number (30 is not stated) and borrows the 'complex co-occurring' language from the text to make the option sound accurate. D inflates the range above the stated figure."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What kind of protocol did Karen develop?",
+          "options": {
+            "A": "A crisis intervention training program for the walk-in intake area",
+            "B": "A documentation framework for clients with co-occurring conditions",
+            "C": "A peer support protocol for social workers dealing with high-stress cases",
+            "D": "A revised safety protocol for the intake team"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'Karen developed a revised safety protocol for the intake team that was adopted agency-wide.' A is the primary real-detail trap — crisis and intake ARE both mentioned in the same passage, making A sound very plausible. B borrows 'documentation' (a real praise point) and 'co-occurring conditions' but applies them to a protocol Karen did not develop."
+        },
+        {
+          "question_number": 4,
+          "skill": "inference",
+          "question_text": "What does Dr. Webb mean by saying Karen 'elevated the quality of discussion' in case conferences?",
+          "options": {
+            "A": "Karen restructured case conference agendas to centre client outcomes",
+            "B": "Karen helped the team stay focused and make better decisions",
+            "C": "Karen consistently challenged colleagues' assumptions to sharpen clinical reasoning",
+            "D": "Karen prepared all conference materials alone"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: Karen asked 'precise, client-centred questions that kept the team focused on outcomes rather than process' — this is the definition of elevating discussion quality. A is a near-right trap that borrows 'outcomes' from the text but invents the detail about restructuring agendas. C partially captures the spirit but implies conflict that is not stated."
+        },
+        {
+          "question_number": 5,
+          "skill": "detail_comprehension",
+          "question_text": "What is notable about Karen's ability with difficult clients?",
+          "options": {
+            "A": "She used specific motivational interviewing techniques to re-engage clients",
+            "B": "She built rapport quickly, even with disengaged clients",
+            "C": "She focused on building long-term therapeutic relationships over time",
+            "D": "She matched difficult clients to the most experienced clinicians on the team"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'build therapeutic rapport quickly, even with clients who had previously disengaged from services.' C is the near-correct trap — it sounds like good clinical practice and relates to the same theme, but directly contradicts 'quickly'; Webb's point is the speed of Karen's rapport-building, not the duration. A invents a specific technique."
+        },
+        {
+          "question_number": 6,
+          "skill": "vocabulary_in_context",
+          "question_text": "What does 'unqualified endorsement' most likely mean in this context?",
+          "options": {
+            "A": "An endorsement that lacks sufficient supporting evidence",
+            "B": "A recommendation with several conditions attached",
+            "C": "A complete and unreserved recommendation",
+            "D": "A brief and informal opinion"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: 'unqualified' here means 'without qualification' — no conditions or reservations. A is the primary word-confusion trap: readers may interpret 'unqualified' as 'lacking qualifications' (as in, the writer is unqualified), when in fact 'unqualified endorsement' is a fixed phrase meaning unconditional support. B inverts the meaning entirely."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the hiring committee's reply to Dr. Webb. Complete the reply by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Dr. Webb,\n\nThank you for your exceptionally thorough reference for Karen Liu. Your insights into her clinical skills and professional [BLANK_7] have been very helpful to our committee.\n\nWe were particularly impressed by your description of her crisis [BLANK_8] skills and her initiative in developing a new safety protocol. These are qualities we value highly at Riverside, where our team handles a significant volume of intake and emergency cases.\n\nBased on the strength of her application and your recommendation, we would like to [BLANK_9] Karen for an interview panel next week. We will contact her directly with scheduling details.\n\nShould we require any [BLANK_10] information during the evaluation process, we will reach out to you again. We greatly appreciate the time and care you put into this reference — it is clear that Karen made a lasting [BLANK_11] during her years at Harbourview.\n\nWith thanks,\nDr. Nadia Osman\nChair, Hiring Committee — Riverside Health Centre",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "conduct",
+              "B": "character",
+              "C": "ethics",
+              "D": "judgment"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'clinical skills and professional conduct' is the standard pairing in clinical reference letters. B (character) is the primary near-synonym trap — 'professional character' IS in Webb's own letter — making it a real-detail echo that sounds right. C (ethics) and D (judgment) are near-synonyms but refer to specific professional qualities rather than the general standard of professional behaviour."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "response",
+              "B": "intervention",
+              "C": "handling",
+              "D": "management"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'crisis management skills' is the established professional term for the ability to handle high-pressure situations effectively. A (response) and B (intervention) are near-synonyms — 'crisis response' and 'crisis intervention' are both real clinical terms — but 'crisis management' is the broadest and most applicable compound noun for a general professional skill."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "schedule",
+              "B": "shortlist",
+              "C": "advance",
+              "D": "invite"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'we would like to invite Karen for an interview panel' is the standard hiring-process phrasing for moving a candidate forward. A (schedule) is the primary near-synonym trap — scheduling an interview is indeed the next step, but 'invite' is the formal verb for extending the opportunity. B (shortlist) means to put on a list, not to contact for an interview."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "further",
+              "B": "additional",
+              "C": "supplementary",
+              "D": "clarifying"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'any additional information' is the standard phrase in formal committee correspondence for requesting more material. A (further) is the primary near-synonym trap — 'any further information' is equally correct and even used by Webb at the end of her own letter, making it a natural echo. C (supplementary) and D (clarifying) are near-synonyms with more specific connotations."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "impact",
+              "B": "contribution",
+              "C": "impression",
+              "D": "mark"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'Karen made a lasting impression' is the fixed phrase for leaving a strong, remembered effect on a workplace. D (mark) is the primary near-synonym trap — 'made a lasting mark' is a real and common phrase meaning nearly the same thing. A (impact) and B (contribution) refer to measurable effects, while 'impression' captures the personal quality of Webb's endorsement."
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 14,
+      "difficulty": "easy",
+      "title": "Request for a Traffic Safety Measure",
+      "passage": {
+        "type": "email",
+        "from": "Paul Andrews",
+        "to": "City of Burlington — Traffic Safety Division",
+        "subject": "Request for Speed Bumps on Willow Street",
+        "body": "Dear Traffic Safety Division,\n\nI am writing on behalf of the residents of Willow Street to request the installation of speed bumps or an additional stop sign on our street. We have become increasingly concerned about vehicle speeds in our neighbourhood, particularly during school drop-off and pick-up hours.\n\nWillow Street runs directly past Lakeview Elementary School and has no traffic calming measures between Pine Avenue and the school entrance — a distance of roughly 400 metres. Despite the posted 40 km/h speed limit, many vehicles travel well above this during the morning rush. Last month, a child on a bicycle was nearly struck by a speeding van while crossing at the school crosswalk. Fortunately, the child's parent pulled him back just in time.\n\nI have circulated a petition among our neighbours and collected 34 signatures from households on Willow Street and the surrounding blocks, all supporting the installation of speed bumps. The petition is attached to this email.\n\nWe are not asking for a major infrastructure project — just two or three well-placed speed bumps between Pine Avenue and the school would make a meaningful difference. We would also welcome a community meeting with your team to discuss other options, such as a flashing speed sign or additional crosswalk markings.\n\nThank you for considering our request. Our children's safety is our primary concern.\n\nSincerely,\nPaul Andrews\nWillow Street"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "Why is Paul writing this email?",
+          "options": {
+            "A": "To request traffic calming measures near a school",
+            "B": "To report a near-miss accident involving a child cyclist and a van",
+            "C": "To present a petition demanding a reduced speed limit on Willow Street",
+            "D": "To request a speed enforcement program for school hours"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Paul's opening sentence requests 'the installation of speed bumps or an additional stop sign.' B is the primary real-detail trap — the near-miss IS described in detail, making it memorable, but it is supporting evidence for the infrastructure request, not the purpose of the email. C is a partial-truth trap — a petition IS attached, but a speed limit reduction is not Paul's ask."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "What is the speed limit on Willow Street?",
+          "options": {
+            "A": "40 km/h",
+            "B": "30 km/h, as required in school zones under city bylaws",
+            "C": "50 km/h, the standard residential speed limit",
+            "D": "30 km/h during school hours and 40 km/h otherwise"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'the posted 40 km/h speed limit.' B and D both use 30 km/h — a plausible school zone speed — and sound like they could describe the correct legal standard, making them tempting. B adds a fictional bylaw detail and D invents a time-based rule, neither of which appears in the text."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What near-accident occurred recently?",
+          "options": {
+            "A": "A speeding car nearly struck a child crossing at the school entrance",
+            "B": "A van drove through the school crosswalk when children were present",
+            "C": "A cyclist was nearly forced off the road by a vehicle passing too closely",
+            "D": "A child on a bicycle was nearly hit by a speeding van"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'a child on a bicycle was nearly struck by a speeding van while crossing at the school crosswalk.' A changes 'van' to 'car' and 'crosswalk' to 'entrance' — a subtle but significant substitution. B changes what the van did; it did not 'drive through' the crosswalk — it nearly struck the child who was already crossing."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "How many signatures did Paul collect?",
+          "options": {
+            "A": "40, representing all households on Willow Street",
+            "B": "34",
+            "C": "25 from Willow Street and 9 from surrounding blocks",
+            "D": "More than 30, representing a majority of the street's homeowners"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'collected 34 signatures from households on Willow Street and the surrounding blocks.' A is the data-swap trap — 40 km/h IS in the email as the speed limit, not as a signature count. C is a plausible decomposition (25 + 9 = 34) that matches the total but adds a false breakdown not in the text. D is technically true but vague."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why does Paul say 'We are not asking for a major infrastructure project'?",
+          "options": {
+            "A": "To acknowledge that the city has a limited road improvement budget",
+            "B": "To distinguish this request from a future, more comprehensive proposal",
+            "C": "To show the request is modest and reasonable",
+            "D": "To point out that simple measures are faster to implement than road redesigns"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Paul preemptively addresses a possible objection by emphasizing the simplicity of his ask ('just two or three well-placed speed bumps'). A and D are plausible inferences about why simple solutions are preferred, but Paul states his purpose directly — he wants to frame his request as reasonable and easy to approve."
+        },
+        {
+          "question_number": 6,
+          "skill": "inference",
+          "question_text": "What is the effect of Paul mentioning the near-accident involving a child?",
+          "options": {
+            "A": "It establishes that speeding has occurred repeatedly over a long period",
+            "B": "It identifies the school crosswalk as the most dangerous single point on the street",
+            "C": "It gives a concrete example that makes the safety concern urgent",
+            "D": "It provides a specific incident that could support a formal legal complaint"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: a real incident with a named victim makes the abstract concern about speeding concrete and immediate. A is a partial-truth trap — repeated speeding IS described ('many vehicles travel well above this'), but the near-accident specifically makes the urgency personal. B focuses too narrowly on the crosswalk location; Paul's concern spans the entire 400-metre stretch."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the city's response to Paul. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Mr. Andrews,\n\nThank you for writing to us about traffic safety on Willow Street. We take concerns related to school zones very [BLANK_7], and I appreciate you taking the time to organize a petition from your neighbours.\n\nAfter reviewing your request, I can confirm that Willow Street has been added to our list of priority locations for a traffic [BLANK_8]. A team from our division will visit the area next week to collect speed data, observe traffic patterns during school hours, and assess the roadway for suitable speed bump [BLANK_9].\n\nOnce the study is complete — typically within three to four weeks — we will share the results with you and [BLANK_10] our recommendations. If speed bumps are warranted, we can usually begin installation within two months of approval.\n\nI would also be happy to arrange the community meeting you [BLANK_11]. I will follow up with some possible dates early next week.\n\nBest regards,\nSusan Lam\nTraffic Safety Coordinator, City of Burlington",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "seriously",
+              "B": "carefully",
+              "C": "urgently",
+              "D": "personally"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'take concerns very seriously' is the established institutional phrase. B (carefully) and C (urgently) are near-synonyms — 'we take this very carefully' sounds plausible, but neither completes the idiomatic fixed phrase 'take [something] seriously' that signals organizational accountability in public communications."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "survey",
+              "B": "assessment",
+              "C": "review",
+              "D": "study"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'priority locations for a traffic study' — the next sentence describes collecting 'speed data' and observing 'traffic patterns,' which are the activities of a traffic study. A (survey) and B (assessment) are near-synonyms. The distinction: 'traffic study' is the specific term used in municipal traffic engineering for a data-collection process with measurable outputs."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "installation",
+              "B": "placement",
+              "C": "positioning",
+              "D": "location"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'assess the roadway for suitable speed bump placement' means determining where speed bumps would be most effective. A (installation) and C (positioning) are near-synonyms — 'installation' refers to the act of putting them in, not the assessment of where. D (location) is a noun that works but 'placement' is more specific to the design-decision process."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "outline",
+              "B": "present",
+              "C": "share",
+              "D": "communicate"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'share the results with you and present our recommendations' creates a clear two-part structure — sharing data and formally presenting next steps. A (outline) is close but suggests a summary rather than a complete recommendation. C (share) is already used earlier in the same sentence, making 'present' the natural second verb for formal recommendations."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "mentioned",
+              "B": "requested",
+              "C": "suggested",
+              "D": "proposed"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'the community meeting you suggested' echoes Paul's phrasing — he said 'we would also welcome a community meeting.' A (mentioned) is a near-synonym and the primary trap — Paul did mention it, but 'suggested' better captures that he put it forward as an idea. B (requested) overstates the formality of what Paul described as something they 'would welcome.'"
+          }
+        ]
+      }
+    },
+    {
+      "set_number": 15,
+      "difficulty": "intermediate",
+      "title": "Condo Owner Protests a Special Assessment",
+      "passage": {
+        "type": "email",
+        "from": "Natasha Volkov, Unit 1204",
+        "to": "Board of Directors, Lakeshore Terrace Condominium Corporation",
+        "subject": "Objection to Special Assessment — Resolution 2024-07",
+        "body": "Dear Board of Directors,\n\nI am writing to formally object to the special assessment of $15,000 per unit approved under Resolution 2024-07 at last month's board meeting. While I understand that the lobby renovation is intended to improve the building's appearance and property values, I have serious concerns about the process by which this decision was made, the scope of the proposed work, and the financial burden it places on owners.\n\nFirst, the notice of the meeting at which this resolution was passed was sent just ten days in advance, giving owners insufficient time to review the renovation proposal, obtain independent cost estimates, or organize a meaningful discussion. Under the Condominium Act, matters involving a special assessment of this magnitude should, in my view, require a broader consultation process, including a town hall meeting open to all owners.\n\nSecond, the proposed budget of $1.2 million for a lobby renovation appears excessive. I have spoken with two licensed contractors who estimate that comparable work — new flooring, lighting, and furniture — could be completed for approximately $650,000 to $800,000. The board has not provided a breakdown of costs, nor has it indicated whether competitive bids were solicited. Transparency on this point is essential.\n\nThird, many owners in this building are retirees on fixed incomes. A $15,000 lump-sum payment with only 60 days' notice creates genuine financial hardship. I would urge the board to consider alternatives such as a phased payment plan over 12 months, a scaled-back renovation focusing on safety-critical items first, or the use of reserve fund contributions to offset part of the cost.\n\nI request that the board table Resolution 2024-07, schedule a town hall meeting within 30 days, and provide a full cost breakdown and evidence of competitive bidding before proceeding. I reserve the right to bring this matter before the Condominium Authority Tribunal if my concerns are not addressed.\n\nSincerely,\nNatasha Volkov"
+      },
+      "mcq_questions": [
+        {
+          "question_number": 1,
+          "skill": "writer_purpose",
+          "question_text": "What is Natasha's main purpose in writing this email?",
+          "options": {
+            "A": "To object to a special assessment and request changes to the process",
+            "B": "To request a formal town hall meeting on behalf of all condo owners",
+            "C": "To challenge the board's contractor selection and renovation budget",
+            "D": "To formally challenge the legality of the assessment under the Condominium Act"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: Natasha raises three concerns — process, budget, and financial hardship — and makes four specific requests. B is a partial-truth trap — a town hall IS requested, but it is one of four requests within a broader objection. D is a real-detail trap — the Condominium Act IS mentioned, but as context for her process concern, not as a legal challenge per se."
+        },
+        {
+          "question_number": 2,
+          "skill": "detail_comprehension",
+          "question_text": "How much is each unit being assessed?",
+          "options": {
+            "A": "$10,000 per unit for a 12-month phased payment",
+            "B": "$1,250 per month over a 12-month payment period",
+            "C": "$12,500 per unit, before applicable fees",
+            "D": "$15,000"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'the special assessment of $15,000 per unit.' A is the primary real-detail trap — 12-month payment IS proposed by Natasha as an alternative, but $10,000 per unit is invented. B is a math-bait trap: $15,000 ÷ 12 = $1,250/month, making B technically derivable from the text but not the stated assessment amount."
+        },
+        {
+          "question_number": 3,
+          "skill": "detail_comprehension",
+          "question_text": "What does Natasha say about the notice period for the meeting?",
+          "options": {
+            "A": "It exceeded the Condominium Act's minimum requirement but still felt rushed",
+            "B": "She received no notice at all",
+            "C": "It violated the Condominium Act's minimum notice requirement",
+            "D": "It gave owners ten days, which she feels was not enough"
+          },
+          "correct_answer": "D",
+          "explanation": "D is correct: 'the notice...was sent just ten days in advance, giving owners insufficient time.' A is the primary near-correct trap — Natasha notes the meeting 'met the minimum legal requirement' in spirit of the Act, but her objection is that ten days was not practically sufficient. C inverts her claim; she says the assessment is of sufficient MAGNITUDE to warrant more consultation, not that the notice was illegal."
+        },
+        {
+          "question_number": 4,
+          "skill": "detail_comprehension",
+          "question_text": "What do independent contractors estimate the renovation could cost?",
+          "options": {
+            "A": "$700,000 to $750,000, according to the two contractors Natasha consulted",
+            "B": "$650,000 to $800,000",
+            "C": "$1.2 million, the board's approved budget",
+            "D": "$850,000 to $950,000 for the scope described in the proposal"
+          },
+          "correct_answer": "B",
+          "explanation": "B is correct: 'approximately $650,000 to $800,000.' A is the primary trap — it uses numbers within Natasha's range but narrows it to a false sub-range. C is the data-swap trap — $1.2 million IS in the email as the board's budget, not the contractors' estimate. Confusing these two figures is the central intended error."
+        },
+        {
+          "question_number": 5,
+          "skill": "inference",
+          "question_text": "Why does Natasha mention that many owners are retirees on fixed incomes?",
+          "options": {
+            "A": "To propose a means-tested payment structure that exempts lower-income owners",
+            "B": "To suggest the assessment disproportionately affects owners who purchased at lower prices",
+            "C": "To argue that the payment timeline creates genuine financial hardship",
+            "D": "To contextualize why she personally opposes a luxury renovation"
+          },
+          "correct_answer": "C",
+          "explanation": "C is correct: Natasha says 'A $15,000 lump-sum payment with only 60 days' notice creates genuine financial hardship' — the mention of retirees on fixed incomes directly supports this argument. A and D are plausible inferences but neither matches her stated purpose. B is a reasonable equity argument but is not the point she makes."
+        },
+        {
+          "question_number": 6,
+          "skill": "inference",
+          "question_text": "What does Natasha's mention of the Condominium Authority Tribunal imply?",
+          "options": {
+            "A": "She is prepared to pursue legal remedies if the board does not respond",
+            "B": "She has already consulted a lawyer about the assessment",
+            "C": "She is confident the assessment violates the Condominium Act",
+            "D": "She has already filed a preliminary complaint pending the board's response"
+          },
+          "correct_answer": "A",
+          "explanation": "A is correct: 'I reserve the right to bring this matter before the Condominium Authority Tribunal if my concerns are not addressed' — a conditional threat of legal action. C is a real-detail trap — the Condominium Act IS cited, but Natasha uses 'in my view,' indicating it is her opinion, not a certainty. D removes the conditional; she reserves the right but has not yet filed."
+        }
+      ],
+      "fill_in_blank_response": {
+        "instructions": "Now read the board chair's response. Complete the response by filling in the blanks. Choose the best option for each blank.",
+        "response_text": "Dear Ms. Volkov,\n\nThank you for your detailed letter regarding Resolution 2024-07. The board takes your [BLANK_7] seriously, and I appreciate you raising several points that warrant further discussion.\n\nYou are correct that the notice period was shorter than ideal. While the ten-day notice met the minimum legal requirement under the Condominium Act, I [BLANK_8] that a matter of this financial significance deserved more lead time. We will ensure broader consultation going forward.\n\nRegarding costs, the board did receive three bids from licensed contractors. The winning bid included structural upgrades to the lobby pillars that were not part of the purely cosmetic estimates you may have [BLANK_9]. We will circulate a full cost breakdown to all owners within the next two weeks.\n\nI am also open to your suggestion of a phased payment plan. We will explore the [BLANK_10] of offering a 12-month instalment option and will include this topic on the agenda for a town hall meeting, which I am scheduling for November 15.\n\nI hope this response demonstrates our willingness to address your concerns in good [BLANK_11]. We look forward to your participation in the upcoming meeting.\n\nBest regards,\nGraham Ellis\nBoard Chair, Lakeshore Terrace Condominium Corporation",
+        "blanks": [
+          {
+            "blank_number": 7,
+            "options": {
+              "A": "objections",
+              "B": "concerns",
+              "C": "complaints",
+              "D": "feedback"
+            },
+            "correct_answer": "A",
+            "explanation": "A is correct: 'The board takes your objections seriously' echoes Natasha's own subject line — 'Objection to Special Assessment.' B (concerns), C (complaints), and D (feedback) are near-synonyms in this context, but 'objections' is the most precise legal-register word for formal disagreement with a board resolution."
+          },
+          {
+            "blank_number": 8,
+            "options": {
+              "A": "agree",
+              "B": "concede",
+              "C": "accept",
+              "D": "acknowledge"
+            },
+            "correct_answer": "D",
+            "explanation": "D is correct: 'I acknowledge that a matter of this financial significance deserved more lead time' means recognizing a fact without fully agreeing. A (agree) and B (concede) are near-synonyms — 'concede' specifically implies yielding a point under pressure, which the chair is partly doing. However, 'acknowledge' is more neutral and does not imply full concession on the underlying issue."
+          },
+          {
+            "blank_number": 9,
+            "options": {
+              "A": "sourced",
+              "B": "obtained",
+              "C": "gathered",
+              "D": "received"
+            },
+            "correct_answer": "B",
+            "explanation": "B is correct: 'the purely cosmetic estimates you may have obtained' means estimates Natasha requested from her own contractors. A (sourced) and C (gathered) are near-synonyms — 'estimates you may have sourced' is plausible — but 'obtained' is the standard past participle when referring to quotes or estimates acquired from a third party."
+          },
+          {
+            "blank_number": 10,
+            "options": {
+              "A": "viability",
+              "B": "feasibility",
+              "C": "practicality",
+              "D": "possibility"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'explore the feasibility of offering a 12-month instalment option' is the standard phrase in governance and financial contexts for evaluating whether a proposal is workable. A (viability) and B (practicality) are very close near-synonyms — 'viability' implies financial sustainability, while 'feasibility' is broader and encompasses logistical, financial, and legal considerations."
+          },
+          {
+            "blank_number": 11,
+            "options": {
+              "A": "standing",
+              "B": "order",
+              "C": "faith",
+              "D": "spirit"
+            },
+            "correct_answer": "C",
+            "explanation": "C is correct: 'in good faith' is the fixed legal and formal phrase meaning with honest, sincere intentions. A (standing) creates 'in good standing' — a real phrase meaning in compliance with requirements. B (order) creates 'in good order' — meaning properly organized. Both are real near-idioms that could confuse readers, but only 'in good faith' means acting with genuine intent to resolve a dispute."
+          }
+        ]
+      }
+    }
+  ]
+}
