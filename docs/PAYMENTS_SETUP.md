@@ -9,7 +9,7 @@ celpipAce uses **Stripe Checkout** with recurring subscriptions. Weekly, monthly
 In Supabase Dashboard → SQL Editor → New Query, run:
 
 ```
-supabase/payments_schema.sql
+supabase/schema/billing/payments_schema.sql
 ```
 
 This creates the `payments` table, augments `profiles` with subscription columns, and sets up RLS so only the user (and `sales@celpipace.com`) can read payment rows.

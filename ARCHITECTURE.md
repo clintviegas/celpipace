@@ -8,7 +8,9 @@ Postgres database. Everything below is grouped by **frontend**, **backend**,
 celpipace/
 ├── src/             FRONTEND  — React UI, runs in the browser
 ├── api/             BACKEND   — Vercel serverless functions (Node.js)
-├── supabase/        DATABASE  — Postgres schema, RLS, RPCs (SQL migrations)
+├── supabase/        DATABASE  — Postgres schema, RLS, RPCs
+│   ├── schema/      hand-applied, idempotent — the original build-out, by domain
+│   └── migrations/  timestamped, CLI/MCP-applied — everything going forward
 ├── scripts/         BUILD     — pre-render, sitemap, one-time seeders
 ├── public/          STATIC    — files copied verbatim into the build output
 ├── docs/            DOCS      — setup guides per subsystem
@@ -90,27 +92,37 @@ side using the service-role key.
 
 ## Database — `supabase/`
 
-Postgres schema and RLS policies. Each file is a SQL migration applied via the
-Supabase MCP or dashboard. Apply order shouldn't matter for the current set
-because each migration is idempotent (`CREATE TABLE IF NOT EXISTS`, …).
+Postgres schema and RLS policies, in two layers:
+
+- **`supabase/schema/`** — the original build-out. 31 hand-written, idempotent
+  files (`CREATE TABLE IF NOT EXISTS`, safe to re-run), applied directly via
+  the Supabase dashboard or MCP rather than through migration tooling.
+  Grouped by domain (`core`, `billing`, `practice`, `coach-ai`, `marketing`,
+  `ops`) — not by apply order, since several were written and run out of
+  filename order. The actual required order, with dependencies, is
+  `docs/SUPABASE_SETUP_ORDER.md`; that file is authoritative, this table is
+  just a map of what's where.
+- **`supabase/migrations/`** — timestamped, CLI/MCP-applied migrations.
+  Everything going forward lives here instead of adding another file to
+  `schema/`.
 
 | File | Tables / objects it creates |
 | --- | --- |
-| `admin_hardening.sql` | `profiles` trigger (`handle_new_user`), admin RLS, activity RPCs |
-| `phase5_security_hardening.sql` | RLS lockdown across all user tables |
-| `phase1_audit_tables.sql` | `subscription_events`, `webhook_events`, `email_log` |
-| `phase3_expire_premium_rpc.sql` | RPC used by the daily cron |
-| `phase4_rate_log.sql` | `api_rate_log` table + `check_rate_limit` RPC |
-| `subscriptions_schema.sql` | Stripe-related columns + `cancellation_feedback` |
-| `payments_schema.sql` | `payments` (Stripe receipts) |
-| `test_sessions_schema.sql` | Mock + practice session state (selected answers, scores, meta) |
-| `practice_attempts.sql` | One row per completed practice set |
-| `progress_schema.sql` | `user_progress` JSONB blob |
-| `writing_schema.sql` | Writing-specific tracking |
-| `analytics_events.sql` | Page-view + click analytics for the admin dashboard |
-| `contact_messages.sql` | Contact-form submissions |
-| `coupons.sql` | Coupons + redemptions |
-| `loops_schema.sql` · `marketing_schema.sql` · `rag_schema.sql` | Loops/Brevo audience + embedding store |
+| `supabase/schema/core/admin_hardening.sql` | `profiles` trigger (`handle_new_user`), admin RLS, activity RPCs |
+| `supabase/schema/ops/phase5_security_hardening.sql` | RLS lockdown across all user tables |
+| `supabase/schema/ops/phase1_audit_tables.sql` | `subscription_events`, `webhook_events`, `email_log` |
+| `supabase/schema/billing/phase3_expire_premium_rpc.sql` | RPC used by the daily cron |
+| `supabase/schema/ops/phase4_rate_log.sql` | `api_rate_log` table + `check_rate_limit` RPC |
+| `supabase/schema/billing/subscriptions_schema.sql` | Stripe-related columns + `cancellation_feedback` |
+| `supabase/schema/billing/payments_schema.sql` | `payments` (Stripe receipts) |
+| `supabase/schema/practice/test_sessions_schema.sql` | Mock + practice session state (selected answers, scores, meta) |
+| `supabase/schema/practice/practice_attempts.sql` | One row per completed practice set |
+| `supabase/schema/practice/progress_schema.sql` | `user_progress` JSONB blob |
+| `supabase/schema/practice/writing_schema.sql` | Writing-specific tracking |
+| `supabase/schema/ops/analytics_events.sql` | Page-view + click analytics for the admin dashboard |
+| `supabase/schema/marketing/contact_messages.sql` | Contact-form submissions |
+| `supabase/schema/billing/coupons.sql` | Coupons + redemptions |
+| `supabase/schema/marketing/loops_schema.sql` · `supabase/schema/marketing/marketing_schema.sql` · `supabase/schema/coach-ai/rag_schema.sql` | Loops/Brevo audience + embedding store |
 
 **Blog CMS table:** `public.blog_posts` (added via Supabase MCP migration
 `create_blog_posts_table`, no file in this folder — see commit history).

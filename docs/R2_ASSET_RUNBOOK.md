@@ -11,6 +11,16 @@ Production serves `public/images/` and `public/audio/` from **Cloudflare R2**, n
 | Vercel env | `VITE_CDN_URL` = public CDN URL above |
 | App helper | `asset()` in `src/data/constants.js` prefixes CDN in production |
 
+## CORS
+
+`docs/r2-cors-rules.json` allows `GET`/`HEAD` from the production domains and
+localhost — needed because the browser fetches assets directly from the R2
+public URL, cross-origin from the app. Was sitting undocumented at the repo
+root; moved here since it's R2-bucket config, not app config. Apply via the
+Cloudflare dashboard (bucket → Settings → CORS Policy) or `wrangler r2 bucket
+cors` (check `wrangler r2 bucket cors --help` for the exact subcommand on your
+installed version — it changed across wrangler releases).
+
 ## Prerequisites
 
 ```bash

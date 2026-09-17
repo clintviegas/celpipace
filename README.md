@@ -126,17 +126,17 @@ Server-side secrets such as `STRIPE_SECRET_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `O
 
 Run the SQL files in `supabase/` as needed for the feature set you are enabling. Important setup files include:
 
-- `supabase/admin_hardening.sql`
-- `supabase/geo_attribution_schema.sql`
-- `supabase/auth_premium.sql`
-- `supabase/payments_schema.sql`
-- `supabase/subscriptions_schema.sql`
-- `supabase/progress_schema.sql`
-- `supabase/practice_attempts.sql`
-- `supabase/test_sessions_schema.sql`
-- `supabase/writing_schema.sql`
+- `supabase/schema/core/admin_hardening.sql`
+- `supabase/schema/marketing/geo_attribution_schema.sql`
+- `supabase/schema/core/auth_premium.sql`
+- `supabase/schema/billing/payments_schema.sql`
+- `supabase/schema/billing/subscriptions_schema.sql`
+- `supabase/schema/practice/progress_schema.sql`
+- `supabase/schema/practice/practice_attempts.sql`
+- `supabase/schema/practice/test_sessions_schema.sql`
+- `supabase/schema/practice/writing_schema.sql`
 
-See the matching setup guides in `docs/` for auth domain, payments, persistence, subscriptions, contact, and test sessions.
+Full apply order and dependencies: `docs/SUPABASE_SETUP_ORDER.md`. See the matching setup guides in `docs/` for auth domain, payments, persistence, subscriptions, contact, and test sessions.
 
 ## Development
 

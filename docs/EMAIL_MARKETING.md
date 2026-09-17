@@ -23,7 +23,7 @@ remain transactional (no unsubscribe footer).
 ## One-time setup
 
 1. **Run the migration** in the Supabase SQL editor:
-   `supabase/email_marketing_v2.sql`
+   `supabase/schema/marketing/email_marketing_v2.sql`
    Adds `profiles.exam_date`, `public.checkout_intents`, `public.broadcasts`,
    and the `abandoned_checkout_candidates` + `weekly_digest_candidates` RPCs.
    It also seeds one **draft** newsletter (`slug='clb-myths-01'`).

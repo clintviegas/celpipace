@@ -10,10 +10,10 @@ The app saves progress in two layers:
 Run these in Supabase SQL Editor:
 
 ```sql
-\i supabase/progress_schema.sql
-\i supabase/test_sessions_schema.sql
-\i supabase/writing_schema.sql
-\i supabase/practice_attempts.sql
+\i supabase/schema/practice/progress_schema.sql
+\i supabase/schema/practice/test_sessions_schema.sql
+\i supabase/schema/practice/writing_schema.sql
+\i supabase/schema/practice/practice_attempts.sql
 ```
 
 Mock exams save resumable state and final scores in `test_sessions`. LSWR practice completions save summaries in `user_progress` and a per-attempt row in `practice_attempts`.

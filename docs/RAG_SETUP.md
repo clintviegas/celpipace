@@ -6,7 +6,7 @@ Phase 1 of the AI scoring upgrade: pgvector-backed retrieval-augmented feedback 
 
 | File | Role |
 | --- | --- |
-| `supabase/rag_schema.sql` | pgvector extension, `essay_embeddings` table, `match_essay_exemplars` RPC, `get_user_weakness_profile` RPC, `user_score_trends` view |
+| `supabase/schema/coach-ai/rag_schema.sql` | pgvector extension, `essay_embeddings` table, `match_essay_exemplars` RPC, `get_user_weakness_profile` RPC, `user_score_trends` view |
 | `api/_lib/embeddings.js` | Wrapper for OpenAI `text-embedding-3-small` (1536 dims) |
 | `api/_lib/rag.js` | Retrieval helpers + prompt-block builders + persistence |
 | `api/score-writing.js` | Now embeds → retrieves exemplars + weakness profile → injects → scores → persists |
@@ -66,7 +66,7 @@ No new secrets needed.
 In the Supabase Dashboard → SQL Editor, run:
 
 ```
-supabase/rag_schema.sql
+supabase/schema/coach-ai/rag_schema.sql
 ```
 
 This creates the `vector` extension, the `essay_embeddings` table, two RPCs, and the analytics view. RLS is enabled; only exemplar rows are publicly readable, and users can read their own rows. Inserts/updates are gated to the service role (i.e. our API routes).

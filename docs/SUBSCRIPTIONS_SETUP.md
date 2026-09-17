@@ -8,15 +8,15 @@ This document covers the recurring subscription system: Stripe + Supabase + RLS.
 
 ```sql
 -- Existing
-\i supabase/auth_premium.sql
-\i supabase/payments_schema.sql
-\i supabase/coupons.sql
+\i supabase/schema/core/auth_premium.sql
+\i supabase/schema/billing/payments_schema.sql
+\i supabase/schema/billing/coupons.sql
 
 -- NEW
-\i supabase/subscriptions_schema.sql
+\i supabase/schema/billing/subscriptions_schema.sql
 ```
 
-`subscriptions_schema.sql` is **idempotent** — re-running it is safe.
+`supabase/schema/billing/subscriptions_schema.sql` is **idempotent** — re-running it is safe.
 
 It adds these columns to `profiles`:
 
@@ -174,7 +174,7 @@ Progress data (test_sessions, user_attempts) is **never deleted** — users can 
 
 ## 7. Testing checklist
 
-- [ ] Run `subscriptions_schema.sql` on Supabase
+- [ ] Run `supabase/schema/billing/subscriptions_schema.sql` on Supabase
 - [ ] Recreate Stripe prices as recurring
 - [ ] Update `STRIPE_PRICE_*` env vars in Vercel
 - [ ] Add new webhook events in Stripe

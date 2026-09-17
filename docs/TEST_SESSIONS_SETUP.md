@@ -6,7 +6,7 @@ This feature replaces the volatile `sessionStorage`/in-memory React state for te
 
 ## 1. Apply the Database Migration
 
-Run [supabase/test_sessions_schema.sql](supabase/test_sessions_schema.sql) in the Supabase SQL editor.
+Run [supabase/schema/practice/test_sessions_schema.sql](supabase/schema/practice/test_sessions_schema.sql) in the Supabase SQL editor.
 
 This creates:
 
@@ -84,7 +84,7 @@ session.setCurrentPart('L2')
 
 | File | Change |
 |------|--------|
-| [supabase/test_sessions_schema.sql](supabase/test_sessions_schema.sql) | New migration |
+| [supabase/schema/practice/test_sessions_schema.sql](supabase/schema/practice/test_sessions_schema.sql) | New migration |
 | [src/hooks/useTestSession.js](src/hooks/useTestSession.js) | New hook |
 | [src/pages/MockTestPage.jsx](src/pages/MockTestPage.jsx) | Top-level mock state now backed by Supabase. On reload the page restores `sectionIdx`, `partIdx`, and per-part `scores`. `handleStart`, `handlePartDone`, and `handleContinueSection` autosave to the session. The session is closed via `complete()` when reaching the final results screen. |
 | [src/pages/DashboardPage.jsx](src/pages/DashboardPage.jsx) | New "Resume Where You Left Off" card — queries incomplete `test_sessions` and renders a Resume button that deep-links back to the right page. |

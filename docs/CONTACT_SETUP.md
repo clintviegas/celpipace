@@ -7,7 +7,7 @@ The `/contact` form posts to `/api/contact`. The endpoint saves every message in
 Run this in Supabase SQL Editor:
 
 ```sql
-\i supabase/contact_messages.sql
+\i supabase/schema/marketing/contact_messages.sql
 ```
 
 This creates `public.contact_messages` with RLS, user-owned reads, and admin reads for `clint.viegas@gmail.com`.

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Apply supabase/patch_coach_weakness.sql to production Postgres.
+ * Apply supabase/schema/coach-ai/patch_coach_weakness.sql to production Postgres.
  *
  * Requires SUPABASE_DB_URL (direct Postgres connection string from
  * Supabase → Project Settings → Database → Connection string → URI).
@@ -23,7 +23,7 @@ const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL
 const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY
 const dbUrl = env.SUPABASE_DB_URL || env.DATABASE_URL
 
-const PATCH_FILE = path.join(ROOT, 'supabase/patch_coach_weakness.sql')
+const PATCH_FILE = path.join(ROOT, 'supabase/schema/coach-ai/patch_coach_weakness.sql')
 
 async function verifyRpc() {
   if (!supabaseUrl || !serviceKey) {

@@ -6,7 +6,7 @@ directory is not.**
 ## Why this exists
 
 `supabase/*.sql` is a folder of loose scripts with no ordering and no applied-state tracking.
-On 2026-08-06 an audit found real drift: `rag_schema.sql` and `writing_schema.sql` were sitting in
+On 2026-08-06 an audit found real drift: `supabase/schema/coach-ai/rag_schema.sql` and `supabase/schema/practice/writing_schema.sql` were sitting in
 the repo having never been applied. Six code paths queried `essay_embeddings`, a table that did not
 exist — which silently disabled the free-tier evaluation cap, because the row count came back
 `undefined` and `(count ?? 0) >= 2` never tripped.
