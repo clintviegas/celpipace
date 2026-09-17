@@ -9,6 +9,8 @@ playwright-report/
 !.env.example
 .vercel
 .claude/settings.local.json
+.mcp.json
+skills-lock.json
 
 # OS
 .DS_Store
