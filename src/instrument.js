@@ -69,7 +69,19 @@ if (dsn) {
     ignoreErrors: [
       'ResizeObserver loop limit exceeded',
       'ResizeObserver loop completed with undelivered notifications',
+      // supabase-js auth coordinates token refresh across tabs with
+      // navigator.locks; when another tab takes the lock over, the loser's
+      // pending request rejects with this. Harmless, and not ours to fix.
+      "Lock broken by another request with the 'steal' option",
     ],
+
+    // A production build served by `vite preview` still reports as the
+    // production environment. Drop anything from a local host so test runs
+    // don't open issues against the live site.
+    beforeSend(event) {
+      if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname)) return null
+      return event
+    },
   })
 }
 

@@ -1,7 +1,9 @@
 import { lazy } from 'react'
 import { captureError } from './observability'
 
-const CHUNK_RE = /Loading chunk|Failed to fetch dynamically imported module|Importing a module script failed/i
+// One phrasing per engine: Chrome ("Failed to fetch…"), Firefox ("error loading…"),
+// Safari ("Importing a module script failed"), webpack-era ("Loading chunk").
+const CHUNK_RE = /Loading chunk|Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed/i
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))

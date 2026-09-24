@@ -27,6 +27,8 @@ import { enqueueJob, drainOutbox } from './outbox.js'
 // minute, so throughput comes from frequency rather than batch size.
 const BATCH_SIZE = 8
 const LEASE_SECONDS = 120
+// Attempts a profile miss is retried before it is settled as a real miss.
+const PROFILE_MISS_ATTEMPTS = 4
 
 function iso() { return new Date().toISOString() }
 
@@ -257,7 +259,12 @@ async function handleInvoicePaid(ctx) {
     return { status: patch.subscription_status }
   })
 
-  await runEffect(supabase, eventId, 'payment_upsert', async () => {
+  // The first invoice of a Checkout-created subscription is the same charge
+  // handleCheckoutCompleted already recorded under the cs_ session id. Writing
+  // it again here under the in_ id counted every new subscriber's first payment
+  // twice in the revenue totals. Renewals (subscription_cycle) and mid-cycle
+  // changes are only ever seen here, so they still get their row.
+  if (inv.billing_reason !== 'subscription_create') await runEffect(supabase, eventId, 'payment_upsert', async () => {
     const { error } = await supabase.from('payments').upsert({
       user_id:            profile.id,
       email:              profile.email,
@@ -472,7 +479,19 @@ function logSubEvent(ctx, row) {
 // processing_error, silently erasing whatever we wrote in this function a
 // moment earlier. Handing the note to markDone() instead makes it the single
 // writer of that column, so there's nothing left to race.
+//
+// Except early on: Stripe fires checkout.session.completed, subscription.created
+// and invoice.paid within the same second, in no guaranteed order, and only the
+// checkout event links the Stripe customer to a profile. If one of the others
+// lands first (or checkout is still waiting on a retry during a DB outage) the
+// miss is only "not linked yet". So the first few attempts throw a quiet,
+// retryable error and let backoff (~1m, 2m, 4m) give checkout time to land.
 async function flagProfileMiss(ctx, lookup) {
+  if ((ctx.event.attempts || 1) < PROFILE_MISS_ATTEMPTS) {
+    const err = new Error(`profile_not_linked_yet: ${JSON.stringify(lookup)}`)
+    err.quiet = true
+    throw err
+  }
   const msg = `profile_not_found: ${JSON.stringify(lookup)}`
   captureMessage(msg, { job: 'worker', event_type: ctx.event.event_type, stripe_event_id: ctx.eventId })
   return { profileMiss: true, lookup, note: msg }
@@ -514,6 +533,10 @@ export async function processClaimedEvent({ event, supabase, stripe }) {
     return { eventId, type: event.event_type, outcome: 'done', ...result }
   } catch (err) {
     const { dead, attempts } = await markFailed(supabase, event, err)
+    // Expected, self-resolving retries (see flagProfileMiss) stay out of Sentry.
+    if (err?.quiet && !dead) {
+      return { eventId, type: event.event_type, outcome: 'retry', error: err.message }
+    }
     captureError(err, {
       job: 'worker',
       event_type: event.event_type,

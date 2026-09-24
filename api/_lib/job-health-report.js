@@ -10,14 +10,15 @@
 // recorded the failure faithfully, but nothing ever read them.
 
 import { captureMessage } from './observability.js'
+import { dbErrorMessage } from './db.js'
 
 // Beyond this, a pending event is not "waiting", it is stuck.
 const STUCK_MINUTES = 30
 
 async function count(supabase, table, apply) {
   const q = apply(supabase.from(table).select('id', { count: 'exact', head: true }))
-  const { count: n, error } = await q
-  if (error) throw new Error(`${table}: ${error.message}`)
+  const { count: n, error, status } = await q
+  if (error) throw new Error(`${table}: ${dbErrorMessage(error, status)}`)
   return n || 0
 }
 

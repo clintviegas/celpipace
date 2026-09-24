@@ -7,6 +7,8 @@
 // (claim_webhook_events, FOR UPDATE SKIP LOCKED) so a row can only ever be held
 // by one worker at a time.
 
+import { dbErrorMessage } from './db.js'
+
 const MAX_ATTEMPTS = 6
 
 /**
@@ -28,11 +30,11 @@ export function backoffSeconds(attempts) {
  * pg_cron ticks every minute, so throughput comes from frequency not batch size.
  */
 export async function claimEvents(supabase, { limit = 10, leaseSeconds = 120 } = {}) {
-  const { data, error } = await supabase.rpc('claim_webhook_events', {
+  const { data, error, status } = await supabase.rpc('claim_webhook_events', {
     p_limit: limit,
     p_lease_seconds: leaseSeconds,
   })
-  if (error) throw new Error(`claim_failed: ${error.message}`)
+  if (error) throw new Error(`claim_failed: ${dbErrorMessage(error, status)}`)
   return data || []
 }
 
@@ -94,7 +96,7 @@ export async function markFailed(supabase, event, err) {
  * @returns {Promise<{ inserted: boolean }>}
  */
 export async function enqueueEvent(supabase, { source = 'stripe', eventId, eventType, payload }) {
-  const { error } = await supabase
+  const { error, status } = await supabase
     .from('webhook_events')
     .upsert(
       {
@@ -110,7 +112,7 @@ export async function enqueueEvent(supabase, { source = 'stripe', eventId, event
       { onConflict: 'stripe_event_id', ignoreDuplicates: true }
     )
 
-  if (error) throw new Error(`inbox_insert_failed: ${error.message}`)
+  if (error) throw new Error(`inbox_insert_failed: ${dbErrorMessage(error, status)}`)
   return { inserted: true }
 }
 

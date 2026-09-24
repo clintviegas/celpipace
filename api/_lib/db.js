@@ -47,3 +47,26 @@ export async function tryDb(builder, label) {
     return { data: null, error: err }
   }
 }
+
+/**
+ * One-line description of a PostgREST error, safe to put in an Error message.
+ *
+ * When Supabase is unreachable, Cloudflare answers with a full HTML error page
+ * and supabase-js hands that whole page back as `error.message` — ~6 KB of
+ * markup per Sentry event. HEAD requests (count queries) fail the other way:
+ * no body at all, so `error.message` is empty. Both cases collapse to
+ * something a human can read at a glance.
+ *
+ * @param {object|null} error - the `error` from a PostgREST response
+ * @param {number} [status] - the HTTP status from the same response
+ * @returns {string}
+ */
+export function dbErrorMessage(error, status) {
+  const raw = error?.message || ''
+  if (/<!DOCTYPE html|<html/i.test(raw)) {
+    const title = raw.match(/<title>([^<]*)<\/title>/i)?.[1]?.trim()
+    return `upstream_unavailable: ${title || `HTTP ${status || 'error'} (HTML body)`}`
+  }
+  if (raw) return raw
+  return error?.code || (status ? `HTTP ${status}` : 'unknown_error')
+}

@@ -11,6 +11,8 @@
 // Plan resolution order: Stripe price id → subscription metadata → explicit
 // fallback → the generic 'premium' bucket.
 
+import { dbErrorMessage } from './db.js'
+
 const PLAN_BY_PRICE = {
   [process.env.STRIPE_PRICE_WEEKLY    || '']: 'weekly',
   [process.env.STRIPE_PRICE_MONTHLY   || '']: 'monthly',
@@ -112,6 +114,10 @@ export function subscriptionToProfilePatch(sub, fallbackPlan) {
  * Order is most-specific first: our own user id, then the subscription (a
  * customer may hold several), then the customer, then email as a last resort.
  *
+ * Throws on a query failure. Returning null there would let a database timeout
+ * pass as "no such customer", and the worker settles a profile miss as done,
+ * so a transient outage would permanently drop the event instead of retrying.
+ *
  * @returns {Promise<object|null>}
  */
 export async function findProfile(supabase, { userId, subscriptionId, customerId, email } = {}) {
@@ -123,8 +129,13 @@ export async function findProfile(supabase, { userId, subscriptionId, customerId
   ].filter(Boolean)
 
   for (const [column, value] of lookups) {
-    const { data } = await supabase.from('profiles').select('*').eq(column, value).maybeSingle()
+    const { data, error, status } = await supabase.from('profiles').select('*').eq(column, value).maybeSingle()
     if (data) return data
+    // PGRST116 = several rows matched (e.g. a shared email). That lookup is
+    // ambiguous, not broken, so fall through to the next identifier as before.
+    if (error && error.code !== 'PGRST116') {
+      throw new Error(`profile_lookup_failed (${column}): ${dbErrorMessage(error, status)}`)
+    }
   }
   return null
 }

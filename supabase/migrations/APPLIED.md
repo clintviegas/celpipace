@@ -33,6 +33,10 @@ platform-readiness work on 2026-08-06. Regenerate this list with `list_migration
 
 ## Still unapplied, on purpose
 
+`20260924120000_cron_housekeeping.sql` — written 2026-09-24 while the database was too
+starved to accept connections. Apply it (MCP `apply_migration` or the SQL editor) once it
+responds again, then move it into the table above.
+
 `20260806070000_pg_cron_schedule.sql` — superseded by `20260806141444`, which applied the
 functions only. What remains is the activation, which needs a secret and so must be run by a
 human in the SQL editor:
