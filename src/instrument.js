@@ -73,6 +73,8 @@ if (dsn) {
       // navigator.locks; when another tab takes the lock over, the loser's
       // pending request rejects with this. Harmless, and not ours to fix.
       "Lock broken by another request with the 'steal' option",
+      'because another request stole it',
+      'Lock was stolen by another request',
     ],
 
     // A production build served by `vite preview` still reports as the

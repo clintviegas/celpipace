@@ -165,6 +165,10 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [profileLoaded, setProfileLoaded] = useState(false)
   const lastSeenTouchRef = useRef(0)
+  // Several auth events can start overlapping profile loads. Only the latest
+  // one may write state, so a slow or aborted earlier load can't overwrite a
+  // good result with null.
+  const profileLoadSeqRef = useRef(0)
 
   const touchUserActivity = useCallback(async (currentUser) => {
     if (!currentUser?.id) return
@@ -187,8 +191,13 @@ export function AuthProvider({ children }) {
 
   /* ── Load / refresh profile row ── */
   const loadProfile = useCallback(async (currentUser) => {
+    const seq = ++profileLoadSeqRef.current
+    const isStale = () => seq !== profileLoadSeqRef.current
     if (!currentUser) { setProfile(null); setProfileLoaded(true); return }
     setProfileLoaded(false)
+    // On a transient failure keep the profile we already have for this user.
+    // Wiping it drops a paying user to free until the next reload.
+    const keepExisting = () => setProfile(prev => (prev?.id === currentUser.id ? prev : null))
 
     // NOTE: profile row is created by the `handle_new_user` trigger
     // (see supabase/admin_hardening.sql). We don't upsert here because that path runs on
@@ -203,9 +212,10 @@ export function AuthProvider({ children }) {
         .eq('id', currentUser.id)
         .maybeSingle()
 
+      if (isStale()) return
       if (error) {
         console.warn('[auth] profile load failed:', error.message)
-        setProfile(null)
+        keepExisting()
         return
       }
 
@@ -233,11 +243,13 @@ export function AuthProvider({ children }) {
         const { data: created } = await supabase
           .from('profiles').select('*').eq('id', currentUser.id).maybeSingle()
         const syncedCreated = await syncPendingAuthConsent(created)
+        if (isStale()) return
         setProfile(syncedCreated || null)
         maybeSyncNewUser(syncedCreated)
         return
       }
       const syncedProfile = await syncPendingAuthConsent(data)
+      if (isStale()) return
       setProfile(syncedProfile)
       maybeSyncNewUser(syncedProfile)
 
@@ -263,9 +275,9 @@ export function AuthProvider({ children }) {
       }
     } catch (e) {
       console.warn('[auth] profile load exception:', e?.message)
-      setProfile(null)
+      if (!isStale()) keepExisting()
     } finally {
-      setProfileLoaded(true)
+      if (!isStale()) setProfileLoaded(true)
     }
   }, [])
 
@@ -277,29 +289,27 @@ export function AuthProvider({ children }) {
     getSupabaseClient().then((supabase) => {
       if (!mounted) return
 
-      supabase.auth.getSession()
-        .then(({ data: { session } }) => {
-          if (!mounted) return
-          const currentUser = session?.user ?? null
-          setUser(currentUser)
-          setLoading(false)
-          identify(currentUser?.id || null)
-          touchUserActivity(currentUser)
-          loadProfile(currentUser)
-        })
-        .catch((error) => {
-          console.warn('[auth] getSession failed:', error?.message || error)
-          if (mounted) setLoading(false)
-        })
-
+      // onAuthStateChange fires INITIAL_SESSION on subscribe, so it covers the
+      // bootstrap too. A separate getSession() call here used to start a second
+      // profile load in parallel; the two fought over the auth-token lock and
+      // the loser's "Lock ... stolen" rejection could null out the profile.
       const { data } = supabase.auth.onAuthStateChange(
-        (_event, session) => {
+        (event, session) => {
           const currentUser = session?.user ?? null
           setUser(currentUser)
           setLoading(false)
+          // A token refresh doesn't change the profile row. Reloading it on
+          // every refresh only adds DB round-trips and lock contention.
+          if (event === 'TOKEN_REFRESHED') return
           identify(currentUser?.id || null)
-          touchUserActivity(currentUser)
-          loadProfile(currentUser)
+          // Supabase runs this callback while it holds the auth lock, and
+          // calling the client from inside it can deadlock. Defer the work
+          // until the callback has returned.
+          setTimeout(() => {
+            if (!mounted) return
+            touchUserActivity(currentUser)
+            loadProfile(currentUser)
+          }, 0)
         }
       )
       subscription = data.subscription
